@@ -1,0 +1,41 @@
+name: Independent GF2 81-bit information retention audit
+
+on:
+  push:
+    branches:
+      - research/gf2-information-retention-20261014
+    paths:
+      - experiments/retention/**
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
+      - .github/workflows/gf2-information-retention.yml
+  pull_request:
+    paths:
+      - experiments/retention/**
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
+      - .github/workflows/gf2-information-retention.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-injectivity:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independently recompute GF2 rank, nullspaces, model horizons and tamper controls
+        run: python experiments/retention/verify_retention.py
