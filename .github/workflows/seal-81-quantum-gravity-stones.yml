@@ -1,0 +1,61 @@
+name: Seal 81 quantum gravity computational stone
+on:
+  push:
+    branches:
+      - agent/seat-3/2026-10-14-quantum-gravity-gates
+    paths:
+      - tools/seal_quantum_gravity_81.py
+      - .github/workflows/seal-81-quantum-gravity-stones.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: asolaria-seat3-qg81-stone
+  cancel-in-progress: false
+
+jobs:
+  seal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Download both independent CI result artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/qg311 /tmp/qg313
+          gh run download 38589387275 --repo JesseBrown1980/asolaria-stone-to-moss --name quantum-gravity-controls-python-3.11 --dir /tmp/qg311
+          gh run download 38589387275 --repo JesseBrown1980/asolaria-stone-to-moss --name quantum-gravity-controls-python-3.13 --dir /tmp/qg313
+      - name: Verify independent Python 3.11 and 3.13 artifacts are byte-identical
+        run: |
+          cmp /tmp/qg311/results.json /tmp/qg313/results.json
+          echo 'f3c634d62c8ebb634aa6fbd04503f94c2bee3cc1269880a6b69b4db896234dd0  /tmp/qg313/results.json' | sha256sum -c -
+      - name: Seal append-only HBP and HBI with SHA-256 sidecars
+        run: |
+          python tools/seal_quantum_gravity_81.py --input /tmp/qg313/results.json --out stones/2026-10-14-rainbow81/
+          ( cd stones/2026-10-14-rainbow81 && for manifest in quantum-gravity-81-*.sha256 stone-seat3-81-quantum-gravity-*.sha256; do sha256sum -c "$manifest"; done )
+      - name: Store sealed result as CI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: quantum-gravity-81-sealed-stones-${{ github.run_id }}
+          path: |
+            stones/2026-10-14-rainbow81/quantum-gravity-81-*
+            stones/2026-10-14-rainbow81/stone-seat3-81-quantum-gravity-*
+      - name: Commit into seat-3 branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stones/2026-10-14-rainbow81/quantum-gravity-81-* stones/2026-10-14-rainbow81/stone-seat3-81-quantum-gravity-*
+          if ! git diff --cached --quiet; then
+            git commit -m "Seal seat-3 quantum gravity reference control results [CI verified]"
+            git push origin HEAD:agent/seat-3/2026-10-14-quantum-gravity-gates
+          else
+            echo 'All stones were already sealed'
+          fi
