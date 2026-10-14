@@ -51,7 +51,10 @@ def main():
             assert lines[i*4+j] == (
                 f"{family}|{law}|{horizon}|{rank}|{81-rank}|{2**(81-rank)}"
             )
-    record = json.loads(RECEIPT.read_bytes())
+    receipt_bytes = RECEIPT.read_bytes()
+    sealed_sha = RECEIPT.with_suffix(".json.sha256").read_text("ascii").split()
+    assert sealed_sha == [sha(receipt_bytes), RECEIPT.name]
+    record = json.loads(receipt_bytes)
     assert record["schema"] == "ASOLARIA-GF2-81-INFORMATION-RETENTION-STONE-V1"
     assert record["challenge_sha256"] == sha(CHALLENGE.read_bytes())
     assert record["cross_language"]["canonical_tsv_sha256"] == EXPECTED
