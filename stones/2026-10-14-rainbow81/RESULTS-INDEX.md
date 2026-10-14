@@ -1,5 +1,14 @@
 # ASOLARIA — Rainbow81 Stone Index | 2026-10-14
 
+## Seat 1 next challenge — 32,805 exact digital states
+
+- [Post-preregistration software challenge](../../experiments/seat1/TRIAD-27-CHALLENGE-20261014.json) (SHA256 `e02346f41a43ecf6f772a16cb585b4c214a01b9513f1f34f2c9ba1ad52f5773b`): 27 **symbolic** time×color×space waves × 81 starting states × 5 GF(2) laws × 3 modeled horizons `T`, `T+1`, `T+81`.
+- Independent Python column-matrix / Node cyclic-polynomial programs returned **32,805/32,805 byte-identical states** (6,392,029-byte HBP, SHA256 `720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3`).
+- Per implementation: 32,805 bit-flip linearity, 10,935 one-step composition, 10,935 +81-step composition, 10,935 rotation and 120 explicit small-step reference controls. **Six deliberately invalid challenges rejected**, public nonce change alters output, and one-byte tamper changes SHA.
+- [Full negative-control GitHub CI](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38652227818) **PASS on Windows and Ubuntu**; [PR #14 merged](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/14).
+- [Append-only receipt HBP](seat-1-20261014-triad27-three-horizon.hbp) · [HBI](seat-1-20261014-triad27-three-horizon.hbi) · [JSON](seat-1-20261014-triad27-three-horizon.json), SHA-256 sidecars included.
+- The challenge is **public software-only** and does not satisfy the blinded three-physical-host prerequisite. The time/color/space inputs are labels, not physical measurements.
+
 ## Four-seat computational release — integrated
 
 This index retains the original stones. The **complete four-seat audit** is published at [publication/2026-10-14/REPORT.md](../../publication/2026-10-14/REPORT.md), with the machine-readable [completion matrix](../../publication/2026-10-14/STATUS.json) and [Linux/Windows release CI](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38644568103) (**both jobs PASS**).
