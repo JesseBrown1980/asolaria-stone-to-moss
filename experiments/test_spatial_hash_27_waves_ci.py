@@ -72,8 +72,8 @@ for scale in SCALES:
         observed+=1
 
 distances=[math.dist((0,0,0),(1040*s,880*s,560*s)) for s in SCALES]
-assert distances[0]*1_000_000 == distances[1]
-assert distances[0]*1_000_000_000 == distances[2]
+assert math.isclose(distances[0]*1_000_000, distances[1], rel_tol=1e-12)
+assert math.isclose(distances[0]*1_000_000_000, distances[2], rel_tol=1e-12)
 assert observed==27
 print(json.dumps({
  "kind":"independent CI cross-check",
