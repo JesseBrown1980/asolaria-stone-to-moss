@@ -40,6 +40,10 @@ def main():
     commit=sidecar_verify(CHECKIN,"commit.json")
     ready=sidecar_verify(STONES,BASENAME+".json")
     hbp=sidecar_verify(STONES,BASENAME+".hbp")
+    hbi=sidecar_verify(STONES,BASENAME+".hbi")
+    assert EXPECTED_ROOT.encode("ascii") not in hbi, "HBI indexes receipt hashes, not the large binary output"
+    assert b"physical_host_verified=0" in hbi
+    assert b"fresh_three_host_challenge=NOT_ISSUED" in hbi
     pub_der=base64.b64decode(checkin["public_spki_der_b64"],validate=True)
     assert sha(pub_der)==EXPECTED_PUB
     assert checkin["public_key_fingerprint_sha256"]==EXPECTED_PUB
@@ -78,7 +82,7 @@ def main():
         # One edited byte must fail hash validation.
         assert sha(a[:-1]+b"X")!=EXPECTED_ROOT
     print(json.dumps({"status":"PASS","seat":"seat-1",
-      "signature_checks":3,"sidecars_verified":4,
+      "signature_checks":3,"sidecars_verified":5,
       "tampered_signature_rejected":True,
       "python_node_exact_agreement":ready["python_vs_node_agreement"],
       "result_sha256":EXPECTED_ROOT,
