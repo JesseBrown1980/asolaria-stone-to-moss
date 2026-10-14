@@ -39,6 +39,11 @@ BASENAMES=[
  STONE/"quantum-gravity-81-compact-receipt.json",
  STONE/"stone-seat3-81-quantum-gravity-2026-10-14.hbp",
  STONE/"stone-seat3-81-quantum-gravity-2026-10-14.hbi",
+ STONE/"seat-1-20261014-triad27-three-horizon.json",
+ STONE/"seat-1-20261014-triad27-three-horizon.hbp",
+ STONE/"seat-1-20261014-triad27-three-horizon.hbi",
+ STONE/"retention-81-rank40.json",
+ STONE/"retention-81-rank40.tsv",
 ]
 HASH="031367b1da1a368dc7471141a9799b79c694a0c9900f65a047438ccaa5f76600"
 def sha(data):
@@ -68,6 +73,27 @@ def main():
     s2=read(STONE/"seat-2-20261014-readiness.json")
     s3=read(STONE/"seat-3-20261014-local-preflight.json")
     s4=read(STONE/"seat-4-20261014-readiness.json")
+    triad=read(STONE/"seat-1-20261014-triad27-three-horizon.json")
+    assert triad["python_node_exact_rows"]==triad["expected_rows"]==32805
+    assert triad["disagreements"]==0
+    assert triad["model_horizons"]==[10**13,10**13+1,10**13+81]
+    assert triad["hbp_sha256"]=="720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3"
+    assert triad["challenge_sha256"]=="e02346f41a43ecf6f772a16cb585b4c214a01b9513f1f34f2c9ba1ad52f5773b"
+    assert triad["physical_host_independently_verified"] is False
+    assert triad["fresh_three_host_challenge"] is False
+    retention=read(STONE/"retention-81-rank40.json")
+    assert retention["schema"]=="ASOLARIA-GF2-81-INFORMATION-RETENTION-STONE-V1"
+    assert retention["cross_language"]["exact_parity_rows"]==40
+    assert retention["cross_language"]["mismatches"]==0
+    assert retention["cross_language"]["canonical_tsv_sha256"]=="f4a0f2f19eb72930035b92356f0b2099655ba2f0d5e4640a4c0a1df29209de78"
+    assert retention["scope"]["physical_host_independence_verified"] is False
+    assert retention["scope"]["fresh_cross_host_blinded_challenge"] is False
+    assert retention["scope"]["huggingface_remote_publication_verified"] is False
+    assert retention["scope"]["repairs_original_seat2_signature"] is False
+    assert len(retention["results"])==10
+    assert [x["rank"] for x in retention["results"]]==[79,80,80,80,81,80,80,81,81,80]
+    assert retention["model_horizons"]==[1,10**13,10**13+1,10**13+81]
+    assert (P/"INFORMATION-RETENTION-81.md").is_file()
     seat3_followon=read(STONE/"seat-3-two-horizon-9720-control.json")
     assert seat3_followon["schema"]=="ASOLARIA-SEAT3-TWO-HORIZON-STRESS-RECEIPT-V1"
     assert seat3_followon["records_per_language"]==9720
@@ -105,6 +131,10 @@ def main():
         "seat2_reported_parity":1620,
         "seat3_parity":4860,
         "seat4_parity":729,
+        "seat1_triad_followon_32805_metadata_checked":True,
+        "triad_full_hbp_sha256_expected":"720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3",
+        "retention_81_law_horizon_comparisons":40,
+        "retention_canonical_tsv_sha256":"f4a0f2f19eb72930035b92356f0b2099655ba2f0d5e4640a4c0a1df29209de78",
         "seat3_followon_9720_metadata_checked": True,
         "seat3_followon_raw_hbp_sha256_expected": "245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef",
         "seat3_followon_reproduction_runs_separately": True,
