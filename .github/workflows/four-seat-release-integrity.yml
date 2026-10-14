@@ -8,6 +8,11 @@ on:
       - publication/2026-10-14/**
       - tools/audit_four_seat_release.py
       - tools/publish_seat3_two_horizon_to_hf.py
+      - tools/audit_seat1_triad_for_release.py
+      - experiments/seat1/triad_*
+      - experiments/retention/**
+      - stones/2026-10-14-rainbow81/seat-1-20261014-triad27*
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
       - experiments/seat3/two_horizon_*
       - stones/2026-10-14-rainbow81/seat-3-two-horizon*
       - .github/workflows/four-seat-release-integrity.yml
@@ -16,6 +21,11 @@ on:
       - publication/2026-10-14/**
       - tools/audit_four_seat_release.py
       - tools/publish_seat3_two_horizon_to_hf.py
+      - tools/audit_seat1_triad_for_release.py
+      - experiments/seat1/triad_*
+      - experiments/retention/**
+      - stones/2026-10-14-rainbow81/seat-1-20261014-triad27*
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
       - experiments/seat3/two_horizon_*
       - stones/2026-10-14-rainbow81/seat-3-two-horizon*
       - .github/workflows/four-seat-release-integrity.yml
@@ -47,6 +57,10 @@ jobs:
         run: python tools/audit_four_seat_release.py > release-audit.json
       - name: Independently regenerate Seat 3 9,720 two-horizon full HBP with Python and Node
         run: python tools/publish_seat3_two_horizon_to_hf.py
+      - name: Independently regenerate new Seat 1 triad 32,805 full states and verify fixed HBP SHA256
+        run: python tools/audit_seat1_triad_for_release.py
+      - name: Independently verify 40 GF2 information-retention cases and exact loss controls
+        run: python experiments/retention/verify_retention.py
       - name: Independently verify Seat 1 Ed25519 signatures and receipt hashes
         run: python physical/verify_seat1_computational.py
       - name: Independently verify Seat 3 Ed25519 signatures and tamper control
