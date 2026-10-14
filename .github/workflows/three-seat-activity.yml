@@ -51,7 +51,19 @@ jobs:
           git add tracking/latest.json tracking/STATUS.md tracking/snapshots/ || true
           if ! git diff --cached --quiet; then
             git commit -m "[tracker] Record three-seat public activity snapshot"
-            git push origin HEAD:main
+            # Other agents can write while this job is collecting. Incorporate
+            # nonconflicting remote commits, never force-push over another seat.
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                echo "Snapshot committed after reconciliation"
+                exit 0
+              fi
+              echo "Concurrent update detected; retrying with a fresh base"
+            done
+            echo "Snapshot saved as a workflow artifact; Git push needs review"
+            exit 1
           else
             echo "No new observable public repository state"
           fi
