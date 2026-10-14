@@ -1,0 +1,56 @@
+name: Seat 1 signed computational readiness verification
+
+on:
+  push:
+    branches:
+      - agent/seat-1/computational-readiness-20261014
+    paths:
+      - physical/verify_seat1_computational.py
+      - .github/workflows/verify-seat1-computational.yml
+      - tracking/checkins/seat-1/**
+      - stones/2026-10-14-rainbow81/seat-1-20261014-computational-readiness.*
+  pull_request:
+    paths:
+      - physical/verify_seat1_computational.py
+      - .github/workflows/verify-seat1-computational.yml
+      - tracking/checkins/seat-1/**
+      - stones/2026-10-14-rainbow81/seat-1-20261014-computational-readiness.*
+
+permissions:
+  contents: read
+
+jobs:
+  candidate-only:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install cryptographic signature verifier
+        run: python -m pip install --disable-pip-version-check 'cryptography>=42'
+      - name: Reproduce original synthetic preflight input
+        run: node physical/make_preflight_fixture.js preflight-challenge.json
+      - name: Python matrix 10T modeled-step calculation
+        run: python physical/evolve_gf2_python.py preflight-challenge.json seat1-python.hbp --self-test
+      - name: Independent Node cyclic polynomial 10T calculation
+        run: node physical/evolve_gf2_node.js preflight-challenge.json seat1-node.hbp --self-test
+      - name: Independently verify all public Ed25519 signatures, checksums and output
+        run: python physical/verify_seat1_computational.py --challenge preflight-challenge.json --python-hbp seat1-python.hbp --node-hbp seat1-node.hbp > seat1-ci-receipt.json
+      - name: Print objective CI result
+        run: python -c "import json; print(json.dumps(json.load(open('seat1-ci-receipt.json')),sort_keys=True,indent=2))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-computational-only-${{ matrix.os }}
+          path: |
+            seat1-ci-receipt.json
+            seat1-python.hbp
+            seat1-node.hbp
+            preflight-challenge.json
