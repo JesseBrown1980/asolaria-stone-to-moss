@@ -7,6 +7,7 @@ on:
     paths:
       - physical/verify_seat4_public_precommit.py
       - .github/workflows/audit-seat4-ed25519-20261014.yml
+      - stones/2026-10-14-rainbow81/stone-seat4-public-precommit-audit-20261014.*
   pull_request:
     paths:
       - physical/verify_seat4_public_precommit.py
@@ -44,6 +45,11 @@ jobs:
           assert r["coordinator_challenge_issued"] is False
           print("ED25519_SIGNATURES_VERIFIED - no physical host attestation")
           PY
+      - name: Verify HBP and HBI audit stone checksums
+        run: |
+          cd stones/2026-10-14-rainbow81
+          sha256sum -c stone-seat4-public-precommit-audit-20261014.hbp.sha256
+          sha256sum -c stone-seat4-public-precommit-audit-20261014.hbi.sha256
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-pinned-ed25519-audit-python-${{ matrix.python }}
