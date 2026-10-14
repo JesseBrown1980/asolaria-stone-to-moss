@@ -68,6 +68,18 @@ def main():
     s2=read(STONE/"seat-2-20261014-readiness.json")
     s3=read(STONE/"seat-3-20261014-local-preflight.json")
     s4=read(STONE/"seat-4-20261014-readiness.json")
+    seat3_followon=read(STONE/"seat-3-two-horizon-9720-control.json")
+    assert seat3_followon["schema"]=="ASOLARIA-SEAT3-TWO-HORIZON-STRESS-RECEIPT-V1"
+    assert seat3_followon["records_per_language"]==9720
+    assert seat3_followon["exact_state_agreements"]==9720
+    assert seat3_followon["disagreements"]==0
+    assert seat3_followon["modeled_horizons"]==[10**13,10**13+1]
+    assert seat3_followon["physical_host_independent"] is False
+    assert seat3_followon["fresh_three_physical_host_challenge"] is False
+    assert seat3_followon["output_sha256_python"]==seat3_followon["output_sha256_node"]=="245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef"
+    addendum=(P/"SEAT3-9720-ADDENDUM.md").read_text(encoding="utf-8")
+    for phrase in ("9,720", "software", "not", "Hugging Face"):
+        assert phrase in addendum
     assert s1["python_vs_node_agreement"]==4860 and s1["output_sha256"]==HASH
     assert s1["physical_host_independence_verified"] is False
     assert s2["agreements"]==s2["cases_python_vs_node"]==1620
@@ -93,6 +105,9 @@ def main():
         "seat2_reported_parity":1620,
         "seat3_parity":4860,
         "seat4_parity":729,
+        "seat3_followon_9720_metadata_checked": True,
+        "seat3_followon_raw_hbp_sha256_expected": "245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef",
+        "seat3_followon_reproduction_runs_separately": True,
         "seat2_signature_independently_verified":False,
         "physical_hosts_witnessed":0,
         "fresh_physical_challenge_issued":False,
