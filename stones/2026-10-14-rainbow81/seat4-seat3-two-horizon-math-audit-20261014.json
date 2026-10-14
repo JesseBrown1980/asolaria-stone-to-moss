@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-14",
+  "evidence_class": "self-contained synthetic GF(2) computation in one unverified host; not a fresh challenge",
+  "fresh_postcommit_challenge_issued": false,
+  "law_checks": [
+    {
+      "delta_bits_t": 38,
+      "delta_bits_tplus1": 44,
+      "impulse_mask_t_hex": "155a16342d577b100237b",
+      "impulse_mask_tplus1_hex": "1fee3a5c77f98d300658c",
+      "law_index": 0,
+      "taps": [
+        0,
+        1
+      ]
+    },
+    {
+      "delta_bits_t": 38,
+      "delta_bits_tplus1": 44,
+      "impulse_mask_t_hex": "19d9de7018a028c073dcd",
+      "impulse_mask_tplus1_hex": "1ebea7b07a208bc1bcafa",
+      "law_index": 1,
+      "taps": [
+        0,
+        2
+      ]
+    },
+    {
+      "delta_bits_t": 39,
+      "delta_bits_tplus1": 43,
+      "impulse_mask_t_hex": "18f94f284a07b861fe862",
+      "impulse_mask_tplus1_hex": "0ec1a83a8e350badf7bb1",
+      "law_index": 2,
+      "taps": [
+        0,
+        1,
+        3
+      ]
+    },
+    {
+      "delta_bits_t": 53,
+      "delta_bits_tplus1": 47,
+      "impulse_mask_t_hex": "1f5315a1d7eb6ffefdaa3",
+      "impulse_mask_tplus1_hex": "03e89f575cea6f6ff2161",
+      "law_index": 3,
+      "taps": [
+        0,
+        4,
+        7
+      ]
+    },
+    {
+      "delta_bits_t": 36,
+      "delta_bits_tplus1": 38,
+      "impulse_mask_t_hex": "0587d0766a1d4305aac32",
+      "impulse_mask_tplus1_hex": "11d29283c709aeee2164b",
+      "law_index": 4,
+      "taps": [
+        0,
+        1,
+        5,
+        9
+      ]
+    }
+  ],
+  "modeled_horizons": [
+    10000000000000,
+    10000000000001
+  ],
+  "no_secrets_published": true,
+  "one_step_impulse_recurrences_checked": 405,
+  "published_changed_bit_counts_reproduced": true,
+  "published_full_9720_record_sha256_reproduced": false,
+  "ring_length": 81,
+  "schema": "ASOLARIA-SEAT4-INDEPENDENT-SEAT3-TWO-HORIZON-AUDIT-V1",
+  "seat": "seat-4",
+  "seeded_full_state_metamorphic_controls": 60,
+  "separate_physical_host_verified": false,
+  "source_of_claim": "stones/2026-10-14-rainbow81/seat-3-two-horizon-9720-control.json",
+  "source_repo": "JesseBrown1980/asolaria-stone-to-moss",
+  "status": "PASS_LIMITED_DIGITAL_CROSSCHECK"
+}
