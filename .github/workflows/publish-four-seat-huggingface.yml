@@ -20,6 +20,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Use Node.js 22 for independent Seat 3 source replay
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Validate public release and all SHA256 sidecars
         env:
           HF_PUBLISH_DRY_RUN: '1'
