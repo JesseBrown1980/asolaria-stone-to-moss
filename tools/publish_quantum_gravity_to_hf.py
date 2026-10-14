@@ -30,6 +30,7 @@ NAMES = (
 )
 CODE = (
     "experiments/PREREG-81-quantum-gravity-gates-2026-10-14.md",
+    "experiments/EVALUATION-81-QUANTUM-GRAVITY-2026-10-14.md",
     "experiments/test_81_quantum_gravity_controls.py",
     "tools/seal_quantum_gravity_81.py",
 )
