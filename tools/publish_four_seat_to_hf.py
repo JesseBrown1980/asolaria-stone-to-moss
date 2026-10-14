@@ -37,6 +37,11 @@ RECEIPTS=(
  "quantum-gravity-81-compact-receipt.json",
  "stone-seat3-81-quantum-gravity-2026-10-14.hbp",
  "stone-seat3-81-quantum-gravity-2026-10-14.hbi",
+ "seat-1-20261014-triad27-three-horizon.json",
+ "seat-1-20261014-triad27-three-horizon.hbp",
+ "seat-1-20261014-triad27-three-horizon.hbi",
+ "retention-81-rank40.json",
+ "retention-81-rank40.tsv",
 )
 DOCUMENTS=(
  "PUBLICATION-INDEX.md",
@@ -54,6 +59,17 @@ DOCUMENTS=(
  "experiments/seat3/two_horizon_polynomial.js",
  "stones/2026-10-14-rainbow81/seat-3-two-horizon-9720-control.json",
  "publication/2026-10-14/SEAT3-9720-ADDENDUM.md",
+ "publication/2026-10-14/INFORMATION-RETENTION-81.md",
+ "experiments/seat1/PREREG-TRIAD-27WAVE-THREE-HORIZON-20261014.md",
+ "experiments/seat1/TRIAD-27-CHALLENGE-20261014.json",
+ "experiments/seat1/triad_27_python.py",
+ "experiments/seat1/triad_27_node.js",
+ "experiments/seat1/triad_release_verify.py",
+ "experiments/seat1/triad_negative_controls.py",
+ "experiments/retention/retention_poly.py",
+ "experiments/retention/retention_matrix.js",
+ "experiments/retention/verify_retention.py",
+ "tools/audit_seat1_triad_for_release.py",
  "experiments/test_81_quantum_gravity_controls.py",
  "experiments/EVALUATION-81-QUANTUM-GRAVITY-2026-10-14.md",
 )
@@ -114,6 +130,51 @@ def stage(folder):
         full.parent.mkdir(parents=True,exist_ok=True)
         full.write_bytes(raw)
         inventory["computed/seat3-two-horizon-9720.hbp"]=expected
+    # Recompute Seat 1's separate 27-wave *public SOFTWARE* challenge in
+    # distinct matrix/polynomial implementations; do not count as real-device evidence.
+    triad=json.loads((STONE/"seat-1-20261014-triad27-three-horizon.json").read_text(encoding="utf-8"))
+    triad_expected="720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3"
+    if not (triad.get("python_node_exact_rows")==32805
+            and triad.get("disagreements")==0
+            and triad.get("hbp_sha256")==triad_expected
+            and triad.get("model_horizons")==[10**13,10**13+1,10**13+81]
+            and triad.get("physical_host_independently_verified") is False
+            and triad.get("fresh_three_host_challenge") is False):
+        raise ValueError("Seat 1 triad source stone does not meet reproducible software gate")
+    with tempfile.TemporaryDirectory(prefix="seat1-triad-reproduce-") as tmp:
+        pyout=Path(tmp)/"python.hbp"
+        jsout=Path(tmp)/"node.hbp"
+        challenge=ROOT/"experiments/seat1/TRIAD-27-CHALLENGE-20261014.json"
+        python=subprocess.run(["python",str(ROOT/"experiments/seat1/triad_27_python.py"),
+                               str(challenge),str(pyout),"--self-test"],
+                              cwd=ROOT,capture_output=True,text=True,check=True,timeout=120)
+        node=subprocess.run(["node",str(ROOT/"experiments/seat1/triad_27_node.js"),
+                             str(challenge),str(jsout),"--self-test"],
+                            cwd=ROOT,capture_output=True,text=True,check=True,timeout=120)
+        p=json.loads(python.stdout.strip())
+        n=json.loads(node.stdout.strip())
+        if not (p.get("sha256")==n.get("sha256")==triad_expected
+                and p.get("rows")==n.get("rows")==32805
+                and p.get("smallstep")==n.get("smallstep")==120
+                and p.get("linearity")==n.get("linearity")==32805):
+            raise ValueError("Seat 1 triad independent solver counts mismatch")
+        generated=pyout.read_bytes()
+        if not (generated==jsout.read_bytes() and len(generated)==6392029
+                and digest(generated)==triad_expected):
+            raise ValueError("Seat 1 triad full result byte/SHA mismatch")
+        full=folder/"computed"/"seat1-triad-32805.hbp"
+        full.parent.mkdir(parents=True,exist_ok=True)
+        full.write_bytes(generated)
+        inventory["computed/seat1-triad-32805.hbp"]=triad_expected
+    # New information-preserving versus noninjective GF(2) rank control.
+    # Receipt TSV and its SHA sidecar are already included via RECEIPTS.
+    retention=json.loads((STONE/"retention-81-rank40.json").read_text(encoding="utf-8"))
+    if not (retention.get("cross_language",{}).get("exact_parity_rows")==40
+            and retention.get("cross_language",{}).get("mismatches")==0
+            and retention.get("cross_language",{}).get("canonical_tsv_sha256")
+              =="f4a0f2f19eb72930035b92356f0b2099655ba2f0d5e4640a4c0a1df29209de78"
+            and retention.get("scope",{}).get("physical_host_independence_verified") is False):
+        raise ValueError("GF2 81-bit information retention receipt is not validated")
     readme=(
         "# Asolaria — four-seat computational reproducibility archive\n\n"
         "Software verification receipts with SHA256 manifests and test code.\n"
@@ -122,7 +183,11 @@ def stage(folder):
         "Seat 3: 4,860-case parity (new five-tap fixture).\n"
         "Seat 4: 729-case parity (older public B-challenge).\n"
         "Separate Seat 3 follow-on: 9,720 two-horizon rows under new stress taps;\n"
-        "independently rebuilt full HBP and exact hash are in computed/.\n\n"
+        "independently rebuilt full HBP and exact hash are in computed/.\n"
+        "Separate Seat 1 triad follow-on: 32,805 software-only 27-wave, three-horizon\n"
+        "states; 6,392,029-byte independently rebuilt HBP is under computed/.\n"
+        "Further computational retention control: 40 GF(2) rank/entropy records\n"
+        "establish which 81-bit operators are invertible or lose 1-2 source bits.\n\n"
         "**No independently attested physical three-host experiment, entanglement,\n"
         "physical gravity or faster-than-light communication is claimed.**\n"
         "The source report distinguishes incompatible inputs and law sets.\n\n"
