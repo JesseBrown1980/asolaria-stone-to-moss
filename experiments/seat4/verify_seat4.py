@@ -37,6 +37,15 @@ def main():
     Ed25519PublicKey.from_public_bytes(pub).verify(base64.b64decode(ck['signature_ed25519_b64']), canonical)
     assert p['secret_revealed'] is False
     assert p['physical_separation_verified'] is False
+    sigpath=RECEIPT.with_name(RECEIPT.stem+'.sig.json')
+    detached=json.loads(sigpath.read_bytes())
+    assert detached['signed_file_sha256']==sha(RECEIPT)
+    assert detached['public_key_ed25519_b64']==ck['public_key_ed25519_b64']
+    Ed25519PublicKey.from_public_bytes(pub).verify(base64.b64decode(detached['signature_ed25519_b64']), RECEIPT.read_bytes())
+    for signedpath in (RECEIPT,sigpath,CHECKIN,CHECKIN.with_suffix('.hbp')):
+        sidecar=signedpath.with_name(signedpath.name+'.sha256')
+        asserted_hash=sidecar.read_text().split()[0]
+        assert sha(signedpath)==asserted_hash
     with tempfile.TemporaryDirectory() as folder:
         d=pathlib.Path(folder)
         outputs=[]
