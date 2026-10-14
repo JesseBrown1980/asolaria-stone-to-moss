@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-10-14T14:54:45Z",
+  "captured_at_utc": "2026-10-14T19:28:11Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -9,177 +9,773 @@
     {
       "branches": [
         {
+          "name": "agent/seat-1/computational-readiness-20261014",
+          "sha": "85370f66df1e0279a81fdd731ac59a9302edac5e"
+        },
+        {
+          "name": "agent/seat-2/cross-host-rainbow81-20261014",
+          "sha": "bd451707cedf040a6c4a8cd42b4db1445458ceea"
+        },
+        {
+          "name": "agent/seat-3/computational-preflight-20261014t1633",
+          "sha": "67ac287b0826cadfa41ff10e65bab4d06c17f0f9"
+        },
+        {
+          "name": "agent/seat-3/cross-host-rainbow81-20261014",
+          "sha": "c05e3f9764d557df8fcf7804692ce8a6eca9e393"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-adversarial-mixtures",
+          "sha": "c0084fcd7cb27107dece5f5abdcbb62e629c253a"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-cross-host-portal",
+          "sha": "bab0d9cd4ff6ad70c02418644e083c0467a1e468"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-quantum-gravity-gates",
+          "sha": "9c8dac9cab2aa5513d801c3b36aad5506efc6722"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-three-physical-hosts",
+          "sha": "50d96e363943273a44b3a195eff9e9b2591f4765"
+        },
+        {
+          "name": "agent/seat-4/cross-host-rainbow81-20261014",
+          "sha": "137f38dfde2731601e50643f8dc12f94b6d0ea14"
+        },
+        {
+          "name": "audit/seat4-signature-verification-20261014",
+          "sha": "77cfeb7dbd2341ca945818f687a965047e3e26ad"
+        },
+        {
+          "name": "audit/seat-2-public-receipt-20261014",
+          "sha": "d5a8f68a714893b6d9f82fc566e64e76de494125"
+        },
+        {
           "name": "main",
-          "sha": "9ef54bbb8a410ab991a23642c17248641dd50a8f"
+          "sha": "96f0d73b76fe66ac7f90ca35d85ab4c8b51be5c2"
         }
       ],
       "errors": [],
-      "pull_requests": [],
+      "pull_requests": [
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 8,
+          "state": "closed",
+          "title": "[seat-1] Signed computational check-in and independently verified 4,860-case readiness",
+          "updated_at": "2026-10-14T16:44:38Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/8"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 7,
+          "state": "open",
+          "title": "Seat 3: signed computational check-in + 4,860-case pinned protocol preflight",
+          "updated_at": "2026-10-14T16:39:41Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/7"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 6,
+          "state": "closed",
+          "title": "[coordination] Independently verify Seat 4 signatures and seal cross-seat audit",
+          "updated_at": "2026-10-14T16:26:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/6"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 5,
+          "state": "open",
+          "title": "Seat 4: independent Rainbow81 10^13-step Python/Node verification (729/729)",
+          "updated_at": "2026-10-14T16:26:47Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/5"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 4,
+          "state": "closed",
+          "title": "[seat-3] Real physical three-host commit/challenge/reveal protocol + verified GF2 software preflight",
+          "updated_at": "2026-10-14T16:09:28Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/4"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 3,
+          "state": "closed",
+          "title": "[seat-3] Sealed 81-body quantum/gravity controls and credential-safe Hugging Face publisher",
+          "updated_at": "2026-10-14T15:43:03Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/3"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 2,
+          "state": "closed",
+          "title": "[seat-3] Rainbow81 preregistered adversarial mixture waves and sealed stone",
+          "updated_at": "2026-10-14T15:08:19Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/2"
+        }
+      ],
       "recent_commits": [
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Reconcile concurrent agent commits before pushing activity ledger; never force-push",
+          "message_title": "Merge signed Seat 1 computational readiness with cross-OS 4,860-case verification",
           "seat": "unassigned",
-          "sha": "9ef54bbb8a410ab991a23642c17248641dd50a8f",
-          "timestamp_utc": "2026-10-14T14:54:18Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/9ef54bbb8a410ab991a23642c17248641dd50a8f"
+          "sha": "96f0d73b76fe66ac7f90ca35d85ab4c8b51be5c2",
+          "timestamp_utc": "2026-10-14T16:44:38Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/96f0d73b76fe66ac7f90ca35d85ab4c8b51be5c2"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Index Seat 1 HBI fifth checksum and keep physical host qualification",
+          "seat": "seat-1",
+          "sha": "85370f66df1e0279a81fdd731ac59a9302edac5e",
+          "timestamp_utc": "2026-10-14T16:43:26Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/85370f66df1e0279a81fdd731ac59a9302edac5e"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Seal Rainbow81 fifth-feature 3240-pair result and 103680 bounded-noise trials",
+          "message_title": "Index Seat 1 HBI fifth checksum and keep physical host qualification",
           "seat": "unassigned",
-          "sha": "b7e78d79e16a9721cea9b04fd3e9852b1afe1851",
-          "timestamp_utc": "2026-10-14T14:53:41Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b7e78d79e16a9721cea9b04fd3e9852b1afe1851"
+          "sha": "85370f66df1e0279a81fdd731ac59a9302edac5e",
+          "timestamp_utc": "2026-10-14T16:43:26Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/85370f66df1e0279a81fdd731ac59a9302edac5e"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independently verify Seat 1 HBI index SHA-256 as fifth immutable sidecar",
+          "seat": "seat-1",
+          "sha": "e54022d42927717aa666ace762ee6c6a5b509f0a",
+          "timestamp_utc": "2026-10-14T16:43:16Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e54022d42927717aa666ace762ee6c6a5b509f0a"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Add falsifiable Rainbow81 fifth-feature mixture test: linear control, quadratic readout and bounded-noise sweeps",
+          "message_title": "Independently verify Seat 1 HBI index SHA-256 as fifth immutable sidecar",
           "seat": "unassigned",
-          "sha": "8a7e5617e177b448cd706d74bc119b99fe6caaa3",
-          "timestamp_utc": "2026-10-14T14:52:36Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8a7e5617e177b448cd706d74bc119b99fe6caaa3"
+          "sha": "e54022d42927717aa666ace762ee6c6a5b509f0a",
+          "timestamp_utc": "2026-10-14T16:43:16Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e54022d42927717aa666ace762ee6c6a5b509f0a"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add append-only Seat 1 HBI index and integrity companion",
+          "seat": "seat-1",
+          "sha": "06e8af31eff76c5ebca1f8981cca7615865e6f49",
+          "timestamp_utc": "2026-10-14T16:43:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/06e8af31eff76c5ebca1f8981cca7615865e6f49"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Enable hourly three-seat activity ledger with signed JSON snapshots",
+          "message_title": "Add append-only Seat 1 HBI index and integrity companion",
           "seat": "unassigned",
-          "sha": "5262c3552d53ee9fffdae396b8acc692d850b470",
-          "timestamp_utc": "2026-10-14T14:52:01Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/5262c3552d53ee9fffdae396b8acc692d850b470"
+          "sha": "06e8af31eff76c5ebca1f8981cca7615865e6f49",
+          "timestamp_utc": "2026-10-14T16:43:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/06e8af31eff76c5ebca1f8981cca7615865e6f49"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add append-only Seat 1 HBI index and integrity companion",
+          "seat": "seat-1",
+          "sha": "b667735fafa51a486956668e97fc551ece93c84e",
+          "timestamp_utc": "2026-10-14T16:43:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b667735fafa51a486956668e97fc551ece93c84e"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Add public six-repository SHA-stamped three-seat activity collector",
+          "message_title": "Add append-only Seat 1 HBI index and integrity companion",
           "seat": "unassigned",
-          "sha": "b9e27079065433e2fdcecfd2e13e8486657fb18e",
-          "timestamp_utc": "2026-10-14T14:51:19Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b9e27079065433e2fdcecfd2e13e8486657fb18e"
+          "sha": "b667735fafa51a486956668e97fc551ece93c84e",
+          "timestamp_utc": "2026-10-14T16:43:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b667735fafa51a486956668e97fc551ece93c84e"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Certify completed software-only Seat 1 4,860-case CI and preserve physical-host exclusion",
+          "seat": "seat-1",
+          "sha": "cd337e471097bc2f1e9cfacd3cac6b65d3bbd263",
+          "timestamp_utc": "2026-10-14T16:41:48Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/cd337e471097bc2f1e9cfacd3cac6b65d3bbd263"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Publish three-agent coordination and provenance protocol",
+          "message_title": "Certify completed software-only Seat 1 4,860-case CI and preserve physical-host exclusion",
           "seat": "unassigned",
-          "sha": "8b65a59d1422124970515d94b77d9a86d752fd62",
-          "timestamp_utc": "2026-10-14T14:49:43Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8b65a59d1422124970515d94b77d9a86d752fd62"
+          "sha": "cd337e471097bc2f1e9cfacd3cac6b65d3bbd263",
+          "timestamp_utc": "2026-10-14T16:41:48Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/cd337e471097bc2f1e9cfacd3cac6b65d3bbd263"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "CI rerun Seat 1 candidate on Ubuntu and Windows; verify Ed25519 and 4860 result records",
+          "seat": "seat-1",
+          "sha": "e29eade0ac32d992d8094d2296d5aa03e4dc8f4e",
+          "timestamp_utc": "2026-10-14T16:39:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e29eade0ac32d992d8094d2296d5aa03e4dc8f4e"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Establish three-seat registry without guessing agent identities",
+          "message_title": "CI rerun Seat 1 candidate on Ubuntu and Windows; verify Ed25519 and 4860 result records",
           "seat": "unassigned",
-          "sha": "589082163930395f0b5b14eb7db9c7069c74447e",
-          "timestamp_utc": "2026-10-14T14:49:41Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/589082163930395f0b5b14eb7db9c7069c74447e"
+          "sha": "e29eade0ac32d992d8094d2296d5aa03e4dc8f4e",
+          "timestamp_utc": "2026-10-14T16:39:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e29eade0ac32d992d8094d2296d5aa03e4dc8f4e"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independently verify Seat 1 computational signatures, stones and 4860-case preflight",
+          "seat": "seat-1",
+          "sha": "e4d35227bee1082a03b448d02941bb18ed590925",
+          "timestamp_utc": "2026-10-14T16:39:23Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e4d35227bee1082a03b448d02941bb18ed590925"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Publish consolidated nine-wave and 27-wave results index",
+          "message_title": "Independently verify Seat 1 computational signatures, stones and 4860-case preflight",
           "seat": "unassigned",
-          "sha": "4731205cefdd438c0419bb12b51c143167b36a1d",
-          "timestamp_utc": "2026-10-14T14:49:38Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4731205cefdd438c0419bb12b51c143167b36a1d"
+          "sha": "e4d35227bee1082a03b448d02941bb18ed590925",
+          "timestamp_utc": "2026-10-14T16:39:23Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e4d35227bee1082a03b448d02941bb18ed590925"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add reproducible GitHub Actions Seat-3 4860-state and Ed25519 check CI",
+          "seat": "seat-3",
+          "sha": "67ac287b0826cadfa41ff10e65bab4d06c17f0f9",
+          "timestamp_utc": "2026-10-14T16:39:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/67ac287b0826cadfa41ff10e65bab4d06c17f0f9"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add public-only Seat 3 Ed25519 and receipt integrity verifier",
+          "seat": "seat-3",
+          "sha": "31c07d88250aba9f96a2cac97ab82c8660452a03",
+          "timestamp_utc": "2026-10-14T16:38:50Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/31c07d88250aba9f96a2cac97ab82c8660452a03"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
+          "seat": "seat-1",
+          "sha": "6de719d511931266cf1309fafb44324444aac862",
+          "timestamp_utc": "2026-10-14T16:38:23Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/6de719d511931266cf1309fafb44324444aac862"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Deposit standalone nine-wave hash cascade reproduction beside sealed stones",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
           "seat": "unassigned",
-          "sha": "8a556ab34473b1e0c9d7f29c0b8e17e0283b60ed",
-          "timestamp_utc": "2026-10-14T14:48:20Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8a556ab34473b1e0c9d7f29c0b8e17e0283b60ed"
+          "sha": "6de719d511931266cf1309fafb44324444aac862",
+          "timestamp_utc": "2026-10-14T16:38:23Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/6de719d511931266cf1309fafb44324444aac862"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal signed Seat 1 software-only candidate readiness and blinded computational commitment",
+          "seat": "seat-1",
+          "sha": "17b86986c70746b617fb5d0215678e31f00f069e",
+          "timestamp_utc": "2026-10-14T16:38:21Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/17b86986c70746b617fb5d0215678e31f00f069e"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Seal evaluation checksum",
+          "message_title": "Seal signed Seat 1 software-only candidate readiness and blinded computational commitment",
           "seat": "unassigned",
-          "sha": "6843847e655560dd85aacc6fc6eba76bacd0316f",
-          "timestamp_utc": "2026-10-14T14:36:20Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/6843847e655560dd85aacc6fc6eba76bacd0316f"
+          "sha": "17b86986c70746b617fb5d0215678e31f00f069e",
+          "timestamp_utc": "2026-10-14T16:38:21Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/17b86986c70746b617fb5d0215678e31f00f069e"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
+          "seat": "seat-1",
+          "sha": "75a17a9d2092cdd7c9cd050b83ead8fca79d9676",
+          "timestamp_utc": "2026-10-14T16:38:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/75a17a9d2092cdd7c9cd050b83ead8fca79d9676"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Record evidence limits, identity-vs-distance counterexample and next test protocol",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
           "seat": "unassigned",
-          "sha": "459e106fb8c2ade3101b25e976fdd5af8f756e93",
-          "timestamp_utc": "2026-10-14T14:36:11Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/459e106fb8c2ade3101b25e976fdd5af8f756e93"
+          "sha": "75a17a9d2092cdd7c9cd050b83ead8fca79d9676",
+          "timestamp_utc": "2026-10-14T16:38:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/75a17a9d2092cdd7c9cd050b83ead8fca79d9676"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal signed Seat 1 software-only candidate readiness and blinded computational commitment",
+          "seat": "seat-1",
+          "sha": "e92868bf8285cbae3efe8d19877232a0731d0185",
+          "timestamp_utc": "2026-10-14T16:38:14Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e92868bf8285cbae3efe8d19877232a0731d0185"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Seal independent CI witness for 27-wave spatial hash stone",
+          "message_title": "Seal signed Seat 1 software-only candidate readiness and blinded computational commitment",
           "seat": "unassigned",
-          "sha": "e82de673e3f67852c26fa454e7da2068b3decb73",
-          "timestamp_utc": "2026-10-14T14:33:55Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e82de673e3f67852c26fa454e7da2068b3decb73"
+          "sha": "e92868bf8285cbae3efe8d19877232a0731d0185",
+          "timestamp_utc": "2026-10-14T16:38:14Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e92868bf8285cbae3efe8d19877232a0731d0185"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
+          "seat": "seat-1",
+          "sha": "c17f6ab2238ce582a5279481c15d5409bd84d113",
+          "timestamp_utc": "2026-10-14T16:38:12Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c17f6ab2238ce582a5279481c15d5409bd84d113"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Seal independent CI witness for 27-wave spatial hash stone",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
           "seat": "unassigned",
-          "sha": "4f62af5eaf4672ebe3a8443ef0965dd036b5dd67",
-          "timestamp_utc": "2026-10-14T14:33:52Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4f62af5eaf4672ebe3a8443ef0965dd036b5dd67"
+          "sha": "c17f6ab2238ce582a5279481c15d5409bd84d113",
+          "timestamp_utc": "2026-10-14T16:38:12Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c17f6ab2238ce582a5279481c15d5409bd84d113"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal signed Seat 1 software-only candidate readiness and blinded computational commitment",
+          "seat": "seat-1",
+          "sha": "b647afc586b59401d59a110249a7eb3a791d17d1",
+          "timestamp_utc": "2026-10-14T16:38:09Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b647afc586b59401d59a110249a7eb3a791d17d1"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Seal independent CI witness for 27-wave spatial hash stone",
+          "message_title": "Seal signed Seat 1 software-only candidate readiness and blinded computational commitment",
           "seat": "unassigned",
-          "sha": "8e6e3cf0704050f121dd4007c1a64acf27a23e99",
-          "timestamp_utc": "2026-10-14T14:33:48Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8e6e3cf0704050f121dd4007c1a64acf27a23e99"
+          "sha": "b647afc586b59401d59a110249a7eb3a791d17d1",
+          "timestamp_utc": "2026-10-14T16:38:09Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b647afc586b59401d59a110249a7eb3a791d17d1"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
+          "seat": "seat-1",
+          "sha": "f44af0fb59189e00bb0a45d866858fd4178a6923",
+          "timestamp_utc": "2026-10-14T16:38:06Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f44af0fb59189e00bb0a45d866858fd4178a6923"
         },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
           "branch": "main",
           "github_actor": "JesseBrown1980",
-          "message_title": "Seal independent CI witness for 27-wave spatial hash stone",
+          "message_title": "Add SHA-256 sidecar for Seat 1 public receipt",
           "seat": "unassigned",
-          "sha": "8959981bd3d7dc50201fb772132202c8c76ec959",
-          "timestamp_utc": "2026-10-14T14:33:42Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8959981bd3d7dc50201fb772132202c8c76ec959"
+          "sha": "f44af0fb59189e00bb0a45d866858fd4178a6923",
+          "timestamp_utc": "2026-10-14T16:38:06Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f44af0fb59189e00bb0a45d866858fd4178a6923"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal signed Seat 1 software-only candidate readiness and blinded computational commitment",
+          "seat": "seat-1",
+          "sha": "6821858849249e9c0e284f8214a138c380d21707",
+          "timestamp_utc": "2026-10-14T16:38:03Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/6821858849249e9c0e284f8214a138c380d21707"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal Seat-3 signed computational preflight HBP/JSON checksums, append-only",
+          "seat": "seat-3",
+          "sha": "8bc867e2b807584a95a3b43d826362f8147715a0",
+          "timestamp_utc": "2026-10-14T16:38:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8bc867e2b807584a95a3b43d826362f8147715a0"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal Seat-3 signed computational preflight HBP/JSON checksums, append-only",
+          "seat": "seat-3",
+          "sha": "872708d9284910f5ae4ceb0127c7cd606969f2c8",
+          "timestamp_utc": "2026-10-14T16:37:59Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/872708d9284910f5ae4ceb0127c7cd606969f2c8"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal Seat-3 signed computational preflight HBP/JSON checksums, append-only",
+          "seat": "seat-3",
+          "sha": "2052f162bd4ebcfd229baa03ff8d2c6f0844d665",
+          "timestamp_utc": "2026-10-14T16:37:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/2052f162bd4ebcfd229baa03ff8d2c6f0844d665"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal Seat-3 signed computational preflight HBP/JSON checksums, append-only",
+          "seat": "seat-3",
+          "sha": "f409c954b5664715be724de2918b4237d8a1cc0a",
+          "timestamp_utc": "2026-10-14T16:37:54Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f409c954b5664715be724de2918b4237d8a1cc0a"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal Seat-3 signed computational preflight HBP/JSON checksums, append-only",
+          "seat": "seat-3",
+          "sha": "ef5c054630e085bcd43b8a97507a64531680b92e",
+          "timestamp_utc": "2026-10-14T16:37:51Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ef5c054630e085bcd43b8a97507a64531680b92e"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat-3: sealed signed 4860-case matrix/polynomial same-host preflight",
+          "seat": "seat-3",
+          "sha": "70e7cfb2cac943f7cc39c409b39294138c529454",
+          "timestamp_utc": "2026-10-14T16:37:07Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/70e7cfb2cac943f7cc39c409b39294138c529454"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat-3 computational checkin: Ed25519 signed, same-host caveat, unrevealed salt",
+          "seat": "seat-3",
+          "sha": "3b56e6a885498b7f34fcaf40c118a5d49f6ffd1d",
+          "timestamp_utc": "2026-10-14T16:36:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3b56e6a885498b7f34fcaf40c118a5d49f6ffd1d"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat-3 computational checkin: Ed25519 signed, same-host caveat, unrevealed salt",
+          "seat": "seat-3",
+          "sha": "6bc2e801c7461f744aacd93810b73942f92d15f7",
+          "timestamp_utc": "2026-10-14T16:36:37Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/6bc2e801c7461f744aacd93810b73942f92d15f7"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge independent Seat 4 Ed25519 audit and cross-agent coordination stone",
+          "seat": "seat-3",
+          "sha": "2dadc995f460da957879bca7fd558cb037428ece",
+          "timestamp_utc": "2026-10-14T16:26:44Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/2dadc995f460da957879bca7fd558cb037428ece"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Reconcile Seat 2/4 cryptographic audit and source version mismatch without claiming physical-host proof",
+          "seat": "seat-3",
+          "sha": "77cfeb7dbd2341ca945818f687a965047e3e26ad",
+          "timestamp_utc": "2026-10-14T16:25:05Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/77cfeb7dbd2341ca945818f687a965047e3e26ad"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/seat4-signature-verification-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Reconcile Seat 2/4 cryptographic audit and source version mismatch without claiming physical-host proof",
+          "seat": "unassigned",
+          "sha": "77cfeb7dbd2341ca945818f687a965047e3e26ad",
+          "timestamp_utc": "2026-10-14T16:25:05Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/77cfeb7dbd2341ca945818f687a965047e3e26ad"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat4: add branch CI to independently rerun 729-case parity and signatures",
+          "seat": "unassigned",
+          "sha": "137f38dfde2731601e50643f8dc12f94b6d0ea14",
+          "timestamp_utc": "2026-10-14T16:23:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/137f38dfde2731601e50643f8dc12f94b6d0ea14"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat4 verifier: require detached signature and all SHA256 sidecars",
+          "seat": "unassigned",
+          "sha": "86dfc26b6fd9e062d87c0b66ebe09d652d5f41d4",
+          "timestamp_utc": "2026-10-14T16:23:41Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/86dfc26b6fd9e062d87c0b66ebe09d652d5f41d4"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Check HBP and HBI sidecars alongside independent Seat 4 signature audit",
+          "seat": "seat-3",
+          "sha": "cc052b3ecf3f0cbe62a3c9617f9f69ddfb59f6fc",
+          "timestamp_utc": "2026-10-14T16:23:22Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/cc052b3ecf3f0cbe62a3c9617f9f69ddfb59f6fc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/seat4-signature-verification-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Check HBP and HBI sidecars alongside independent Seat 4 signature audit",
+          "seat": "unassigned",
+          "sha": "cc052b3ecf3f0cbe62a3c9617f9f69ddfb59f6fc",
+          "timestamp_utc": "2026-10-14T16:23:22Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/cc052b3ecf3f0cbe62a3c9617f9f69ddfb59f6fc"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal independent Seat 4 cryptographic audit with append-only HBI HBP provenance",
+          "seat": "seat-3",
+          "sha": "5c92a2e95ba9115e29089e7642ebd055d6867a00",
+          "timestamp_utc": "2026-10-14T16:23:07Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/5c92a2e95ba9115e29089e7642ebd055d6867a00"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/seat4-signature-verification-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal independent Seat 4 cryptographic audit with append-only HBI HBP provenance",
+          "seat": "unassigned",
+          "sha": "5c92a2e95ba9115e29089e7642ebd055d6867a00",
+          "timestamp_utc": "2026-10-14T16:23:07Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/5c92a2e95ba9115e29089e7642ebd055d6867a00"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-3/computational-preflight-20261014t1633",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal independent Seat 4 cryptographic audit with append-only HBI HBP provenance",
+          "seat": "seat-3",
+          "sha": "4efbf2fdeeab5bfc71f31d70428741e51e18ce6c",
+          "timestamp_utc": "2026-10-14T16:23:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4efbf2fdeeab5bfc71f31d70428741e51e18ce6c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/seat4-signature-verification-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal independent Seat 4 cryptographic audit with append-only HBI HBP provenance",
+          "seat": "unassigned",
+          "sha": "4efbf2fdeeab5bfc71f31d70428741e51e18ce6c",
+          "timestamp_utc": "2026-10-14T16:23:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4efbf2fdeeab5bfc71f31d70428741e51e18ce6c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat4: checksum sidecar for signed readiness record",
+          "seat": "unassigned",
+          "sha": "e5033bdbc861d28efa606199e74b0afc8f8b19be",
+          "timestamp_utc": "2026-10-14T16:23:00Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e5033bdbc861d28efa606199e74b0afc8f8b19be"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/seat4-signature-verification-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal independent Seat 4 cryptographic audit with append-only HBI HBP provenance",
+          "seat": "unassigned",
+          "sha": "af0f15484df072e6d72cbcc38c88db0af259a162",
+          "timestamp_utc": "2026-10-14T16:23:00Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/af0f15484df072e6d72cbcc38c88db0af259a162"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/seat4-signature-verification-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal independent Seat 4 cryptographic audit with append-only HBI HBP provenance",
+          "seat": "unassigned",
+          "sha": "ed839ab559c11d6c9340f5280f4a7e1c874d7cb0",
+          "timestamp_utc": "2026-10-14T16:22:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ed839ab559c11d6c9340f5280f4a7e1c874d7cb0"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat4: checksum sidecar for signed readiness record",
+          "seat": "unassigned",
+          "sha": "91c46a549a1c082f6e184d0a7c763b9574947387",
+          "timestamp_utc": "2026-10-14T16:22:57Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/91c46a549a1c082f6e184d0a7c763b9574947387"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat4: checksum sidecar for signed readiness record",
+          "seat": "unassigned",
+          "sha": "6fe70411036128701d82fe313ad0a56cc13104ce",
+          "timestamp_utc": "2026-10-14T16:22:54Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/6fe70411036128701d82fe313ad0a56cc13104ce"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat4: checksum sidecar for signed readiness record",
+          "seat": "unassigned",
+          "sha": "f99bbd8ed9fc06bad7546e1106d63d010eddf0e2",
+          "timestamp_utc": "2026-10-14T16:22:52Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f99bbd8ed9fc06bad7546e1106d63d010eddf0e2"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat4: add detached Ed25519 signature for 729-case receipt",
+          "seat": "unassigned",
+          "sha": "2ab92449a0a0e5d645bdb3775f2fa6e6bdf18c51",
+          "timestamp_utc": "2026-10-14T16:22:34Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/2ab92449a0a0e5d645bdb3775f2fa6e6bdf18c51"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal SHA-256 of Seat 4 independent Seat 2 audit",
+          "seat": "unassigned",
+          "sha": "ebc0a7232cbb0d0586eb5059f4b47bf1e3aa3388",
+          "timestamp_utc": "2026-10-14T16:22:16Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ebc0a7232cbb0d0586eb5059f4b47bf1e3aa3388"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-4/cross-host-rainbow81-20261014",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat 4: append signed public verification audit of Seat 2 readiness",
+          "seat": "unassigned",
+          "sha": "ba121152adc8a4e8863c63b30e4da7c4ab198f80",
+          "timestamp_utc": "2026-10-14T16:21:57Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ba121152adc8a4e8863c63b30e4da7c4ab198f80"
         }
       ],
       "repo": "JesseBrown1980/asolaria-stone-to-moss",
@@ -188,32 +784,122 @@
         {
           "branch": "main",
           "conclusion": null,
-          "id": 38584677064,
+          "id": 38623879221,
           "name": "Asolaria three-seat activity ledger",
-          "sha": "9ef54bbb8a410ab991a23642c17248641dd50a8f",
+          "sha": "96f0d73b76fe66ac7f90ca35d85ab4c8b51be5c2",
           "status": "in_progress",
-          "updated_at": "2026-10-14T14:54:24Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38584677064"
+          "updated_at": "2026-10-14T19:27:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38623879221"
         },
         {
-          "branch": "main",
-          "conclusion": "failure",
-          "id": 38584341775,
-          "name": "Asolaria three-seat activity ledger",
-          "sha": "5262c3552d53ee9fffdae396b8acc692d850b470",
-          "status": "completed",
-          "updated_at": "2026-10-14T14:52:49Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38584341775"
-        },
-        {
-          "branch": "main",
+          "branch": "agent/seat-1/computational-readiness-20261014",
           "conclusion": "success",
-          "id": 38581200777,
-          "name": "Stone spatial-hash 27-wave cross-check",
-          "sha": "4442f8e6c5bf003937caa35f19dbc51ae1fb58ce",
+          "id": 38600506172,
+          "name": "Preflight GF2 10T independent algorithms - cloud runners only",
+          "sha": "85370f66df1e0279a81fdd731ac59a9302edac5e",
           "status": "completed",
-          "updated_at": "2026-10-14T14:31:26Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38581200777"
+          "updated_at": "2026-10-14T16:44:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600506172"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600506136,
+          "name": "Preflight Ed25519 three-seat ceremony - simulated one host",
+          "sha": "85370f66df1e0279a81fdd731ac59a9302edac5e",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:44:00Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600506136"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600506124,
+          "name": "Seat 1 signed computational readiness verification",
+          "sha": "85370f66df1e0279a81fdd731ac59a9302edac5e",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:44:44Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600506124"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600483817,
+          "name": "Preflight Ed25519 three-seat ceremony - simulated one host",
+          "sha": "e54022d42927717aa666ace762ee6c6a5b509f0a",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:43:43Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600483817"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600483666,
+          "name": "Preflight GF2 10T independent algorithms - cloud runners only",
+          "sha": "e54022d42927717aa666ace762ee6c6a5b509f0a",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:44:06Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600483666"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600483453,
+          "name": "Seat 1 signed computational readiness verification",
+          "sha": "e54022d42927717aa666ace762ee6c6a5b509f0a",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:44:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600483453"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600474212,
+          "name": "Seat 1 signed computational readiness verification",
+          "sha": "e54022d42927717aa666ace762ee6c6a5b509f0a",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:43:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600474212"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600451664,
+          "name": "Preflight Ed25519 three-seat ceremony - simulated one host",
+          "sha": "06e8af31eff76c5ebca1f8981cca7615865e6f49",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:43:29Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600451664"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600451573,
+          "name": "Preflight GF2 10T independent algorithms - cloud runners only",
+          "sha": "06e8af31eff76c5ebca1f8981cca7615865e6f49",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:43:48Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600451573"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600451457,
+          "name": "Seat 1 signed computational readiness verification",
+          "sha": "06e8af31eff76c5ebca1f8981cca7615865e6f49",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:43:52Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600451457"
+        },
+        {
+          "branch": "agent/seat-1/computational-readiness-20261014",
+          "conclusion": "success",
+          "id": 38600447355,
+          "name": "Seat 1 signed computational readiness verification",
+          "sha": "06e8af31eff76c5ebca1f8981cca7615865e6f49",
+          "status": "completed",
+          "updated_at": "2026-10-14T16:43:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38600447355"
         }
       ]
     },
@@ -553,7 +1239,7 @@
         },
         {
           "name": "main",
-          "sha": "c3f340fe60674883155817ec94c030128b7a0f51"
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c"
         }
       ],
       "errors": [],
@@ -640,6 +1326,39 @@
         }
       ],
       "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish Host A cross-chat handoff and staged blinded receipt protocol",
+          "seat": "unassigned",
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c",
+          "timestamp_utc": "2026-10-14T15:55:27Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/8712368c851abe347ddf97a25bfbd96275d4316c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal Host B nonce seed for nine Rainbow-81 blinded cross-chat waves",
+          "seat": "unassigned",
+          "sha": "529958e96b8298ba2d5c409144933257baab5f98",
+          "timestamp_utc": "2026-10-14T15:54:33Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/529958e96b8298ba2d5c409144933257baab5f98"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Record Asolaria 81 blinded cross-host protocol dry-run, Stones 024-033 with checksum pins",
+          "seat": "unassigned",
+          "sha": "df88458437bc7352e1afb623662e621bde7547e3",
+          "timestamp_utc": "2026-10-14T15:45:00Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/df88458437bc7352e1afb623662e621bde7547e3"
+        },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "acer",
@@ -808,17 +1527,6 @@
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
-          "branch": "main",
-          "github_actor": "JesseBrown1980",
-          "message_title": "agent discipline: sections 13, 14 and 15",
-          "seat": "unassigned",
-          "sha": "1935dcdda2f515b10d9b39865e6a70c4729ab24c",
-          "timestamp_utc": "2026-08-06T17:28:54Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/1935dcdda2f515b10d9b39865e6a70c4729ab24c"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
           "branch": "codex/full-system-rust181-gate-20260806",
           "github_actor": "JesseBrown1980",
           "message_title": "agent discipline: sections 13, 14 and 15",
@@ -830,29 +1538,7 @@
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
-          "branch": "main",
-          "github_actor": "JesseBrown1980",
-          "message_title": "agent discipline: sections 13, 14 and 15",
-          "seat": "unassigned",
-          "sha": "5f286ba23d9ddb0fda1e59e2e7e25a62be021c3d",
-          "timestamp_utc": "2026-08-06T17:28:53Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/5f286ba23d9ddb0fda1e59e2e7e25a62be021c3d"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
           "branch": "codex/full-system-rust181-gate-20260806",
-          "github_actor": "JesseBrown1980",
-          "message_title": "agent discipline: sections 13, 14 and 15",
-          "seat": "unassigned",
-          "sha": "c4e4bd2c830938abb50135ecac46105bb73caece",
-          "timestamp_utc": "2026-08-06T17:28:52Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/c4e4bd2c830938abb50135ecac46105bb73caece"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "main",
           "github_actor": "JesseBrown1980",
           "message_title": "agent discipline: sections 13, 14 and 15",
           "seat": "unassigned",
@@ -1307,6 +1993,66 @@
         {
           "branch": "main",
           "conclusion": "success",
+          "id": 38593609895,
+          "name": "Public IS tournament",
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:57:00Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593609895"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38593609728,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:55:51Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593609728"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38593477603,
+          "name": "Public IS tournament",
+          "sha": "529958e96b8298ba2d5c409144933257baab5f98",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:56:09Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593477603"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38593477546,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "529958e96b8298ba2d5c409144933257baab5f98",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:55:07Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593477546"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38592067236,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "df88458437bc7352e1afb623662e621bde7547e3",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:45:28Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38592067236"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38592066867,
+          "name": "Public IS tournament",
+          "sha": "df88458437bc7352e1afb623662e621bde7547e3",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:46:21Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38592066867"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
           "id": 31135942275,
           "name": "Rust 1.81 + clippy (operator toolchain rule)",
           "sha": "c3f340fe60674883155817ec94c030128b7a0f51",
@@ -1363,66 +2109,6 @@
           "status": "completed",
           "updated_at": "2026-08-06T22:40:53Z",
           "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31126507104"
-        },
-        {
-          "branch": "codex/full-system-rust181-gate-20260806",
-          "conclusion": "success",
-          "id": 31125370125,
-          "name": "Public IS tournament",
-          "sha": "8042b110f61747a0de5be300f82d70e0bf302a39",
-          "status": "completed",
-          "updated_at": "2026-08-06T19:37:19Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31125370125"
-        },
-        {
-          "branch": "codex/full-system-rust181-gate-20260806",
-          "conclusion": "success",
-          "id": 31125370100,
-          "name": "Rust 1.81 + clippy (operator toolchain rule)",
-          "sha": "8042b110f61747a0de5be300f82d70e0bf302a39",
-          "status": "completed",
-          "updated_at": "2026-08-06T18:56:48Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31125370100"
-        },
-        {
-          "branch": "codex/full-system-rust181-gate-20260806",
-          "conclusion": "success",
-          "id": 31125291820,
-          "name": "Rust 1.81 + clippy (operator toolchain rule)",
-          "sha": "8042b110f61747a0de5be300f82d70e0bf302a39",
-          "status": "completed",
-          "updated_at": "2026-08-06T20:04:07Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31125291820"
-        },
-        {
-          "branch": "codex/full-system-rust181-gate-20260806",
-          "conclusion": "success",
-          "id": 31125290996,
-          "name": "Public IS tournament",
-          "sha": "8042b110f61747a0de5be300f82d70e0bf302a39",
-          "status": "completed",
-          "updated_at": "2026-08-06T19:55:33Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31125290996"
-        },
-        {
-          "branch": "main",
-          "conclusion": "failure",
-          "id": 31123435728,
-          "name": "Public IS tournament",
-          "sha": "5f286ba23d9ddb0fda1e59e2e7e25a62be021c3d",
-          "status": "completed",
-          "updated_at": "2026-08-06T22:55:32Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31123435728"
-        },
-        {
-          "branch": "main",
-          "conclusion": "success",
-          "id": 31123435721,
-          "name": "Rust 1.81 + clippy (operator toolchain rule)",
-          "sha": "5f286ba23d9ddb0fda1e59e2e7e25a62be021c3d",
-          "status": "completed",
-          "updated_at": "2026-08-06T22:35:57Z",
-          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31123435721"
         }
       ]
     },
@@ -2832,5 +3518,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "1ece36a55d3fce68d16fcbbec423b2941c1f81a828afb9d68bd5376dd27f97bd"
+  "source_state_sha256": "ea0d4d074b5ced45a5107986377605751ef2e9d33a0719bac7b7fecedadbcc03"
 }
