@@ -97,6 +97,14 @@ def build(folder):
     return manifest
 
 def main():
+    if os.environ.get("HF_PUBLISH_DRY_RUN") == "1":
+        with tempfile.TemporaryDirectory(prefix="asolaria-hf-stage-audit-") as tmp:
+            manifest = build(tmp)
+            print("STAGING_INTEGRITY_PASS",
+                  json.dumps({"file_count": len(manifest["files_sha256"]),
+                              "destinations": DESTS,
+                              "archive_prefix": PREFIX}))
+        return
     token = guard()
     api = HfApi(token=token)
     account = api.whoami().get("name", "")
