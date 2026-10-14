@@ -129,6 +129,10 @@ def main():
         print("SEAT3_HF_STAGING_PASS",
               json.dumps({"record_count": 9720, "file_count": len(manifest["files_sha256"]),
                           "sha256": EXPECTED, "target": REPO_ID}, sort_keys=True))
+        export = os.environ.get("SEAT3_HF_EXPORT_DIR")
+        if export:
+            shutil.copytree(folder, export)
+            print("SEAT3_HF_STAGING_ARTIFACT_EXPORTED", export)
         if os.environ.get("SEAT3_HF_PUBLISH") != "1":
             return
         token = os.environ.get("HF_TOKEN")
