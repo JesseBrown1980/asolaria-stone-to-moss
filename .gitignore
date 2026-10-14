@@ -1,2 +1,8 @@
 # Build artifacts never belong in a release. An earlier repo shipped 88 of them.
 /target/
+
+# Private, machine-specific cryptographic material MUST NEVER be checked in.
+/.asolaria-private/
+/physical/.asolaria-private/
+/physical/preflight-challenge.json
+/physical/result-*.hbp

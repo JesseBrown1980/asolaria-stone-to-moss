@@ -1,0 +1,37 @@
+name: Verify three-physical-host protocol preflight stone checksums
+
+on:
+  push:
+    branches:
+      - agent/seat-3/2026-10-14-three-physical-hosts
+    paths:
+      - stones/2026-10-14-rainbow81/stone-three-physical-hosts-software-preflight-2026-10-14.*
+      - .github/workflows/verify-three-hosts-preflight-stone.yml
+  pull_request:
+    paths:
+      - stones/2026-10-14-rainbow81/stone-three-physical-hosts-software-preflight-2026-10-14.*
+
+permissions:
+  contents: read
+
+jobs:
+  stone-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify both append-only HBP and HBI SHA256
+        run: |
+          cd stones/2026-10-14-rainbow81
+          sha256sum -c stone-three-physical-hosts-software-preflight-2026-10-14.hbp.sha256
+          sha256sum -c stone-three-physical-hosts-software-preflight-2026-10-14.hbi.sha256
+      - name: Assert CLOUD ONLY physical-host status
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          hbp=Path('stones/2026-10-14-rainbow81/stone-three-physical-hosts-software-preflight-2026-10-14.hbp').read_text()
+          assert 'three_physical_hosts_verified=0' in hbp
+          assert 'class=CLOUD_SOFTWARE_ONLY' in hbp
+          assert 'physical_machine_receipts=0' in hbp
+          assert 'records_per_runner=4860' in hbp
+          print('STONE_INTEGRITY_PASS; actual physical-host receipts PENDING')
+          PY
