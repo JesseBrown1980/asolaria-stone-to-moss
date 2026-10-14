@@ -1,0 +1,46 @@
+name: Preflight Ed25519 three-seat ceremony - simulated one host
+
+on:
+  push:
+    branches:
+      - agent/seat-3/2026-10-14-three-physical-hosts
+    paths:
+      - physical/**
+      - .github/workflows/three-seat-ceremony-preflight.yml
+  pull_request:
+    paths:
+      - physical/**
+      - .github/workflows/three-seat-ceremony-preflight.yml
+
+permissions:
+  contents: read
+
+jobs:
+  simulated-ceremony:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Simulate three SIGNED seats and 10T challenge; run adversarial tamper controls
+        run: python physical/test_three_seat_ci.py
+      - name: Validate no physical-hardware claim
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('three-seat-ci-only-result.json'))
+          assert r['synthetic_CI_only'] is True
+          assert r['level']=='physical_device_separation_unverified'
+          assert r['signature_tamper_negative_test']=='PASS'
+          assert r['output_tamper_negative_test']=='PASS'
+          assert len(r['seats'])==3
+          print('SIMULATED_CEREMONY_VALID; physical host attestation pending')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: simulated-three-seat-ceremony-only
+          path: three-seat-ci-only-result.json
