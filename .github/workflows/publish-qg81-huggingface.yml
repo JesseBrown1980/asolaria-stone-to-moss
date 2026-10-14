@@ -27,6 +27,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Install Hub publishing client
+        run: python -m pip install --disable-pip-version-check 'huggingface_hub>=0.36,<2'
+      - name: Verify local staging without credentials
+        env:
+          HF_PUBLISH_DRY_RUN: '1'
+        run: python tools/publish_quantum_gravity_to_hf.py
       - name: Require a protected write-capable Hugging Face credential
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -36,8 +42,6 @@ jobs:
             exit 1
           fi
           echo "Credential configured; token value is not displayed."
-      - name: Install Hub publishing client
-        run: python -m pip install --disable-pip-version-check 'huggingface_hub>=0.36,<2'
       - name: Publish and download-verify both destinations
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
