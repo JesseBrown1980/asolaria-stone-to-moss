@@ -1,0 +1,35 @@
+name: Stone spatial-hash 27-wave cross-check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - experiments/test_spatial_hash_27_waves_ci.py
+      - .github/workflows/stone-spatial-hash-27.yml
+  pull_request:
+    paths:
+      - experiments/test_spatial_hash_27_waves_ci.py
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Reproduce all 27 waves
+        run: python experiments/test_spatial_hash_27_waves_ci.py > stone-spatial-ci-result.json
+      - name: Display result
+        run: cat stone-spatial-ci-result.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spatial-hash-python-${{ matrix.python }}
+          path: stone-spatial-ci-result.json
