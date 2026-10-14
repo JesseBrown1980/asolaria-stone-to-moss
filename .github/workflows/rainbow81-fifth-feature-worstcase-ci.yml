@@ -1,0 +1,42 @@
+name: Rainbow81 fifth-feature worst-case CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - experiments/test_rainbow81_fifth_feature_worstcase.py
+      - .github/workflows/rainbow81-fifth-feature-worstcase-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exhaustive-candidate-proof:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run exhaustive bounded-noise candidate test
+        run: python experiments/test_rainbow81_fifth_feature_worstcase.py > /tmp/worstcase.json
+      - name: Verify results agree with sealed receipt
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          actual=Path('/tmp/worstcase.json').read_bytes()
+          expected=Path('stones/2026-10-14-rainbow81/rainbow81-fifth-feature-worstcase-results-2026-10-14.json').read_bytes()
+          assert actual==expected, 'receipt mismatch'
+          data=json.loads(actual)
+          assert data['candidate_comparisons']==14240
+          assert data['minimum_fifth_channel_gap_units']==64
+          assert data['maximum_gap_allowing_false_accept_units']==48
+          assert data['false_accept_candidates']==0
+          print('PASS: published receipt matches independently re-executed worst-case test')
+          PY
