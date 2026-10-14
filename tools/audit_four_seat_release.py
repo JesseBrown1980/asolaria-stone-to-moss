@@ -68,6 +68,16 @@ def main():
     assert registry["experimental_conclusions"]["three_physically_independent_hosts"]==0
     assert registry["experimental_conclusions"]["physical_common_challenge_issued"] is False
     assert registry["publication"]["huggingface_verified"]=="not_done"
+    followons=registry["distinct_followon_software_results"]
+    assert [(x["source_pr"],x["experiment"]) for x in followons]==[
+      (11,"two_horizon_stress"),
+      (14,"triad_27_waves_three_horizons"),
+      (15,"gf2_information_retention")
+    ]
+    assert followons[0]["state_rows_verified"]==9720
+    assert followons[1]["state_rows_verified"]==32805
+    assert followons[2]["law_horizon_cases_verified"]==40
+    assert all(item["physical_device_attested"] is False for item in followons)
 
     s1=read(STONE/"seat-1-20261014-computational-readiness.json")
     s2=read(STONE/"seat-2-20261014-readiness.json")
@@ -121,7 +131,7 @@ def main():
     assert len(qg["geometry_and_gravity_controls"]["spatial_waves"])==9
     assert "emergent physical gravity" in qg["not_tested"]
     doc=(P/"REPORT.md").read_text(encoding="utf-8")
-    for fragment in ("1,620","4,860","729","42,688","Hugging Face","physical"):
+    for fragment in ("1,620","4,860","729","42,688","32,805","9,720","information-retention","Hugging Face","physical"):
         assert fragment in doc
     summary={
         "schema":"ASOLARIA-FOUR-SEAT-RELEASE-AUDIT-V1",
