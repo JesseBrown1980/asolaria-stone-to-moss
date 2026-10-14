@@ -1,0 +1,62 @@
+name: Coordinate Rainbow81 GitHub to Hugging Face
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/publish_rainbow81_to_hf.py
+      - .github/workflows/coordinate-rainbow81-huggingface.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rainbow81-hf-github-mirror
+  cancel-in-progress: false
+
+jobs:
+  verify-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Audit source SHA256 sidecars and stage the mirror
+        run: python tools/publish_rainbow81_to_hf.py
+      - name: Verify core reproducible experiments
+        run: |
+          python experiments/test_rainbow81_fifth_feature.py > /tmp/rainbow81-fifth-result.json
+          python experiments/test_rainbow81_fifth_feature_worstcase.py > /tmp/rainbow81-worstcase-result.json
+          python experiments/test_spatial_hash_27_waves_ci.py > /tmp/rainbow81-spatial-result.json
+  publish-after-credential:
+    if: github.event_name == 'workflow_dispatch'
+    needs: verify-staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install Hugging Face Hub publisher
+        run: python -m pip install --disable-pip-version-check 'huggingface_hub>=0.36,<2'
+      - name: Require a protected write-capable Hugging Face token
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::Publication unavailable: add a write-capable HF_TOKEN in repository Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          echo "Repository publishing credential is configured; its value is hidden."
+      - name: Publish and download-verify every mirrored file
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_PUBLISH: '1'
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python tools/publish_rainbow81_to_hf.py
