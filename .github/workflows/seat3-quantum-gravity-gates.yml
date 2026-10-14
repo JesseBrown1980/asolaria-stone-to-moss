@@ -1,0 +1,55 @@
+name: Asolaria 81 quantum and gravity computational gates
+
+on:
+  push:
+    branches:
+      - agent/seat-3/2026-10-14-quantum-gravity-gates
+    paths:
+      - experiments/test_81_quantum_gravity_controls.py
+      - .github/workflows/seat3-quantum-gravity-gates.yml
+  pull_request:
+    paths:
+      - experiments/test_81_quantum_gravity_controls.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run preregistered Bell GHZ spatial gates
+        run: python experiments/test_81_quantum_gravity_controls.py > results.json
+      - name: Check independent gate summary
+        run: |
+          python - <<'PY'
+          import json, math
+          r=json.load(open('results.json'))
+          assert r['status']=='PASS' and r['bodies']==81
+          assert len(r['sha_seeded_local_hidden_variable_waves'])==9
+          assert len(r['ghz_81_party_compressed_measurement_waves'])==9
+          assert len(r['geometry_and_gravity_controls']['spatial_waves'])==9
+          assert all(v['chsh']<=2.00000000001 for v in r['sha_seeded_local_hidden_variable_waves'])
+          assert abs(r['quantum_singlet_explicit_reference']['chsh']-2*math.sqrt(2))<1e-12
+          assert r['geometry_and_gravity_controls']['metadata_only_force_without_position_input']==0
+          assert r['geometry_and_gravity_controls']['gravity_law_is_explicit_positive_control']
+          print(json.dumps({
+            'classical_chsh': [v['chsh'] for v in r['sha_seeded_local_hidden_variable_waves']],
+            'programmed_quantum_chsh': r['quantum_singlet_explicit_reference']['chsh'],
+            'spatial_waves': 9, 'GHZ_sample_waves': 9,
+            'physical_quantum_gravity_measured': False
+          }, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quantum-gravity-controls-python-${{ matrix.python-version }}
+          path: results.json
