@@ -1,0 +1,50 @@
+name: Seat 1 triad 27-wave three-horizon independent challenge
+
+on:
+  push:
+    branches:
+      - agent/seat-1/triad-27wave-3horizon-20261014
+    paths:
+      - experiments/seat1/**
+      - .github/workflows/seat1-triad-three-horizon.yml
+  pull_request:
+    paths:
+      - experiments/seat1/**
+      - .github/workflows/seat1-triad-three-horizon.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-math:
+    name: Triad-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Python GF2 column-matrix 32,805 full records, all metamorphic controls
+        run: python experiments/seat1/triad_27_python.py experiments/seat1/TRIAD-27-CHALLENGE-20261014.json python-32805.hbp --self-test
+      - name: Node independent cyclic-polynomial 32,805 full records, all metamorphic controls
+        run: node experiments/seat1/triad_27_node.js experiments/seat1/TRIAD-27-CHALLENGE-20261014.json node-32805.hbp --self-test
+      - name: Compare exact full bytes and verify sealed row counts + one-byte corruption fails
+        run: |
+          python -c "import hashlib,pathlib; a=pathlib.Path('python-32805.hbp').read_bytes(); b=pathlib.Path('node-32805.hbp').read_bytes(); assert a==b,'CROSS_IMPLEMENTATION_MISMATCH'; assert a.count(b'WAVE|')==32805; assert a.endswith(b'END|rows=32805|linearity=32805|successor=10935|plus81=10935|rotation=10935|physical_tested=0|json=0\n'); h=hashlib.sha256(a).hexdigest(); assert hashlib.sha256(a[:-1]+b'X').hexdigest()!=h; print('SEAT1_32805_PASS sha256='+h+' bytes='+str(len(a)))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: triad-three-horizon-${{ matrix.os }}
+          path: |
+            python-32805.hbp
+            node-32805.hbp
+            experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
