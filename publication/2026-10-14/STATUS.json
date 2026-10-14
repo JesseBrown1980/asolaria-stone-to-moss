@@ -76,6 +76,35 @@
       "note": "Old publicly revealed B challenge; fourth computational participant, not fourth physical host"
     }
   ],
+  "distinct_followon_software_results": [
+    {
+      "source_pr": 11,
+      "seat_label": "seat-3",
+      "experiment": "two_horizon_stress",
+      "state_rows_verified": 9720,
+      "evidence": "reproducible_software_only",
+      "full_hbp_sha256": "245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef",
+      "physical_device_attested": false
+    },
+    {
+      "source_pr": 14,
+      "seat_label": "seat-1",
+      "experiment": "triad_27_waves_three_horizons",
+      "state_rows_verified": 32805,
+      "evidence": "reproducible_software_only",
+      "full_hbp_sha256": "720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3",
+      "physical_device_attested": false
+    },
+    {
+      "source_pr": 15,
+      "experiment": "gf2_information_retention",
+      "law_horizon_cases_verified": 40,
+      "law_families": ["legacy_CA", "new_five_tap_stress"],
+      "evidence": "computational_rank_nullspace_only",
+      "canonical_tsv_sha256": "f4a0f2f19eb72930035b92356f0b2099655ba2f0d5e4640a4c0a1df29209de78",
+      "physical_device_attested": false
+    }
+  ],
   "experimental_conclusions": {
     "hash_avalanche": "measured_after_explicit_software_recomputation",
     "long_range_physical_signaling": "not_tested",
