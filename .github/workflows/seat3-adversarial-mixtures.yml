@@ -1,0 +1,44 @@
+name: Asolaria seat-3 adversarial mixture waves
+on:
+  push:
+    branches:
+      - agent/seat-3/2026-10-14-adversarial-mixtures
+    paths:
+      - experiments/test_rainbow81_adversarial_mixtures.py
+      - .github/workflows/seat3-adversarial-mixtures.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  falsification:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Execute four preregistered waves
+        run: python experiments/test_rainbow81_adversarial_mixtures.py > results.json
+      - name: Check fixed baseline and show raw measurements
+        run: |
+          python - <<'PY'
+          import json
+          with open('results.json', encoding='utf-8') as f:
+              r=json.load(f)
+          assert r['wave_A']['exact_four_aliases']==272
+          assert r['wave_A']['quadratic_survivors']==0
+          assert r['wave_B']['unequal_pair_cases']==411480
+          assert r['wave_C']['distinct_triples']==85320
+          assert r['wave_B']['five_accepted']>0
+          assert r['physical_measurements_performed'] is False
+          print(json.dumps(r, sort_keys=True, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-adversarial-results-python-${{ matrix.python-version }}
+          path: results.json

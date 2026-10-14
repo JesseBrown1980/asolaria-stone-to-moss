@@ -1,0 +1,44 @@
+name: Verify seat-3 stones and measurement parity
+on:
+  push:
+    branches:
+      - agent/seat-3/2026-10-14-adversarial-mixtures
+    paths:
+      - stones/2026-10-14-rainbow81/stone-seat3-adversarial-mixtures-2026-10-14.*
+      - stones/2026-10-14-rainbow81/rainbow81-adversarial-2026-10-14-results.json*
+      - .github/workflows/verify-seat3-stones.yml
+  pull_request:
+    paths:
+      - stones/2026-10-14-rainbow81/stone-seat3-adversarial-mixtures-2026-10-14.*
+      - stones/2026-10-14-rainbow81/rainbow81-adversarial-2026-10-14-results.json*
+
+permissions:
+  contents: read
+
+jobs:
+  independent-seal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify all sha256 sidecars
+        run: |
+          cd stones/2026-10-14-rainbow81
+          sha256sum -c rainbow81-adversarial-2026-10-14-results.json.sha256
+          sha256sum -c stone-seat3-adversarial-mixtures-2026-10-14.hbp.sha256
+          sha256sum -c stone-seat3-adversarial-mixtures-2026-10-14.hbi.sha256
+      - name: Verify receipt and HBI references
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib
+          p=pathlib.Path('stones/2026-10-14-rainbow81')
+          r=json.loads((p/'rainbow81-adversarial-2026-10-14-results.json').read_text())
+          assert r['ci_jobs']==['Python 3.11 SUCCESS','Python 3.13 SUCCESS']
+          assert r['unequal_weight']['five_accepted']==42688
+          assert r['three_body']['five_with_tolerance']==748
+          assert r['adversarial']['bounded_noise_feasible_five']==123904
+          assert r['physical_nonlocality_demonstrated'] is False
+          for filename in ['rainbow81-adversarial-2026-10-14-results.json','stone-seat3-adversarial-mixtures-2026-10-14.hbp']:
+              digest=hashlib.sha256((p/filename).read_bytes()).hexdigest()
+              assert digest in (p/'stone-seat3-adversarial-mixtures-2026-10-14.hbi').read_text()
+          print('SHA-256 stone integrity and evidence limits: PASS')
+          PY
