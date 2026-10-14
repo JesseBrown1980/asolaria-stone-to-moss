@@ -43,6 +43,8 @@ jobs:
           python -c "import hashlib,pathlib; a=pathlib.Path('python-32805.hbp').read_bytes(); b=pathlib.Path('node-32805.hbp').read_bytes(); assert a==b,'CROSS_IMPLEMENTATION_MISMATCH'; assert a.count(b'WAVE|')==32805; assert a.endswith(b'END|rows=32805|linearity=32805|successor=10935|plus81=10935|rotation=10935|physical_tested=0|json=0\n'); h=hashlib.sha256(a).hexdigest(); assert hashlib.sha256(a[:-1]+b'X').hexdigest()!=h; print('SEAT1_32805_PASS sha256='+h+' bytes='+str(len(a)))"
       - name: Validate preregistered bad input, changed nonce and output corruption controls
         run: python experiments/seat1/triad_negative_controls.py
+      - name: Verify three sealed receipt sidecars, full challenge and output SHA256
+        run: python experiments/seat1/triad_release_verify.py python-32805.hbp node-32805.hbp
       - uses: actions/upload-artifact@v4
         with:
           name: triad-three-horizon-${{ matrix.os }}
