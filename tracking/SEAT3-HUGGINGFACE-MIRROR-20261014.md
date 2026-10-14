@@ -16,7 +16,7 @@
 - [HF mirror staging run 38649141774](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38649141774): **SUCCESS** in `stage-and-verify`; `publish-and-readback` **SKIPPED** because no manual publish was requested.
 - [Download staged artifact `seat3-two-horizon-hf-ready`](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38649141774/artifacts/11933726366) — 8 files, zipped, reported 322,514 bytes.
 - Staged artifact ZIP digest from GitHub Actions log: `915647efec5445445efc6708ffcf79d400ea5fb6358f4713861ad4ffed74eb6d`.
-- Files include the regenerated 9,720-row HBP, independent Python + Node source, signed-scope JSON result stone, README, summary, SHA256SUMS and a manifest with pinned Git HEAD.
+- Files include the regenerated 9,720-row HBP, independent Python + Node source, scope-limited JSON result stone, README, summary, SHA256SUMS and a manifest with pinned Git HEAD.
 - Publisher script: [`tools/publish_seat3_two_horizon_to_hf.py`](https://github.com/JesseBrown1980/asolaria-stone-to-moss/blob/main/tools/publish_seat3_two_horizon_to_hf.py).
 - Workflow: [`.github/workflows/publish-seat3-two-horizon-huggingface.yml`](https://github.com/JesseBrown1980/asolaria-stone-to-moss/blob/main/.github/workflows/publish-seat3-two-horizon-huggingface.yml).
 - Reserved HF destination: `Jessedbrown/asolaria-wasm81-rainbow-audit` (model repository), `experiments/2026-10-14/seat3-two-horizon-9720/`. **Not confirmed published**.
