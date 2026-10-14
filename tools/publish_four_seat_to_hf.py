@@ -50,6 +50,10 @@ DOCUMENTS=(
  "physical/verify_seat4_public_precommit.py",
  "experiments/seat3/verify_public_seat3.js",
  "experiments/seat4/verify_seat4.py",
+ "experiments/seat3/two_horizon_matrix.py",
+ "experiments/seat3/two_horizon_polynomial.js",
+ "stones/2026-10-14-rainbow81/seat-3-two-horizon-9720-control.json",
+ "publication/2026-10-14/SEAT3-9720-ADDENDUM.md",
  "experiments/test_81_quantum_gravity_controls.py",
  "experiments/EVALUATION-81-QUANTUM-GRAVITY-2026-10-14.md",
 )
@@ -81,13 +85,44 @@ def stage(folder):
         raise ValueError("QG81 original multi-Python CI digest mismatch")
     for rel in DOCUMENTS:
         include(ROOT/rel,rel)
+    # Recreate the newer Seat 3 9,720-row HBP from two distinct algorithms.
+    # This is a follow-on SOFTWARE control; it is not a new physical-host seat.
+    followon=json.loads((STONE/"seat-3-two-horizon-9720-control.json").read_text(encoding="utf-8"))
+    expected="245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef"
+    if not (followon.get("exact_state_agreements")==9720
+            and followon.get("disagreements")==0
+            and followon.get("modeled_horizons")==[10**13,10**13+1]
+            and followon.get("output_sha256_python")==expected
+            and followon.get("output_sha256_node")==expected
+            and followon.get("physical_host_independent") is False):
+        raise ValueError("Seat 3 follow-on receipt disagrees with pinned software classification")
+    with tempfile.TemporaryDirectory(prefix="seat3-reproduce-") as temp:
+        p=Path(temp)/"python.hbp"
+        n=Path(temp)/"node.hbp"
+        py=subprocess.run(["python",str(ROOT/"experiments/seat3/two_horizon_matrix.py"),str(p)],
+                          cwd=ROOT,capture_output=True,text=True,check=True,timeout=120)
+        node=subprocess.run(["node",str(ROOT/"experiments/seat3/two_horizon_polynomial.js"),str(n)],
+                            cwd=ROOT,capture_output=True,text=True,check=True,timeout=120)
+        sp=json.loads(py.stdout.strip())
+        sn=json.loads(node.stdout.strip())
+        if sp!=sn or sp.get("records")!=9720 or sp.get("sha256")!=expected:
+            raise ValueError("Seat 3 follow-on independent output summary mismatch")
+        raw=p.read_bytes()
+        if len(raw)!=1195980 or raw!=n.read_bytes() or digest(raw)!=expected:
+            raise ValueError("Seat 3 follow-on two-language HBP byte/SHA mismatch")
+        full=folder/"computed"/"seat3-two-horizon-9720.hbp"
+        full.parent.mkdir(parents=True,exist_ok=True)
+        full.write_bytes(raw)
+        inventory["computed/seat3-two-horizon-9720.hbp"]=expected
     readme=(
         "# Asolaria — four-seat computational reproducibility archive\n\n"
         "Software verification receipts with SHA256 manifests and test code.\n"
         "Seat 1: 4,860-case parity (new five-tap fixture).\n"
         "Seat 2: 1,620 reported cases (original Ed25519 serialization unresolved).\n"
         "Seat 3: 4,860-case parity (new five-tap fixture).\n"
-        "Seat 4: 729-case parity (older public B-challenge).\n\n"
+        "Seat 4: 729-case parity (older public B-challenge).\n"
+        "Separate Seat 3 follow-on: 9,720 two-horizon rows under new stress taps;\n"
+        "independently rebuilt full HBP and exact hash are in computed/.\n\n"
         "**No independently attested physical three-host experiment, entanglement,\n"
         "physical gravity or faster-than-light communication is claimed.**\n"
         "The source report distinguishes incompatible inputs and law sets.\n\n"
