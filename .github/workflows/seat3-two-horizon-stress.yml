@@ -1,0 +1,53 @@
+name: Seat 3 two-horizon 9,720-case stress (software only)
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/two_horizon_*"
+      - "stones/2026-10-14-rainbow81/seat-3-two-horizon*"
+      - ".github/workflows/seat3-two-horizon-stress.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare-independent-algorithms:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Independently calculate 12 waves x 5 laws x 81 bodies x 2 horizons
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/seat3stress"
+          python experiments/seat3/two_horizon_matrix.py "$RUNNER_TEMP/seat3stress/python.hbp" > "$RUNNER_TEMP/seat3stress/python-summary.json"
+          node experiments/seat3/two_horizon_polynomial.js "$RUNNER_TEMP/seat3stress/node.hbp" > "$RUNNER_TEMP/seat3stress/node-summary.json"
+          cmp "$RUNNER_TEMP/seat3stress/python.hbp" "$RUNNER_TEMP/seat3stress/node.hbp"
+          printf '%s  %s\n' 245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef "$RUNNER_TEMP/seat3stress/python.hbp" | sha256sum -c -
+          printf '%s  %s\n' 245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef "$RUNNER_TEMP/seat3stress/node.hbp" | sha256sum -c -
+          python - "$RUNNER_TEMP/seat3stress" <<'PY'
+          import json, pathlib, sys
+          d=pathlib.Path(sys.argv[1])
+          p=json.loads((d/"python-summary.json").read_text())
+          n=json.loads((d/"node-summary.json").read_text())
+          assert p==n, (p,n)
+          assert p["records"]==9720
+          assert p["sha256"]=="245ab02b30cbdd9215d161c6561adc6a6c3bf72dd3fa2cb62979b2fb74031cef"
+          assert p["direct_step_controls"]==120
+          assert p["t_to_tplus1_controls"]==9720
+          assert p["delta_uniform_per_law_horizon"]==True
+          assert p["horizons"]==[10**13,10**13+1]
+          print("PASS_SEAT3_9720_FROZEN_STRESS; physical-host-independent=UNVERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-two-horizon-9720-py${{ matrix.python-version }}
+          path: ${{ runner.temp }}/seat3stress/*
+          retention-days: 30
