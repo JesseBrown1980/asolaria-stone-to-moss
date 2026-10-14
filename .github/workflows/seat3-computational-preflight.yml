@@ -1,0 +1,45 @@
+name: Seat 3 computational preflight (same-host evidence only)
+on:
+  pull_request:
+    paths:
+      - "tracking/checkins/seat-3/**"
+      - "stones/2026-10-14-rainbow81/seat-3-20261014-local-preflight*"
+      - "experiments/seat3/**"
+      - "physical/**"
+      - ".github/workflows/seat3-computational-preflight.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate sealed public Ed25519 proofs
+        run: node experiments/seat3/verify_public_seat3.js
+      - name: Reproduce 4860 full states with official frozen algorithms
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/seat3"
+          node physical/make_preflight_fixture.js "$RUNNER_TEMP/seat3/challenge.json"
+          python physical/evolve_gf2_python.py "$RUNNER_TEMP/seat3/challenge.json" "$RUNNER_TEMP/seat3/python.hbp" --self-test
+          node physical/evolve_gf2_node.js "$RUNNER_TEMP/seat3/challenge.json" "$RUNNER_TEMP/seat3/node.hbp" --self-test
+          cmp "$RUNNER_TEMP/seat3/python.hbp" "$RUNNER_TEMP/seat3/node.hbp"
+          printf '%s  %s\n' 031367b1da1a368dc7471141a9799b79c694a0c9900f65a047438ccaa5f76600 "$RUNNER_TEMP/seat3/python.hbp" | sha256sum -c -
+          printf '%s  %s\n' 031367b1da1a368dc7471141a9799b79c694a0c9900f65a047438ccaa5f76600 "$RUNNER_TEMP/seat3/node.hbp" | sha256sum -c -
+          echo "SEAT3_4860_COMPUTATIONAL_PREFLIGHT_PASS (PHYSICAL HOST INDEPENDENCE UNVERIFIED)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-computational-preflight-py${{ matrix.python-version }}
+          path: ${{ runner.temp }}/seat3/*.hbp
+          retention-days: 30
