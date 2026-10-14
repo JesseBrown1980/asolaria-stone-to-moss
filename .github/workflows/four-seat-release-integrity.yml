@@ -1,0 +1,56 @@
+name: Four-seat public release integrity audit
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - publication/2026-10-14/**
+      - tools/audit_four_seat_release.py
+      - .github/workflows/four-seat-release-integrity.yml
+  pull_request:
+    paths:
+      - publication/2026-10-14/**
+      - tools/audit_four_seat_release.py
+      - .github/workflows/four-seat-release-integrity.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-audit:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Ed25519 verifier
+        run: python -m pip install --disable-pip-version-check 'cryptography>=42,<49'
+      - name: Verify all four seat receipt checksums and publication classification
+        run: python tools/audit_four_seat_release.py > release-audit.json
+      - name: Independently verify Seat 1 Ed25519 signatures and receipt hashes
+        run: python physical/verify_seat1_computational.py
+      - name: Independently verify Seat 3 Ed25519 signatures and tamper control
+        run: node experiments/seat3/verify_public_seat3.js
+      - name: Independently verify Seat 4 signed data and 729-case Python/Node result
+        run: python experiments/seat4/verify_seat4.py
+      - name: Independently verify original Seat 4 Git-pinned precommit signatures
+        run: python physical/verify_seat4_public_precommit.py
+      - name: Ensure unresolved Seat 2 Ed25519 preimage is not misrepresented
+        run: |
+          python -c "import json; r=json.load(open('release-audit.json')); assert r['seat2_signature_independently_verified'] is False; assert r['physical_hosts_witnessed']==0; assert r['hf_publication_verified'] is False; print('EVIDENCE_CLASSIFICATION_PASS')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: four-seat-publication-audit-${{ matrix.os }}
+          path: release-audit.json
