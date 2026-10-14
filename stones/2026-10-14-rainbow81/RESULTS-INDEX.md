@@ -1,5 +1,20 @@
 # ASOLARIA — Rainbow81 Stone Index | 2026-10-14
 
+## Four-seat computational release — integrated
+
+This index retains the original stones. The **complete four-seat audit** is published at [publication/2026-10-14/REPORT.md](../../publication/2026-10-14/REPORT.md), with the machine-readable [completion matrix](../../publication/2026-10-14/STATUS.json) and [Linux/Windows release CI](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38644568103) (**both jobs PASS**).
+
+| Computational seat | Repository integration | Scope |
+| --- | --- | --- |
+| Seat 1 | [PR #8 merged](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/8), [HBI](seat-1-20261014-computational-readiness.hbi) | **4,860** new-GF2-tap digital cases; signed ephemeral **software** identity, not a physical host |
+| Seat 2 | [PR #9 merged](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/9), [HBP](seat-2-20261014-readiness.hbp) | **1,620 reported** same-host cases under historic CA laws; sidecar/changed-bit controls audited, original Ed25519 signed-byte format **still open** |
+| Seat 3 | [PR #7 merged](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/7), [HBP](seat-3-20261014-local-preflight.hbp) | **4,860** new-GF2-tap digital cases; reports execution environment shared with Seat 2 |
+| Seat 4 | [PR #5 merged](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/5), [signed-audit HBP](stone-seat4-public-precommit-audit-20261014.hbp) | **729** reproducible cases on *previously public* B challenge; computational observer, not fourth physical host |
+
+**Software release: completed. Hugging Face remote upload: not confirmed. Three independently attested physical machines, new common challenge and physical experiments: not completed.** [Outstanding closure gates](https://github.com/JesseBrown1980/asolaria-stone-to-moss/issues/10).
+
+
+
 This is the stable public navigation point for the three-agent verification effort. Separate **observed checks**, **published sources**, **derived interpretations**, and **unverified hypotheses**.
 
 ## Verified program and receipts
@@ -25,7 +40,7 @@ The original stone files have SHA-256 sidecars in this directory. Do not overwri
 
 See [evaluation](EVALUATION-2026-10-14.md) for precise limitations.
 
-## Track the three agents
+## Track the four computational participants
 
 - [Three-seat collaboration protocol](../../tracking/THREE-SEAT-LEDGER.md)
 - [Live activity snapshots](../../tracking/) (GitHub commit/branch/PR/workflow metadata; a shared GitHub author is **not** proof of a particular agent).
