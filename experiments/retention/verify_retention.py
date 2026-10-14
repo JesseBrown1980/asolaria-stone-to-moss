@@ -106,6 +106,7 @@ def main():
         "two_languages_byte_equal":True,
         "independent_algorithm_parity":True,
         "negative_controls":"PASS", "canonical_sha256":EXPECTED,
+        "receipt_sha256":sha(RECEIPT.read_bytes()),
         "physical_host_attested":False
     },sort_keys=True))
 
