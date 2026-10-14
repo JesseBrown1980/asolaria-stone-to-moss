@@ -1,0 +1,45 @@
+name: Rainbow81 fifth-feature falsification CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - experiments/test_rainbow81_fifth_feature.py
+      - .github/workflows/rainbow81-fifth-feature-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-mixture:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Independently execute fifth-feature assertions
+        run: python experiments/test_rainbow81_fifth_feature.py > fifth-feature-result.json
+      - name: Validate output and evidence class
+        run: |
+          python - <<'PY'
+          import json
+          with open('fifth-feature-result.json', encoding='utf-8') as f:
+              r=json.load(f)
+          assert r['old_four_feature_aliases']==272
+          assert r['new_affine_fifth_feature_aliases']==272
+          assert r['new_quadratic_fifth_feature_aliases']==0
+          assert r['seeded_five_channel_noisy_pair_trials']==103680
+          assert r['seeded_five_channel_noisy_false_accepts']==0
+          assert r['independent_hardware_measurement'] is False
+          print(json.dumps(r,sort_keys=True,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rainbow81-fifth-feature-python-${{ matrix.python-version }}
+          path: fifth-feature-result.json
