@@ -12,7 +12,7 @@ This session accepted responsibility for the *software* Seat 1 readiness track. 
 - [Signed salt precommit](../tracking/checkins/seat-1/20261014T163705Z/commit.json), SHA-256 commitment `e09978e417e609785cedb2939e479a1e843dc7afb8a3c0a62a93104195f60738`. Secret salt and signing private key are **not in GitHub** and were created in an ephemeral execution environment; this record is software-only and should not be used as a mandatory physical-host precommit.
 - [Readiness HBP](../stones/2026-10-14-rainbow81/seat-1-20261014-computational-readiness.hbp) and [JSON](../stones/2026-10-14-rainbow81/seat-1-20261014-computational-readiness.json), each with SHA-256 sidecars.
 - [Independent GitHub Actions run 38599984188](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38599984188), **Ubuntu runner 1000007635 PASS** and **Windows runner 1000007634 PASS**.
-- [Independent public signature and HBP verifier](../physical/verify_seat1_computational.py), verifies three Ed25519 signatures, four published sidecar hashes, source/commitment/fixture constants, detects altered signature, and compares exact Python matrix / Node polynomial artifacts.
+- [Independent public signature and HBP verifier](../physical/verify_seat1_computational.py), verifies three Ed25519 signatures, five published sidecar hashes, source/commitment/fixture constants, detects altered signature, and compares exact Python matrix / Node polynomial artifacts.
 
 ## Exact tested result
 
@@ -24,7 +24,7 @@ This session accepted responsibility for the *software* Seat 1 readiness track. 
 | Python small-step controls | **120/120 PASS** |
 | Node small-step controls | **120/120 PASS** |
 | Published receipt Ed25519 signatures | **3/3 PASS** |
-| Public sidecar checksum verifications | **4/4 PASS** |
+| Public sidecar checksum verifications | **5/5 PASS** |
 | Mutation of signed public record | **Rejected** |
 | HBP SHA-256 | `031367b1da1a368dc7471141a9799b79c694a0c9900f65a047438ccaa5f76600` |
 
