@@ -15,7 +15,7 @@ function signed(doc,key) {
  if(doc.schema!==SIGN || !signature_b64 || !crypto.verify(null,Buffer.from(JSON.stringify(sort(body))),key,Buffer.from(signature_b64,"base64")))
    throw Error("Invalid signed precommit");
 }
-if(process.argv.length!==10)throw Error("Usage: node create_challenge.js seat1-checkin.json seat1-commit.json seat2-checkin.json seat2-commit.json seat3-checkin.json seat3-commit.json challenge.json");
+if(process.argv.length!==9)throw Error("Usage: node create_challenge.js seat1-checkin.json seat1-commit.json seat2-checkin.json seat2-commit.json seat3-checkin.json seat3-commit.json challenge.json");
 const commitments={}, fingerprints=[];
 for(let i=0;i<3;i++){
  const seat="seat-"+(i+1),id=JSON.parse(fs.readFileSync(process.argv[2+i*2],"utf8"));
