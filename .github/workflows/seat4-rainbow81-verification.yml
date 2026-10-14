@@ -1,0 +1,72 @@
+name: Seat 4 Rainbow81 cross-language verification
+
+on:
+  push:
+    branches:
+      - agent/seat-4/cross-host-rainbow81-20261014
+    paths:
+      - experiments/seat4/**
+      - stones/2026-10-14-rainbow81/seat4-10e13-cross-language-receipt.json
+      - .github/workflows/seat4-rainbow81-verification.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify pinned source and challenge bytes
+        working-directory: experiments/seat4
+        run: |
+          printf '%s  %s\n' \
+            '58e962036aa9033f00a54eea12ebadfb006293ce91014a3be9936df9010f28f2' B-CHALLENGE.json \
+            'abfc50421ad7ca49954e1c2fc6efc7abf011df073749e55985192e1df6098ec1' seat4_poly.py \
+            'edd14317c92a8d8d1608ed80d5f5fa0b0097601a0bd7a483927f41d2b775a3b8' seat4_matrix.js | sha256sum -c -
+      - name: Run independent Python and Node implementations
+        working-directory: experiments/seat4
+        run: |
+          python seat4_poly.py B-CHALLENGE.json python.csv > python-run.json
+          node seat4_matrix.js B-CHALLENGE.json node.csv > node-run.json
+          cmp python.csv node.csv
+          printf '%s  %s\n' 'e949b8560c9150d3c8a446bf5f675644439fcf7b29ab976b32ad3731337cfd43' python.csv | sha256sum -c -
+          python - <<'PY'
+          import csv,hashlib,json
+          from pathlib import Path
+          p=Path('.')
+          py=json.loads((p/'python-run.json').read_text())
+          nd=json.loads((p/'node-run.json').read_text())
+          receipt=json.loads((p/'../../stones/2026-10-14-rainbow81/seat4-10e13-cross-language-receipt.json').read_text())
+          rows=list(csv.reader((p/'python.csv').open()))
+          assert len(rows)==729
+          assert py['cases']==nd['cases']==729
+          assert py['sha256_csv']==nd['sha256_csv']==receipt['result']['csv_sha256']
+          assert py['source_challenge_sha256']==nd['source_challenge_sha256']==receipt['source_challenge']['sha256']
+          assert len({(r[0],r[1]) for r in rows})==729
+          assert len({r[3] for r in rows})==729
+          assert len({r[4] for r in rows})==729
+          assert all(len(r)==5 for r in rows)
+          print('Seat4 PASS: 729/729 case equality and pinned challenge and source hashes')
+          print('Evidence: deterministic CPU GF2 model; physical host independence NOT attested')
+          PY
+      - name: Upload independent audit rows and runtimes
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat4-rainbow81-two-language-729-trials
+          path: |
+            experiments/seat4/python.csv
+            experiments/seat4/node.csv
+            experiments/seat4/python-run.json
+            experiments/seat4/node-run.json
+          if-no-files-found: error
