@@ -1,0 +1,49 @@
+name: Preflight GF2 10T independent algorithms - cloud runners only
+
+on:
+  push:
+    branches:
+      - agent/seat-3/2026-10-14-three-physical-hosts
+    paths:
+      - physical/**
+      - .github/workflows/three-physical-seats-software-preflight.yml
+  pull_request:
+    paths:
+      - physical/**
+      - .github/workflows/three-physical-seats-software-preflight.yml
+
+permissions:
+  contents: read
+
+jobs:
+  software-preflight:
+    name: Preflight ${{ matrix.os }} Python vs Node
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate PRE-FIXED SYNTHETIC challenge only
+        run: node physical/make_preflight_fixture.js preflight-challenge.json
+      - name: Matrix Python exact 10-trillion-step GF2 evolution
+        run: python physical/evolve_gf2_python.py preflight-challenge.json python-result.hbp --self-test
+      - name: Cyclic polynomial Node exact 10-trillion-step GF2 evolution
+        run: node physical/evolve_gf2_node.js preflight-challenge.json node-result.hbp --self-test
+      - name: Verify byte-identical outputs, 4860 independent law/wave/body checks
+        run: |
+          python -c "import hashlib,pathlib; a=pathlib.Path('python-result.hbp').read_bytes(); b=pathlib.Path('node-result.hbp').read_bytes(); assert a==b, 'CROSS-RUNTIME-MISMATCH'; assert a.count(b'WAVE|')==4860; print('PREFLIGHT_PASS byte_identical='+hashlib.sha256(a).hexdigest())"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: software-preflight-${{ matrix.os }}
+          path: |
+            python-result.hbp
+            node-result.hbp
+            preflight-challenge.json
