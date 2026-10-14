@@ -1,0 +1,42 @@
+name: Publish four-seat release via free Hugging Face Hub API
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asolaria-four-seat-hf-repository-upload
+  cancel-in-progress: false
+
+jobs:
+  publish-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout verified public GitHub release
+        uses: actions/checkout@v4
+      - name: Use Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Validate public release and all SHA256 sidecars
+        env:
+          HF_PUBLISH_DRY_RUN: '1'
+        run: python tools/publish_four_seat_to_hf.py
+      - name: Ensure protected HF write token exists
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::No protected Actions secret HF_TOKEN configured. No Hugging Face upload attempted."
+            exit 1
+          fi
+          echo "Repository write token available as protected secret (content not printed)."
+      - name: Install free Hugging Face Hub API client
+        run: python -m pip install --disable-pip-version-check 'huggingface_hub>=0.36,<2'
+      - name: Upload verified files and re-download every file to compare SHA256
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python tools/publish_four_seat_to_hf.py

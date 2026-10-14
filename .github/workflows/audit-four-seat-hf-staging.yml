@@ -1,0 +1,34 @@
+name: Check four-seat Hugging Face Hub package without a token
+
+on:
+  push:
+    branches:
+      - publication/normal-hf-hub-four-seat-20261014
+    paths:
+      - tools/publish_four_seat_to_hf.py
+      - .github/workflows/audit-four-seat-hf-staging.yml
+  pull_request:
+    paths:
+      - tools/publish_four_seat_to_hf.py
+      - .github/workflows/audit-four-seat-hf-staging.yml
+      - .github/workflows/publish-four-seat-huggingface.yml
+
+permissions:
+  contents: read
+
+jobs:
+  stage-public-files:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build public four-seat release package, check all SHA256 files
+        env:
+          HF_PUBLISH_DRY_RUN: '1'
+        run: python tools/publish_four_seat_to_hf.py
