@@ -1,6 +1,7 @@
 #![forbid(unsafe_code)]
 //! Reproducible hosted-CPU run. Source physics measurements are not fabricated.
 use asolaria_proxima_ternary::{B_PERIOD,D_PERIOD,decimal_pow3,phase_3pow,report};
+use asolaria_proxima_ternary::memory::{self,Ledger};
 use std::{env,fs,io,path::Path,time::Instant};
 fn main()->io::Result<()>{
     let started=Instant::now();
@@ -20,6 +21,28 @@ fn main()->io::Result<()>{
         writeln!(csv,"{exponent},{years},{},{},{},{},GF3,EXACT_MODULAR_FAST_FORWARD,false",b.n,b.d,d.n,d.d).expect("write string");
     }
     fs::write(dir.join("EPOCHS-RUST181.csv"),csv)?;
+    // Separate physical CPU execution from external astronomical truth.
+    // 81 distinct particles each retain their 27 *own* observation events.
+    let original=memory::synthetic_memory_fixture().expect("memory test fixture");
+    let persisted=original.save_text();
+    let restored=Ledger::load_text(&persisted).expect("particle histories reconstruct");
+    assert_eq!(original,restored);
+    assert_eq!(original.materialized(),81);
+    assert_eq!(original.note_count(),2187);
+    fs::write(dir.join("PARTICLE-MEMORY-R1.ledger"),persisted)?;
+    let high_address="+".repeat(180);
+    let virtual_at_0=memory::virtual_state(&high_address,0).expect("180-trit address");
+    let virtual_at_1=memory::virtual_state(&high_address,1).expect("180-trit address");
+    let mut memory_report=String::from("MEMORY|schema=ASOLARIA-PER-PARTICLE-MEMORY-V1|trits=-1,0,+1|fixture=SYNTHETIC|source_2d_raw=UNAVAILABLE|json=0\n");
+    memory_report.push_str(&format!("ADDR|depth=180|possible_identifiers=3^180|exact_decimal={}|materialized_in_benchmark=0|virtual_initial={}|virtual_next={}|json=0\n",decimal_pow3(180),virtual_at_0,virtual_at_1));
+    memory_report.push_str("LEDGER|independent_particles=81|stored_events=2187|per_particle_events=27|serialize_and_reload=PASS|json=0\n");
+    for depth in 1..=7usize {
+        let address=memory::base3_address(0,depth).expect("level address");
+        let _ = original.state(&address,81).expect("address is valid");
+        memory_report.push_str(&format!("DEPTH|depth={depth}|address={address}|memory_namespace=PER_PARTICLE|FischerReplay=PASS|json=0\n"));
+    }
+    memory_report.push_str("BOUNDARY|independent_observations_per_virtual_address=NOT_ASSUMED|capacity_not_allocated_memory|json=0\n");
+    fs::write(dir.join("PARTICLE-MEMORY-R1.hbp"),memory_report)?;
     fs::write(dir.join("RUNTIME.hbp"),format!(
         "RUNTIME|hosted_os={}|arch={}|elapsed_ns={}|physical_device=HOSTED_CPU|distinct_host_custody=UNATTESTED|instrumented_optics=NONE|json=0\n",
         env::consts::OS,env::consts::ARCH,started.elapsed().as_nanos()))?;
