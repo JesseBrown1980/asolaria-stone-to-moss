@@ -1,0 +1,45 @@
+name: Seat 3 third-method audit of Seat 1 complementary views
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat3/independent_multiview_gcd_audit.py'
+      - '.github/workflows/seat3-peer-seat1-multiview-gcd.yml'
+      - 'stones/2026-10-15-rainbow81/seat3-peer-seat1-multiview*'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-gcd-replay:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Recompute 112 ranks, 4584 exact inversions and 16808 collisions from source
+        shell: bash
+        run: |
+          python experiments/seat3/independent_multiview_gcd_audit.py experiments/seat1/TRIAD-27-CHALLENGE-20261014.json > "$RUNNER_TEMP/seat3-peer-audit.json"
+          python - "$RUNNER_TEMP/seat3-peer-audit.json" <<'PY'
+          import json,sys
+          v=json.load(open(sys.argv[1]))
+          assert v['configuration_count']==112
+          assert v['rank_distribution']=={'79':4,'80':84,'81':24}
+          assert v['rank_violations']==0
+          assert v['exact_no_side_information_recoveries']==4584
+          assert v['lossy_input_pair_collisions']==16808
+          assert v['observed_sample_records']==21392
+          assert v['same_law_later_horizons_add_no_rank']==14
+          assert v['independent_physical_hosts_verified']==0
+          print("SEAT3_PEER_SEAT1_GCD_112_RANKS_21392_CONTROLS_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-peer-seat1-gcd-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat3-peer-audit.json
+          retention-days: 30
