@@ -66,6 +66,10 @@ def check_original_n_nest(nn):
         assert requirement in discipline,("missing N-Nest discipline",requirement)
     assert "Consent does not nest" in law
     assert "child.reported == watcher.recomputed_truth" in readme
+    upstream_blobs={
+        "nest-depth3-verify.cjs":"2baca296edec2d46a9bc197efee8850bd168a5ef",
+        "nest-depthN-prime-verify.cjs":"fd24c0eceff455351f27e7244d5bd61bffd38a25"
+    }
     results=[]
     for script,archive in (
         ("nest-depth3-verify.cjs","nest-depth3-verify-2026-06-03.hbp"),
@@ -95,9 +99,13 @@ def check_original_n_nest(nn):
                     assert b"CAUGHT=true" in line
                     assert f"@depth{depth}".encode() in line
                 faults=7
+            actual_source_sha=blob_sha(subprocess.run(
+                ["git","show",N_NEST_COMMIT+":"+script],cwd=nn,
+                capture_output=True,check=True).stdout)
+            assert actual_source_sha==upstream_blobs[script],("upstream script blob differs",script)
             results.append({
                 "script":script,
-                "pinned_git_blob_sha1":blob_sha((nn/script).read_bytes()),
+                "pinned_git_blob_sha1":actual_source_sha,
                 "clean_tree":"MEASURED_PASS",
                 "fault_levels_detected":faults,
                 "timestamped_hbp_sidecar_verified":True,
