@@ -1,0 +1,101 @@
+name: Seat5 R13 23M real-host classical trit stress
+on:
+  push:
+    branches: [agent/seat-5/r13-center-origin-trit-geometry-20261015]
+    paths:
+      - 'experiments/seat5/r13/**'
+      - '.github/workflows/seat5-r13-scale23m-rust181.yml'
+  pull_request:
+    paths:
+      - 'experiments/seat5/r13/**'
+      - '.github/workflows/seat5-r13-scale23m-rust181.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  scale:
+    name: 23M trits ${{ matrix.profile }} ${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [debug, release]
+        seed: [relic-seed, azure-seed]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - name: Rust 1.81 and strict clippy exact-head check
+        working-directory: experiments/seat5/r13/rust
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(rustc --version | awk '{print $2}')" = "1.81.0"
+          cargo clippy --locked --offline --all-targets -- -D warnings
+          cargo test --locked --offline
+      - name: Execute 23 million real-host classical trit positions
+        working-directory: experiments/seat5/r13/rust
+        shell: bash
+        env:
+          PROFILE: ${{ matrix.profile }}
+          SEED: ${{ matrix.seed }}
+        run: |
+          set -euo pipefail
+          mkdir -p "out/$SEED"
+          if [ "$PROFILE" = release ]; then
+            cargo run --locked --offline --release --bin scale23m -- "$SEED" "out/$SEED"
+          else
+            cargo run --locked --offline --bin scale23m -- "$SEED" "out/$SEED"
+          fi
+          cd "out/$SEED"
+          test "$(wc -c < original-trits.bin)" = 23000000
+          test "$(wc -c < center-relative.bin)" = 23000000
+          test "$(wc -c < restored-trits.bin)" = 23000000
+          cmp original-trits.bin restored-trits.bin
+          grep -q '^COUNT|positions=23000000|frame=27|frames=851851|partial=23|source_bytes=23000000|encoded_bytes=23000000|restored_bytes=23000000$' scale23m.hbp
+          grep -q '^SCIENCE|original_relic_azure_23m_qubit_report=OPERATOR_REPORTED|current_result=NOT_A_QUANTUM_CLONING_EXPERIMENT|optical_detector=NOT_CONNECTED$' scale23m.hbp
+          sha256sum original-trits.bin center-relative.bin restored-trits.bin scale23m.hbp > scale23m.sha256
+          sha256sum --check scale23m.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scale23m-${{ matrix.seed }}-${{ matrix.profile }}
+          path: experiments/seat5/r13/rust/out/${{ matrix.seed }}/*
+          if-no-files-found: error
+          compression-level: 6
+  referee:
+    name: 23M independently downloaded artifact and cross-build referee
+    needs: scale
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: scale23m-*
+          path: downloaded
+      - name: Independently verify actual raw files and cross-profile equality
+        shell: bash
+        run: |
+          set -euo pipefail
+          for seed in relic-seed azure-seed; do
+            for profile in debug release; do
+              (
+                cd "downloaded/scale23m-$seed-$profile"
+                sha256sum --check scale23m.sha256
+                cmp original-trits.bin restored-trits.bin
+                grep -q '^CHARIOT|outward_checked=23000000|inward_checked=23000000|readback=EXACT$' scale23m.hbp
+              )
+            done
+            for file in original-trits.bin center-relative.bin restored-trits.bin scale23m.hbp; do
+              cmp "downloaded/scale23m-$seed-debug/$file" "downloaded/scale23m-$seed-release/$file"
+            done
+          done
+          if cmp -s downloaded/scale23m-relic-seed-debug/original-trits.bin downloaded/scale23m-azure-seed-debug/original-trits.bin; then
+            echo 'ERROR: two seed profiles unexpectedly identical' >&2
+            exit 1
+          fi
+          echo 'SEAT5_R13_23M_TWO_PROFILE_EXACT_CLASSICAL_RESTORES_PASS'
+          echo 'No real quantum or optical hardware tested'
