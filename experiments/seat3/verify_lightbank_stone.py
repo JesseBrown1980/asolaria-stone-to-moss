@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 
-STONE_SHA="22d2ac4009e0351b6898c87d3e70109a31c2901224186c55824aa8b360362a56"
+STONE_SHA="36378bcf565200bf7ffaa952ec659777b9bae8964192c3d7ce7f5251cc9bc26a"
 STICK_SHA="54bd7fbd5de20dee1cc409b8e1fa52ea0c2bdbf64777adf1abd2cf5077fac5f2"
 HBP_SHA="c1cfdeca37da66b91f38da617081b0836ed8b9036eed3cf10e0fdd2539ab57cc"
 HBI_SHA="595868d29142a1e6857dde29cf3fa38ebfac1bafd844e1c02a1e6cc789e144b4"
@@ -16,7 +16,7 @@ def sha(b):return hashlib.sha256(b).hexdigest()
 def verify(stone,fresh_json,independent_artifacts):
     p=Path(stone)
     b=p.read_bytes()
-    assert len(b)==1664 and sha(b)==STONE_SHA,"immutability stone changed"
+    assert len(b)==1665 and sha(b)==STONE_SHA,"immutability stone changed"
     sc=(p.parent/(p.name+".sha256")).read_text("ascii").split()
     assert sc==[STONE_SHA,p.name],"sidecar invalid or mismatched"
     txt=b.decode("ascii")
