@@ -65,6 +65,14 @@ function witness_step(w,t,mode,state,p,mem,pulse,out){
  const expected=[field,newp,nextmem,active,spike];
  return expected.every((v,i)=>v===out[i]);
 }
+function verify_record(w,t,mode,state,p,mem,keys,reported){
+ const output=[reported.state,reported.occ,reported.mem,
+               reported.gate,reported.spike];
+ return witness_step(w,t,mode,state,p,mem,reported.pulse,output)&&
+        reported.pix===sha(frame(reported.state))&&
+        reported.id===identities(keys)&&
+        reported.pos===positions(keys,t);
+}
 function pad(n,size){return String(n).padStart(size,'0')}
 function stable(v){
  if(Array.isArray(v))return v.map(stable);
@@ -103,26 +111,32 @@ function main(){
       '|field='+next.toString(16).padStart(21,'0')+
       '|frame='+pic+'|positions='+pos+'|identities='+frozen+'\n');
     if(tick===81){
-      const honest={pulse,occ:newp,state:next,pix:pic,id:frozen};
-      let fake={...honest,pulse:1-pulse};
-      assert(fake.pulse!==honest.pulse&&fake.pulse!==schedule(w,tick,mode));
-      faults.pulse++;
-      fake={...honest,occ:(newp+1)%(MAX+1)};
-      assert(fake.occ!==honest.occ);
-      faults.gate_occupancy++;
-      fake={...honest,state:next^1n};
-      assert(fake.state!==honest.state);
-      faults.field++;
-      fake={...honest,pix:sha(frame(next^(1n<<40n)))};
-      assert(fake.pix!==honest.pix);
-      faults.pixel++;
+      const honest={pulse,occ:newp,state:next,pix:pic,id:frozen,
+                    pos,mem:newmem,gate,spike};
+      assert(verify_record(w,tick,mode,state,p,mem,keys,honest),'honest record rejected');
       const spoof=keys.slice();spoof[w]='0'.repeat(16);
-      fake={...honest,id:identities(spoof)};
-      assert(fake.id!==honest.id);
-      faults.pid++;
+      const alterations={
+        pulse:['pulse',1-pulse],
+        gate_occupancy:['occ',(newp+1)%(MAX+1)],
+        field:['state',next^1n],
+        pixel:['pix',sha(frame(next^(1n<<40n)))],
+        pid:['id',identities(spoof)]
+      };
+      for(const [kind,[key,val]] of Object.entries(alterations)){
+        const fake={...honest,[key]:val};
+        assert(!verify_record(w,tick,mode,state,p,mem,keys,fake),
+          'independent watcher accepted planted '+kind);
+        faults[kind]++;
+      }
       const forgedPulse=1-pulse;
       const forgedOutput=step(w,tick,mode,state,p,mem,forgedPulse);
-      assert(witness_step(w,tick,mode,state,p,mem,forgedPulse,forgedOutput)===false);
+      const forged={
+        pulse:forgedPulse,state:forgedOutput[0],occ:forgedOutput[1],
+        mem:forgedOutput[2],gate:forgedOutput[3],spike:forgedOutput[4],
+        pix:sha(frame(forgedOutput[0])),pos,id:frozen
+      };
+      assert(!verify_record(w,tick,mode,state,p,mem,keys,forged),
+        'forged common pulse schedule passed anchored source');
       source_forgery++;
     }
     state=next;p=newp;mem=newmem;
