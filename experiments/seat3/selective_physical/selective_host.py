@@ -8,7 +8,11 @@ LIRIS local experiments are preserved, not described as never performed.
 from __future__ import annotations
 from fractions import Fraction as F
 from pathlib import Path
-import hashlib,json,platform,re,resource,sys,time,tracemalloc
+import hashlib,json,platform,re,sys,time,tracemalloc
+try:
+    import resource
+except ImportError:
+    resource=None
 from itertools import product
 SCHEMA="ASOLARIA-SEAT3-SELECTIVE-ATTENUATOR-PHYSICAL-HOST-V1"
 SOURCE="02ff42a93d934074ae9c83e1b989f097944c8c7cd2ed80197c2cfd8795391e22"
@@ -193,6 +197,7 @@ def run(src,liris,out):
     # may be unavailable on Windows, label unknown rather than invent.
     rss=None; unit="unavailable"
     try:
+        if resource is None:raise OSError('resource unavailable on Windows')
         raw=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         unit="KiB_linux" if sys.platform.startswith("linux") else "UNSPECIFIED_NATIVE_OS_UNIT"
         rss=raw
