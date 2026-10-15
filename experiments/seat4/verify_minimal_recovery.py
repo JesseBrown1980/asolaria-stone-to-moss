@@ -30,6 +30,7 @@ LOSS={
 }
 CHALLENGE_SHA="e02346f41a43ecf6f772a16cb585b4c214a01b9513f1f34f2c9ba1ad52f5773b"
 TRACE_SHA="1d9a57dc908ad206d64ab336cd9f9de402614821c41369fb19dfb5f2f2c46bfe"
+RECEIPT=STONE/"seat-4-minimal-recovery-20261014.json"
 
 
 def sha(data):
@@ -45,6 +46,23 @@ def main():
     # The older independent 40-row rank proof and its SHA sidecars must still hold.
     baseline=run([sys.executable,str(ROOT/"experiments"/"retention"/"verify_retention.py")])
     assert baseline["status"]=="PASS" and baseline["rank_cases"]==40
+    receipt_raw=RECEIPT.read_bytes()
+    receipt=json.loads(receipt_raw)
+    assert receipt["schema"]=="ASOLARIA-SEAT4-MINIMAL-RECOVERY-RESULT-V1"
+    assert receipt["seat"]=="seat-4"
+    assert receipt["source_challenge_sha256"]==CHALLENGE_SHA
+    assert receipt["result"]["complete_trace_sha256"]==TRACE_SHA
+    assert receipt["result"]["exact_source_roundtrips"]==8440
+    assert receipt["result"]["mismatched_reconstructions"]==0
+    assert receipt["boundaries"]["physical_host_independently_attested"] is False
+    assert receipt["boundaries"]["physical_three_device_challenge_issued"] is False
+    assert receipt["boundaries"]["represents_compression_gain"] is False
+    assert [x["minimal_recovery_tag_bits"] for x in receipt["law_results"]]==[
+        x for x in LOSS.values()
+    ]
+    sidecar=RECEIPT.with_suffix(".json.sha256")
+    if sidecar.exists():
+        assert sidecar.read_text("ascii").split()==[sha(receipt_raw),RECEIPT.name]
     with tempfile.TemporaryDirectory(prefix="asolaria-seat4-recovery-") as tmp:
         pyout=Path(tmp)/"python.trace"
         jsout=Path(tmp)/"node.trace"
@@ -91,6 +109,7 @@ def main():
         "wrong_tag_misdecodes":28,
         "source_challenge_sha256":CHALLENGE_SHA,
         "canonical_trace_sha256":digest,
+        "result_receipt_sha256":sha(receipt_raw),
         "cross_language_trace_byte_equal":True,
         "physical_machine_independence":"UNVERIFIED",
         "scope":"exact digital input reconstruction only; no physical entropy, light or faster-than-light test"
