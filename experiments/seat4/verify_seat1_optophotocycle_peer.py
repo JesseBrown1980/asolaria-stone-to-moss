@@ -161,6 +161,13 @@ def main():
             "independence_limit":"third mathematical implementation on public synthetic input, not independent physical custody",
         }
         encoded=(json.dumps(report,sort_keys=True,indent=2)+"\n").encode("ascii")
+        # This published peer receipt came from an actual successful hosted
+        # third-algorithm replay. Seal it byte-for-byte on every future CI.
+        frozen=Path(__file__).resolve().parents[2]/"stones"/"2026-10-15-rainbow81"/"seat4-seat1-photocycle-peer.json"
+        frozen_sha="d9b4ac57e6cea5f2fe91473f6593d8d3c5e14c9975b9a279b65af9f9acf539e1"
+        assert sha(encoded)==frozen_sha and encoded==frozen.read_bytes()
+        assert frozen.with_name(frozen.name+".sha256").read_text("ascii").split()==[
+            frozen_sha,frozen.name]
         if args.receipt:
             args.receipt.parent.mkdir(parents=True,exist_ok=True)
             args.receipt.write_bytes(encoded)
