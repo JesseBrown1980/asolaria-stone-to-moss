@@ -125,6 +125,8 @@ def run(nrepo:Path,qrepo:Path,output:Path,stone:Path,sidecar:Path):
     assert not watcher(sid_wrong,expected_source_hash,payload_hash,payload_hash,True,[True,True])
     checks["GF2_stacked_rank81_does_not_authenticate_source"]="PASS"
     checks["n_nest_watcher_swapped_source_selector_payload_consent_child_hold"]="PASS"
+    checks["qprism_changed_selector_denied_even_with_matching_source"]="PASS"
+    checks["forged_score_payload_digest_held_by_independent_watcher"]="PASS"
     # If reporter AND watcher collude, a software equality test alone CANNOT
     # establish independent source identity. Explicit bounded counterexample.
     false_claim="reported synthetic score 0.99"
