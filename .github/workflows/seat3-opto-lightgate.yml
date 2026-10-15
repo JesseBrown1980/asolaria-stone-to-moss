@@ -44,6 +44,7 @@ jobs:
           python experiments/seat3/seat3_opto_toy.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/python.json"
           node experiments/seat3/seat3_opto_toy.js "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/node.json"
           python experiments/seat3/verify_opto_toy.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" "$RUNNER_TEMP/seat3-optogate"
+          python experiments/seat3/verify_opto_stone.py stones/2026-10-15-rainbow81/seat3-opto-toy-20261015.hbp "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/python.json"
       - name: Changed trace is rejected
         shell: bash
         run: |
