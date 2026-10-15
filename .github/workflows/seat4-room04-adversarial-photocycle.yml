@@ -126,7 +126,8 @@ jobs:
               if path.is_file():
                   digest=hashlib.sha256(path.read_bytes()).hexdigest()
                   manifest.append(f"{digest}  {path.name}\n")
-          (root/"SHA256SUMS").write_text("".join(manifest),encoding="ascii")
+          (root/"SHA256SUMS").write_text("".join(manifest),encoding="ascii",newline="\n")
+          assert hashlib.sha256((root/"SHA256SUMS").read_bytes()).hexdigest()=="091258c4d997ecd5b13ccb18441add688f0d60760e9f87b030d21d30c911acca"
           print("SEAT4_ROOM04_ACCEPTANCE_PASS: strict software-only watch and HALT, full trace archived")
           PY
       - uses: actions/upload-artifact@v4
