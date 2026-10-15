@@ -44,7 +44,7 @@ def check_pinned(repo:Path,commit:str,blobs:dict[str,str])->None:
         f=repo/path
         assert f.is_file(),("missing pinned source",path)
         assert git(repo,"rev-parse","HEAD:"+path)==expected,("upstream index drift",path)
-        assert git(repo,"hash-object",str(f))==expected,("upstream working source tampered",path)
+        assert git(repo,"hash-object",str(f.resolve()))==expected,("upstream working source tampered",path)
 
 def load_schedule_id(qrepo:Path):
     # Directly execute the real pinned Q-PRISM source module. Importing the
@@ -89,6 +89,8 @@ def run(nrepo:Path,qrepo:Path,output:Path,stone:Path,sidecar:Path):
     near={**base,"P2_mW":10.0000000001}
     sid_a=schedule_id(base)
     sid_b=schedule_id(near)
+    sid_wrong=schedule_id({**base,"P2_mW":11.0})
+    assert sid_wrong != sid_a, "selector negative-control fixture did not change"
     assert sid_a==sid_b, "intended 9-decimal quantization alias disappeared"
     assert digest(json.dumps(base,sort_keys=True).encode()) != digest(json.dumps(near,sort_keys=True).encode())
     assert sid_a.startswith("HG1024:QPRISM:")
@@ -120,7 +122,7 @@ def run(nrepo:Path,qrepo:Path,output:Path,stone:Path,sidecar:Path):
     assert not watcher(sid_a,expected_source_hash,digest(b"tampered"),payload_hash,True,[True,True])
     assert not watcher(sid_a,expected_source_hash,payload_hash,payload_hash,False,[True,True])
     assert not watcher(sid_a,expected_source_hash,payload_hash,payload_hash,True,[True,False])
-    assert not watcher(sid_b,expected_source_hash,payload_hash,payload_hash,True,[True,False])
+    assert not watcher(sid_wrong,expected_source_hash,payload_hash,payload_hash,True,[True,True])
     checks["GF2_stacked_rank81_does_not_authenticate_source"]="PASS"
     checks["n_nest_watcher_swapped_source_selector_payload_consent_child_hold"]="PASS"
     # If reporter AND watcher collude, a software equality test alone CANNOT
