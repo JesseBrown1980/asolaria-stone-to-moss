@@ -1,0 +1,109 @@
+name: Seat 2 independent crossview entropy and M2 optimal views
+
+on:
+  push:
+    branches: [agent/seat-2/peer-review-crossview-m2-20261015]
+  pull_request:
+    paths:
+      - experiments/seat2/peer_crossview_M2.py
+      - .github/workflows/seat2-peer-crossview-m2.yml
+      - stones/2026-10-15-rainbow81/seat2-peer-crossview-m2-20261015.hbp
+      - stones/2026-10-15-rainbow81/seat2-peer-crossview-m2-20261015.hbp.sha256
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-peer:
+    name: ${{ matrix.os }} / Python ${{ matrix.py }} / Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: a1c3573d4e036d21d590d0d1a499a206fd827682
+          path: seat3-frozen
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independently derive 252 multi-view rank and M2 optimal view records
+        shell: bash
+        run: |
+          python experiments/seat2/peer_crossview_M2.py \
+            seat3-frozen/experiments/seat1/TRIAD-27-CHALLENGE-20261014.json \
+            seat2-independent-M2.json seat2-independent-M2.hbp
+      - name: Verify freshly generated Seat2 HBP against committed stone and SHA sidecar
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          stone=Path("stones/2026-10-15-rainbow81/seat2-peer-crossview-m2-20261015.hbp")
+          generated=Path("seat2-independent-M2.hbp").read_bytes()
+          committed=stone.read_bytes()
+          digest=hashlib.sha256(generated).hexdigest()
+          sidecar=stone.with_name(stone.name+".sha256").read_bytes()
+          assert generated==committed, "SEAT2_M2_GENERATED_HBP_DIFFERS_FROM_COMMITTED"
+          assert sidecar==(digest+"  "+stone.name+"\n").encode("ascii"), "SEAT2_M2_STONE_SHA256_SIDECAR_MISMATCH"
+          altered=bytearray(generated)
+          altered[len(altered)//2]^=1
+          assert altered!=committed, "SEAT2_M2_NEGATIVE_COMMITTED_BYTE_TEST_FAILED"
+          assert hashlib.sha256(altered).hexdigest()!=digest, "SEAT2_M2_NEGATIVE_HASH_TEST_FAILED"
+          print("PASS_GENERATED_SEAT2_STONE_BYTE_EQUAL_AND_SHA256",len(generated),digest)
+          print("PASS_ACTUAL_CHANGED_BYTE_IS_HELD")
+          PY
+      - name: Reproduce Seat 3 exact original pinned cross-view traces
+        shell: bash
+        run: |
+          python seat3-frozen/experiments/seat3/seat3_crossview_entropy.py \
+            seat3-frozen/experiments/seat1/TRIAD-27-CHALLENGE-20261014.json \
+            seat3-python.hbp seat3-python.json
+          node seat3-frozen/experiments/seat3/seat3_crossview_entropy_node.js \
+            seat3-frozen/experiments/seat1/TRIAD-27-CHALLENGE-20261014.json \
+            seat3-node.hbp seat3-node.json
+      - name: Pin complete HBP SHA and check 30,560 adversarial controls
+        shell: bash
+        run: |
+          python seat3-frozen/experiments/seat3/verify_crossview_entropy.py \
+            seat3-python.hbp seat3-node.hbp seat3-python.json seat3-node.json \
+            seat3-frozen/stones/2026-10-15-rainbow81
+      - name: Independently validate every pair and triple rank and M2 counterexample
+        shell: bash
+        run: |
+          python -c 'import json,hashlib; s=json.load(open("seat2-independent-M2.json"));p=json.load(open("seat3-python.json"));assert s["checks_passed"] and s["nonempty_view_subsets_checked"]==252;assert s["A_plus_B_pair_configs"]==len(p["pairs"])==20;assert s["A_plus_B_plus_C_triple_configs"]==len(p["triples"])==40;assert all(x["joint_rank"]==81 and x["cross_source_constraints"]==78 for x in p["pairs"]);assert all(x["joint_rank"]==81 and x["cross_source_constraints"]==158 for x in p["triples"]);assert s["counterexamples"]["two_B_views_source_rank"]==80 and s["counterexamples"]["two_B_views_blind_consistency_exponent"]==80;assert s["counterexamples"]["A_plus_B_source_rank"]==81;assert all([z["unit_cost_optimization"][str(k)]["minimum_views"] for k in (78,158,238,318,398)]==[2,3,4,5,6] for z in s["unit_cost_m2_selection"]);assert s["counterexamples"]["source_authentication_not_implied_by_rank_or_codimension"];print("PASS_SEAT2_PEER_CROSSVIEW_252_RANKS_FOUR_HORIZONS_M2_OPTIMUM")'
+      - name: Archive full independent and peer audit evidence
+        if: matrix.os == 'ubuntu-latest' && matrix.py == '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-peer-crossview-full-verified
+          retention-days: 30
+          path: |
+            seat2-independent-M2.json
+            seat2-independent-M2.hbp
+            seat3-python.hbp
+            seat3-node.hbp
+            seat3-python.json
+            seat3-node.json
+      - name: Archive matrix-side receipts
+        if: matrix.os != 'ubuntu-latest' || matrix.py != '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-peer-M2-${{ matrix.os }}-py${{ matrix.py }}
+          retention-days: 30
+          path: |
+            seat2-independent-M2.json
+            seat2-independent-M2.hbp
+            seat3-python.json
+            seat3-node.json
