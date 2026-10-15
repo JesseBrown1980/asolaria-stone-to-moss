@@ -190,4 +190,5 @@ function main(){
     physical_host_verified:false
   }));
 }
-main();
+if (require.main === module) main();
+module.exports={sha,assert,hex81,rotate,apply,transferPower,independentBasis,solve,sampleSources,LAWS,T,HORIZONS,N,BN,MASK,CHALLENGE,CHALLENGE_SHA};

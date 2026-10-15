@@ -1,0 +1,56 @@
+name: Seat 1 cross-view source provenance negative controls
+
+on:
+  push:
+    branches:
+      - agent/seat-1/crossview-provenance-negative-20261015
+    paths:
+      - experiments/seat1/crossview_provenance_*
+      - experiments/seat1/PREREG-CROSSVIEW-PROVENANCE-20261015.md
+      - experiments/seat1/multiview_81_node.js
+      - .github/workflows/seat1-crossview-provenance.yml
+      - stones/2026-10-15-rainbow81/seat-1-crossview-provenance-*
+  pull_request:
+    paths:
+      - experiments/seat1/crossview_provenance_*
+      - experiments/seat1/PREREG-CROSSVIEW-PROVENANCE-20261015.md
+      - experiments/seat1/multiview_81_node.js
+      - .github/workflows/seat1-crossview-provenance.yml
+      - stones/2026-10-15-rainbow81/seat-1-crossview-provenance-*
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: provenance-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independent Python cyclic-polynomial provenance attack
+        run: python experiments/seat1/crossview_provenance_python.py python-provenance.hbp python-metrics.json
+      - name: Independent Node 81-column matrix provenance attack
+        run: node experiments/seat1/crossview_provenance_node.js node-provenance.hbp node-metrics.json
+      - name: Assert bytewise identity, full counts, witnesses, trace tamper and both runtimes
+        run: |
+          python -c "import hashlib,json,pathlib; a=pathlib.Path('python-provenance.hbp').read_bytes();b=pathlib.Path('node-provenance.hbp').read_bytes();p=json.loads(pathlib.Path('python-metrics.json').read_text());n=json.loads(pathlib.Path('node-metrics.json').read_text());assert a==b,'PY_NODE_OUTPUT_MISMATCH';assert a.count(b'PROVENANCE|')==18336;assert a.endswith(b'END|cases=18336|valid=4584|rejected=4584|source_swap=4584|invisible=4584|full_rank_pairs=24|physical_attested=0|json=0\n');assert p['per_pair_controls']==n['per_pair_controls'];assert all(p[k]==n[k] for k in ('cases','rank81_pairs','valid_roundtrips','detected_mismatches','accepted_wrong_source','invisible_provenance_mismatches','trace_sha256','trace_bytes'));h=hashlib.sha256(a).hexdigest();assert p['trace_sha256']==h;assert hashlib.sha256(a[:-1]+b'X').hexdigest()!=h;print('SEAT1_PROVENANCE_PASS sha256='+h+' bytes='+str(len(a)))"
+      - name: Independently validate signed-byte-free public receipt SHA256 sidecars, HBI index and both 4.32MB traces
+        run: python experiments/seat1/verify_crossview_provenance.py python-provenance.hbp node-provenance.hbp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-provenance-${{ matrix.os }}
+          path: |
+            python-provenance.hbp
+            node-provenance.hbp
+            python-metrics.json
+            node-metrics.json
