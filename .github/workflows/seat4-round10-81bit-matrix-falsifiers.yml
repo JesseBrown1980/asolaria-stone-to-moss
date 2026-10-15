@@ -45,6 +45,26 @@ jobs:
         shell: bash
         run: |
           node experiments/seat4/round10/matrix_referee.js "$RUNNER_TEMP/r10-witness"
+      - name: Regenerate and verify exact committed Seat4 R10 append-only HBP receipt
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,os
+          from pathlib import Path
+          stone=Path("stones/2026-10-15-rainbow81/seat4-r10-original81-matrix-falsification-20261015.hbp")
+          blob=stone.read_bytes();digest=hashlib.sha256(blob).hexdigest()
+          assert len(blob)==582
+          assert digest=="2a2fcb0a343b425e0ce456a32384f644f157ef321e17e4b56735b83f398566c6"
+          assert stone.with_suffix(stone.suffix+".sha256").read_bytes()==(digest+"  "+stone.name+"\n").encode("ascii")
+          root=Path(os.environ["RUNNER_TEMP"])/"r10-witness"
+          expected={"r10-81bit-cases.jsonl":"08a1ebbf1e7d24d7882258e9f341767b19093c1a4368b5e21f175592461f32ef",
+           "r10-results.json":"5d9b2a894af90a16695604fb3601941d2ca698834261e14c404b68bdd965ca8b",
+           "r10-independent-node.json":"c7b89255fdc4caf5146175364c786e6c727b3ff64fe034edcd57d5a645706c5e"}
+          for name,wanted in expected.items():
+              assert hashlib.sha256((root/name).read_bytes()).hexdigest()==wanted
+              assert wanted.encode("ascii") in blob
+          print("SEAT4_R10_COMMITTED_FULL_SOURCE_RECEIPT_RECREATED",len(blob),digest)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-r10-${{ matrix.os }}-py${{ matrix.python }}
