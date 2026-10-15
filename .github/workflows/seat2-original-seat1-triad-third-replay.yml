@@ -1,0 +1,78 @@
+name: Seat 2 independent replay of Seat 1 original 32805 triad
+
+on:
+  push:
+    branches: [agent/seat-2/seat1-triad-third-algorithm-20261015]
+  pull_request:
+    paths:
+      - experiments/seat2/independent_seat1_row_action_32805.py
+      - .github/workflows/seat2-original-seat1-triad-third-replay.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    name: ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout the separately frozen Seat 1 challenge and Seat 3 replay
+        uses: actions/checkout@v4
+        with:
+          ref: 4203882ebab4746ed47a65544aa2d22baf73ebf8
+          path: frozen
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independent Seat 2 output-row GF2 replayer, including artifact disambiguation
+        shell: bash
+        run: |
+          python experiments/seat2/independent_seat1_row_action_32805.py             frozen/experiments/seat1/TRIAD-27-CHALLENGE-20261014.json             frozen/stones/2026-10-14-rainbow81/seat-1-20261014-triad27-three-horizon.hbp             frozen/stones/2026-10-14-rainbow81/seat-1-20261014-triad27-three-horizon.hbp.sha256             seat2-original-output.hbp seat2-independent-receipt.json
+      - name: Reproduce frozen Seat 3 polynomial replay
+        shell: bash
+        run: |
+          python frozen/experiments/seat3/independent_seat1_triad_replay.py             frozen/experiments/seat1/TRIAD-27-CHALLENGE-20261014.json             seat3-original-output.hbp > seat3-report.json
+      - name: Reproduce original Seat 1 Node GF2 polynomial calculation
+        shell: bash
+        run: |
+          node frozen/experiments/seat1/triad_27_node.js             frozen/experiments/seat1/TRIAD-27-CHALLENGE-20261014.json             seat1-node-original-output.hbp --self-test > seat1-node-report.json
+      - name: Verify full byte identity, all 32805 records, two distinct receipt hashes
+        shell: bash
+        run: |
+          python -c 'from pathlib import Path; import hashlib,json; p=[Path(x).read_bytes() for x in ("seat2-original-output.hbp","seat3-original-output.hbp","seat1-node-original-output.hbp")]; d="720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3"; c=json.load(open("seat2-independent-receipt.json")); assert len(p[0])==6392029; assert p[0]==p[1]==p[2]; assert all(hashlib.sha256(x).hexdigest()==d for x in p); assert c["record_count"]==32805 and c["linearity_controls"]==32805 and c["successor_controls"]==10935 and c["plus81_controls"]==10935 and c["rotation_controls"]==10935 and c["small_step_controls"]==120; assert c["compact_original_receipt_sha256"]=="1db6389ba110e8b835e504deebc177e163f8b085d5a48cb47215bb372468700e"; assert hashlib.sha256(p[0][:-1]+bytes([p[0][-1]^1])).hexdigest()!=d; print("PASS_SEAT2_INDEPENDENT_32805_THREE_ALGORITHMS_ALL_BYTES")'
+      - name: Archive full outputs for one reference runner
+        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-seat1-original-full-output-32805
+          retention-days: 30
+          path: |
+            seat2-original-output.hbp
+            seat3-original-output.hbp
+            seat1-node-original-output.hbp
+            seat2-independent-receipt.json
+            seat3-report.json
+            seat1-node-report.json
+      - name: Archive other hosted runner check results
+        if: matrix.os != 'ubuntu-latest' || matrix.python != '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-seat1-${{ matrix.os }}-py${{ matrix.python }}
+          retention-days: 30
+          path: |
+            seat2-independent-receipt.json
+            seat3-report.json
+            seat1-node-report.json
