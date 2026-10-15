@@ -1,0 +1,103 @@
+name: Seat4 archived Seat2-Seat4 physical-host cross-referee
+on:
+  push:
+    branches:
+      - agent/seat-4/round9-host-evidence-bridge-20261015
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  archived-independent-audit:
+    name: Original eight archived host receipts ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          path: original/frozen-main
+          persist-credentials: false
+      - name: Freeze true published Seat2 source-input commit
+        shell: bash
+        run: |
+          test "$(git -C original/frozen-main rev-parse HEAD)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Download original source full bank archived from earlier PR80
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: original
+      - name: Download original previously published Seat2 exact-head physical host receipts
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38777263894
+          pattern: seat2-r9-*
+          merge-multiple: false
+          path: seat2
+      - name: Download original previously published Seat4 actual bank host receipts
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38777543919
+          pattern: seat4-r9-*
+          merge-multiple: false
+          path: seat4
+      - name: Independent eight-archive original-byte review and three-layer evidence refusal
+        shell: bash
+        run: |
+          python experiments/seat4/round9/audit_seat2_seat4_host.py "seat2" "seat4" "original" "$RUNNER_TEMP/r9b-review"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r9b-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/r9b-review/*
+          if-no-files-found: error
+          retention-days: 30
+  eight-original-host-receipts:
+    name: Final four-platform peer-authored audit byte parity
+    needs: archived-independent-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r9b-*
+          merge-multiple: false
+          path: audited
+      - name: Compare complete cross-seat source and host results
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          dirs=sorted(Path('audited').glob('seat4-r9b-*'))
+          assert len(dirs)==4
+          name='cross-seat-archive-review.json'
+          contents=[(d/name).read_bytes() for d in dirs]
+          assert len(set(contents))==1,'CROSS_OS_EVIDENCE_DRIFT'
+          d=hashlib.sha256(contents[0]).hexdigest()
+          for path in dirs:
+              assert (path/(name+'.sha256')).read_bytes()==(d+'  '+name+'\n').encode('ascii')
+          result=json.loads(contents[0])
+          assert result['frozen_archive_sets_checked']==8
+          assert len(result['separate_host_measurements'])==4
+          assert result['evidence_level2_OS_reported_CPU_RAM']=='PASS'
+          assert result['evidence_level3_CALIBRATED_SENSOR_READINGS']=='NOT_COLLECTED_IN_EITHER_CI_RUN'
+          assert result['physical_photon_memory_newly_confirmed'] is False
+          print('SEAT4_R9B_FOUR_RUNS_ARCHIVED_EIGHT_SOURCE_HOST_AUDIT_IDENTICAL',len(contents[0]),d)
+          PY
