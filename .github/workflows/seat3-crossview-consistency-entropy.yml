@@ -1,0 +1,61 @@
+name: Seat 3 cross-view consistency entropy (Python and independent Node)
+
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-3/crossview-consistency-entropy-20261015
+    paths:
+      - experiments/seat3/seat3_crossview_entropy.py
+      - experiments/seat3/seat3_crossview_entropy_node.js
+      - experiments/seat3/verify_crossview_entropy.py
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - stones/2026-10-15-rainbow81/seat3-crossview-consistency-entropy.*
+      - .github/workflows/seat3-crossview-consistency-entropy.yml
+  pull_request:
+    paths:
+      - experiments/seat3/seat3_crossview_entropy.py
+      - experiments/seat3/seat3_crossview_entropy_node.js
+      - experiments/seat3/verify_crossview_entropy.py
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - stones/2026-10-15-rainbow81/seat3-crossview-consistency-entropy.*
+      - .github/workflows/seat3-crossview-consistency-entropy.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mathematical-replay:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run independent 81-bit implementations, exact SHA and sealed receipt checks
+        shell: bash
+        run: |
+          python experiments/seat3/seat3_crossview_entropy.py experiments/seat1/TRIAD-27-CHALLENGE-20261014.json "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/python.json"
+          node experiments/seat3/seat3_crossview_entropy_node.js experiments/seat1/TRIAD-27-CHALLENGE-20261014.json "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/node.json"
+          python experiments/seat3/verify_crossview_entropy.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" stones/2026-10-15-rainbow81
+      - name: Frozen fixture tamper must fail in both languages
+        shell: bash
+        run: |
+          python -c 'from pathlib import Path; import os; b=Path("experiments/seat1/TRIAD-27-CHALLENGE-20261014.json").read_bytes(); (Path(os.environ["RUNNER_TEMP"])/"mutated.json").write_bytes(bytes([b[0]^1])+b[1:])'
+          if python experiments/seat3/seat3_crossview_entropy.py "$RUNNER_TEMP/mutated.json" "$RUNNER_TEMP/bad-python.hbp" "$RUNNER_TEMP/bad-python.json"; then
+            echo "ERROR: Python accepted tampered fixture"; exit 1
+          fi
+          if node experiments/seat3/seat3_crossview_entropy_node.js "$RUNNER_TEMP/mutated.json" "$RUNNER_TEMP/bad-node.hbp" "$RUNNER_TEMP/bad-node.json"; then
+            echo "ERROR: Node accepted tampered fixture"; exit 1
+          fi
+          echo "Tamper controls PASS"
