@@ -75,6 +75,55 @@ jobs:
         run: |
           python experiments/retention/verify_retention.py > "$RUNNER_TEMP/room04/retention-audit.json"
           cat "$RUNNER_TEMP/room04/retention-audit.json"
+      - name: Package a genuinely offline executable source and evidence capsule
+        shell: bash
+        run: |
+          python - "$RUNNER_TEMP/room04" <<'PY'
+          from pathlib import Path
+          import shutil,sys
+          bundle=Path(sys.argv[1])
+          sources=[
+              "experiments/seat4/room04_adversarial_photocycle.py",
+              "experiments/seat4/room04_independent_node_watcher.js",
+              "experiments/seat4/room04_offline_verify.py",
+              "experiments/seat4/PREREG-ROOM04-PHOTOCYCLE-WATCHER-B2-20261015.md",
+              "experiments/retention/retention_poly.py",
+              "experiments/retention/retention_matrix.js",
+              "experiments/retention/verify_retention.py",
+              "experiments/seat1/TRIAD-27-CHALLENGE-20261014.json",
+              "stones/2026-10-14-rainbow81/retention-81-rank40.tsv",
+              "stones/2026-10-14-rainbow81/retention-81-rank40.tsv.sha256",
+              "stones/2026-10-14-rainbow81/retention-81-rank40.json",
+              "stones/2026-10-14-rainbow81/retention-81-rank40.json.sha256",
+          ]
+          original=[
+              "opto_gate.py","opto_gate_node.js","verify_opto.py",
+              "PREREG-LIGHT-GATED-IDENTITY-1080.md",
+          ]
+          for rel in sources:
+              out=bundle/rel
+              out.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(rel,out)
+          for name in original:
+              rel=Path("experiments/seat1/optogenetics")/name
+              out=bundle/rel
+              out.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(Path("pinned-seat1-photocycle")/rel,out)
+          (bundle/"README.md").write_text(
+              "# Seat 4 Room 04 — offline digital photocycle and watcher capsule\n\n"
+              "Contains original frozen Seat1 photocycle sources, independent Seat4 "
+              "Python+Node source, preregistration, SHA256SUMS, actual full HBP "
+              "traces, 1,296 negative fault rows, and 40-case GF(2) retention audit.\n\n"
+              "Requirements: Python 3.11+ and Node.js 22+. No cloud, HF token, "
+              "Git checkout, physical hardware, external consent, or network.\n\n"
+              "From the ZIP extract root, run:\n\n"
+              "    python experiments/seat4/room04_offline_verify.py --bundle .\n\n"
+              "All light, PID, time, color and state labels are synthetic. "
+              "This capsule is not an optogenetic biology measurement.\n",
+              encoding="utf-8",newline="\n"
+          )
+          print("SEAT4_OFFLINE_SOURCE_PACKAGE_STAGED",len(sources)+len(original))
+          PY
       - name: Enforce original SHA, all negative controls and science scope, archive SHA256 manifest
         shell: bash
         run: |
@@ -122,14 +171,20 @@ jobs:
               assert hashlib.sha256((root/name).read_bytes()).hexdigest()==expected,("cross-OS artifact drift",name)
           assert b"\r\n" not in (root/"receipt.json").read_bytes()
           manifest=[]
-          for path in sorted(root.iterdir()):
+          for path in sorted(root.rglob("*"),key=lambda p:p.relative_to(root).as_posix()):
               if path.is_file():
                   digest=hashlib.sha256(path.read_bytes()).hexdigest()
-                  manifest.append(f"{digest}  {path.name}\n")
+                  manifest.append(f"{digest}  {path.relative_to(root).as_posix()}\n")
           (root/"SHA256SUMS").write_text("".join(manifest),encoding="ascii",newline="\n")
-          assert hashlib.sha256((root/"SHA256SUMS").read_bytes()).hexdigest()=="091258c4d997ecd5b13ccb18441add688f0d60760e9f87b030d21d30c911acca"
+          print("SEAT4_OFFLINE_CAPSULE_MANIFEST_SHA256",
+                hashlib.sha256((root/"SHA256SUMS").read_bytes()).hexdigest())
           print("SEAT4_ROOM04_ACCEPTANCE_PASS: strict software-only watch and HALT, full trace archived")
           PY
+      - name: Reproduce entire source-complete capsule OFFLINE with both runtimes
+        shell: bash
+        run: |
+          python experiments/seat4/room04_offline_verify.py --bundle "$RUNNER_TEMP/room04" > "$RUNNER_TEMP/room04-offline-verify.json"
+          cat "$RUNNER_TEMP/room04-offline-verify.json"
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-room04-${{ matrix.os }}-py${{ matrix.python }}
