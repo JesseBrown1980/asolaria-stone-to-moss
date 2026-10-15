@@ -1,0 +1,88 @@
+name: Seat4 Round6 optical neural retention falsification and physical hold
+on:
+  push:
+    branches:
+      - agent/seat-4/round6-optical-neural-memory-falsification-20261015
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  retention-preflight:
+    name: Falsification ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          persist-credentials: false
+          path: frozen-merged-main
+      - name: Verify historical merge source and retained R5 stone
+        shell: bash
+        run: |
+          test "$(git -C frozen-merged-main rev-parse HEAD)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          test -f frozen-merged-main/experiments/seat3/quadratic_witness/RESULTS-VERIFIED-20261015.md
+          test -f frozen-merged-main/experiments/seat4/round5/sign_spectrum.js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run three computer-only detector models plus actual byte mutations
+        shell: bash
+        run: |
+          python experiments/seat4/round6/photon_neural_preflight.py frozen-merged-main "$RUNNER_TEMP/seat4-r6-results"
+      - name: Independently audit all 15309 simulated detector records with Node
+        shell: bash
+        run: |
+          node experiments/seat4/round6/verify_photon_neural.js "$RUNNER_TEMP/seat4-r6-results" frozen-merged-main
+      - name: Physical sensor and neural evidence gate must remain HOLD without capture
+        shell: bash
+        run: |
+          python experiments/seat4/round6/physical_capture_gate.py --self-test "$RUNNER_TEMP/seat4-r6-results"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r6-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat4-r6-results/*
+          if-no-files-found: error
+          retention-days: 30
+  final-parity:
+    name: Full-byte four-platform source and receipt referee
+    needs: retention-preflight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r6-*
+          merge-multiple: false
+          path: evidence
+      - name: Independently compare full raw simulated detector trace, report and physical hold
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          roots=sorted(Path("evidence").glob("seat4-r6-*"))
+          assert len(roots)==4,roots
+          names=("r6-raw-synthetic-detector.jsonl","r6-results.hbp","r6-results.json",
+            "r6-independent-node.json","r6-physical-status.json")
+          for name in names:
+              blobs=[(p/name).read_bytes() for p in roots]
+              assert len(set(blobs))==1,"OS_BYTE_VARIATION:"+name
+              digest=hashlib.sha256(blobs[0]).hexdigest()
+              for folder,blob in zip(roots,blobs):
+                  assert (folder/(name+".sha256")).read_bytes()==(digest+"  "+name+"\n").encode("ascii")
+              print("R6_FOUR_HOSTED_RUNS_BYTE_EXACT",name,len(blobs[0]),digest)
+          status=json.loads((roots[0]/"r6-physical-status.json").read_bytes())
+          assert status["decision"]=="PHYSICAL_HOLD"
+          print("DIGITAL_PREFLIGHT_PASS_EXTERNAL_PHOTON_AND_NEURAL_HOLD")
+          PY
