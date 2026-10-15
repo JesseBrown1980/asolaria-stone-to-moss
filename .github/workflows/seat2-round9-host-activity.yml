@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
   measured-host-activity:
     name: Host counters ${{ matrix.os }} Python ${{ matrix.python }}
@@ -20,6 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 2
       - uses: actions/checkout@v4
         with:
           repository: JesseBrown1980/asolaria-stone-to-moss
@@ -45,7 +47,7 @@ jobs:
         shell: bash
         run: |
           node experiments/seat2/round9/review_host_bridge.js frozen-main "$RUNNER_TEMP/seat2-r9"
-      - name: Execute 7 actual Node-review forgery tests with recomputed unsigned SHA sidecars
+      - name: Execute 10 actual Node-review forgery tests with recomputed unsigned SHA sidecars
         shell: bash
         run: |
           python experiments/seat2/round9/adversarial_host_context.py             frozen-main "$RUNNER_TEMP/seat2-r9" "$RUNNER_TEMP/seat2-r9/attack-review.json"             experiments/seat2/round9/review_host_bridge.js
@@ -69,12 +71,17 @@ jobs:
           assert h['producing_git_sha']==os.environ['GITHUB_SHA']
           assert h['runner_os']==os.environ['RUNNER_OS']
           assert h['github_job']==os.environ['GITHUB_JOB']
+          evt=json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+          assert h['pr_head_sha']==evt['pull_request']['head']['sha']
+          assert h['github_pr_number']==evt['pull_request']['number']==111
+          assert h['github_run_attempt']==int(os.environ['GITHUB_RUN_ATTEMPT'])
+          assert h['github_event_name']==os.environ['GITHUB_EVENT_NAME']=='pull_request'
           attacked=json.loads((folder/'attack-review.json').read_bytes())
-          assert attacked['case_count']==7 and attacked['status']=='SIX_CONTEXT_OR_SENSOR_FORGERIES_REJECTED_ONE_UNSIGNED_CPU_GAP'
-          assert attacked['forgeries_rejected']==6
+          assert attacked['case_count']==10 and attacked['status']=='NINE_CONTEXT_OR_SENSOR_FORGERIES_REJECTED_ONE_UNSIGNED_CPU_GAP'
+          assert attacked['forgeries_rejected']==9
           assert attacked['unsigned_positive_cpu_counter_forgery_accepted_as_expected'] is True
           assert all(x['recomputed_local_sha256_sidecar'] for x in attacked['falsification_cases'])
-          assert sum(x['actual_node_reviewer_rejected'] for x in attacked['falsification_cases'])==6
+          assert sum(x['actual_node_reviewer_rejected'] for x in attacked['falsification_cases'])==9
           assert [x['case'] for x in attacked['falsification_cases']
                   if x['unsigned_positive_cpu_forgery_accepted']]==['counter_cpu_positive']
           assert not i['externally_attested_instrument_data']
@@ -95,6 +102,12 @@ jobs:
         with:
           pattern: seat2-r9-*
           path: evidence
+      - name: Retrieve authoritative GitHub Actions run identity from provider API
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > evidence-run-identity.json
       - name: Keep actual host readings rather than fabricate identical timing/RSS
         shell: bash
         run: |
@@ -102,6 +115,16 @@ jobs:
           import hashlib,json,os
           from pathlib import Path
           folders=sorted(p for p in Path('evidence').iterdir() if p.is_dir())
+          api=json.loads(Path('evidence-run-identity.json').read_bytes())
+          evt=json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_bytes())
+          assert os.environ['GITHUB_EVENT_NAME']=='pull_request'
+          assert api['id']==int(os.environ['GITHUB_RUN_ID'])
+          assert api['run_attempt']==int(os.environ['GITHUB_RUN_ATTEMPT'])
+          assert api['event']=='pull_request'
+          pr_head=evt['pull_request']['head']['sha']
+          assert api['head_sha']==pr_head, 'GITHUB_API_PR_HEAD_MISMATCH'
+          assert evt['pull_request']['number']==111
+          assert any(x['number']==111 for x in api['pull_requests'])
           assert len(folders)==4,folders
           static=('digital.json','instrument-status.json','node-review.json','attack-review.json')
           for name in static:
@@ -129,11 +152,16 @@ jobs:
               assert x['python'].startswith(py_prefix),'WRONG_HOST_PYTHON_MATRIX'
               assert x['github_run_id']==os.environ['GITHUB_RUN_ID'], 'FORGED_RUN_ID'
               assert x['producing_git_sha']==os.environ['GITHUB_SHA'], 'FORGED_MERGE_COMMIT_SHA'
+              assert x['pr_head_sha']==pr_head, 'FORGED_PR_HEAD_SHA'
+              assert x['github_pr_number']==111, 'FORGED_PR_NUMBER'
+              assert x['github_run_attempt']==api['run_attempt'], 'FORGED_RUN_ATTEMPT'
+              assert x['github_event_name']=='pull_request', 'WRONG_EVENT_KIND'
               assert x['github_job']=='measured-host-activity', 'WRONG_PRODUCER_JOB'
 
               print('R9_REAL_HOST_PROCESS_COUNTERS',p.name,
                     'cpu_ns',x['cpu_elapsed_ns'],'wall_ns',x['wall_elapsed_ns'],
                     'rss_delta_bytes',x['rss_during_bytes']-x['rss_before_bytes'],
                     'raw_host_sha256',digest)
+          print('R9_GITHUB_API_PR_HEAD_RUN_ATTEMPT_AND_SYNTHETIC_MERGE_SEPARATELY_BOUND',pr_head,os.environ['GITHUB_SHA'],api['run_attempt'])
           print('R9_PHYSICAL_HOST_ACTIVITY_BRIDGE_PASS_NO_INSTRUMENTED_PHOTONS_OR_POWER')
           PY
