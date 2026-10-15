@@ -8,6 +8,7 @@ on:
     paths:
       - experiments/seat4/opto_light_gate*
       - experiments/seat4/verify_opto_light_gate.py
+      - experiments/seat4/verify_seat1_optophotocycle_peer.py
       - experiments/seat4/PREREG-OPTOGENETIC-LIGHT-GATE-20261015.md
       - experiments/seat4/OPTO-GATE-RESULTS-20261015.md
       - stones/2026-10-15-rainbow81/seat4-opto-light-gate*
@@ -16,6 +17,7 @@ on:
     paths:
       - experiments/seat4/opto_light_gate*
       - experiments/seat4/verify_opto_light_gate.py
+      - experiments/seat4/verify_seat1_optophotocycle_peer.py
       - experiments/seat4/PREREG-OPTOGENETIC-LIGHT-GATE-20261015.md
       - experiments/seat4/OPTO-GATE-RESULTS-20261015.md
       - stones/2026-10-15-rainbow81/seat4-opto-light-gate*
@@ -38,6 +40,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          persist-credentials: false
+      - name: Check out exact Seat 1 three-state photocycle source
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: dd5e47db9522141de3949a23759a5d647ecdafbd
+          path: pinned-seat1-photocycle
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -63,6 +72,20 @@ jobs:
           print('SEAT4_SYNTHETIC_OPTO_GATE_SHA256',x['trace_sha256'])
           print('SEAT4_SYNTHETIC_OPTO_STONE_SHA256',x['receipt_sha256'])
           PY
+      - name: Independently rederive Seat 1 closed/open/refractory photocycle and both producer traces
+        shell: bash
+        run: |
+          python experiments/seat4/verify_seat1_optophotocycle_peer.py --seat1 pinned-seat1-photocycle --receipt "$RUNNER_TEMP/seat4-seat1-photocycle-peer.json" > "$RUNNER_TEMP/seat4-seat1-photocycle-audit.json"
+          cat "$RUNNER_TEMP/seat4-seat1-photocycle-audit.json"
+          python - "$RUNNER_TEMP/seat4-seat1-photocycle-audit.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['status']=='PASS' and x['snapshots']==8748
+          assert x['third_algorithm_match'] is True
+          assert x['physical_optical_measurement'] is False
+          assert x['hbp_sha256']=='de2c346a92e626403cc5c59b9ffa688d050163fbb48ab8b1cb6a4cde795b0a8b'
+          print('SEAT4_SEAT1_ORIGINAL_PHOTOCYCLE_PEER_PASS', x['hbp_sha256'])
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-optogate-${{ matrix.os }}-py${{ matrix.python }}
@@ -70,5 +93,7 @@ jobs:
             ${{ runner.temp }}/seat4-opto-trace.hbp
             ${{ runner.temp }}/seat4-opto-stone.json
             ${{ runner.temp }}/seat4-opto-audit.json
+            ${{ runner.temp }}/seat4-seat1-photocycle-peer.json
+            ${{ runner.temp }}/seat4-seat1-photocycle-audit.json
           if-no-files-found: error
           retention-days: 90
