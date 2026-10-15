@@ -201,7 +201,11 @@ def main():
     # The horizon invariance needs square-free modulus. n=4 is EVEN,
     # x^4+1=(x+1)^4: rank decreases upon taking the 4th power.
     non_squarefree=(1<<4)|1
-    assert gcd2(non_squarefree,1<<3)!=1
+    # In characteristic 2 the derivative of x^4+1 is ZERO (4=0 mod 2).
+    # The first attempted test incorrectly used x^3; that defective
+    # derivative assertion failed in hosted run 38716127396. Correction is
+    # appended here, not silently concealed.
+    assert gcd2(non_squarefree,0)==non_squarefree
     f=0b11
     rank_h1=pop_rank_h((f,),1,non_squarefree)
     rank_h4=pop_rank_h((f,),4,non_squarefree)
