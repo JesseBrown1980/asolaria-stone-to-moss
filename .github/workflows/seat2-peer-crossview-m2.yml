@@ -56,7 +56,7 @@ jobs:
           digest=hashlib.sha256(generated).hexdigest()
           sidecar=stone.with_name(stone.name+".sha256").read_bytes()
           assert generated==committed, "SEAT2_M2_GENERATED_HBP_DIFFERS_FROM_COMMITTED"
-          assert sidecar==(digest+"  "+stone.name+"\\n").encode("ascii"), "SEAT2_M2_STONE_SHA256_SIDECAR_MISMATCH"
+          assert sidecar==(digest+"  "+stone.name+"\n").encode("ascii"), "SEAT2_M2_STONE_SHA256_SIDECAR_MISMATCH"
           altered=bytearray(generated)
           altered[len(altered)//2]^=1
           assert altered!=committed, "SEAT2_M2_NEGATIVE_COMMITTED_BYTE_TEST_FAILED"
