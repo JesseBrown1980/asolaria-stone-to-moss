@@ -9,6 +9,7 @@ on:
       - "experiments/seat3/PREREG-ROUND3-NORMALIZED*"
       - ".github/workflows/seat3-round3-qutrit-rainbow.yml"
       - "stones/2026-10-15-rainbow81/seat3-round3-qutrit*"
+      - "stones/2026-10-15-rainbow81/seat3-round3-normalized*"
   push:
     branches:
       - main
@@ -20,6 +21,7 @@ on:
       - "experiments/seat3/PREREG-ROUND3-NORMALIZED*"
       - ".github/workflows/seat3-round3-qutrit-rainbow.yml"
       - "stones/2026-10-15-rainbow81/seat3-round3-qutrit*"
+      - "stones/2026-10-15-rainbow81/seat3-round3-normalized*"
   workflow_dispatch:
 
 permissions:
@@ -67,6 +69,7 @@ jobs:
           python experiments/seat3/round3_normalized_intensity.py "$RUNNER_TEMP/py-norm"
           node experiments/seat3/round3_normalized_intensity.js "$RUNNER_TEMP/js-norm"
           python experiments/seat3/verify_round3_normalized.py "$RUNNER_TEMP/py-norm" "$RUNNER_TEMP/js-norm" "$RUNNER_TEMP/seat3-audit/normalized"
+          python experiments/seat3/verify_sealed_round3_normalized.py stones/2026-10-15-rainbow81/seat3-round3-normalized-intensity-correction-20261015.hbp "$RUNNER_TEMP/py-norm" "$RUNNER_TEMP/seat3-peer"
       - name: Normalized rational numerator mutation must be HELD
         shell: bash
         run: |
