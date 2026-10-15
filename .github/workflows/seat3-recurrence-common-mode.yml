@@ -1,0 +1,62 @@
+name: Seat3 recurrence common-mode conditional error floor
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*recurrence*"
+      - "experiments/seat3/*RECURRENCE*"
+      - "stones/2026-10-15-rainbow81/seat3-recurrence-common-mode-*"
+      - ".github/workflows/seat3-recurrence-common-mode.yml"
+  push:
+    branches:
+      - main
+      - agent/seat-3/recurrence-correlation-floor-20261015
+    paths:
+      - "experiments/seat3/*recurrence*"
+      - "experiments/seat3/*RECURRENCE*"
+      - "stones/2026-10-15-rainbow81/seat3-recurrence-common-mode-*"
+      - ".github/workflows/seat3-recurrence-common-mode.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bounded-recurrence:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify pinned LAW.md from actual N-Nest Prime commit
+        shell: bash
+        run: |
+          git clone -q https://github.com/JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED.git "$RUNNER_TEMP/nnest"
+          git -C "$RUNNER_TEMP/nnest" checkout -q 307903651f56e8a28ef98ca36aef22ee8cda935c
+          test "$(git -C "$RUNNER_TEMP/nnest" hash-object -- LAW.md)" = f84710d3018882b7282b9fda227638c57568ffe4
+          grep -q 'Consent does not nest' "$RUNNER_TEMP/nnest/LAW.md"
+          grep -q 'Operator-as-breaker is always live' "$RUNNER_TEMP/nnest/LAW.md"
+      - name: Independently enumerate all mathematical cases and compare byte-exact outputs
+        shell: bash
+        run: |
+          python experiments/seat3/seat3_recurrence_floor.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/python.json"
+          node experiments/seat3/seat3_recurrence_floor.js "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/node.json"
+          python experiments/seat3/verify_recurrence_floor.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" stones/2026-10-15-rainbow81/seat3-recurrence-common-mode-20261015.hbp
+      - name: Intentionally altered receipt must fail its exact SHA
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"python.hbp"; b=p.read_bytes(); (pathlib.Path(os.environ["RUNNER_TEMP"])/"mutated.hbp").write_bytes(bytes([b[0]^1])+b[1:])'
+          if python experiments/seat3/verify_recurrence_floor.py "$RUNNER_TEMP/mutated.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" stones/2026-10-15-rainbow81/seat3-recurrence-common-mode-20261015.hbp; then
+            echo "FAIL: changed HBP was accepted"; exit 1
+          fi
+          echo "Tamper rejected as required"
