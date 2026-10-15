@@ -5,6 +5,8 @@ on:
     paths:
       - "experiments/seat3/*round3*qutrit*"
       - "experiments/seat3/PREREG-ROUND3-QUTRIT*"
+      - "experiments/seat3/*round3*normalized*"
+      - "experiments/seat3/PREREG-ROUND3-NORMALIZED*"
       - ".github/workflows/seat3-round3-qutrit-rainbow.yml"
       - "stones/2026-10-15-rainbow81/seat3-round3-qutrit*"
   push:
@@ -14,6 +16,8 @@ on:
     paths:
       - "experiments/seat3/*round3*qutrit*"
       - "experiments/seat3/PREREG-ROUND3-QUTRIT*"
+      - "experiments/seat3/*round3*normalized*"
+      - "experiments/seat3/PREREG-ROUND3-NORMALIZED*"
       - ".github/workflows/seat3-round3-qutrit-rainbow.yml"
       - "stones/2026-10-15-rainbow81/seat3-round3-qutrit*"
   workflow_dispatch:
@@ -56,6 +60,21 @@ jobs:
           node experiments/seat3/round3_qutrit_rainbow_peer.js "$RUNNER_TEMP/seat3-peer"
           python experiments/seat3/verify_round3_qutrit_rainbow.py "$RUNNER_TEMP/seat3-peer" "$RUNNER_TEMP/seat3-audit"
           python experiments/seat3/verify_sealed_round3_rainbow.py stones/2026-10-15-rainbow81/seat3-round3-qutrit-rainbow27-20261015.hbp "$RUNNER_TEMP/seat3-peer"
+
+      - name: Independent normalized seven-class correction and SHA sampler scale falsifier
+        shell: bash
+        run: |
+          python experiments/seat3/round3_normalized_intensity.py "$RUNNER_TEMP/py-norm"
+          node experiments/seat3/round3_normalized_intensity.js "$RUNNER_TEMP/js-norm"
+          python experiments/seat3/verify_round3_normalized.py "$RUNNER_TEMP/py-norm" "$RUNNER_TEMP/js-norm" "$RUNNER_TEMP/seat3-audit/normalized"
+      - name: Normalized rational numerator mutation must be HELD
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"js-norm"/"normalized27.hbp"; a=p.read_bytes(); a=a.replace(b"1/3,1/3,1/3",b"2/3,1/3,1/3",1); assert len(a)==len(p.read_bytes()); p.write_bytes(a)'
+          if python experiments/seat3/verify_round3_normalized.py "$RUNNER_TEMP/py-norm" "$RUNNER_TEMP/js-norm" "$RUNNER_TEMP/should-never-be-trusted"; then
+            echo "FAILED: changed normalized rational input accepted"; exit 1
+          fi
+          echo "Changed rational normalized trace correctly HELD"
       - name: Altered full ledger must be rejected fail-closed
         shell: bash
         run: |
