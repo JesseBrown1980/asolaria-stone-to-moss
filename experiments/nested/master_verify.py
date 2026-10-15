@@ -2,7 +2,7 @@
 """Master referee for 4 concurrent N-Nest seat artifacts.
 No material from one seat is accepted by another without full hash verification.
 """
-import hashlib,json,os,sys
+import hashlib,json,os,sys,tempfile
 from pathlib import Path
 SEATS=("seat-1","seat-2","seat-3","seat-4")
 CHALLENGE_SHA="e02346f41a43ecf6f772a16cb585b4c214a01b9513f1f34f2c9ba1ad52f5773b"
@@ -42,10 +42,22 @@ def main(folder):
     start=max(x["parent_started_epoch_ms"] for x in summaries)
     end=min(x["parent_ended_epoch_ms"] for x in summaries)
     global_overlap_ms=max(0,end-start)
-    # Intentionally inject a forged digest; the same master verifier must reject.
-    probe=summaries[0].copy()
-    probe["canonical_hbp_sha256"]="0"*64
-    assert probe["canonical_hbp_sha256"]!=sha((Path(folder)/"nested-seat-1"/"seat-1.hbp").read_bytes())
+    # Exercise the SAME production verify(root, seat) function on
+    # a deliberately forged archived receipt. No separate toy comparison.
+    with tempfile.TemporaryDirectory(prefix="nnest-forged-seat-gate-") as tmp:
+        case=Path(tmp)/"nested-seat-1"
+        case.mkdir(parents=True)
+        original=Path(folder)/"nested-seat-1"
+        (case/"seat-1.hbp").write_bytes((original/"seat-1.hbp").read_bytes())
+        probe=json.loads((original/"seat-1.json").read_text())
+        probe["canonical_hbp_sha256"]="0"*64
+        (case/"seat-1.json").write_text(json.dumps(probe))
+        try:
+            verify(tmp,"seat-1")
+        except (AssertionError,ValueError):
+            pass
+        else:
+            raise AssertionError("master-accepted-forged-seat-receipt")
     result={"schema":"ASOLARIA-FOUR-SEAT-NNEST-MASTER-REFEREE-V1",
             "seats":list(SEATS),"verified_seats":4,
             "rows_verified":sum(x["parent_rows"] for x in summaries),
