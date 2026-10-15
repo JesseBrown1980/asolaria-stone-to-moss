@@ -95,6 +95,8 @@ jobs:
               "stones/2026-10-14-rainbow81/retention-81-rank40.tsv.sha256",
               "stones/2026-10-14-rainbow81/retention-81-rank40.json",
               "stones/2026-10-14-rainbow81/retention-81-rank40.json.sha256",
+              "stones/2026-10-15-rainbow81/seat4-room04-b2-watchers.json",
+              "stones/2026-10-15-rainbow81/seat4-room04-b2-watchers.json.sha256",
           ]
           original=[
               "opto_gate.py","opto_gate_node.js","verify_opto.py",
@@ -151,6 +153,10 @@ jobs:
           assert not receipt["independent_physical_source_authenticated"]
           assert not receipt["physical_light_or_biology_measured"]
           assert receipt["coherent_fake_source_plus_fake_watcher_without_anchor"]=="PROVENANCE_HOLD"
+          stone=pathlib.Path("stones/2026-10-15-rainbow81/seat4-room04-b2-watchers.json")
+          assert stone.read_bytes()==(root/"receipt.json").read_bytes()
+          side=stone.with_name(stone.name+".sha256").read_text("ascii").split()
+          assert side==["e63baf8accdfbca43bd23e02b8849fcf312ee904ea3a29e02ab9c11bd8b0dafd",stone.name]
           assert receipt["halt"]["accepted_before_halt"]==17
           assert receipt["halt"]["post_halt_denied"]==64
           assert receipt["halt"]["human_prompts"]==receipt["halt"]["external_privileges_granted"]==0
