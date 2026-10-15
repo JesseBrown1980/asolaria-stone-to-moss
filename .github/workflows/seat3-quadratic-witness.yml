@@ -1,0 +1,134 @@
+name: Seat3 exact 3-bit quadratic rainbow order witness independent tests
+
+on:
+  push:
+    branches:
+      - agent/seat-3/rainbow27-quadratic-witness-20261015
+    paths:
+      - "experiments/seat3/quadratic_witness/**"
+      - ".github/workflows/seat3-quadratic-witness.yml"
+  pull_request:
+    paths:
+      - "experiments/seat3/quadratic_witness/**"
+      - ".github/workflows/seat3-quadratic-witness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-witness:
+    name: Independent independent Python ${{ matrix.python }} and Node22 on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: c32d472dfe84f352450eb50469e0e9a987c33d78
+          path: frozen-pr81
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 98e62f1e7218c7fbb20e21fd5c3d734304e4ee6a
+          path: frozen-pr76
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Require original source Git commit and blob identities
+        shell: bash
+        run: |
+          test "$(git -C frozen-pr81 rev-parse HEAD)" = c32d472dfe84f352450eb50469e0e9a987c33d78
+          test "$(git -C frozen-pr81 rev-parse HEAD:experiments/seat3/rainbow27_v2/rainbow27_v2.py)" = 097c2d93cc6cfeb6f03a2df75d9529b267dadc44
+          test "$(git -C frozen-pr76 rev-parse HEAD)" = 98e62f1e7218c7fbb20e21fd5c3d734304e4ee6a
+      - name: Retrieve original sealed PR81 hosted artifact (not rewritten producer output)
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38747014513
+          name: rainbow27-v2-ubuntu-latest-py3.11
+          path: ${{ runner.temp }}/pr81
+      - name: Two independent exact combinatorial implementations and third full validator
+        shell: bash
+        run: |
+          python experiments/seat3/quadratic_witness/quadratic_witness.py "$RUNNER_TEMP/pr81" "$RUNNER_TEMP/py"
+          node experiments/seat3/quadratic_witness/quadratic_witness.js "$RUNNER_TEMP/pr81" "$RUNNER_TEMP/js"
+          python experiments/seat3/quadratic_witness/verify_witness.py "$RUNNER_TEMP/py" "$RUNNER_TEMP/js" "$RUNNER_TEMP/pr81" "$RUNNER_TEMP/verified"
+      - name: Genuine full source-ledger mutation must fail BOTH implementations
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"pr81"/"rainbow27"/"rainbow27-v2.hbp"
+          data=bytearray(p.read_bytes())
+          data[100]^=1
+          p.write_bytes(data)
+          PY
+          if python experiments/seat3/quadratic_witness/quadratic_witness.py "$RUNNER_TEMP/pr81" "$RUNNER_TEMP/wrong-python"; then
+            echo "FAILED: Python accepted mutated original full source trace"; exit 1
+          fi
+          if node experiments/seat3/quadratic_witness/quadratic_witness.js "$RUNNER_TEMP/pr81" "$RUNNER_TEMP/wrong-node"; then
+            echo "FAILED: Node accepted mutated original full source trace"; exit 1
+          fi
+          echo "Both independent implementations HELD altered original source"
+      - name: Tampered new witness HBP must fail the third exact auditor
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"py"/"witness59049.hbp"
+          d=bytearray(p.read_bytes());d[100]^=1;p.write_bytes(d)
+          PY
+          if python experiments/seat3/quadratic_witness/verify_witness.py "$RUNNER_TEMP/py" "$RUNNER_TEMP/js" "$RUNNER_TEMP/pr81" "$RUNNER_TEMP/untrusted"; then
+            echo "FAILED: altered 59k witness receipt accepted"; exit 1
+          fi
+          echo "Altered locally generated HBP HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-quadratic-witness-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          retention-days: 30
+          if-no-files-found: error
+
+  all-four-byte-parity:
+    name: Byte-exact source-to-witness results across four hosted jobs
+    runs-on: ubuntu-latest
+    needs: exact-witness
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-quadratic-witness-*
+          path: audit-results
+          merge-multiple: false
+      - name: Confirm SHA256 sidecars and full byte identity
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          dirs=sorted(Path("audit-results").glob("seat3-quadratic-witness-*"))
+          assert len(dirs)==4,dirs
+          for name in ("witness59049.hbp","witness-result.json","witness-independent-check.json"):
+              items=[(d/name).read_bytes() for d in dirs]
+              assert all(x==items[0] for x in items),"CROSS_HOST_SOURCE_DRIFT:"+name
+              for d,x in zip(dirs,items):
+                  expected=(hashlib.sha256(x).hexdigest()+"  "+name+"\n").encode("ascii")
+                  assert (d/(name+".sha256")).read_bytes()==expected
+              print("PASS_FOUR_IDENTICAL",name,len(items[0]),hashlib.sha256(items[0]).hexdigest())
+          PY
