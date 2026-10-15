@@ -1,0 +1,130 @@
+name: Seat1 real-host process counters bound to photon phonon memory outputs
+
+on:
+  push:
+    branches:
+      - experiment/seat1-measured-host-activity-20261015
+    paths:
+      - experiments/seat1_photon_phonon/**
+      - .github/workflows/seat1-physical-host-observation.yml
+  pull_request:
+    paths:
+      - experiments/seat1_photon_phonon/**
+      - .github/workflows/seat1-physical-host-observation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host-process:
+    name: Kernel counters + full 6804 memory frames ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install actual OS process counter capture and source QR tool dependencies
+        run: python -m pip install --disable-pip-version-check "psutil==7.2.2" "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Install ZBar pixel decoder on Ubuntu
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Build actual original synthetic 81-QR memory pixels
+        run: python experiments/seat1/round2/lightbank_81.py original-evidence
+      - name: Independently reconstruct the exact original image QR source bytes
+        run: node experiments/seat1/round2/verify_lightbank_81.js original-evidence
+      - name: Rebuild original source-anchored 567-row Rainbow7 bank
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py original-evidence rainbow-evidence
+      - name: Independently audit original 184815-byte bank on Node
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js original-evidence rainbow-evidence
+      - name: Execute original Python coupling unchanged; measure true kernel CPU RSS and IO
+        run: python experiments/seat1_photon_phonon/host_measure.py --label python-coupling --output measured-python --original original-evidence/lightbank-memories.json --bank rainbow-evidence/rainbow7-bank.jsonl --index rainbow-evidence/rainbow7-index.hbi --hbp py-coupling/coupling.hbp --result py-coupling/results.json -- python experiments/seat1_photon_phonon/coupling.py original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-coupling
+      - name: Execute independent Node coupling unchanged; measure true kernel CPU RSS and IO
+        run: python experiments/seat1_photon_phonon/host_measure.py --label node-coupling --output measured-node --original original-evidence/lightbank-memories.json --bank rainbow-evidence/rainbow7-bank.jsonl --index rainbow-evidence/rainbow7-index.hbi --hbp node-coupling/coupling.hbp --result node-coupling/results.json -- node experiments/seat1_photon_phonon/coupling.js original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi node-coupling
+      - name: Independent third-seat original-byte mathematical audit
+        run: python experiments/seat1_photon_phonon/audit_coupling.py . third-audit/receipt.json
+      - name: Validate actual OS counters and their immutable source/output bindings
+        run: python experiments/seat1_photon_phonon/verify_host_measure.py original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-coupling node-coupling measured-python measured-node
+      - name: Publish original data, full HBP and kernel counter raw samples without edits
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: physical-host-observation-${{ matrix.os }}
+          retention-days: 60
+          if-no-files-found: warn
+          path: |
+            original-evidence/lightbank-memories.json
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+            py-coupling/coupling.hbp
+            py-coupling/results.json
+            py-coupling/*.sha256
+            node-coupling/coupling.hbp
+            node-coupling/results.json
+            node-coupling/*.sha256
+            third-audit/receipt.json
+            measured-python/receipt.json
+            measured-python/samples.jsonl
+            measured-python/*.sha256
+            measured-node/receipt.json
+            measured-node/samples.jsonl
+            measured-node/*.sha256
+
+  independent-host-referee:
+    name: Independent Linux and Windows resource time-series referee
+    needs: host-process
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          name: physical-host-observation-ubuntu-latest
+          path: linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: physical-host-observation-windows-latest
+          path: windows
+      - name: Independently validate four live kernel CPU RSS timelines against frozen output
+        run: python experiments/seat1_photon_phonon/verify_host_measure.py linux/original-evidence/lightbank-memories.json linux/rainbow-evidence/rainbow7-bank.jsonl linux/rainbow-evidence/rainbow7-index.hbi linux/py-coupling linux/node-coupling linux/measured-python linux/measured-node windows/measured-python windows/measured-node
+      - name: Check source data and model output bytes match across OS; do not compare numeric CPU/RSS
+        shell: python
+        run: |
+          from pathlib import Path
+          from hashlib import sha256
+          files = [
+              "original-evidence/lightbank-memories.json",
+              "rainbow-evidence/rainbow7-bank.jsonl",
+              "rainbow-evidence/rainbow7-index.hbi",
+              "py-coupling/coupling.hbp",
+              "py-coupling/results.json",
+              "py-coupling/coupling.hbp.sha256",
+              "py-coupling/results.json.sha256",
+              "node-coupling/coupling.hbp",
+              "node-coupling/results.json",
+              "node-coupling/coupling.hbp.sha256",
+              "node-coupling/results.json.sha256",
+              "third-audit/receipt.json",
+          ]
+          for file in files:
+              a = (Path("linux") / file).read_bytes()
+              b = (Path("windows") / file).read_bytes()
+              assert a == b, ("ACTUAL_COMPUTATION_BYTES_CHANGED", file)
+              print("CROSS_OS_FROZEN_RESULT_IDENTICAL", file, len(a), sha256(a).hexdigest())
+          print("KERNEL_PHYSICAL_PROCESS_METRICS_MAY_DIFFER_AND_ARE_NOT_OPTICAL_SENSOR_READINGS")
