@@ -1,0 +1,82 @@
+name: Seat 4 Recurrence Is Mind multi-entity and screen-feedback experiment
+
+on:
+  push:
+    branches:
+      - agent/seat-4/recurrence-is-mind-9x9-feedback-20261015
+      - main
+    paths:
+      - experiments/seat4/recurrence_trial*
+      - experiments/seat4/verify_recurrence_trial.py
+      - experiments/seat4/PREREG-RECURRENCE-IS-MIND-MULTIENTITY-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-recurrence-is-mind-3888*
+      - .github/workflows/seat4-recurrence-multi-entity.yml
+  pull_request:
+    paths:
+      - experiments/seat4/recurrence_trial*
+      - experiments/seat4/verify_recurrence_trial.py
+      - experiments/seat4/PREREG-RECURRENCE-IS-MIND-MULTIENTITY-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-recurrence-is-mind-3888*
+      - .github/workflows/seat4-recurrence-multi-entity.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recurrence-and-n-nest:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Fetch original N-Nest Prime laws and executable verification
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED
+          ref: 307903651f56e8a28ef98ca36aef22ee8cda935c
+          path: nnest-upstream
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute and SHA-verify pinned N-Nest prime watcher and original 27-wave tests
+        shell: bash
+        run: |
+          python experiments/seat4/nnest_wave_gate.py --nnest nnest-upstream --receipt "$RUNNER_TEMP/nnest-recurrence-gate.json" > "$RUNNER_TEMP/nnest-recurrence-stdout.json"
+          python - "$RUNNER_TEMP/nnest-recurrence-gate.json" <<'PY'
+          import json,sys
+          v=json.load(open(sys.argv[1],encoding="utf8"))
+          assert v["gate_verdict"]=="MEASURED_PASS"
+          assert v["nnest_upstream"]["discipline_loaded"] is True
+          assert v["nested"]["leaves"]==27
+          assert v["nested"]["nodes"]==40
+          assert v["nested"]["tampered_wave_13_rejected"] is True
+          assert v["physical_host_independence"]=="NOT_MEASURED"
+          print("SEAT4_ORIGINAL_NNEST_RECURRENCE_GATE_PASS")
+          PY
+      - name: Independent Python + Node recurrence and digital visual-feedback matrix
+        shell: bash
+        run: |
+          python experiments/seat4/verify_recurrence_trial.py "$RUNNER_TEMP/recurrence-receipt.json" "$RUNNER_TEMP/recurrence-full-trace.hbp" > "$RUNNER_TEMP/recurrence-audit.json"
+          cat "$RUNNER_TEMP/recurrence-audit.json"
+      - name: Preserve measured software receipts for independent audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat4-recurrence-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/nnest-recurrence-gate.json
+            ${{ runner.temp }}/recurrence-receipt.json
+            ${{ runner.temp }}/recurrence-full-trace.hbp
+            ${{ runner.temp }}/recurrence-audit.json
+          if-no-files-found: error
+          retention-days: 30
