@@ -216,12 +216,12 @@ def attacks(resolver,v2_lines):
     held("missing_source_manifest",lambda:FactorizedRainbowResolver(
          b"",resolver.bank,resolver.base_index))
     held("unattested_origin",resolver.require_external_authentication)
-    row=v2_lines[2] # id=01, wave00, location00, a valid non-dark route
+    row=v2_lines[1] # id=01, wave00, location00, a valid non-dark route
     held("forged_lane",lambda:validate_case(row[:-1]+("2" if row[-1]!="2" else "1"),1))
     held("stale_replayed_sequence",lambda:validate_case(row,2))
     row2=v2_lines[19]  # synthetic case from original source
     held("forged_rgb_source_metadata",lambda:validate_case(
-         re.sub(r"\|rgb=\d{3}", "|rgb=222",row2),18))
+         re.sub(r"\|rgb=\d{3}", "|rgb=222",row2),19))
     violet=FactorizedRainbowResolver(resolver.source,resolver.bank,resolver.base_index,
                                      available_bands=BANDS[:-1])
     held("erased_violet_payload",lambda:violet.resolve(0,"violet",0))
