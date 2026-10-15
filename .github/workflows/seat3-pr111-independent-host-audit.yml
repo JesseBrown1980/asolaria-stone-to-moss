@@ -1,0 +1,124 @@
+name: Seat3 independent PR111 host counters and replay/custody challenge
+on:
+  push:
+    branches: [agent/seat-3/pr111-crosshost-provenance-falsification-20261015]
+    paths:
+      - 'experiments/seat3/pr111_custody/**'
+      - '.github/workflows/seat3-pr111-independent-host-audit.yml'
+  pull_request:
+    paths:
+      - 'experiments/seat3/pr111_custody/**'
+      - '.github/workflows/seat3-pr111-independent-host-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  independent-source-host-review:
+    name: Four archived Seat2 host packets ${{ matrix.os }} Python ${{ matrix.python }} Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          path: original-main
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 8e597ae4c8d5d1ff76a2d25ad394ec49e601afc4
+          path: original-seat2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Assert exact historical frozen SHA and original Seat2 reviewer code
+        shell: bash
+        run: |
+          test "$(git -C original-main rev-parse HEAD)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          test "$(git -C original-seat2 rev-parse HEAD)" = 8e597ae4c8d5d1ff76a2d25ad394ec49e601afc4
+          test "$(git -C original-seat2 rev-parse HEAD:experiments/seat2/round9/review_host_bridge.js)" = ceb57bb8eda64d7eb4398075f603bae2b4a43733
+      - name: Download all four unchanged Seat2 PR111 original hosted receipt archives
+        uses: actions/download-artifact@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38777263894
+          github-token: ${{ github.token }}
+          pattern: seat2-r9-*
+          merge-multiple: false
+          path: ${{ runner.temp }}/archived-seat2
+      - name: Independently recompute 256 x 2MiB SHA and attack original reviewer with coherently forged telemetry
+        shell: bash
+        run: |
+          python experiments/seat3/pr111_custody/referee.py "$RUNNER_TEMP/archived-seat2" original-main original-seat2/experiments/seat2/round9/review_host_bridge.js "$RUNNER_TEMP/verified"
+      - name: Independent Node22 source, artifact and active replay test
+        shell: bash
+        run: |
+          node experiments/seat3/pr111_custody/independent_digest.js original-main "$RUNNER_TEMP/archived-seat2" "$RUNNER_TEMP/verified"
+      - name: Actually mutate anchored 701-byte frozen HBP and require trust-root rejection
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("original-main/stones/2026-10-15-rainbow81/seat4-round5-signed-spectrum-mapping-20261015.hbp")
+          b=bytearray(p.read_bytes());b[87]^=1;p.write_bytes(b)
+          PY
+          if python experiments/seat3/pr111_custody/referee.py "$RUNNER_TEMP/archived-seat2" original-main original-seat2/experiments/seat2/round9/review_host_bridge.js "$RUNNER_TEMP/tampered"; then
+            echo "UNSAFE: accepted changed original source"; exit 1
+          fi
+          echo "SOURCE_ANCHOR_MUTATION_REJECTED"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-r9-forensics-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          if-no-files-found: error
+          retention-days: 30
+  four-platform-final:
+    name: Independent four-host exact bytes, authentic electronic process reports, and audit scope
+    runs-on: ubuntu-latest
+    needs: independent-source-host-review
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-r9-forensics-*
+          merge-multiple: false
+          path: audit-outputs
+      - name: Compare complete third-party verdicts and independent Node review
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          folders=sorted(Path("audit-outputs").glob("seat3-r9-forensics-*"))
+          assert len(folders)==4,folders
+          for filename in ("seat3-pr111-crosshost-verdict.json","seat3-independent-node-review.json"):
+              data=[(p/filename).read_bytes() for p in folders]
+              assert all(b==data[0] for b in data),"CROSS_PLATFORM_SCOPED_VERDICT_MISMATCH"
+              for path,body in zip(folders,data):
+                  assert (path/(filename+".sha256")).read_bytes()==(
+                      hashlib.sha256(body).hexdigest()+"  "+filename+"\n").encode("ascii")
+              print("SEAT3_EXACT_PROOF_FOUR_PLATFORM_PASS",filename,len(data[0]),hashlib.sha256(data[0]).hexdigest())
+          record=json.loads((folders[0]/"seat3-pr111-crosshost-verdict.json").read_bytes())
+          assert record["copied_packet_upstream_accepts_nonsensor_forgery"]==4
+          assert len(record["legitimate_four_reported_host_records"])==4
+          assert record["independent_mains_power_or_photon_detector"] is False
+          assert record["os_process_report_not_unforgeable_independent_hardware_attestation"] is True
+          print("ORIGINAL_HOST_ACTIVITY_PRESERVED_AND_COHERENT_SPOOF_ACCEPTANCE_CONFIRMED")
+          for host in record["legitimate_four_reported_host_records"]:
+              print("ORIGINAL_HOST_OS_OBSERVATION",host["artifact"],
+                    "cpu_ns",host["process_cpu_ns"],
+                    "wall_ns",host["monotonic_elapsed_ns"],
+                    "rss_delta_bytes",host["rss_delta_bytes"])
+          PY
