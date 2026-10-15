@@ -40,7 +40,8 @@ def verify_staging(staging):
     staging=Path(staging)
     manifest=json.loads((staging/"RELEASE-MANIFEST.json").read_text())
     assert manifest["schema"]=="ASOLARIA-NNEST-HF-RELEASE-V1"
-    assert manifest["destination"]==DEST and manifest["prefix"]==PREFIX
+    assert manifest["destination"]==DEST
+    assert manifest["prefix"]==PREFIX+"/"+str(manifest["producing_github_run_id"])
     for name,digest in manifest["file_sha256"].items():
         f=staging/safe_relpath(name)
         assert f.is_file(), "missing release evidence: "+name
@@ -104,7 +105,8 @@ def stage(source,target):
     sums={str(x.relative_to(target)):sha(x.read_bytes()) for x in paths}
     release={
         "schema":"ASOLARIA-NNEST-HF-RELEASE-V1","destination":DEST,
-        "prefix":PREFIX,"producing_github_run_id":manifest["producing_github_run_id"],
+        "prefix":PREFIX+"/"+str(manifest["producing_github_run_id"]),
+        "producing_github_run_id":manifest["producing_github_run_id"],
         "producing_git_head_sha":manifest["producing_git_head_sha"],
         "source_repositories":manifest["source_lineage"],
         "job_overlap_ms":master["cross_seat_wall_clock_overlap_ms"],
@@ -129,18 +131,22 @@ def publish(staging):
     who=api.whoami()
     assert str(who.get("name","")).lower()=="jessedbrown", "HF account mismatch; upload rejected"
     api.repo_info(DEST,repo_type="model")
+    remote_prefix=manifest["prefix"]
+    original=set(api.list_repo_files(DEST,repo_type="model"))
+    if any(name.startswith(remote_prefix+"/") for name in original):
+        raise RuntimeError("HF destination prefix already exists; refuse overwrite")
     api.upload_folder(repo_id=DEST,repo_type="model",folder_path=str(staging),
-                      path_in_repo=PREFIX,commit_message="Mirror SHA-verified N-Nest four-seat nested proofs")
+                      path_in_repo=remote_prefix,commit_message="Mirror SHA-verified N-Nest four-seat nested proofs")
     names=set(api.list_repo_files(DEST,repo_type="model"))
     expected={*manifest["file_sha256"],"RELEASE-MANIFEST.json","RELEASE-SHA256SUMS"}
     for name in sorted(expected):
-        remote=PREFIX+"/"+name
+        remote=remote_prefix+"/"+name
         assert remote in names, "HF uploaded file not visible: "+name
         f=Path(hf_hub_download(repo_id=DEST,filename=remote,repo_type="model",
                                token=token,force_download=True))
         assert sha(f.read_bytes())==sha((staging/name).read_bytes()), "HF readback SHA mismatch: "+name
     print("NNEST_HF_REMOTE_PUBLISHED_AND_READBACK_VERIFIED",
-          "https://huggingface.co/"+DEST+"/tree/main/"+PREFIX)
+          "https://huggingface.co/"+DEST+"/tree/main/"+remote_prefix)
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("paths",nargs="+")
