@@ -1,0 +1,60 @@
+name: Seat3 synthetic optogenetic light-gate cross-language audit
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*opto*"
+      - "experiments/seat3/PREREG-OPTOGENETIC*"
+      - ".github/workflows/seat3-opto-lightgate.yml"
+      - "stones/2026-10-15-rainbow81/seat3-opto-*"
+  push:
+    branches:
+      - main
+      - agent/seat-3/opto-lightgate-kinetics-20261015
+    paths:
+      - "experiments/seat3/*opto*"
+      - "experiments/seat3/PREREG-OPTOGENETIC*"
+      - ".github/workflows/seat3-opto-lightgate.yml"
+      - "stones/2026-10-15-rainbow81/seat3-opto-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-toy-replay:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run all four light-gate control arms and independently compare HBP
+        shell: bash
+        run: |
+          python experiments/seat3/seat3_opto_toy.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/python.json"
+          node experiments/seat3/seat3_opto_toy.js "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/node.json"
+          python experiments/seat3/verify_opto_toy.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" "$RUNNER_TEMP/seat3-optogate"
+      - name: Changed trace is rejected
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"]); raw=(p/"python.hbp").read_bytes(); (p/"corrupted.hbp").write_bytes(bytes([raw[0]^1])+raw[1:])'
+          if python experiments/seat3/verify_opto_toy.py "$RUNNER_TEMP/corrupted.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" "$RUNNER_TEMP/should-not-exist"; then
+            echo "Tamper incorrectly accepted"; exit 1
+          fi
+          echo "Tamper-control PASS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-opto-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/seat3-optogate/*
+          if-no-files-found: error
+          retention-days: 30
