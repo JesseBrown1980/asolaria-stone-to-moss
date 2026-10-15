@@ -5,12 +5,14 @@ on:
     paths:
       - "experiments/seat3/rainbow27_v2/**"
       - ".github/workflows/seat3-rainbow27-v2.yml"
+      - "stones/2026-10-15-rainbow81/seat3-rainbow27-normalized-v2-20261015.hbp*"
   push:
     branches:
       - "agent/seat-3/rainbow27-lossless-normalized-v2-20261015"
     paths:
       - "experiments/seat3/rainbow27_v2/**"
       - ".github/workflows/seat3-rainbow27-v2.yml"
+      - "stones/2026-10-15-rainbow81/seat3-rainbow27-normalized-v2-20261015.hbp*"
   workflow_dispatch:
 
 permissions:
@@ -52,6 +54,9 @@ jobs:
           python experiments/seat3/rainbow27_v2/rainbow27_v2.py "$RUNNER_TEMP/rainbow27"
           node experiments/seat3/rainbow27_v2/rainbow27_v2.js "$RUNNER_TEMP/node.hbp"
           python experiments/seat3/rainbow27_v2/verify_rainbow27_v2.py "$RUNNER_TEMP/rainbow27/rainbow27-v2.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/rainbow27/rainbow27-v2.json" "$RUNNER_TEMP/node.hbp.node.json" "$RUNNER_TEMP/rainbow27"
+      - name: Require append-only V2 stone and checksum matches newly executed result
+        run: |
+          python experiments/seat3/rainbow27_v2/verify_sealed_stone.py "$RUNNER_TEMP/rainbow27"
       - name: Verify actual altered HBP fails independent gate
         run: |
           python -c 'import os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"]); b=(p/"rainbow27/rainbow27-v2.hbp").read_bytes(); (p/"tampered.hbp").write_bytes(bytes([b[0]^1])+b[1:])'
