@@ -61,8 +61,8 @@ def main():
         x for x in LOSS.values()
     ]
     sidecar=RECEIPT.with_suffix(".json.sha256")
-    if sidecar.exists():
-        assert sidecar.read_text("ascii").split()==[sha(receipt_raw),RECEIPT.name]
+    assert sidecar.is_file(),"Seat 4 recovery receipt SHA-256 sidecar missing"
+    assert sidecar.read_text("ascii").split()==[sha(receipt_raw),RECEIPT.name]
     with tempfile.TemporaryDirectory(prefix="asolaria-seat4-recovery-") as tmp:
         pyout=Path(tmp)/"python.trace"
         jsout=Path(tmp)/"node.trace"
