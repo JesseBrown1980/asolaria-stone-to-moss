@@ -1,0 +1,117 @@
+name: Seat2 Round3 independent RGB provenance and source referee
+
+on:
+  push:
+    branches:
+      - agent/seat-2/round3-rgb-provenance-20261015
+    paths:
+      - experiments/seat2/round3/**
+      - .github/workflows/seat2-round3-rgb-provenance.yml
+  pull_request:
+    paths:
+      - experiments/seat2/round3/**
+      - .github/workflows/seat2-round3-rgb-provenance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  independent-replay:
+    name: Seat2 ZXing pixel verification ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 22
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.11'
+          - os: windows-latest
+            python: '3.11'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install independent QR reader and imaging tools
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check zxing-cpp==3.0.0 qrcode==8.2 Pillow==12.0.0 opencv-python-headless==4.13.0.92 numpy==2.3.5
+      - name: Pin source run identity and download both published original artifact sets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: JesseBrown1980/asolaria-stone-to-moss
+        run: |
+          set -euo pipefail
+          PINNED_SHA="a3e86a169ee9d45d64cd83973919e760ce7e65d9"
+          ACTUAL_SHA="$(gh api "repos/$GH_REPO/actions/runs/38735582094" --jq '.head_sha')"
+          test "$ACTUAL_SHA" = "$PINNED_SHA"
+          mkdir -p seat2-source/ubuntu seat2-source/windows seat2-artifacts
+          gh run download 38735582094 -R "$GH_REPO" -n round3-light-being-ubuntu-latest-py3.11 -D seat2-source/ubuntu
+          gh run download 38735582094 -R "$GH_REPO" -n round3-light-being-windows-latest-py3.13 -D seat2-source/windows
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          for name in ("ubuntu","windows"):
+              root=Path("seat2-source")/name
+              files=sorted(f for f in root.rglob("*") if f.is_file())
+              assert len(files)==15, (name,[str(f) for f in files])
+              with zipfile.ZipFile(Path("seat2-artifacts")/(name+".zip"),"w",compression=zipfile.ZIP_STORED) as z:
+                  for p in files:
+                      z.write(p,p.relative_to(root).as_posix())
+              print(f"Seat2 independent source retrieval: {name} {len(files)} artifact files")
+          PY
+      - name: Run independent ZXing QR, counterfeit actual pixels, 52488-row source-gated audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/seat2/round3/seat2_independent_rgb_provenance.py \
+             --ubuntu seat2-artifacts/ubuntu.zip \
+             --windows seat2-artifacts/windows.zip \
+             --output seat2-artifacts/seat2-independent-result.json \
+             | tee seat2-artifacts/seat2-summary.txt
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          root=Path("seat2-artifacts")
+          data=json.loads((root/"seat2-independent-result.json").read_text())
+          assert data["status"]=="SEAT2_DIGITAL_PROVENANCE_PASS_WITH_LIMITATIONS"
+          assert data["cross_os_canonical_json_exact"]
+          assert data["cross_os_hbp_exact"]
+          assert data["cross_os_rgb_pixels_exact"]
+          for os in ("ubuntu","windows"):
+              x=data[os]
+              assert x["qr"]["zxing_complete_planes"]==32
+              assert x["qr"]["source_fixture_bytes"]==65536
+              assert x["qr"]["correctly_empty_blue_filler"]==1
+              assert x["qr"]["missing_green_pixel_rejected"]
+              assert x["qr"]["tampered_actual_png_pixel_QR_rejected_by_external_digest"]
+              assert x["qr"]["attack_controlling_source_and_anchor_passed"]
+              assert x["cases"]["row_count"]==52488
+              assert x["cases"]["distinct_wave_address_identities"]==2187
+              assert x["cases"]["independent_gate_schedule_verified"]
+              assert x["cases"]["every_born_lane_recomputed_from_source"]
+              assert x["cases"]["extra_false_qutrit_lane_attacks_rejected"]==8748
+              attack=x["cases"]["independently_constructed_actual_attack_packets"]
+              assert sum(v for k,v in attack.items() if not k.startswith("FALSE_ROUTE:"))==52488
+              assert attack["CORRUPT:FAULT_HELD"]==8748
+              assert attack["STALE:FAULT_HELD"]==8748
+              assert attack["FORGED:FAULT_HELD"]==8748
+              assert not x["cases"]["replayed_HBP_contains_raw_attack_bytes"]
+          print("SEAT2_INDEPENDENT_PIXEL_AND_PROVENANCE_PASS")
+          print("SEAT2_RECEIPT_SHA256",hashlib.sha256((root/"seat2-independent-result.json").read_bytes()).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-round3-zxing-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            seat2-artifacts/seat2-independent-result.json
+            seat2-artifacts/seat2-transport-manifest.json
+            seat2-artifacts/seat2-summary.txt
+          if-no-files-found: error
+          retention-days: 90

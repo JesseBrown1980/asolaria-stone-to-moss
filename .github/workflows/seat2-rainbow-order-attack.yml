@@ -1,0 +1,115 @@
+name: Seat2 Round4 rainbow order and RGB plane swap
+
+on:
+  push:
+    branches:
+      - agent/seat-2/round3-rgb-provenance-20261015
+    paths:
+      - experiments/seat2/round3/seat2_rainbow_order_attack.py
+      - experiments/seat2/round3/PREREG-RAINBOW-ORDER-AND-PLANE-SWAPS-20261015.md
+      - .github/workflows/seat2-rainbow-order-attack.yml
+  pull_request:
+    paths:
+      - experiments/seat2/round3/seat2_rainbow_order_attack.py
+      - experiments/seat2/round3/PREREG-RAINBOW-ORDER-AND-PLANE-SWAPS-20261015.md
+      - .github/workflows/seat2-rainbow-order-attack.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  independent-rainbow-order:
+    name: Seat2 27-sector 55-image swap ${{ matrix.os }} Python3.11
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install ZXing-C++ independent QR decoder and image support
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check zxing-cpp==3.0.0 Pillow==12.0.0 numpy==2.3.5
+      - name: Download original source-run images by immutable run id
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: JesseBrown1980/asolaria-stone-to-moss
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="$(gh api "repos/$GH_REPO/actions/runs/38735582094" --jq '.head_sha')"
+          test "$SOURCE_SHA" = "a3e86a169ee9d45d64cd83973919e760ce7e65d9"
+          mkdir -p seat2-rainbow-source/ubuntu seat2-rainbow-source/windows
+          gh run download 38735582094 -R "$GH_REPO" -n round3-light-being-ubuntu-latest-py3.11 -D seat2-rainbow-source/ubuntu
+          gh run download 38735582094 -R "$GH_REPO" -n round3-light-being-windows-latest-py3.13 -D seat2-rainbow-source/windows
+          mkdir -p seat2-rainbow-evidence
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          for osname in ("ubuntu","windows"):
+            root=Path("seat2-rainbow-source")/osname
+            filenames=sorted(x for x in root.rglob("*") if x.is_file())
+            assert len(filenames)==15,[str(x) for x in filenames]
+            with zipfile.ZipFile(Path("seat2-rainbow-evidence")/(osname+".zip"),"w",compression=zipfile.ZIP_STORED) as zipout:
+              for file in filenames:
+                zipout.write(file,file.relative_to(root).as_posix())
+            print("SOURCE_PACKAGE",osname,len(filenames))
+          PY
+      - name: Challenge 27 ternary colors and 55 actual RGB PNG pixel permutations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/seat2/round3/seat2_rainbow_order_attack.py \
+            --ubuntu seat2-rainbow-evidence/ubuntu.zip \
+            --windows seat2-rainbow-evidence/windows.zip \
+            --output-dir seat2-rainbow-evidence \
+            | tee seat2-rainbow-evidence/summary.txt
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          root=Path("seat2-rainbow-evidence")
+          raw=(root/"rainbow-order-cases.hbp").read_bytes()
+          receipt=json.loads((root/"rainbow-order-result.json").read_text())
+          m=receipt["math_identity"]
+          a=receipt["real_png_pixel_plane_swaps"]
+          assert m["ordered_ternary_addresses"]==27
+          assert m["raw_symmetric_classes"]==10
+          assert m["normalized_classes_including_undefined_zero"]==7
+          assert m["directed_distinct_source_to_candidate_attacks"]==702
+          assert m["intensity_only_unprotected_order_swaps"]==66
+          assert m["normalized_probability_unprotected_order_swaps"]==104
+          assert m["ordered_sector_bindings_rejected_all_foreign_ids"]==702
+          assert a["actual_555px_rgb_pixel_plane_permutations"]==55
+          assert a["indexed_payload_still_passed_fixed_sha_after_color_plane_swaps"]==55
+          assert a["ordered_channel_mapping_rejected_swapped_planes"]==55
+          assert receipt["rainbow_hbp_rows"]==817
+          assert receipt["rainbow_hbp_bytes"]==len(raw)
+          assert len(raw.splitlines())==817
+          assert hashlib.sha256(raw).hexdigest()==receipt["rainbow_hbp_sha256"]
+          assert receipt["status"]=="DIGITAL_ORDER_BINDING_FALSIFIERS_PASS"
+          assert receipt["signed_trust_root_verified"] is False
+          print("SEAT2_RAINBOW_27_AND_55_REAL_RGB_PIXEL_SWAPS_PASS")
+          print("SEAT2_RAINBOW_HBP_SHA256",receipt["rainbow_hbp_sha256"])
+          print("SEAT2_RAINBOW_JSON_SHA256",hashlib.sha256((root/"rainbow-order-result.json").read_bytes()).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-rainbow-order-${{ matrix.os }}-py3.11
+          path: |
+            seat2-rainbow-evidence/rainbow-order-cases.hbp
+            seat2-rainbow-evidence/rainbow-order-result.json
+            seat2-rainbow-evidence/SHA256SUMS.txt
+            seat2-rainbow-evidence/summary.txt
+          if-no-files-found: error
+          retention-days: 90
