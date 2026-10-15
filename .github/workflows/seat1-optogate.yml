@@ -1,0 +1,61 @@
+name: Seat1 light-gated molecular-state software autocycle
+
+on:
+  push:
+    branches: [agent/seat-1/optogenetic-photocycle-20261015]
+    paths: [experiments/seat1/optogenetics/**, .github/workflows/seat1-optogate.yml]
+  pull_request:
+    paths: [experiments/seat1/optogenetics/**, .github/workflows/seat1-optogate.yml]
+permissions:
+  contents: read
+jobs:
+  source-crosscheck:
+    runs-on: ${{ matrix.os }}
+    name: light-gate-${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m py_compile experiments/seat1/optogenetics/opto_gate.py experiments/seat1/optogenetics/verify_opto.py
+      - run: python experiments/seat1/optogenetics/opto_gate.py opto-python.hbp opto-python.json
+      - run: node experiments/seat1/optogenetics/opto_gate_node.js opto-node.hbp opto-node.json
+      - name: Seal all original run bytes
+        run: |
+          python -c "import hashlib,pathlib; ps=[pathlib.Path(x) for x in ('opto-python.hbp','opto-python.json','opto-node.hbp','opto-node.json')]; [(p.with_name(p.name+'.sha256').write_text(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n',encoding='ascii')) for p in ps]"
+      - run: python experiments/seat1/optogenetics/verify_opto.py .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: optogate-${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            opto-python.hbp
+            opto-python.hbp.sha256
+            opto-python.json
+            opto-python.json.sha256
+            opto-node.hbp
+            opto-node.hbp.sha256
+            opto-node.json
+            opto-node.json.sha256
+  os-referee:
+    name: exact-bitcrosscheck
+    runs-on: ubuntu-latest
+    needs: source-crosscheck
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: optogate-ubuntu-latest
+          path: OS-ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: optogate-windows-latest
+          path: OS-windows
+      - run: python experiments/seat1/optogenetics/verify_opto.py OS-ubuntu OS-windows
