@@ -4,7 +4,7 @@ on:
     paths:
       - 'experiments/seat3/independent_multiview_gcd_audit.py'
       - '.github/workflows/seat3-peer-seat1-multiview-gcd.yml'
-      - 'stones/2026-10-15-rainbow81/seat3-seat1-multiview*'
+      - 'stones/2026-10-15-rainbow81/seat3-peer-seat1-multiview*'
   workflow_dispatch:
 permissions:
   contents: read
