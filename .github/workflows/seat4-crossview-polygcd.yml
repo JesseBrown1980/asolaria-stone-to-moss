@@ -1,0 +1,79 @@
+name: Seat 4 independent cross-view polynomial GCD certificate
+
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-4/crossview-polynomial-certificate-20261015
+    paths:
+      - experiments/seat4/crossview_polygcd_certificate.py
+      - experiments/seat4/PREREG-CROSSVIEW-GCD-OPTIMAL-VIEWS-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-crossview-polygcd-peer-certificate*
+      - .github/workflows/seat4-crossview-polygcd.yml
+  pull_request:
+    paths:
+      - experiments/seat4/crossview_polygcd_certificate.py
+      - experiments/seat4/PREREG-CROSSVIEW-GCD-OPTIMAL-VIEWS-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-crossview-polygcd-peer-certificate*
+      - .github/workflows/seat4-crossview-polygcd.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  algebra-independent-of-seat3:
+    runs-on: ${{ matrix.os }}
+    name: Exact polynomial gcd rank theorem ${{ matrix.os }} Python ${{ matrix.python }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Reprove from polynomial gcd, all 63 view subsets, toy exhaustive oracle and negative power counterexample
+        shell: bash
+        run: |
+          python experiments/seat4/crossview_polygcd_certificate.py --receipt "$RUNNER_TEMP/seat4-crossview-polygcd.json"
+          python - "$RUNNER_TEMP/seat4-crossview-polygcd.json" <<'PY'
+          import hashlib,json,sys,pathlib
+          p=pathlib.Path(sys.argv[1])
+          data=p.read_bytes()
+          obj=json.loads(data)
+          assert obj["status"]=="MEASURED_PASS"
+          assert obj["subset_count"]==63
+          assert (obj["full_rank_subsets"],obj["rank80_subsets"],obj["rank79_subsets"])==(31,31,1)
+          assert obj["non_squarefree_counterexample"]["rank_h1"]==3
+          assert obj["non_squarefree_counterexample"]["rank_h4"]==0
+          assert obj["stronger_blind_detection_can_fail_recovery"]
+          assert not obj["independent_source_identity_attested"]
+          parts=pathlib.Path(str(p)+".sha256").read_text("ascii").split()
+          assert parts==[hashlib.sha256(data).hexdigest(),p.name]
+          assert parts[0]=="b12c97d7a54a2c96f1855fdeba484354d3bd4eb5bc1297b189bae304a50edbdf"
+          sealed=pathlib.Path("stones/2026-10-15-rainbow81/seat4-crossview-polygcd-peer-certificate.json")
+          sealed_raw=sealed.read_bytes()
+          sealed_sha=hashlib.sha256(sealed_raw).hexdigest()
+          assert sealed_sha=="5e149162781cfe35470c93671eaf3062f2eeb6135b6719f74c4de6a0655a0cc0"
+          sidecar=pathlib.Path(str(sealed)+".sha256").read_text("ascii").split()
+          assert sidecar==[sealed_sha,sealed.name]
+          peer=json.loads(sealed_raw)
+          assert peer["independent_full_63subset_receipt_sha256"]==parts[0]
+          assert peer["source_seat3_commit"]==obj["peer_source_commit"]
+          assert peer["full_source_rank81_subsets"]==obj["full_rank_subsets"]
+          print("INDEPENDENT_CROSSVIEW_GCD_SHA256",parts[0])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-polygcd-${{ matrix.os }}-python-${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/seat4-crossview-polygcd.json
+            ${{ runner.temp }}/seat4-crossview-polygcd.json.sha256
+          if-no-files-found: error
+          retention-days: 30
