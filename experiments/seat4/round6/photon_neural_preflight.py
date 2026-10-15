@@ -123,7 +123,7 @@ def run_attack_checks(rows):
  attacks.append(mutate("changed_raw_count",k,{"detector_count":baseline["detector_count"]+1},"SYNTHETIC_COUNT_DRIFT"))
  attacks.append(mutate("forged_physical_flag",k,{"simulation_only":False},"FALSE_PHYSICAL_EVIDENCE"))
  attacks.append(mutate("changed_source_bit",k,{"precommitted_bit":1-baseline["precommitted_bit"]},"WRONG_PRECOMMITTED_SOURCE"))
- attacks.append(mutate("out_of_range_sector",k,{"sector":27},"BAD_SOURCE_ID_WITNESS"))
+ attacks.append(mutate("out_of_range_sector",k,{"sector":27},"ID_RANGE"))
  # Missing frame is a real absence of one band/site rather than a mock assertion.
  subset=list(rows);del subset[index[k]]
  try:validate_rows(subset)
