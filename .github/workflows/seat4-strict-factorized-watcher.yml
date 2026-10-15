@@ -1,0 +1,98 @@
+name: Seat4 independent strict route and factorized index watcher
+on:
+  push:
+    branches:
+      - agent/seat-4/round4-v2-lane-binding-watcher-20261015
+    paths:
+      - experiments/seat4/round4/**
+      - .github/workflows/seat4-strict-factorized-watcher.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  strict-watcher:
+    name: Independent digital watcher ${{ matrix.os }} py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          persist-credentials: false
+          path: frozen-seat1-pr80
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: c32d472dfe84f352450eb50469e0e9a987c33d78
+          persist-credentials: false
+          path: frozen-seat3-pr81
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify immutable upstream Git HEADs and code blobs
+        shell: bash
+        run: |
+          test "$(git -C frozen-seat1-pr80 rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-seat1-pr80 rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+          test "$(git -C frozen-seat3-pr81 rev-parse HEAD)" = c32d472dfe84f352450eb50469e0e9a987c33d78
+          test "$(git -C frozen-seat3-pr81 rev-parse HEAD:experiments/seat3/rainbow27_v2/rainbow27_v2.py)" = 097c2d93cc6cfeb6f03a2df75d9529b267dadc44
+      - name: Download original Seat1 PR80 hosted source bank and full index
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/seat1-source
+      - name: Download original Seat3 PR81 hosted qutrit V2 trace
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38747014513
+          name: rainbow27-v2-ubuntu-latest-py3.11
+          path: ${{ runner.temp }}/seat3-source
+      - name: Run independent route watcher and metadata factorization
+        shell: bash
+        run: |
+          python experiments/seat4/round4/strict_watcher.py "$RUNNER_TEMP/seat1-source" "$RUNNER_TEMP/seat3-source" "$RUNNER_TEMP/seat4-result"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-strict-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat4-result/*
+          if-no-files-found: error
+          retention-days: 30
+  compare-receipts:
+    runs-on: ubuntu-latest
+    needs: strict-watcher
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-strict-*
+          path: receipts
+          merge-multiple: false
+      - name: Verify four complete byte-identical evidence deposits
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          dirs=sorted(Path("receipts").glob("seat4-strict-*"))
+          assert len(dirs)==4,dirs
+          for name in ("seat4-strict.hbp","seat4-strict.json"):
+              chunks=[(d/name).read_bytes() for d in dirs]
+              assert len(set(chunks))==1, "CROSS_OS_BYTES_DIFFER:"+name
+              digest=hashlib.sha256(chunks[0]).hexdigest()
+              for d in dirs:
+                  assert (d/(name+".sha256")).read_bytes()==(digest+"  "+name+"\n").encode("ascii")
+              print("FOUR_WAY_BYTE_EXACT",name,len(chunks[0]),digest)
+          PY
