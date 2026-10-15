@@ -1,0 +1,148 @@
+name: Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher
+
+on:
+  push:
+    branches:
+      - agent/seat-3/factorized-rainbow27-resolver-20261015
+    paths:
+      - "experiments/seat3/factorized_rainbow27/**"
+      - ".github/workflows/seat3-factorized-r27-resolver.yml"
+      - "stones/2026-10-15-rainbow81/seat3-factorized-r27*"
+  pull_request:
+    paths:
+      - "experiments/seat3/factorized_rainbow27/**"
+      - ".github/workflows/seat3-factorized-r27-resolver.yml"
+      - "stones/2026-10-15-rainbow81/seat3-factorized-r27*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  full-factorized-replay:
+    name: Independent ${{ matrix.os }} Python ${{ matrix.python }} Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: historical-pr80
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: c32d472dfe84f352450eb50469e0e9a987c33d78
+          path: historical-pr81
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Confirm exact upstream immutable Git source objects
+        shell: bash
+        run: |
+          test "$(git -C historical-pr80 rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C historical-pr80 rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+          test "$(git -C historical-pr81 rev-parse HEAD)" = c32d472dfe84f352450eb50469e0e9a987c33d78
+          test "$(git -C historical-pr81 rev-parse HEAD:experiments/seat3/rainbow27_v2/rainbow27_v2.py)" = 097c2d93cc6cfeb6f03a2df75d9529b267dadc44
+      - name: Download original independently published PR80 bank and base index
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/original-pr80
+      - name: Download original independently published PR81 59049-case qutrit V2 trace
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38747014513
+          name: rainbow27-v2-ubuntu-latest-py3.11
+          path: ${{ runner.temp }}/original-pr81
+      - name: Construct factorized resolver in TWO independent languages
+        shell: bash
+        run: |
+          python experiments/seat3/factorized_rainbow27/factorized_resolver.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/python-results"
+          node experiments/seat3/factorized_rainbow27/factorized_resolver.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/node-results"
+          python experiments/seat3/factorized_rainbow27/verify_factorized.py "$RUNNER_TEMP/python-results" "$RUNNER_TEMP/node-results" "$RUNNER_TEMP/verified-results"
+          python experiments/seat3/factorized_rainbow27/verify_sealed_factorized.py stones/2026-10-15-rainbow81/seat3-factorized-r27-20261015.hbp "$RUNNER_TEMP/verified-results"
+      - name: Fail closed on altered original bank in BOTH language implementations
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          root=Path(os.environ["RUNNER_TEMP"])
+          src=root/"original-pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
+          mutated=bytearray(src.read_bytes())
+          mutated[0]^=1
+          src.write_bytes(mutated)
+          PY
+          if python experiments/seat3/factorized_rainbow27/factorized_resolver.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/rejected-python"; then
+            echo "FAILED - Python accepted mutated bank"; exit 1
+          fi
+          if node experiments/seat3/factorized_rainbow27/factorized_resolver.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/rejected-node"; then
+            echo "FAILED - Node accepted mutated bank"; exit 1
+          fi
+          echo "Both independently written digital bank verifiers fail closed on original-byte mutation"
+      - name: Tampered report is never accepted as newly verified original
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          root=Path(os.environ["RUNNER_TEMP"])
+          p=root/"python-results"/"factorized-r27-results.hbp"
+          changed=bytearray(p.read_bytes());changed[20]^=1;p.write_bytes(changed)
+          PY
+          if python experiments/seat3/factorized_rainbow27/verify_factorized.py "$RUNNER_TEMP/python-results" "$RUNNER_TEMP/node-results" "$RUNNER_TEMP/invalid-receipt"; then
+            echo "FAILED - mutated full evidence report accepted";exit 1
+          fi
+          echo "SHA and byte-parity report gates HELD tampered HBP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: factorized-seat3-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified-results/*
+          if-no-files-found: error
+          retention-days: 30
+
+  byte-identity:
+    name: Cross-check all four hosted source-sealed artifacts byte-for-byte
+    runs-on: ubuntu-latest
+    needs: full-factorized-replay
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: factorized-seat3-*
+          path: resolved-outputs
+          merge-multiple: false
+      - name: Independent fourth pass over complete HBP and JSON plus SHA256 sidecars
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          roots=sorted(Path("resolved-outputs").glob("factorized-seat3-*"))
+          assert len(roots)==4, roots
+          for name in ("factorized-r27-results.hbp","factorized-r27-results.json","third-party-check.json"):
+              data=[(r/name).read_bytes() for r in roots]
+              assert all(x==data[0] for x in data), "FOUR_PLATFORM_BYTE_DRIFT:"+name
+              for r,blob in zip(roots,data):
+                  side=(r/(name+".sha256")).read_bytes()
+                  assert side==(hashlib.sha256(blob).hexdigest()+"  "+name+"\n").encode("ascii")
+              print("ALL_FOUR_BYTE_EXACT",name,len(data[0]),hashlib.sha256(data[0]).hexdigest())
+          PY
