@@ -6,11 +6,15 @@ on:
       - agent/seat-3/neural-photon-memory-assay-20261015
     paths:
       - "experiments/seat3/neural_photon/*factorial*"
+      - "experiments/seat3/neural_photon/verify_sealed_oae.py"
+      - "stones/2026-10-15-rainbow81/seat3-photon-phonon-electronic-factorial*"
       - "experiments/seat3/neural_photon/SEAT1-HANDOFF-PHOTON-PHONON*"
       - ".github/workflows/seat3-photo-phonon-electronic-factorial.yml"
   pull_request:
     paths:
       - "experiments/seat3/neural_photon/*factorial*"
+      - "experiments/seat3/neural_photon/verify_sealed_oae.py"
+      - "stones/2026-10-15-rainbow81/seat3-photon-phonon-electronic-factorial*"
       - ".github/workflows/seat3-photo-phonon-electronic-factorial.yml"
   workflow_dispatch:
 
@@ -51,6 +55,7 @@ jobs:
           python experiments/seat3/neural_photon/optical_acoustic_factorial.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/py"
           node experiments/seat3/neural_photon/optical_acoustic_factorial.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/js"
           python experiments/seat3/neural_photon/verify_optical_acoustic_factorial.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/py" "$RUNNER_TEMP/js" "$RUNNER_TEMP/verified"
+          python experiments/seat3/neural_photon/verify_sealed_oae.py stones/2026-10-15-rainbow81/seat3-photon-phonon-electronic-factorial-20261015.hbp "$RUNNER_TEMP/verified"
       - name: Original underlying retained bank corruption fails both numerical models
         shell: bash
         run: |
