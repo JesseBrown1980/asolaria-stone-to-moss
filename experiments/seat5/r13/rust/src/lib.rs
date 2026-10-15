@@ -5,6 +5,7 @@
 //! The separately named Chariots are audit traversals; not new physics.
 
 pub type Trit = i8;
+pub mod paths;
 pub const CELLS: usize = 27;
 pub const CENTER: usize = 13;
 pub const PER_ROOT_CHANNELS: usize = 81; // 27 addresses × 3 encircling/shadow channels
