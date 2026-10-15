@@ -1,0 +1,135 @@
+name: C3 third-seed spectral shift and noise falsification
+
+on:
+  push:
+    branches:
+      - agent/seat-3/c3-third-seed-leakage-stress-20261015
+    paths:
+      - "experiments/seat3/neural_photon/c3/**"
+      - ".github/workflows/seat3-c3-third-seed.yml"
+  pull_request:
+    paths:
+      - "experiments/seat3/neural_photon/c3/**"
+      - ".github/workflows/seat3-c3-third-seed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  c3-independent:
+    name: C3 PINNED on ${{ matrix.os }} Python ${{ matrix.python }} Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: frozen-original-pr80
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Confirm historical producer commit and Git blob
+        shell: bash
+        run: |
+          test "$(git -C frozen-original-pr80 rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-original-pr80 rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+      - name: Download original hosted 81-site and 567-row source bank
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/real-original-pr80
+      - name: Run prospective C third seed and D shifted leakage stress in independent Python and Node
+        shell: bash
+        run: |
+          python experiments/seat3/neural_photon/c3/c3_third_seed.py "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/python"
+          node experiments/seat3/neural_photon/c3/c3_third_seed.js "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/node"
+          python experiments/seat3/neural_photon/c3/verify_c3_third_seed.py "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/verified"
+          python experiments/seat3/neural_photon/c3/identifiability_counterexamples.py "$RUNNER_TEMP/verified"
+      - name: Actually corrupt historical bank and require both independent programs to HOLD
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"real-original-pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
+          z=bytearray(p.read_bytes());z[90]^=1;p.write_bytes(z)
+          PY
+          if python experiments/seat3/neural_photon/c3/c3_third_seed.py "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/invalid-python"; then
+            echo "FAIL: modified historical source accepted";exit 1
+          fi
+          if node experiments/seat3/neural_photon/c3/c3_third_seed.js "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/invalid-node"; then
+            echo "FAIL: modified historical source accepted Node";exit 1
+          fi
+          echo "SOURCE_MUTATION_HELD"
+      - name: Change a synthesized photon record and require third verifier to reject
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"python"/"c3-third-seed.hbp"
+          b=bytearray(p.read_bytes());b[199]^=1;p.write_bytes(b)
+          PY
+          if python experiments/seat3/neural_photon/c3/verify_c3_third_seed.py "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/invalid-audit"; then
+            echo "FAIL: altered model detector record accepted";exit 1
+          fi
+          echo "DETECTOR_RECORD_MUTATION_HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: c3-third-seed-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          retention-days: 30
+          if-no-files-found: error
+
+  fifth-parity:
+    name: Cross-host 4/4 full byte identity and source/physical scope gate
+    runs-on: ubuntu-latest
+    needs: c3-independent
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: c3-third-seed-*
+          path: all-results
+          merge-multiple: false
+      - name: Compare ALL C/D source, SHA and independent verifier bytes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          roots=sorted(Path("all-results").glob("c3-third-seed-*"))
+          assert len(roots)==4,roots
+          for name in ("c3-third-seed.hbp","c3-results.json","independent-c3-check.json","identifiability-counterexample.json"):
+              blobs=[(r/name).read_bytes() for r in roots]
+              assert all(b==blobs[0] for b in blobs),"PLATFORM_BYTE_DRIFT:"+name
+              for r,b in zip(roots,blobs):
+                  expect=(hashlib.sha256(b).hexdigest()+"  "+name+"\n").encode("ascii")
+                  assert (r/(name+".sha256")).read_bytes()==expect,"SIDECAR_BAD"
+              print("C3_FOUR_BYTE_EQUAL",name,len(blobs[0]),hashlib.sha256(blobs[0]).hexdigest())
+          metrics=json.loads((roots[0]/"c3-results.json").read_bytes())
+          assert metrics["new_real_optical_measurements"]==0
+          assert metrics["physical_optical_storage_test"]=="NOT_RUN"
+          assert metrics["external_source_custody_authenticated"] is False
+          for condition in ("C","D"):
+              for n in ("1","3","7"):
+                  val=metrics["paired_census_by_model"][condition][n]
+                  assert val["both_correct"]+val["fixed_only"]+val["degraded"]+val["both_wrong"]==15309
+                  print("C3_HOLDOUT_ERROR_RATE",condition,n,val["raw_wrong"],val["fixed_wrong"],"repaired",val["fixed_only"],"degraded",val["degraded"])
+          PY
