@@ -75,7 +75,7 @@ def main():
   assert status["decision"]=="PHYSICAL_HOLD" and status["actual_external_capture_files_supplied"] is False
   assert intake(destination)["decision"]=="PHYSICAL_HOLD"
  data=canonical(status);(destination/"r6-physical-status.json").write_bytes(data)
- (destination/"r6-physical-status.json.sha256").write_text(
-  sha(data)+"  r6-physical-status.json\n",encoding="ascii")
+ (destination/"r6-physical-status.json.sha256").write_bytes(
+  (sha(data)+"  r6-physical-status.json\n").encode("ascii"))
  print(json.dumps({"physical":status["decision"],"reason":status["reason"]},sort_keys=True))
 if __name__=="__main__":main()
