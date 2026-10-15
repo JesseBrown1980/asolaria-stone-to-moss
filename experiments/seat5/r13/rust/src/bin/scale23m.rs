@@ -2,7 +2,7 @@
 //! 23 million *classical trit* position stress experiment per deterministic
 //! seed profile. It is NOT a 23 million physical qubit experiment.
 //! Operator-reported older Relic/Azure qubit results are distinct history.
-use asolaria_seat5_r13::{chariot_walk, CENTER};
+use asolaria_seat5_r13::{chariot_walk, paths::unit_residue27, CENTER};
 use std::{env, fs, path::PathBuf};
 
 const POSITIONS: usize = 23_000_000;
@@ -131,8 +131,8 @@ fn main() {
     // Adversarial checks operate on actual 23M-sized copies and must reject.
     let mut tampered = packed.clone();
     let mut wrong = 0usize;
-    for j in 0..tampered.len() {
-        if j % FRAME != 0 && tampered[j] < 4 {
+    for (j, &value) in tampered.iter().enumerate() {
+        if j % FRAME != 0 && value < 4 {
             wrong = j;
             break;
         }
@@ -154,7 +154,8 @@ fn main() {
         route_counts[i % ROUTES.len()] += 1;
     }
     assert!(route_counts.iter().all(|&n| n == POSITIONS / ROUTES.len()));
-    assert_eq!(2usize % 27, 29usize % 27);
+    assert_eq!(unit_residue27(2), Some(2));
+    assert_eq!(unit_residue27(2), unit_residue27(29));
 
     fs::write(out.join("original-trits.bin"), original.iter().map(|&t| (t + 1) as u8).collect::<Vec<_>>())
         .expect("original raw");
