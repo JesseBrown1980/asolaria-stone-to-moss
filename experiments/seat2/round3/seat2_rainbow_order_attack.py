@@ -355,7 +355,7 @@ def main():
     sha_rows=[]
     for p in (root/"rainbow-order-cases.hbp",root/"rainbow-order-result.json"):
         sha_rows.append(f"{sh(p.read_bytes())}  {p.name}\n")
-    (root/"SHA256SUMS.txt").write_text("".join(sha_rows),encoding="ascii")
+    (root/"SHA256SUMS.txt").write_bytes("".join(sha_rows).encode("ascii"))
     print(json.dumps({
       "status":outcome["ubuntu"]["status"],
       "ordered":outcome["ubuntu"]["math_identity"]["ordered_ternary_addresses"],
