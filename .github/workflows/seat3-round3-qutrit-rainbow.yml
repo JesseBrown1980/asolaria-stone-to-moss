@@ -55,6 +55,7 @@ jobs:
         run: |
           node experiments/seat3/round3_qutrit_rainbow_peer.js "$RUNNER_TEMP/seat3-peer"
           python experiments/seat3/verify_round3_qutrit_rainbow.py "$RUNNER_TEMP/seat3-peer" "$RUNNER_TEMP/seat3-audit"
+          python experiments/seat3/verify_sealed_round3_rainbow.py stones/2026-10-15-rainbow81/seat3-round3-qutrit-rainbow27-20261015.hbp "$RUNNER_TEMP/seat3-peer"
       - name: Altered full ledger must be rejected fail-closed
         shell: bash
         run: |
