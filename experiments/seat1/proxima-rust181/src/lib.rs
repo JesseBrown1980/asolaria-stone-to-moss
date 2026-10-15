@@ -6,6 +6,7 @@ pub mod long_horizon;
 pub mod sha256;
 pub mod camera;
 pub mod freeze_play;
+pub mod motion;
 use std::collections::BTreeSet;
 pub type Trit=i8;
 pub const TRITS:[Trit;3]=[-1,0,1];
