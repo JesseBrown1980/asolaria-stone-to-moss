@@ -149,9 +149,32 @@ def run(original,bankdir,outdir):
         expect("wrong_external_anchor",lambda:pin(bank,"0"*64,"BANK"),"PIN_BANK_MISMATCH"),
     ]
     require(len(negative)==12 and all(negative),"NEGATIVE_CONTROL_MISSING")
-    # These represent 567 stored entries. Erasures propagate to 27 aliases.
-    missing_violet=27*81
-    missing_one_source=27
+    # Actively remove base references, attempt EVERY logical address, then restore.
+    # Do not equate arithmetic about expected erasure with observed rejected reads.
+    def erasure(removed,expected):
+        removed=set(removed)
+        saved={key:resolver.lookup.pop(key) for key in removed}
+        try:
+            rejected=accepted=0
+            for s in range(27):
+                for band in BANDS:
+                    for n in range(81):
+                        identity=f"site-{n:03d}"
+                        try:
+                            resolver.resolve(s,band,identity)
+                        except ValueError as e:
+                            require(str(e)=="MISSING_BASE_ROW" and (band,identity) in saved,
+                                    "ERASURE_FAILED_FOR_WRONG_REASON")
+                            rejected+=1
+                        else:
+                            require((band,identity) not in saved,"ERASURE_NOT_DETECTED")
+                            accepted+=1
+            require(rejected==expected and accepted==15309-expected,"ERASURE_COUNT_MISMATCH")
+            return rejected
+        finally:
+            resolver.lookup.update(saved)
+    missing_violet=erasure(((band,f"site-{n:03d}") for band in ("violet",) for n in range(81)),2187)
+    missing_one_source=erasure((("red","site-000"),),27)
     summary={
         "schema":SCHEMA,
         "source_sha256":SOURCE_SHA,"bank_sha256":BANK_SHA,"base_index_sha256":BASE_SHA,
