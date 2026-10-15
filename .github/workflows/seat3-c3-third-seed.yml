@@ -61,6 +61,7 @@ jobs:
           python experiments/seat3/neural_photon/c3/c3_third_seed.py "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/python"
           node experiments/seat3/neural_photon/c3/c3_third_seed.js "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/node"
           python experiments/seat3/neural_photon/c3/verify_c3_third_seed.py "$RUNNER_TEMP/real-original-pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/verified"
+          python experiments/seat3/neural_photon/c3/identifiability_counterexamples.py "$RUNNER_TEMP/verified"
       - name: Actually corrupt historical bank and require both independent programs to HOLD
         shell: bash
         run: |
@@ -115,7 +116,7 @@ jobs:
           from pathlib import Path
           roots=sorted(Path("all-results").glob("c3-third-seed-*"))
           assert len(roots)==4,roots
-          for name in ("c3-third-seed.hbp","c3-results.json","independent-c3-check.json"):
+          for name in ("c3-third-seed.hbp","c3-results.json","independent-c3-check.json","identifiability-counterexample.json"):
               blobs=[(r/name).read_bytes() for r in roots]
               assert all(b==blobs[0] for b in blobs),"PLATFORM_BYTE_DRIFT:"+name
               for r,b in zip(roots,blobs):
