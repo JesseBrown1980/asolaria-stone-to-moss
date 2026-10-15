@@ -29,6 +29,7 @@ LOSS={
     ("triad-stress","TAP4"):1
 }
 CHALLENGE_SHA="e02346f41a43ecf6f772a16cb585b4c214a01b9513f1f34f2c9ba1ad52f5773b"
+TRACE_SHA="1d9a57dc908ad206d64ab336cd9f9de402614821c41369fb19dfb5f2f2c46bfe"
 
 
 def sha(data):
@@ -53,6 +54,7 @@ def main():
         b=jsout.read_bytes()
         assert a==b,"Python and Node recovery traces differ"
         digest=sha(a)
+        assert digest==TRACE_SHA,"Full source-reconstruction trace differs from pinned bytes"
         assert digest==python["canonical_trace_sha256"]==node["canonical_trace_sha256"]
         for record in (python,node):
             assert record["schema"]=="ASOLARIA-SEAT4-MINIMAL-RECOVERY-V1"
