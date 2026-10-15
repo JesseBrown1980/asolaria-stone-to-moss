@@ -62,6 +62,28 @@ def calculate_wave(seat,nonce,w,operators):
             for idx,op in enumerate(operators[li]):
                 rows.append(canonical_row(seat,w,li,body,idx,apply(op,initial)))
     return rows
+def accept_child_wave(msg, seat, wave, parent_rows):
+    """One acceptance function for real child results AND forged-record controls."""
+    if msg.get("kind")!="wave" or msg.get("seat")!=seat or msg.get("wave")!=wave:
+        raise ValueError("child-wave-role-or-order-mismatch")
+    if msg.get("gate_ok") is not True or msg.get("watcher_gate_ok") is not True:
+        raise ValueError("child-or-watcher-gate-not-green")
+    if msg.get("watcher_checked")!=405 or msg.get("records")!=1215:
+        raise ValueError("incomplete-child-receipt")
+    reported_rows=msg.get("rows")
+    if not isinstance(reported_rows,list) or len(reported_rows)!=1215:
+        raise ValueError("missing-full-child-states")
+    incoming_bytes="".join(reported_rows).encode("ascii")
+    reported_digest=msg.get("rows_sha256")
+    if sha(incoming_bytes)!=reported_digest:
+        raise ValueError("forged-child-rows-sha")
+    if reported_rows!=parent_rows:
+        raise ValueError("child-and-independent-parent-disagree")
+    parent_digest=sha("".join(parent_rows).encode("ascii"))
+    if reported_digest!=parent_digest:
+        raise ValueError("child-digest-does-not-match-parent")
+    return parent_digest
+
 def main(seat,challenge_file,out_dir):
     if seat not in ("seat-1","seat-2","seat-3","seat-4"):raise ValueError("bad seat")
     c=require_challenge(challenge_file)
@@ -89,16 +111,26 @@ def main(seat,challenge_file,out_dir):
             local_rows=calculate_wave(seat,c["nonce"],wave,operators)
             parent_end=time.time_ns()//1_000_000
             msg=pread(proc)
-            assert msg["kind"]=="wave" and msg["seat"]==seat and msg["wave"]==wave
-            assert msg["gate_ok"] and msg["watcher_gate_ok"] and msg["watcher_checked"]==405
-            assert msg["records"]==len(local_rows)==1215 and msg["rows"]==local_rows
-            raw="".join(local_rows).encode("ascii")
-            digest=sha(raw)
-            assert msg["rows_sha256"]==digest
-            # Parent gate must reject fabricated child receipts (N-Nest fail-closed).
-            assert msg["rows_sha256"]!="0"*64
-            bad=bytearray(raw);bad[len(raw)//2]^=1
-            assert sha(bad)!=digest
+            digest=accept_child_wave(msg,seat,wave,local_rows)
+            # Exercise the EXACT same real-child acceptance function with
+            # adversarially forged message content. Both must be rejected.
+            forged_sha=dict(msg)
+            forged_sha["rows_sha256"]="0"*64
+            try:
+                accept_child_wave(forged_sha,seat,wave,local_rows)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError("parent-accepted-forged-child-digest")
+            forged_rows=dict(msg)
+            forged_rows["rows"]=list(msg["rows"])
+            forged_rows["rows"][0]=forged_rows["rows"][0].replace("|value=","|value=0",1)
+            try:
+                accept_child_wave(forged_rows,seat,wave,local_rows)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError("parent-accepted-forged-child-state")
             overlap_this=max(0,min(parent_end,msg["child_math_completed_ms"])-
                               max(parent_begin,msg["child_started_ms"]))
             overlap_ms+=overlap_this
