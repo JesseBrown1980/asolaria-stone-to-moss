@@ -1,0 +1,5 @@
+PORTAL|schema=ASOLARIA-SEAT4-R6-OPTICAL-NEURAL-PREFLIGHT-V1|synthetic=1|json=0
+INPUT|merged_seat4_r5_sha256=077bf98dc7c10e3125ce1147270cc927ce978ab63a19ec30e4655267f1770400|source_bank_sha256=52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345|json=0
+DATA|rows=15309|unique_source_sites=567|sha256=46a7b6c55ed32b6b1bf5d5d3f5033d8b3ef0214a54e1eb7942dc952a1de1c8bc|json=0
+FALSIFIERS|cases=12|synthetic_null_and_afterglow=HELD|json=0
+END|digital_preflight=PASS|real_photon_measurement=HOLD|neural_physical=HOLD|json=0
