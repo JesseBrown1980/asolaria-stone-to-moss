@@ -54,6 +54,8 @@ jobs:
         run: node experiments/photon_electron_mcp/electron_verifier.js original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi node-photon
       - name: Cross-language fixed SHA and 12 negative controls
         run: python experiments/photon_electron_mcp/verify_dual.py py-photon node-photon
+      - name: Independent analytic photon statistics and bytewise source readback cross-exam
+        run: python experiments/photon_electron_mcp/cross_exam.py rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-photon/results.json py-photon/photon-electron.hbp
       - name: Upload complete trace and receipts
         uses: actions/upload-artifact@v4
         with:
