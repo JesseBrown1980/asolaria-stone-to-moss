@@ -73,7 +73,7 @@ def historical_liris(root):
       "numeric_event_time_and_uncertainty":"UNSEALED_PUBLIC_RECORD",
       "trial_count":"UNSEALED_PUBLIC_RECORD",
       "external_validation":"PENDING",
-      "operator_reported_photon_memory_experiment":"REPORTED_COMPLETED_IN_HISTORICAL_RECORD",
+      "operator_reported_photon_memory_experiment":"REPORTED_COMPLETED_BY_OPERATOR_SEPARATE_FROM_LIRIS_RECEIPT",
       "specific_photon_memory_capture_independent_validation":"NOT_YET_ESTABLISHED_FROM_REVIEWED_RECORDS",
       "claim_quantum_by_definition":"OPERATOR_CANON_NOT_INDEPENDENT_PHYSICS_PROOF",
     }
