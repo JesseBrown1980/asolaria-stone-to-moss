@@ -50,7 +50,8 @@ jobs:
           python independent_referee.py out
           python independent_memory_referee.py out
           python independent_camera_referee.py out
-          (cd out && sha256sum ASOLARIA-PROXIMA-RUST181.hbp EPOCHS-RUST181.csv PARTICLE-MEMORY-R1.ledger PARTICLE-MEMORY-R1.hbp TEN-BILLION-YEAR-R1.hbp SYNTHETIC-FITS-R4.fits FREEZE-PLAY-R4.hbp RAINBOW-QR-R4.tsv > COMPUTATIONAL.sha256)
+          python independent_nine_jump_referee.py out
+          (cd out && sha256sum ASOLARIA-PROXIMA-RUST181.hbp EPOCHS-RUST181.csv PARTICLE-MEMORY-R1.ledger PARTICLE-MEMORY-R1.hbp TEN-BILLION-YEAR-R1.hbp SYNTHETIC-FITS-R4.fits FREEZE-PLAY-R4.hbp RAINBOW-QR-R4.tsv NINE-JUMP-MOTION-R5.csv NINE-JUMP-MOTION-R5.hbp > COMPUTATIONAL.sha256)
       - uses: actions/upload-artifact@v4
         with:
           name: proxima-${{ matrix.os }}-${{ matrix.profile }}
@@ -81,6 +82,8 @@ jobs:
               cmp fetched/proxima-ubuntu-latest-debug/SYNTHETIC-FITS-R4.fits "$p/SYNTHETIC-FITS-R4.fits"
               cmp fetched/proxima-ubuntu-latest-debug/FREEZE-PLAY-R4.hbp "$p/FREEZE-PLAY-R4.hbp"
               cmp fetched/proxima-ubuntu-latest-debug/RAINBOW-QR-R4.tsv "$p/RAINBOW-QR-R4.tsv"
+              cmp fetched/proxima-ubuntu-latest-debug/NINE-JUMP-MOTION-R5.csv "$p/NINE-JUMP-MOTION-R5.csv"
+              cmp fetched/proxima-ubuntu-latest-debug/NINE-JUMP-MOTION-R5.hbp "$p/NINE-JUMP-MOTION-R5.hbp"
             done
           done
           test "$(grep -c '^LEVEL|' fetched/proxima-ubuntu-latest-debug/ASOLARIA-PROXIMA-RUST181.hbp)" = 7
