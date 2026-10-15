@@ -89,7 +89,10 @@ def full_case(bridge,q,pin,fixture,arm,depth,scenario,truth,substituted):
     received_params=dict(PARAMS)
     if scenario=="S":received_params["seed"]+=1
     report=copy.deepcopy(substituted if scenario=="S" else truth)
-    if scenario in ("E","W"):report=inject_score_fault(report)
+    # W is a watcher compromise: for A/B no watcher exists. Preserve this
+    # factorial cell without pretending that score corruption is a W attack.
+    if scenario=="E" or (scenario=="W" and arm in ("C","D")):
+        report=inject_score_fault(report)
     # Independent reference is NEVER taken from the mutable submitted record.
     trust_nonce=fixture["envelope"]["session_nonce"]
     requested_nonce=("00000000000000000000000000000000" if scenario=="R" else trust_nonce)
@@ -157,6 +160,15 @@ def full_case(bridge,q,pin,fixture,arm,depth,scenario,truth,substituted):
         "release_authorized":authorized,
         "synthetic_fixture_authorized":bool(synthetic_fixture_authorized),
         "self_generated_authorization_attempt":attempted_autoconsent,
+        "watcher_attack_exercised":(scenario=="W" and arm in ("C","D")),
+        "fault_injection_stage":(
+            "report_postcompute_snr" if scenario=="E"
+            else ("watcher_response_compromised" if scenario=="W" and arm in ("C","D")
+                  else ("not_applicable_no_watcher" if scenario=="W"
+                        else ("initial_shared_input_substitution" if scenario=="S"
+                              else ("source_nonce" if scenario=="R"
+                                    else ("descendant_generated_consent" if scenario=="C" else "none")))))
+        ),
         "same_source_replays":rounds,
         "untrusted_source_substitution_detected":(arm=="D" and scenario=="S" and not source_signed),
         "wrong_nonce_replay_rejected":(arm=="D" and scenario=="R" and not source_signed),
@@ -199,6 +211,9 @@ def run(seat1,nn,q,out):
             assert h["accepted_for_processing"]
             assert not h["release_authorized"]
             assert not idx[(a,d,"C")]["release_authorized"]
+            if a in ("A","B"):
+                assert idx[(a,d,"W")]["watcher_attack_exercised"] is False
+                assert idx[(a,d,"W")]["accepted_for_processing"] is True
             if a in ("C","D"):
                 assert not idx[(a,d,"E")]["accepted_for_processing"]
                 assert not idx[(a,d,"W")]["accepted_for_processing"]
