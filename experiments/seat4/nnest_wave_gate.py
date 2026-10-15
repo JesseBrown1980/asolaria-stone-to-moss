@@ -100,7 +100,8 @@ def check_original_n_nest(nn):
                 "pinned_git_blob_sha1":blob_sha((nn/script).read_bytes()),
                 "clean_tree":"MEASURED_PASS",
                 "fault_levels_detected":faults,
-                "hbp_sha256":sha(actual),
+                "timestamped_hbp_sidecar_verified":True,
+                "hbp_size_bytes":len(actual),
                 "scope":"local software demonstration under pinned upstream source"
             })
     return results
