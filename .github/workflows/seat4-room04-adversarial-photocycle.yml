@@ -81,6 +81,11 @@ jobs:
           python - "$RUNNER_TEMP/room04" <<'PY'
           import hashlib,json,pathlib,sys
           root=pathlib.Path(sys.argv[1])
+          # The model/trace fields were identical on Windows and Ubuntu, but
+          # Python redirected stdout used CRLF on Windows. Canonicalize only
+          # audit JSON logs; the frozen source and all HBP are never modified.
+          for audit in root.glob("*audit.json"):
+              audit.write_bytes(audit.read_bytes().replace(b"\r\n",b"\n"))
           receipt=json.loads((root/"receipt.json").read_text())
           p=json.loads((root/"python-audit.json").read_text())
           n=json.loads((root/"node-audit.json").read_text())
@@ -100,6 +105,22 @@ jobs:
           assert receipt["halt"]["accepted_before_halt"]==17
           assert receipt["halt"]["post_halt_denied"]==64
           assert receipt["halt"]["human_prompts"]==receipt["halt"]["external_privileges_granted"]==0
+          # Hash commitments were independently measured from the first
+          # successful Ubuntu run and its downloaded raw Actions artifact.
+          pinned={
+              "ticks.hbp":"2b9575a8d46c2d2f0842d590081641ed2b20daddccc7153107d76efa0d597277",
+              "faults.hbp":"ad471bc627451f65d6f26797ddf6c03546ac1f74ab8e3698d9825f1409f9bbb2",
+              "original-phaseA.hbp":"de2c346a92e626403cc5c59b9ffa688d050163fbb48ab8b1cb6a4cde795b0a8b",
+              "phaseA-peer-receipt.json":"d9b4ac57e6cea5f2fe91473f6593d8d3c5e14c9975b9a279b65af9f9acf539e1",
+              "receipt.json":"e63baf8accdfbca43bd23e02b8849fcf312ee904ea3a29e02ab9c11bd8b0dafd",
+              "node-audit.json":"07a46050ecc7809fb83f6b16ca93a00f48b1aa3e67f759034ec03bee357e8621",
+              "python-audit.json":"8d37e13c5f11e1c90ff8554896e6b70ac63642b2df8da81dad83973c074aefbe",
+              "phaseA-peer-audit.json":"343cf71a7719266b065816a2478b0320ac5462dd604958ce3dc546b0e09f770a",
+              "retention-audit.json":"4c2cdf1705743c567f09b4a872855ab66a1b3d9d3e75bd7a4f4c5e916fff9b9b",
+          }
+          for name,expected in pinned.items():
+              assert hashlib.sha256((root/name).read_bytes()).hexdigest()==expected,("cross-OS artifact drift",name)
+          assert b"\r\n" not in (root/"receipt.json").read_bytes()
           manifest=[]
           for path in sorted(root.iterdir()):
               if path.is_file():
