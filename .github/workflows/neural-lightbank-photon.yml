@@ -1,0 +1,121 @@
+name: Neural light-bank photon-electron memory - independent physical CPU replay
+
+on:
+  push:
+    branches:
+      - experiment/neural-electron-lif-memory-20261015
+    paths:
+      - experiments/neural_lightbank/**
+      - .github/workflows/neural-lightbank-photon.yml
+  pull_request:
+    paths:
+      - experiments/neural_lightbank/**
+      - .github/workflows/neural-lightbank-photon.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  neural-photon:
+    name: NeuralPhoton-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install QR detector library for original PNG fixture (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install image QR decoding dependencies
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Rebuild frozen 81 synthetic source memories from QR images
+        run: python experiments/seat1/round2/lightbank_81.py original-evidence
+      - name: Independently verify original QR bytes in Node
+        run: node experiments/seat1/round2/verify_lightbank_81.js original-evidence
+      - name: Rebuild 567 source-bank full-byte entries
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py original-evidence rainbow-evidence
+      - name: Independently check full retained bank on Node
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js original-evidence rainbow-evidence
+      - name: Recompute 2835 photon-electron source frames in Python
+        run: python experiments/photon_electron_mcp/photon_model.py original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-photon
+      - name: Independently recompute photon/electron input in Node
+        run: node experiments/photon_electron_mcp/electron_verifier.js original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi node-photon
+      - name: Check full photon-model parents and source bit errors
+        run: python experiments/photon_electron_mcp/verify_dual.py py-photon node-photon
+      - name: Independent analytical photon/byte input audit
+        run: python experiments/photon_electron_mcp/cross_exam.py rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-photon/results.json py-photon/photon-electron.hbp
+      - name: Python neural training and readback; 10 fault injections and violet-band real deletion
+        run: python experiments/neural_lightbank/neural_gate.py rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-photon/photon-electron.hbp neural-py
+      - name: Independently implemented Node neural recall and source-truth watcher
+        run: node experiments/neural_lightbank/neural_gate.js rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi node-photon/photon-electron.hbp neural-node
+      - name: Third independent full-byte neuron/fingerprint verification
+        run: python experiments/neural_lightbank/verify_neural.py rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-photon/photon-electron.hbp neural-py neural-node
+      - name: Upload exact photon input and neural readback artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: neural-photon-${{ matrix.os }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            original-evidence/lightbank-memories.json
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+            py-photon/photon-electron.hbp
+            py-photon/results.json
+            node-photon/photon-electron.hbp
+            node-photon/results.json
+            neural-py/neural-gate.hbp
+            neural-py/neural-gate.json
+            neural-py/*.sha256
+            neural-node/neural-gate.hbp
+            neural-node/neural-gate.json
+            neural-node/*.sha256
+
+  cross-os-parity:
+    name: NeuralPhoton Python Node Ubuntu Windows byte audit
+    needs: neural-photon
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          name: neural-photon-ubuntu-latest
+          path: from-ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: neural-photon-windows-latest
+          path: from-windows
+      - name: Independently validate four exact full neural evidence programs
+        run: python experiments/neural_lightbank/verify_neural.py from-ubuntu/rainbow-evidence/rainbow7-bank.jsonl from-ubuntu/rainbow-evidence/rainbow7-index.hbi from-ubuntu/py-photon/photon-electron.hbp from-ubuntu/neural-py from-ubuntu/neural-node from-windows/neural-py from-windows/neural-node
+      - name: Check original byte source and photon-model against both hosted OSes
+        shell: python
+        run: |
+          import hashlib
+          from pathlib import Path
+          for name in ('original-evidence/lightbank-memories.json',
+                       'rainbow-evidence/rainbow7-bank.jsonl',
+                       'rainbow-evidence/rainbow7-index.hbi',
+                       'py-photon/photon-electron.hbp',
+                       'node-photon/photon-electron.hbp'):
+              a=(Path('from-ubuntu')/name).read_bytes()
+              b=(Path('from-windows')/name).read_bytes()
+              assert a==b, name
+              print(name,len(a),hashlib.sha256(a).hexdigest())
