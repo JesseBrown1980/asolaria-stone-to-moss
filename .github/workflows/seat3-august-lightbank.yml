@@ -1,0 +1,70 @@
+name: Seat3 August light-bank projector / Colour QR protocol audit
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*lightbank*"
+      - "experiments/seat3/PREREG-LIGHTBANK*"
+      - ".github/workflows/seat3-august-lightbank.yml"
+      - "stones/2026-10-15-rainbow81/seat3-august-lightbank*"
+  push:
+    branches:
+      - main
+      - agent/seat-3/lightbank-projector-rgb-20261015
+    paths:
+      - "experiments/seat3/*lightbank*"
+      - "experiments/seat3/PREREG-LIGHTBANK*"
+      - ".github/workflows/seat3-august-lightbank.yml"
+      - "stones/2026-10-15-rainbow81/seat3-august-lightbank*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bank-qr-protocol:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Independently pin original 2026-08 source Git blobs (no historical edits)
+        shell: bash
+        run: |
+          git clone -q https://github.com/JesseBrown1980/the-law-of-space-and-light-and-color-and-travel-at-the-speed-of-one.git "$RUNNER_TEMP/august-law"
+          test "$(git -C "$RUNNER_TEMP/august-law" hash-object -- README.md)" = 6412cb3b82ec084b03b68c9c4d074a58920ac1ee
+          git clone -q https://github.com/JesseBrown1980/the-colour-qr.git "$RUNNER_TEMP/august-qr"
+          test "$(git -C "$RUNNER_TEMP/august-qr" hash-object -- README.md)" = dec43dd370de557f2511e69227b1e234e001ddfc
+          git clone -q https://github.com/JesseBrown1980/light-boat-engine-ships-with-oils.git "$RUNNER_TEMP/august-boat"
+          test "$(git -C "$RUNNER_TEMP/august-boat" hash-object -- README.md)" = ba1c1a36ec1d4201297ccad325f848c6040dc95e
+          test "$(git hash-object -- README.md)" = 74a8e3c9b02fadc86305d47da6b90564334f24bc
+      - name: Independently write/read 65536 B source into bounded RGB memory and verify all records
+        shell: bash
+        run: |
+          python experiments/seat3/seat3_lightbank.py "$RUNNER_TEMP/py.hbp" "$RUNNER_TEMP/py.json"
+          node experiments/seat3/seat3_lightbank.js "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/js.json"
+          python experiments/seat3/verify_lightbank.py "$RUNNER_TEMP/py.hbp" "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/py.json" "$RUNNER_TEMP/js.json" "$RUNNER_TEMP/lightbank-evidence"
+      - name: Any changed canonical output must fail closed
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; d=pathlib.Path(os.environ["RUNNER_TEMP"]); raw=(d/"py.hbp").read_bytes(); (d/"tampered.hbp").write_bytes(bytes([raw[0]^1])+raw[1:])'
+          if python experiments/seat3/verify_lightbank.py "$RUNNER_TEMP/tampered.hbp" "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/py.json" "$RUNNER_TEMP/js.json" "$RUNNER_TEMP/MUST_NOT_EXIST"; then
+            echo "FAIL: tampered HBP accepted"; exit 1
+          fi
+          echo "HELD changed HBP as expected"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-august-lightbank-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/lightbank-evidence/*
+          if-no-files-found: error
+          retention-days: 30
