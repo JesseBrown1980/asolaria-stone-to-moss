@@ -96,6 +96,13 @@ jobs:
               assert x["cases"]["distinct_wave_address_identities"]==2187
               assert x["cases"]["independent_gate_schedule_verified"]
               assert x["cases"]["every_born_lane_recomputed_from_source"]
+              assert x["cases"]["extra_false_qutrit_lane_attacks_rejected"]==8748
+              attack=x["cases"]["independently_constructed_actual_attack_packets"]
+              assert sum(v for k,v in attack.items() if not k.startswith("FALSE_ROUTE:"))==52488
+              assert attack["CORRUPT:FAULT_HELD"]==8748
+              assert attack["STALE:FAULT_HELD"]==8748
+              assert attack["FORGED:FAULT_HELD"]==8748
+              assert not x["cases"]["replayed_HBP_contains_raw_attack_bytes"]
           print("SEAT2_INDEPENDENT_PIXEL_AND_PROVENANCE_PASS")
           print("SEAT2_RECEIPT_SHA256",hashlib.sha256((root/"seat2-independent-result.json").read_bytes()).hexdigest())
           PY
@@ -104,6 +111,7 @@ jobs:
           name: seat2-round3-zxing-${{ matrix.os }}-py${{ matrix.python }}
           path: |
             seat2-artifacts/seat2-independent-result.json
+            seat2-artifacts/seat2-transport-manifest.json
             seat2-artifacts/seat2-summary.txt
           if-no-files-found: error
           retention-days: 90
