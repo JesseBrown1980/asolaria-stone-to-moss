@@ -1,0 +1,109 @@
+name: Seat3 independent Rainbow27 alias factorization and route entropy peer audit
+
+on:
+  push:
+    branches:
+      - agent/seat-3/round3-index-factorization-route-info-20261015
+    paths:
+      - experiments/seat3/round3_alias_entropy/**
+      - .github/workflows/seat3-r27-alias-entropy.yml
+  pull_request:
+    paths:
+      - experiments/seat3/round3_alias_entropy/**
+      - .github/workflows/seat3-r27-alias-entropy.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  information-audit:
+    name: Independent ${{ matrix.os }} Python ${{ matrix.python }} archive audit
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          persist-credentials: false
+          path: frozen-seat1-pr80
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: c32d472dfe84f352450eb50469e0e9a987c33d78
+          persist-credentials: false
+          path: frozen-seat3-pr81
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: SHA lock exact upstream Git objects (independent code is not imported)
+        shell: bash
+        run: |
+          test "$(git -C frozen-seat1-pr80 rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-seat1-pr80 rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+          test "$(git -C frozen-seat3-pr81 rev-parse HEAD)" = c32d472dfe84f352450eb50469e0e9a987c33d78
+          test "$(git -C frozen-seat3-pr81 rev-parse HEAD:experiments/seat3/rainbow27_v2/rainbow27_v2.py)" = 097c2d93cc6cfeb6f03a2df75d9529b267dadc44
+      - name: Fetch already published Seat1 PR80 actual full evidence files
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/upstream80
+      - name: Fetch already published Seat3 PR81 actual full trace files
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38747014513
+          name: rainbow27-v2-ubuntu-latest-py3.11
+          path: ${{ runner.temp }}/upstream81
+      - name: Third implementation - read all 15309 aliases and 59049 routes and compute information
+        shell: bash
+        run: |
+          python experiments/seat3/round3_alias_entropy/audit_round3_alias_route.py "$RUNNER_TEMP/upstream80" "$RUNNER_TEMP/upstream81" "$RUNNER_TEMP/seat3-independent-audit"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-entropy-factorization-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/seat3-independent-audit/*
+          retention-days: 30
+          if-no-files-found: error
+
+  cross-platform-byte-parity:
+    name: Byte-exact independent scientific receipts across four jobs
+    needs: information-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-entropy-factorization-*
+          merge-multiple: false
+          path: audit-outputs
+      - name: Full byte parity on both canonical receipts, plus sidecars
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          root=Path('audit-outputs')
+          variants=sorted(root.glob('seat3-entropy-factorization-*'))
+          assert len(variants)==4, variants
+          names=('peer-entropy-factorization.hbp','peer-entropy-factorization.json')
+          for name in names:
+              data=[(v/name).read_bytes() for v in variants]
+              assert all(b==data[0] for b in data), 'CROSS_OS_REPORT_DRIFT:'+name
+              for variant,blob in zip(variants,data):
+                  side=(variant/(name+'.sha256')).read_bytes()
+                  assert side==(hashlib.sha256(blob).hexdigest()+'  '+name+'\n').encode('ascii')
+              print('FOUR_RUN_BYTE_EQUAL',name,len(data[0]),hashlib.sha256(data[0]).hexdigest())
+          PY
