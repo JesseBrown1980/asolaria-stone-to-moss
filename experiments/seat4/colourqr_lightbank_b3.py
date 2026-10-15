@@ -28,6 +28,9 @@ EXPECTED = {
     "receipt.json": (2751, "e63baf8accdfbca43bd23e02b8849fcf312ee904ea3a29e02ab9c11bd8b0dafd"),
 }
 SCHEMA = "ASOLARIA-SEAT4-COLOURQR-LIGHTBANK-B3-V1"
+# Measured after first successful full 35MB Python build, pinned as a
+# separate source-trust reference rather than trusting an accompanying hash.
+PINNED_MANIFEST_SHA = "a87d27bce1924f3fc4340a337706bf1365cb38919feee71e759f594c3549ced7"
 
 
 def sha(raw):
@@ -257,6 +260,14 @@ def build(source_dir, out_dir):
     return result
 
 
+def trusted_bank_manifest(raw):
+    """Reject a stale or rewritten bank catalog against the pinned IS digest."""
+    assert sha(raw) == PINNED_MANIFEST_SHA, "STALE_OR_TAMPERED_BANK_MANIFEST"
+    parsed = json.loads(raw)
+    assert canonical(parsed) == raw
+    return parsed
+
+
 def all_bank_files(outdir, manifest):
     banks = []
     for i in range(N_BANKS):
@@ -321,8 +332,14 @@ def restore_archive(banks, manifest, order=None):
 
 def verify(out_dir, source_dir, internal=False):
     manifest_raw = (out_dir / "bank_manifest.json").read_bytes()
-    manifest = json.loads(manifest_raw)
-    assert canonical(manifest) == manifest_raw
+    manifest = trusted_bank_manifest(manifest_raw)
+    mutated = bytearray(manifest_raw)
+    mutated[len(mutated) // 2] ^= 1
+    try:
+        trusted_bank_manifest(bytes(mutated))
+        raise AssertionError("Stale manifest illegally accepted")
+    except AssertionError as exc:
+        assert str(exc) == "STALE_OR_TAMPERED_BANK_MANIFEST"
     assert manifest["schema"] == SCHEMA
     assert manifest["classification"] == "SYNTHETIC_DIGITAL_MEMORY_ONLY"
     assert manifest["sources"] == source_archive(source_dir)[1]["sources"]
