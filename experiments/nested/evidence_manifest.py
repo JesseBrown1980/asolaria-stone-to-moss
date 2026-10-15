@@ -20,9 +20,10 @@ def sha(blob):return hashlib.sha256(blob).hexdigest()
 def main(root):
     root=Path(root)
     run_id=os.getenv("GITHUB_RUN_ID","")
-    source=os.getenv("GITHUB_SHA","")
+    checkout=os.getenv("GITHUB_SHA","")
+    source=os.getenv("ASOLARIA_PRODUCER_HEAD_SHA",checkout)
     attempt=os.getenv("GITHUB_RUN_ATTEMPT","")
-    assert run_id.isdecimal() and attempt.isdecimal() and len(source)==40, "GitHub execution provenance not available"
+    assert run_id.isdecimal() and attempt.isdecimal() and len(source)==40 and len(checkout)==40, "GitHub execution provenance not available"
     master=json.loads((root/"master-referee.json").read_text())
     prism=json.loads((root/"qprism-reductions-verdict.json").read_text())
     assert master["status"]==prism["status"]=="PASS"
@@ -73,6 +74,8 @@ def main(root):
         "producing_github_run_id":run_id,
         "producing_attempt":int(attempt),
         "producing_git_head_sha":source,
+        "producing_checkout_sha":checkout,
+        "git_sha_semantics":"producing_git_head_sha is PR branch head or workflow-dispatch SHA; producing_checkout_sha is actual GitHub Actions checkout ref (PR synthetic merge when applicable)",
         "original_challenge_source_sha256":CHALLENGE,
         "source_lineage":{
            "n_nest":{"repository":"JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED","commit":NNEST_COMMIT},
