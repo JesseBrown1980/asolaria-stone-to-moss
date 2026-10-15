@@ -264,9 +264,8 @@ function audit(){
     "|I_b="+witness.conducting_distribution_b+
     "|difference="+witness.difference+"|json=0");
   for(const [k,v] of sortedEntries(negatives))
-    lines.push("NEG|name="+k+"|value="+String(v).toLowerCase().replace(
-      /^math_green_origin_unauthenticated$/,"MATH_GREEN_ORIGIN_UNAUTHENTICATED"
-    )+"|json=0");
+    lines.push("NEG|name="+k+"|value="+
+      (typeof v==="boolean"?String(v).toLowerCase():String(v))+"|json=0");
   lines.push("HALT|before_tick=73|invalid_resume=HELD|synthetic_resume=PASS"+
              "|final_equal=PASS|human_prompts_per_tick=0|json=0");
   const {candidates,feedback,fixed,chosen}=controllerAudit();
