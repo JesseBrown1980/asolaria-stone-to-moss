@@ -92,7 +92,7 @@ def main():
  checks=controls()
  result=run(json.loads(raw),CHALLENGE_SHA,args.output)
  print(json.dumps({"schema":"ASOLARIA-SEAT4-ORIGINAL-SEAT1-TRIAD-REPLAY-V1",
-  "seat":"seat-4","classification":"PUBLIC_SOFTWARE_REPLAY_NOT_PHYSICAL_HOST",
+  "status":"PASS","seat":"seat-4","classification":"PUBLIC_SOFTWARE_REPLAY_NOT_PHYSICAL_HOST",
   "challenge_sha256":CHALLENGE_SHA,"smallstep":checks,
   "physical_hosts_attested":0,"fresh_blinded_three_device_challenge":False,
   **result},sort_keys=True))
