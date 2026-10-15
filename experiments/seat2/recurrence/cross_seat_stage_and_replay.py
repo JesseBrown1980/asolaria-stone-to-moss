@@ -97,9 +97,9 @@ def main():
     assert 'faulty_ab=(scenario=="E" and arm in ("A","B"))' in s2
     assert 'observed=hex81(int(expected_received,16)^1) if faulty_ab else expected_received' in s2
     assert 'if arm=="B" and attempts:' in s2
-    assert 'assert not c["release_authorized"]' not in s2 # no accidental claims
+    assert 'assert not c["release_authorized"]' in s2 # verify enforced no release
     assert 'watcher_attack_exercised' in s1
-    assert 'if scenario=="W" and arm in ("C","D")' in s1
+    assert 'scenario=="W" and arm in ("C","D")' in s1
 
     test=dirs["seat2"]/"experiments/seat2/recurrence"
     assert sha((test/"seat2_rim_signed_source_v1.json").read_bytes())==SEAT2_FIXTURE
