@@ -1,0 +1,97 @@
+name: Seat1 Round4 V2 peer ordered-address crosswalk and 413343 bank reads
+on:
+  push:
+    branches:
+      - agent/seat-1/round4-crosslane-r27v2-bank-20261015
+    paths:
+      - experiments/seat1/round4/**
+      - .github/workflows/seat1-round4-v2-crosslane.yml
+  pull_request:
+    paths:
+      - experiments/seat1/round4/**
+      - .github/workflows/seat1-round4-v2-crosslane.yml
+permissions:
+  contents: read
+jobs:
+  reproducible-crosslane:
+    name: Crosslane-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Pin independent Seat3 V2 producer source (NOT substituted for original QR source)
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: c32d472dfe84f352450eb50469e0e9a987c33d78
+          path: peer-v2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install actual QR pixel decoder on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install ordinary QR raster and reader libraries (no paid compute)
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Regenerate exactly the original Seat1 QR memory from pixels
+        run: python experiments/seat1/round2/lightbank_81.py base-evidence
+      - name: Independently validate source and biological software trace
+        run: node experiments/seat1/round2/verify_lightbank_81.js base-evidence
+      - name: Recreate original Rainbow7 full byte bank
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py base-evidence rainbow-evidence
+      - name: Independently verify original 567 entries and original negative controls
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js base-evidence rainbow-evidence
+      - name: Recreate original 15309 ordered references
+        run: python experiments/seat1/ordered27/ordered27_index.py base-evidence rainbow-evidence ordered-evidence
+      - name: Verify previous index and source provenance checks
+        run: node experiments/seat1/ordered27/verify_ordered27.js base-evidence rainbow-evidence ordered-evidence
+      - name: Generate peer Seat3 V2 full trace from independently PINNED source
+        run: python peer-v2/experiments/seat3/rainbow27_v2/rainbow27_v2.py peer-evidence
+      - name: Independently compare peer's Node full trace bytes (59049 records)
+        run: node peer-v2/experiments/seat3/rainbow27_v2/rainbow27_v2.js peer-evidence/rainbow27-v2-node.hbp
+      - name: Check exact pinned peer trace is byte identical across both algorithms
+        run: |
+          python -c "from pathlib import Path;import hashlib;a=Path('peer-evidence/rainbow27-v2.hbp').read_bytes();b=Path('peer-evidence/rainbow27-v2-node.hbp').read_bytes();assert a==b;assert hashlib.sha256(a).hexdigest()=='8544bb305943d7423f6993cffec4a8232d291811e974c78e7d8ec91a53719672';print('PINNED_PEER_V2_PASS',len(a))"
+      - name: Independently reconstruct exact 59049 source-bound route x 7 indexed bank reads
+        run: python experiments/seat1/round4/crosslane_v2.py base-evidence rainbow-evidence ordered-evidence peer-evidence crosslane-evidence
+      - name: Independently recompute whole crosslane trace and seven adversarial controls in Node
+        run: node experiments/seat1/round4/verify_crosslane_v2.js base-evidence rainbow-evidence ordered-evidence peer-evidence crosslane-evidence
+      - name: Keep full evidence and checked source hashes
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat1-v2-crosslane-${{ matrix.os }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            base-evidence/lightbank-memories.json
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+            ordered-evidence/ordered27-rainbow7-index.hbi
+            peer-evidence/rainbow27-v2.hbp
+            crosslane-evidence/
+  compare-cross-os:
+    name: Compare every crosswalk byte and Node verdict (Ubuntu vs Windows)
+    runs-on: ubuntu-latest
+    needs: reproducible-crosslane
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-v2-crosslane-ubuntu-latest
+          path: ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-v2-crosslane-windows-latest
+          path: windows
+      - name: Byte-for-byte scientific records and receipt parity
+        run: |
+          python -c "from pathlib import Path;import hashlib; names=['base-evidence/lightbank-memories.json','rainbow-evidence/rainbow7-bank.jsonl','rainbow-evidence/rainbow7-index.hbi','ordered-evidence/ordered27-rainbow7-index.hbi','peer-evidence/rainbow27-v2.hbp','crosslane-evidence/seat1-crosslane.hbp','crosslane-evidence/seat1-crosslane.json','crosslane-evidence/seat1-crosslane-node-verification.json'];[(lambda p,a,b:print('ROUND4_CROSS_OS_EXACT',p,hashlib.sha256(a).hexdigest()) if a==b else (_ for _ in ()).throw(AssertionError('CROSS_OS_DRIFT_'+p)))(p,(Path('ubuntu')/p).read_bytes(),(Path('windows')/p).read_bytes()) for p in names]"
