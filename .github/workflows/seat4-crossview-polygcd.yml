@@ -8,11 +8,13 @@ on:
     paths:
       - experiments/seat4/crossview_polygcd_certificate.py
       - experiments/seat4/PREREG-CROSSVIEW-GCD-OPTIMAL-VIEWS-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-crossview-polygcd-peer-certificate*
       - .github/workflows/seat4-crossview-polygcd.yml
   pull_request:
     paths:
       - experiments/seat4/crossview_polygcd_certificate.py
       - experiments/seat4/PREREG-CROSSVIEW-GCD-OPTIMAL-VIEWS-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-crossview-polygcd-peer-certificate*
       - .github/workflows/seat4-crossview-polygcd.yml
   workflow_dispatch:
 
@@ -54,6 +56,17 @@ jobs:
           assert not obj["independent_source_identity_attested"]
           parts=pathlib.Path(str(p)+".sha256").read_text("ascii").split()
           assert parts==[hashlib.sha256(data).hexdigest(),p.name]
+          assert parts[0]=="b12c97d7a54a2c96f1855fdeba484354d3bd4eb5bc1297b189bae304a50edbdf"
+          sealed=pathlib.Path("stones/2026-10-15-rainbow81/seat4-crossview-polygcd-peer-certificate.json")
+          sealed_raw=sealed.read_bytes()
+          sealed_sha=hashlib.sha256(sealed_raw).hexdigest()
+          assert sealed_sha=="5e149162781cfe35470c93671eaf3062f2eeb6135b6719f74c4de6a0655a0cc0"
+          sidecar=pathlib.Path(str(sealed)+".sha256").read_text("ascii").split()
+          assert sidecar==[sealed_sha,sealed.name]
+          peer=json.loads(sealed_raw)
+          assert peer["independent_full_63subset_receipt_sha256"]==parts[0]
+          assert peer["source_seat3_commit"]==obj["peer_source_commit"]
+          assert peer["full_source_rank81_subsets"]==obj["full_rank_subsets"]
           print("INDEPENDENT_CROSSVIEW_GCD_SHA256",parts[0])
           PY
       - uses: actions/upload-artifact@v4
