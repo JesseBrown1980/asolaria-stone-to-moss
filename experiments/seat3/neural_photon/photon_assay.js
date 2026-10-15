@@ -196,6 +196,8 @@ function run(input,output){
         "|count1="+cumulative[1][PORTS[band]]+
         "|count3="+cumulative[3][PORTS[band]]+
         "|count7="+expected+
+        "|dark1="+cumulativeDark[1][PORTS[band]]+
+        "|dark3="+cumulativeDark[3][PORTS[band]]+
         "|dark7="+cumulativeDark[7][PORTS[band]]);
     }
     const chosen=sector%7,signal=cumulative[1][PORTS[chosen]];
