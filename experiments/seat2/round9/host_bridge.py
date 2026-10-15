@@ -69,8 +69,19 @@ def validate_host(sample):
             "MISORDERED_MEMORY_COUNTERS")
     require(sample["memory_allocated_bytes"]==MEMORY_SIZE
             and sample["memory_pages_touched"]==MEMORY_SIZE//4096,"MEMORY_INTERVENTION_MISSING")
-    require(len(sample["producing_git_sha"])==40 and sample["github_run_id"].isdigit()
-            and sample["runner_os"] in ("Linux","Windows"),"INCOMPLETE_CI_CONTEXT")
+    require(len(sample["producing_git_sha"])==40 and
+            all(ch in "0123456789abcdef" for ch in sample["producing_git_sha"]) and
+            sample["github_run_id"].isdigit() and
+            sample["runner_os"] in ("Linux","Windows"),"INCOMPLETE_CI_CONTEXT")
+    # GitHub\u0027s pull_request event GITHUB_SHA is the synthetic merge SHA,
+    # not the pull request head_sha. Bind reports to the current runner context.
+    expected = ("GITHUB_RUN_ID", "GITHUB_SHA", "RUNNER_OS", "GITHUB_JOB")
+    require(all(os.environ.get(key) for key in expected),"CI_CONTEXT_UNAVAILABLE")
+    require(sample["github_run_id"]==os.environ["GITHUB_RUN_ID"],"FORGED_GITHUB_RUN_ID")
+    require(sample["producing_git_sha"]==os.environ["GITHUB_SHA"],"FORGED_PRODUCING_SHA")
+    require(sample["runner_os"]==os.environ["RUNNER_OS"],"FORGED_RUNNER_OS")
+    require(sample["github_job"]==os.environ["GITHUB_JOB"],"FORGED_GITHUB_JOB")
+    require(sample["platform_system"]==platform.system(),"FORGED_PLATFORM_OS")
     return True
 
 def negative_controls(sample,inst):
