@@ -43,6 +43,12 @@ fn main()->io::Result<()>{
     }
     memory_report.push_str("BOUNDARY|independent_observations_per_virtual_address=NOT_ASSUMED|capacity_not_allocated_memory|json=0\n");
     fs::write(dir.join("PARTICLE-MEMORY-R1.hbp"),memory_report)?;
+    // 10 billion model-year matrix jump uses the declared order-three recurrence
+    // and every particle's own persisted history, not one global memory.
+    let (history,ten_gyr)=asolaria_proxima_ternary::long_horizon::individual_memory_witness()
+        .expect("separately retained particle histories at the target horizon");
+    assert_eq!(history,restored);
+    fs::write(dir.join("TEN-BILLION-YEAR-R1.hbp"),ten_gyr)?;
     fs::write(dir.join("RUNTIME.hbp"),format!(
         "RUNTIME|hosted_os={}|arch={}|elapsed_ns={}|physical_device=HOSTED_CPU|distinct_host_custody=UNATTESTED|instrumented_optics=NONE|json=0\n",
         env::consts::OS,env::consts::ARCH,started.elapsed().as_nanos()))?;
