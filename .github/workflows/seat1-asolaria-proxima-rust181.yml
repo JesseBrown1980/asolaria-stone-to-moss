@@ -48,7 +48,8 @@ jobs:
             cargo run --locked --offline -- out
           fi
           python independent_referee.py out
-          (cd out && sha256sum ASOLARIA-PROXIMA-RUST181.hbp EPOCHS-RUST181.csv > COMPUTATIONAL.sha256)
+          python independent_memory_referee.py out
+          (cd out && sha256sum ASOLARIA-PROXIMA-RUST181.hbp EPOCHS-RUST181.csv PARTICLE-MEMORY-R1.ledger PARTICLE-MEMORY-R1.hbp TEN-BILLION-YEAR-R1.hbp > COMPUTATIONAL.sha256)
       - uses: actions/upload-artifact@v4
         with:
           name: proxima-${{ matrix.os }}-${{ matrix.profile }}
@@ -73,6 +74,9 @@ jobs:
               (cd "$p" && sha256sum --check COMPUTATIONAL.sha256)
               cmp fetched/proxima-ubuntu-latest-debug/ASOLARIA-PROXIMA-RUST181.hbp "$p/ASOLARIA-PROXIMA-RUST181.hbp"
               cmp fetched/proxima-ubuntu-latest-debug/EPOCHS-RUST181.csv "$p/EPOCHS-RUST181.csv"
+              cmp fetched/proxima-ubuntu-latest-debug/PARTICLE-MEMORY-R1.ledger "$p/PARTICLE-MEMORY-R1.ledger"
+              cmp fetched/proxima-ubuntu-latest-debug/PARTICLE-MEMORY-R1.hbp "$p/PARTICLE-MEMORY-R1.hbp"
+              cmp fetched/proxima-ubuntu-latest-debug/TEN-BILLION-YEAR-R1.hbp "$p/TEN-BILLION-YEAR-R1.hbp"
             done
           done
           test "$(grep -c '^LEVEL|' fetched/proxima-ubuntu-latest-debug/ASOLARIA-PROXIMA-RUST181.hbp)" = 7
