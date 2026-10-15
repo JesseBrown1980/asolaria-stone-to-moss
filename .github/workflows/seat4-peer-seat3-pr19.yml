@@ -43,7 +43,7 @@ jobs:
         shell: bash
         run: |
           python experiments/seat4/verify_seat3_pr19_peer.py > "$RUNNER_TEMP/seat4-peer.json"
-          cmp "$RUNNER_TEMP/seat4-peer.json" stones/2026-10-15-rainbow81/seat4-seat3-pr19-third-algorithm-peer.json
+          python -c "import json,sys; a=json.load(open(sys.argv[1],encoding='utf-8')); b=json.load(open(sys.argv[2],encoding='utf-8')); assert a==b, 'Seat 4 verification receipt differs'" "$RUNNER_TEMP/seat4-peer.json" stones/2026-10-15-rainbow81/seat4-seat3-pr19-third-algorithm-peer.json
           (cd stones/2026-10-15-rainbow81 && sha256sum -c seat4-seat3-pr19-third-algorithm-peer.json.sha256)
           cat "$RUNNER_TEMP/seat4-peer.json"
       - uses: actions/upload-artifact@v4
