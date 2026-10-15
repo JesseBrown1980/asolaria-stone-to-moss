@@ -1,0 +1,90 @@
+name: Round3 August light-being independent memory and maths
+
+on:
+  push:
+    branches:
+      - coordinator/round3-light-being-august-20261015
+    paths:
+      - experiments/integration/round3-light-being/**
+      - .github/workflows/round3-light-being.yml
+  pull_request:
+    paths:
+      - experiments/integration/round3-light-being/**
+      - .github/workflows/round3-light-being.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    name: Pixel QR and math ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.11'
+          - os: windows-latest
+            python: '3.13'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install zbar image pixel decoder (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install QR writer and independent pixel QR decoder
+        run: python -m pip install --disable-pip-version-check qrcode==8.2 Pillow==12.0.0 pyzbar==0.1.9
+      - name: Run true PNG RGB pixel readback, 52488 matrix, 10000 exchanges and software HALT
+        shell: bash
+        run: |
+          mkdir -p round3-artifacts
+          python experiments/integration/round3-light-being/light_being_round3.py \
+             --qr-dir round3-artifacts/rgb \
+             --case-hbp round3-artifacts/cases.hbp \
+             --receipt round3-artifacts/results.json \
+             | tee round3-artifacts/run-summary.json
+          python - <<'PY'
+          import hashlib,json,pathlib
+          p=pathlib.Path('round3-artifacts')
+          d=json.loads((p/'results.json').read_text())
+          q=d['qr_memory']
+          b=d['being_matrix']
+          f=d['seven_boat_fleet']
+          assert d['status']=='SOFTWARE_PASS'
+          assert d['fixture_bytes']==65536
+          assert q['chunks']==32 and q['composite_rgb_images']==11
+          assert q['actual_separate_plane_decodes']==32
+          assert q['payload_sha256']==q['restored_sha256']==d['fixture_sha256']
+          assert q['missing_green_rejected'] and q['tamper_rejected'] and q['duplicate_index_rejected']
+          assert b['cases']==52488 and b['synthetic_distinct_pids']==2187
+          assert b['qutrit_exact_integer_cases']==2187
+          assert b['cache_capacity']==b['cache_final_size']==729
+          assert b['cache_evictions']==1458 and b['cache_misses']==2187
+          assert b['clean_open_accepted']>0 and b['corrupt_stale_forged_rejected_while_open']>0
+          assert sum(b['verdict_counts'].values())==52488
+          assert hashlib.sha256((p/'cases.hbp').read_bytes()).hexdigest()==b['case_ledger_sha256']
+          assert len((p/'cases.hbp').read_bytes().splitlines())==52488
+          assert f['trades']==10000 and f['initial_asset_totals']==f['final_asset_totals']
+          assert d['autonomy_limits']['cooperative_halt']==81
+          assert d['autonomy_limits']['simulated_external_scope_denials']==81
+          assert d['actual_photon_storage'] is False
+          assert d['actual_neural_control'] is False
+          assert d['physical_host_independence'] is False
+          assert d['sentience_evidence'] is False
+          print('ROUND3_PIXEL_READBACK_32_OF_32_PASS')
+          print('ROUND3_52488_CASES_PASS',b['case_ledger_sha256'])
+          print('ROUND3_CASES_HBP_BYTES', (p/'cases.hbp').stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: round3-light-being-${{ matrix.os }}-py${{ matrix.python }}
+          path: round3-artifacts/**
+          if-no-files-found: error
+          retention-days: 90
