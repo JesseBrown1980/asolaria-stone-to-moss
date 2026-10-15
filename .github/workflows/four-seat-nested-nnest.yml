@@ -1,0 +1,64 @@
+name: N-Nest Rainbow81 four-seat live nested verification
+on:
+  pull_request:
+    paths:
+      - 'experiments/nested/**'
+      - '.github/workflows/four-seat-nested-nnest.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: nnest-four-seat-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  live-nested-seat:
+    name: Live nested ${{ matrix.seat }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        seat: ['seat-1', 'seat-2', 'seat-3', 'seat-4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run parent Python, child Node and grandchild Python in live subprocess tree
+        shell: bash
+        run: |
+          python experiments/nested/parent_matrix.py "${{ matrix.seat }}" \
+            experiments/seat1/TRIAD-27-CHALLENGE-20261014.json \
+            "$RUNNER_TEMP/nested/${{ matrix.seat }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-${{ matrix.seat }}
+          path: ${{ runner.temp }}/nested/${{ matrix.seat }}/*
+          retention-days: 30
+  master:
+    name: N-Nest master independent receipt aggregator
+    needs: live-nested-seat
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: nested-seat-*
+          path: ${{ runner.temp }}/nested-artifacts
+          merge-multiple: false
+      - name: Verify 4 seat streams and 108 grandchild-verdict wave stones
+        shell: bash
+        run: |
+          python experiments/nested/master_verify.py "$RUNNER_TEMP/nested-artifacts"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-master-verdict
+          path: ${{ runner.temp }}/nested-artifacts/master-referee.json
+          retention-days: 30
