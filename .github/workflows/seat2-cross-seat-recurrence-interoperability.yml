@@ -1,0 +1,85 @@
+name: Seat 2 immutable recurrence cross-seat comparability and replay audit
+on:
+  push:
+    branches:
+      - agent/seat-2/recurrence-cross-seat-bridge-20261015
+    paths:
+      - experiments/seat2/recurrence/cross_seat_stage_and_replay.py
+      - .github/workflows/seat2-cross-seat-recurrence-interoperability.yml
+  pull_request:
+    paths:
+      - experiments/seat2/recurrence/cross_seat_stage_and_replay.py
+      - .github/workflows/seat2-cross-seat-recurrence-interoperability.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-cross-seat:
+    name: ${{ matrix.os }} Python ${{ matrix.py }} Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 432565f6f9f6ab4ba0b1f8ebf67a4f5374d07ab2
+          path: seat1-fixed
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 0e7ff0c14b0d4e86462f42c78adc3104bacb91ea
+          path: seat2-fixed
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 84a02995ecdbc40cbef9933a73a92ee778b3616b
+          path: seat3-fixed
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 57edafc472462c3db63207fe8662274ad07c7c1a
+          path: seat4-fixed
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install only Ed25519 software fixture verifier
+        shell: bash
+        run: python -m pip install --disable-pip-version-check cryptography==46.0.4
+      - name: Check independently regenerated Seat2/Seat3/Seat4 software records, source pins and fault stage
+        shell: bash
+        run: |
+          python experiments/seat2/recurrence/cross_seat_stage_and_replay.py \
+            --seat1 seat1-fixed --seat2 seat2-fixed \
+            --seat3 seat3-fixed --seat4 seat4-fixed \
+            --out cross-seat-recurrence.json
+      - name: Rerun all 72+12+3888 computations and verify exact output identity
+        shell: bash
+        run: |
+          python experiments/seat2/recurrence/cross_seat_stage_and_replay.py \
+            --seat1 seat1-fixed --seat2 seat2-fixed \
+            --seat3 seat3-fixed --seat4 seat4-fixed \
+            --out cross-seat-recurrence-again.json
+          python -c 'from pathlib import Path;import json,hashlib;a=Path("cross-seat-recurrence.json").read_bytes();b=Path("cross-seat-recurrence-again.json").read_bytes();assert a==b;z=json.loads(a);assert z["aggregation"]["full_288_from_all_four_seats"] is False;assert z["fault_stage_interoperability"]["not_identical_interventions"];assert z["software_replays"]["seat2"]["cases"]==72 and z["software_replays"]["seat3"]["exact_model_rows"]==12 and z["software_replays"]["seat4"]["cases"]==3888;print("PASS_SOURCE_PINNED_REPLAY_AND_CROSS_SEAT_NONPOOLING",hashlib.sha256(a).hexdigest())'
+      - name: Seal machine-readable audit receipt
+        shell: bash
+        run: |
+          python -c 'from pathlib import Path;import hashlib;f=Path("cross-seat-recurrence.json");Path(f.name+".sha256").write_bytes((hashlib.sha256(f.read_bytes()).hexdigest()+"  "+f.name+"\n").encode("ascii"))'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-recursion-crossseat-${{ matrix.os }}-py${{ matrix.py }}
+          retention-days: 30
+          path: |
+            cross-seat-recurrence.json
+            cross-seat-recurrence.json.sha256
