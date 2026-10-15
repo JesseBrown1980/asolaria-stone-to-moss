@@ -53,6 +53,7 @@ jobs:
           python experiments/seat3/seat3_autonomous_universe.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/python.json"
           node experiments/seat3/seat3_autonomous_universe.js "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/node.json"
           python experiments/seat3/verify_autonomous_universe.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" "$RUNNER_TEMP/seat3-audit"
+          python experiments/seat3/verify_sealed_autonomous_stone.py stones/2026-10-15-rainbow81/seat3-autonomous-identity-20261015.hbp "$RUNNER_TEMP/python.json"
       - name: Tampered full output must fail byte-exact verifier
         shell: bash
         run: |
