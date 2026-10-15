@@ -1,5 +1,5 @@
 # Asolaria computational light-bank evidence — publication index
-**Record prepared 2026-10-15 · public research preprint/index · Hugging Face dataset upload pending**
+**Record updated 2026-10-15 · public computational evidence index · v0.2 package ready; Hugging Face upload pending**
 
 This is a separate **publication index**, not a merged experimental PR, a peer-certified scientific article or an independently verified photonic-memory device. It records the existing archived outputs and their frozen digests, plus a new upload-ready dataset bundle prepared for [Hugging Face](https://huggingface.co/datasets). The bundle is available to the repository owner for upload; no public HF dataset is claimed to exist until a true remote upload/readback is completed.
 
@@ -9,7 +9,7 @@ This is a separate **publication index**, not a merged experimental PR, a peer-c
 **Proposed repo ID:** `Jessedbrown/asolaria-lightbank-four-seat-2026-10-15`.  
 **HF public URL after creation:** `https://huggingface.co/datasets/Jessedbrown/asolaria-lightbank-four-seat-2026-10-15`. **NOT YET CREATED / VERIFIED.**
 
-The prepared local dataset bundle is `asolaria-lightbank-four-seat-hf-dataset-20261015.zip`: **11,047,082 bytes**, SHA-256 `0f33c4d65779a5e8ef774f3dfcf65f7c62f559983ad165c4623dabac9c04e1a1`. It holds **45 SHA-256-inventoried files** plus `manifest.json` and `SHA256SUMS`; manifest SHA `6ebec101c729c4f2e43aad9ba49fd7c2c5aa28a245bda191f115e3f36a3a3aa2`. Prepared offline checks PASS (45 file hash checks, 11 RGB composite PNG/32 distinct standard QR symbol decodes/65,536 recovered synthetic bytes, 1,512 snapshot state audit).
+The current package is `asolaria-lightbank-four-seat-hf-dataset-20261015-v0.2.zip`: **13,514,693 bytes**, SHA-256 `ac5e2f18af2e132aa01dad2eba56bf1f4fe5f77a2a953ee9dce432c0c1f1446b`. It holds **59 SHA-256-inventoried files** plus `manifest.json` and `SHA256SUMS`; manifest SHA `50dfc49c19f98df30f8739c890825ad97cb95516c6888072ba45aa7cdbde87fe`. Local tests passed for all 59 file hashes, actual RGB QR recovery, mathematical class counts, and ZIP integrity. The preceding v0.1 bundle remains a distinct frozen local archive (11,047,082 bytes, SHA `0f33c4d65779a5e8ef774f3dfcf65f7c62f559983ad165c4623dabac9c04e1a1`).
 
 The ChatGPT Hugging Face connection available during preparation was authorized for **read-repos**, **not write**, and the local CLI had no publishing session. The dataset bundle has **not** been uploaded on the owner's behalf. Follow [Hugging Face publication instructions](PUBLISH-TO-HUGGING-FACE.md).
 
@@ -25,6 +25,16 @@ The ChatGPT Hugging Face connection available during preparation was authorized 
 | Three-shard checkpoint recovery | 648 exact pair-based recoveries, 9,237,888 synthetic resumed state updates; SHA `f6599677f934509604bcbf0f3a1913ce3f473223cbb08504ef7271e078c55d5f` | same #70 source |
 | Colour-QR rendered-software pixel transport | 11 RGB PNGs; 32 actually decoded QR symbols; 65,536 source bytes recovered, SHA `fe3f6f1adb2eb15832bd5d5fd59c2c97bc77b581c5c60f54b768545c756b38c4` | [PR #75](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/75) · [CI 38734983493](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38734983493) |
 | Seat4 B3 full bank | 35,608,276-byte archive SHA `2f3a0b27a50a562205a500dd7e38e4318f658cdd05202a4b88312c812ae7ba30`; 27 data banks and separate parity bank | [PR #68](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/68) · [CI 38734811934](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38734811934) |
+
+## Newly archived independent scientific peers — v0.2
+
+Two new cross-platform reviewers are included in the updated 59-file dataset, not blended into the older producer results.
+
+- **Seat 2 independent provenance review [draft PR #77](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/77)**: [CI #38741832217](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38741832217) **2/2 PASS**; 32/32 actual saved QR image-plane reads with independently implemented ZXing-C++; 65,536 original bytes restored; all 52,488 digital case verdicts independently reviewed. OpenCV 4.13 recovered **15/32** QR images at this published size, a recorded interoperability limitation. An additional 34,992 independent software attack packets were rejected (these are **not** additional original experiment rows); 8,748 legitimate packets accepted. Scientific receipt 6,444 B SHA `eeefd8e355788e762f18744604ac2635464cf80a1f197bee92261071d2c38c46` identical Ubuntu/Windows; runner-repacked ZIP metadata SHA differences separately retained. Local self-consistency of SHA is **not external source authentication**.
+- **Seat 3 independent mathematics review [draft PR #76](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/76)**: [CI #38741669991](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38741669991) **4/4 PASS**, independently regenerated exact 52,488-row, 10,773,162-byte case HBP SHA `dca7e5e2b14ada4e28f7ebeb96adef528c28ae6e169a1e21ee8ba058c6836a09`, 2,187 routes, and 10,000 conserved synthetic trades. **Mathematical falsifier:** intensity-only `(S²,Q,Q)` cannot preserve ordered colour: all permutations of RGB map to equal intensities. Exactly 27 unique ordered ternary addresses become only **10 unnormalized intensity signatures**.
+- **New author-calculated extension, not separately peer-reviewed:** after normalizing these signatures, the 27 addresses collapse into **7 classes including the undefined all-zero case**, and conditional colour-address uncertainty is ~2.149596 bits (compared with ~1.631078 bits for unnormalized signatures). Pure Python exact-fraction verifier bundled in `scripts/verify_rainbow27_information_loss.py`. The ordered logical sector identity is `9r+3g+b` and should be preserved separately where needed; this is *not* 27 experimentally measured optical wavelengths.
+
+This v0.2 package contains both peer seats' original CI ZIPs and actual scientific HBP receipts, plus a separate addendum preserving reviewer objections and negative evidence. It is an archived **computational** release candidate, not verified physical light storage, calibrated biology, genuine quantum measurement or full four-seat promotion.
 
 ## Technical interpretation
 
