@@ -204,6 +204,8 @@ def run(source_root,out_root):
                    f"|count1={cumulative[1][PORTS[band]]}"
                    f"|count3={cumulative[3][PORTS[band]]}"
                    f"|count7={expected}"
+                   f"|dark1={cumulative_dark[1][PORTS[band]]}"
+                   f"|dark3={cumulative_dark[3][PORTS[band]]}"
                    f"|dark7={cumulative_dark[7][PORTS[band]]}")
             # Autonomous three-state channelrhodopsin-inspired gate.
             # No human approval per state transition. Each site ID is stable.
