@@ -1,0 +1,94 @@
+name: Seat3 independent Round3 qutrit rainbow27 and fleet mathematical peer review
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*round3*qutrit*"
+      - "experiments/seat3/PREREG-ROUND3-QUTRIT*"
+      - "experiments/seat3/*round3*normalized*"
+      - "experiments/seat3/PREREG-ROUND3-NORMALIZED*"
+      - ".github/workflows/seat3-round3-qutrit-rainbow.yml"
+      - "stones/2026-10-15-rainbow81/seat3-round3-qutrit*"
+      - "stones/2026-10-15-rainbow81/seat3-round3-normalized*"
+  push:
+    branches:
+      - main
+      - agent/seat-3/round3-qutrit-rainbow27-independent-20261015
+    paths:
+      - "experiments/seat3/*round3*qutrit*"
+      - "experiments/seat3/PREREG-ROUND3-QUTRIT*"
+      - "experiments/seat3/*round3*normalized*"
+      - "experiments/seat3/PREREG-ROUND3-NORMALIZED*"
+      - ".github/workflows/seat3-round3-qutrit-rainbow.yml"
+      - "stones/2026-10-15-rainbow81/seat3-round3-qutrit*"
+      - "stones/2026-10-15-rainbow81/seat3-round3-normalized*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-qutrit-peer:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / independent Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5045b5b2ee1960bc469b5588a1b17601490aef6a
+          path: frozen-coordinator-round3
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Pin source Git objects; do not execute coordinator producer
+        shell: bash
+        run: |
+          test "$(git -C frozen-coordinator-round3 rev-parse HEAD)" = 5045b5b2ee1960bc469b5588a1b17601490aef6a
+          test "$(git -C frozen-coordinator-round3 rev-parse HEAD:experiments/integration/round3-light-being/light_being_round3.py)" = 0679599229f1f57091eddc319ac1ed0a072ec88b
+          test "$(git -C frozen-coordinator-round3 rev-parse HEAD:experiments/integration/round3-light-being/CORRECTION-QUTRIT-ROUTING-20261015.md)" = 02764f0363da467c423402f79a27ce7b615da878
+      - name: Reconstruct all original 52488 cases and 10000 independent fleet trades
+        shell: bash
+        run: |
+          node experiments/seat3/round3_qutrit_rainbow_peer.js "$RUNNER_TEMP/seat3-peer"
+          python experiments/seat3/verify_round3_qutrit_rainbow.py "$RUNNER_TEMP/seat3-peer" "$RUNNER_TEMP/seat3-audit"
+          python experiments/seat3/verify_sealed_round3_rainbow.py stones/2026-10-15-rainbow81/seat3-round3-qutrit-rainbow27-20261015.hbp "$RUNNER_TEMP/seat3-peer"
+
+      - name: Independent normalized seven-class correction and SHA sampler scale falsifier
+        shell: bash
+        run: |
+          python experiments/seat3/round3_normalized_intensity.py "$RUNNER_TEMP/py-norm"
+          node experiments/seat3/round3_normalized_intensity.js "$RUNNER_TEMP/js-norm"
+          python experiments/seat3/verify_round3_normalized.py "$RUNNER_TEMP/py-norm" "$RUNNER_TEMP/js-norm" "$RUNNER_TEMP/seat3-audit/normalized"
+          python experiments/seat3/verify_sealed_round3_normalized.py stones/2026-10-15-rainbow81/seat3-round3-normalized-intensity-correction-20261015.hbp "$RUNNER_TEMP/py-norm" "$RUNNER_TEMP/seat3-peer"
+      - name: Normalized rational numerator mutation must be HELD
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"js-norm"/"normalized27.hbp"; a=p.read_bytes(); a=a.replace(b"1/3,1/3,1/3",b"2/3,1/3,1/3",1); assert len(a)==len(p.read_bytes()); p.write_bytes(a)'
+          if python experiments/seat3/verify_round3_normalized.py "$RUNNER_TEMP/py-norm" "$RUNNER_TEMP/js-norm" "$RUNNER_TEMP/should-never-be-trusted"; then
+            echo "FAILED: changed normalized rational input accepted"; exit 1
+          fi
+          echo "Changed rational normalized trace correctly HELD"
+      - name: Altered full ledger must be rejected fail-closed
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; r=pathlib.Path(os.environ["RUNNER_TEMP"]); p=r/"seat3-peer"/"peer-original-cases.hbp"; b=bytearray(p.read_bytes());b[20]^=1;p.write_bytes(b)'
+          if python experiments/seat3/verify_round3_qutrit_rainbow.py "$RUNNER_TEMP/seat3-peer" "$RUNNER_TEMP/should-never-exist"; then
+            echo "FAILED: changed full ledger was accepted"; exit 1
+          fi
+          echo "Tampered full 52488-case ledger correctly HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-round3-qutrit-rainbow-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/seat3-audit/*
+          if-no-files-found: error
+          retention-days: 30
