@@ -98,7 +98,7 @@
         "clean_tree": "MEASURED_PASS",
         "fault_levels_detected": 7,
         "hbp_size_bytes": 886,
-        "pinned_git_blob_sha1": "fd24c0eceff455351f27e7244d5bd61bffd38c25",
+        "pinned_git_blob_sha1": "fd24c0eceff455351f27e7244d5bd61bffd38a25",
         "scope": "local software demonstration under pinned upstream source",
         "script": "nest-depthN-prime-verify.cjs",
         "timestamped_hbp_sidecar_verified": true
