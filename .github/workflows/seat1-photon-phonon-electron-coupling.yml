@@ -1,0 +1,155 @@
+name: Seat1 photon phonon electron exact-source coupling model
+
+on:
+  push:
+    branches:
+      - experiment/seat1-photon-phonon-electron-coupling-20261015
+    paths:
+      - experiments/seat1_photon_phonon/**
+      - .github/workflows/seat1-photon-phonon-electron-coupling.yml
+  pull_request:
+    paths:
+      - experiments/seat1_photon_phonon/**
+      - .github/workflows/seat1-photon-phonon-electron-coupling.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-pinned-photon-phonon:
+    name: Seat1 source-custody ${{ matrix.os }} python3.13 Node22
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 42
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Linux ZBar QR pixel decoder
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install exact original QR producer libraries
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Regenerate and pin original 81 memory sources from actual QR image pixels
+        run: python experiments/seat1/round2/lightbank_81.py original-evidence
+      - name: Independent Node verification of original QR images
+        run: node experiments/seat1/round2/verify_lightbank_81.js original-evidence
+      - name: Reconstruct frozen 567-bank full-byte source and base index
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py original-evidence rainbow-evidence
+      - name: Independent Node source bank/index audit
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js original-evidence rainbow-evidence
+      - name: Seat1 Python source-gated 12-arm light acoustic electronic model
+        run: python experiments/seat1_photon_phonon/coupling.py original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-coupling
+      - name: Independent Seat1 Node22 full source-gated model
+        run: node experiments/seat1_photon_phonon/coupling.js original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi node-coupling
+      - name: Third independently implemented full 6,804-frame byte and LIF audit
+        run: python experiments/seat1_photon_phonon/audit_coupling.py . third-audit/receipt.json
+      - name: Byte-identical Python/Node producer HBP and receipts plus individual digest check
+        shell: python
+        run: |
+          from pathlib import Path
+          import hashlib,json
+          original = Path("original-evidence/lightbank-memories.json").read_bytes()
+          bank = Path("rainbow-evidence/rainbow7-bank.jsonl").read_bytes()
+          idx = Path("rainbow-evidence/rainbow7-index.hbi").read_bytes()
+          assert hashlib.sha256(original).hexdigest()=="02ff42a93d934074ae9c83e1b989f097944c8c7cd2ed80197c2cfd8795391e22"
+          assert hashlib.sha256(bank).hexdigest()=="52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345"
+          assert hashlib.sha256(idx).hexdigest()=="6b105769bf236c156cafa4dd4e3647fe45778c191a7e32ac7df63e84d287d0ee"
+          for filename in ("coupling.hbp","results.json","coupling.hbp.sha256","results.json.sha256"):
+              left = (Path("py-coupling")/filename).read_bytes()
+              right = (Path("node-coupling")/filename).read_bytes()
+              assert left==right, ("PYTHON_NODE_DIFFER",filename)
+              if filename.endswith(".hbp") or filename.endswith(".json"):
+                  sidecar = (Path("py-coupling")/(filename+".sha256")).read_bytes()
+                  assert sidecar == (hashlib.sha256(left).hexdigest()+"  "+filename+"\n").encode("ascii")
+          results=json.loads(Path("py-coupling/results.json").read_bytes())
+          audit=json.loads(Path("third-audit/receipt.json").read_bytes())
+          assert results["frames"]==6804 and results["source_ones"]==662443
+          assert results["source_zeros"]==816077 and results["analytic_checked_arms"]==12
+          assert results["actual_photon_phonon_coupling_measured"] is False
+          assert results["optical_storage_medium_measured"] is False
+          assert audit["software_trace_rows_fully_audited"]==6804
+          assert audit["trace_sha256"]==results["hbp_sha256"]
+          print("SEAT1_COUPLED_DIGITAL_MODEL_PASS_6804_81_567")
+          print("SEAT1_HBP_SHA256",results["hbp_sha256"])
+          print("SEAT1_THIRD_AUDITOR_SHA256",hashlib.sha256(Path("third-audit/receipt.json").read_bytes()).hexdigest())
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-photon-phonon-source-${{ matrix.os }}
+          path: |
+            original-evidence/lightbank-memories.json
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+            py-coupling/coupling.hbp
+            py-coupling/results.json
+            py-coupling/coupling.hbp.sha256
+            py-coupling/results.json.sha256
+            node-coupling/coupling.hbp
+            node-coupling/results.json
+            node-coupling/coupling.hbp.sha256
+            node-coupling/results.json.sha256
+            third-audit/receipt.json
+          retention-days: 90
+          if-no-files-found: error
+
+  independent-cross-os-artifact-parity:
+    name: Seat1 4-producer complete HBP and source parity
+    runs-on: ubuntu-latest
+    needs: source-pinned-photon-phonon
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-photon-phonon-source-ubuntu-latest
+          path: from-ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-photon-phonon-source-windows-latest
+          path: from-windows
+      - name: Check FULL bytes across both languages and OS, not just aggregates
+        shell: python
+        run: |
+          from pathlib import Path
+          from hashlib import sha256
+          import json
+          roots=[Path("from-ubuntu"),Path("from-windows")]
+          files=[
+            "original-evidence/lightbank-memories.json",
+            "rainbow-evidence/rainbow7-bank.jsonl",
+            "rainbow-evidence/rainbow7-index.hbi",
+            "py-coupling/coupling.hbp",
+            "py-coupling/results.json",
+            "py-coupling/coupling.hbp.sha256",
+            "py-coupling/results.json.sha256",
+            "node-coupling/coupling.hbp",
+            "node-coupling/results.json",
+            "node-coupling/coupling.hbp.sha256",
+            "node-coupling/results.json.sha256",
+            "third-audit/receipt.json",
+          ]
+          for filename in files:
+              content=[(r/filename).read_bytes() for r in roots]
+              assert content[0]==content[1], ("CROSS_OS_BYTE_DIFF",filename)
+              print("FULL_BYTE_PARITY",filename,len(content[0]),sha256(content[0]).hexdigest())
+          a=json.loads((roots[0]/"py-coupling/results.json").read_bytes())
+          assert a["frames"]==6804 and len(a["scenario_results"])==12
+          assert a["actual_photon_phonon_coupling_measured"] is False
+          assert a["optical_storage_medium_measured"] is False
+          assert (roots[0]/"py-coupling/coupling.hbp").read_bytes() == (roots[0]/"node-coupling/coupling.hbp").read_bytes()
+          print("SEAT1_FOUR_SOURCE_IMPLEMENTATIONS_CROSS_OS_PASS")
