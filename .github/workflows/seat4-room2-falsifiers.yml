@@ -52,6 +52,7 @@ jobs:
           trace=(root/'trace.hbp').read_bytes()
           ledger=json.loads((root/'fault-ledger.json').read_text())
           expected='3ca42d274909f3ba7b03a00662eda0375e2515acb93f769ec072d2695a0b93'
+          print('CI_CHECK', 'actual',hashlib.sha256(trace).hexdigest(), 'receipt',r['independently_recomputed_hbp_sha256'], 'expected',expected, 'bytes',len(trace),flush=True)
           assert hashlib.sha256(trace).hexdigest()==r['independently_recomputed_hbp_sha256']==expected
           assert len(trace)==2092959
           assert r['original_baseline_rows']==6561
