@@ -80,12 +80,15 @@ def validate(rows):
              and block in range(8) and optical in (0,1) and acoustic in (0,1),
              "INVALID_FACTOR")
         key = (model,) + dims
-        need(key not in seen, "DUPLICATE_FACTORIAL_CASE")
-        seen.add(key)
+        # Test the measurement at its *claimed* factor values before duplicate
+        # checking. A forged detuning can be both wrong-valued and duplicate;
+        # this ensures the independently preregistered fault stage is stable.
         expected = mock_count(model,optical,acoustic,electronic,thermal,
                               phase_idx,resonance,block)
         need(type(row["detector_mock_units"]) is int
              and row["detector_mock_units"] == expected, "NUMERIC_MODEL_MISMATCH")
+        need(key not in seen, "DUPLICATE_FACTORIAL_CASE")
+        seen.add(key)
         values[(model,resonance,phase_idx,electronic,thermal,block)][optical,acoustic] = expected
     need(len(seen)==4096 and len(values)==1024, "INCOMPLETE_FACTORS")
     observed = defaultdict(list)
@@ -184,5 +187,5 @@ def run(out,merged):
     return report
 
 if __name__=="__main__":
-    if len(sys.argv)!=3:raise SystemExit("usage: python seat2_coupling.py MERGED_MAIN OUTPUT")
+    if len(sys.argv)!=3:raise SystemExit("usage: python seat2_coupling.py OUTPUT MERGED_MAIN")
     run(Path(sys.argv[1]),Path(sys.argv[2]))
