@@ -5,6 +5,12 @@ on:
       - 'experiments/nested/**'
       - '.github/workflows/four-seat-nested-nnest.yml'
   workflow_dispatch:
+    inputs:
+      publish_hf:
+        description: "Publish to Hugging Face only with protected HF_TOKEN GitHub Actions secret"
+        type: boolean
+        required: true
+        default: false
 permissions:
   contents: read
   actions: read
@@ -96,3 +102,60 @@ jobs:
             ${{ runner.temp }}/nested-artifacts/SHA256SUMS
           if-no-files-found: error
           retention-days: 30
+
+  stage-hf:
+    name: Stage N-Nest GitHub-verified evidence for HF (no credential)
+    needs: master
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: nested-seat-*
+          path: ${{ runner.temp }}/nested-stage-in
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: nested-master-verdict
+          path: ${{ runner.temp }}/nested-stage-in
+      - name: Validate run-bound source, watchers, wave digests, Q-PRISM and stage all four seats
+        shell: bash
+        run: |
+          python experiments/nested/stage_huggingface.py "$RUNNER_TEMP/nested-stage-in" "$RUNNER_TEMP/nested-hf-ready"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-hf-publisher-ready
+          path: ${{ runner.temp }}/nested-hf-ready/
+          if-no-files-found: error
+          retention-days: 30
+  publish-hf:
+    name: Protected HF Hub publish with full SHA256 download verification
+    needs: stage-hf
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_hf == true && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --disable-pip-version-check 'huggingface_hub>=0.36,<2'
+      - uses: actions/download-artifact@v4
+        with:
+          name: nested-hf-publisher-ready
+          path: ${{ runner.temp }}/nested-hf-ready
+      - name: Upload through protected HF_TOKEN and check remote byte-for-byte SHA
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        shell: bash
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::GitHub Actions HF_TOKEN secret missing, so Hugging Face upload was not attempted."
+            exit 1
+          fi
+          python experiments/nested/stage_huggingface.py --publish-only "$RUNNER_TEMP/nested-hf-ready"
