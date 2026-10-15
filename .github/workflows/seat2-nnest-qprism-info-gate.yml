@@ -1,0 +1,83 @@
+name: Seat 2 N-Nest Q-PRISM information and source-consistency audit
+
+on:
+  push:
+    branches: [agent/seat-2/n-nest-qprism-information-audit-20261015]
+  pull_request:
+    paths:
+      - 'experiments/integration/2026-10-15/seat2_information_budget_audit.py'
+      - '.github/workflows/seat2-nnest-qprism-info-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  information-gate:
+    name: ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout EXACT N-Nest source (depth 3 and prime depth 7)
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED
+          ref: 307903651f56e8a28ef98ca36aef22ee8cda935c
+          path: upstream-n-nest
+          persist-credentials: false
+      - name: Checkout EXACT Q-PRISM address/source implementation
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/Q-PRISM-human-organoid-neural-stream-as-a-high-dimensional-control
+          ref: b4a21a25381d6920b7aab92c94c3c3e1420fc9e4
+          path: upstream-qprism
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: RUN ORIGINAL N-Nest depth 3 corrective-gate source
+        shell: bash
+        run: node upstream-n-nest/nest-depth3-verify.cjs > nest-depth3-stdout.txt
+      - name: RUN ORIGINAL N-Nest prime depth 7 corrective-gate source
+        shell: bash
+        run: node upstream-n-nest/nest-depthN-prime-verify.cjs > nest-depth7-stdout.txt
+      - name: Validate exact live N-Nest depth-3 and depth-7 fail-stop evidence
+        shell: bash
+        run: |
+          python -c 'from pathlib import Path; a=Path("nest-depth3-stdout.txt").read_text();b=Path("nest-depth7-stdout.txt").read_text(); assert "RUN-CLEAN" in a and "RUN-TAMPERED" in a and "corrective-gate-catches-confabulation-at-depth=true" in a; assert "consent-clean-only=true" in a; assert "RUN-CLEAN|apex_subtree_ok=true" in b and "EVERY-LEVEL-CATCHES-CONFABULATION=true" in b; assert all(("LEVEL-"+str(i)+"|" in b and ("CAUGHT=true" in b.split("LEVEL-"+str(i)+"|",1)[1].splitlines()[0])) for i in range(1,8));print("PASS_PINNED_NNEST_DEPTH3_DEPTH7_EACH_LEVEL")'
+      - name: Independent Seat2 Q-PRISM address and GF2/CRT source-information falsifiers
+        shell: bash
+        run: |
+          python experiments/integration/2026-10-15/seat2_information_budget_audit.py \
+            --n-nest upstream-n-nest --qprism upstream-qprism \
+            --output seat2-information-audit.json \
+            --stone seat2-information-budget.hbp \
+            --sidecar seat2-information-budget.hbp.sha256
+      - name: Check receipt SHA256 and rerun determinism
+        shell: bash
+        run: |
+          python experiments/integration/2026-10-15/seat2_information_budget_audit.py \
+            --n-nest upstream-n-nest --qprism upstream-qprism \
+            --output replay.json --stone replay.hbp --sidecar replay.hbp.sha256
+          python -c 'from pathlib import Path;import hashlib,json; a=json.loads(Path("seat2-information-audit.json").read_text());b=json.loads(Path("replay.json").read_text()); h=Path("seat2-information-budget.hbp").read_bytes();assert a==b;assert Path("seat2-information-budget.hbp.sha256").read_text().split()[0]==hashlib.sha256(h).hexdigest();assert Path("replay.hbp").read_bytes()==h and len(a["negative_and_positive_controls"])==a["test_count"]>=10;assert a["physical_source_origin_authenticated"] is False and a["physical_hosts_independently_attested"]==0;print("PASS_NNEST_QPRISM_SOURCE_AND_INFORMATION_BUDGET_AUDIT")'
+      - name: Archive exact checked software-only evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-nnest-qprism-info-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            seat2-information-audit.json
+            seat2-information-budget.hbp
+            seat2-information-budget.hbp.sha256
+            nest-depth3-stdout.txt
+            nest-depth7-stdout.txt
+          retention-days: 30
