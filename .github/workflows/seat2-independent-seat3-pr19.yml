@@ -1,0 +1,72 @@
+name: Seat 2 independently replay Seat 3 PR19 (131220 rows)
+
+on:
+  push:
+    branches:
+      - agent/seat-2/pr19-independent-replay-20261015
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seat2-independent-pr19-replay:
+    name: ${{ matrix.os }} - Python ${{ matrix.py }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ['3.11', '3.13']
+    steps:
+      - name: Checkout independently written Seat 2 verifier
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout exact frozen Seat 3 PR19 source revision
+        uses: actions/checkout@v4
+        with:
+          ref: 3fd5b0a0d6c3cb57bd00366b1ef9a72f6dc300d7
+          path: seat3-pinned
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independent Python matrix and Node polynomial replay of full fixture
+        shell: bash
+        run: |
+          python seat3-pinned/experiments/seat3/one_bit_recovery_matrix_v2.py             seat3-pinned/experiments/seat3/one-bit-recovery-fixture-v2.json             python-result.hbp > python-summary.json
+          node seat3-pinned/experiments/seat3/one_bit_recovery_poly_v2.js             seat3-pinned/experiments/seat3/one-bit-recovery-fixture-v2.json             node-result.hbp > node-summary.json
+      - name: Seat 2 independent full-row input, operator, reconstruction, checksum audit
+        shell: bash
+        run: |
+          python experiments/seat2/verify_seat3_pr19_recovery.py             --fixture seat3-pinned/experiments/seat3/one-bit-recovery-fixture-v2.json             --stone seat3-pinned/stones/2026-10-14-rainbow81/seat-3-one-bit-recovery-262440-v2.json             --python python-result.hbp --node node-result.hbp             --report seat2-pr19-audit.json
+      - name: Read output summaries and ensure all three independent audits passed
+        shell: bash
+        run: |
+          python -c 'import json; p=json.load(open("python-summary.json")); n=json.load(open("node-summary.json")); a=json.load(open("seat2-pr19-audit.json")); assert p["status"]==n["status"]==a["status"]=="PASS"; assert p["sha256"]==n["sha256"]==a["output_hbp_sha256"]=="08fc44cd8e5c2e41ce2dadf55ab96edacbbe11435ce4b21d436ae5e602d23c9d"; assert a["original_pair_rows"]==131220 and a["reconstructed_original_states"]==262440; print("PASS_SEAT2_PR19_ALL_REPLAYS_AND_262440_SOURCE_CHECKS")'
+      - name: Archive full byte-level evidence for one primary job
+        if: matrix.os == 'ubuntu-latest' && matrix.py == '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-pr19-full-verified-outputs
+          path: |
+            python-result.hbp
+            node-result.hbp
+            seat2-pr19-audit.json
+            python-summary.json
+            node-summary.json
+          retention-days: 30
+      - name: Archive other-platform verification receipts
+        if: matrix.os != 'ubuntu-latest' || matrix.py != '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-pr19-receipt-${{ matrix.os }}-py${{ matrix.py }}
+          path: |
+            seat2-pr19-audit.json
+            python-summary.json
+            node-summary.json
+          retention-days: 30
