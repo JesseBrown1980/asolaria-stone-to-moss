@@ -81,7 +81,7 @@ def main(d2,d4,source_root,output):
   check(h2["source_sha256"]==HBP and h2["source_commit"]==FROZEN and
         h2["producing_git_sha"]==SHA_2 and h2["github_run_id"]==RUN_2 and
         h2["runner_os"]==system and h2["python"].startswith(py),
-        "SEAT2_HOST_REPORTED_IDENTITY_MISMATCH")
+        "SEAT2_HOST_REPORTED_IDENTITY_MISMATCH:"+json.dumps({"found":{"source_sha256":h2["source_sha256"],"source_commit":h2["source_commit"],"producing_git_sha":h2["producing_git_sha"],"github_run_id":h2["github_run_id"],"runner_os":h2["runner_os"],"python":h2["python"]},"expected":{"head_sha":SHA_2,"run":RUN_2,"OS":system,"py":py}},sort_keys=True))
   check(h2["cpu_elapsed_ns"]>0 and h2["wall_elapsed_ns"]>0 and
         h2["rss_during_bytes"]-h2["rss_before_bytes"]>=1024*1024 and
         h2["memory_allocated_bytes"]==24*1024*1024 and
@@ -100,7 +100,7 @@ def main(d2,d4,source_root,output):
   check(h4["source_bank_sha256"]==BANK and h4["workload_sha256"]==DIGEST_4 and
         h4["git_sha"]==SHA_4 and h4["git_run_id"]==RUN_4 and
         h4["environment_os"]==system and h4["python_version"].startswith(py),
-        "SEAT4_HOST_REPORTED_IDENTITY_MISMATCH")
+        "SEAT4_HOST_REPORTED_IDENTITY_MISMATCH:"+json.dumps({"found":{"git_sha":h4["git_sha"],"git_run_id":h4["git_run_id"],"environment_os":h4["environment_os"],"python_version":h4["python_version"]},"expected":{"head_sha":SHA_4,"run":RUN_4,"OS":system,"py":py}},sort_keys=True))
   check(h4["host_process_cpu_time_ns_OS"]>0 and h4["monotonic_elapsed_ns_OS"]>0 and
         h4["tracemalloc_peak_python_allocation_bytes"]>=4*1024*1024 and
         h4["scratch_allocation_bytes"]==4*1024*1024,
