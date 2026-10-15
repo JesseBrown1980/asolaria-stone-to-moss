@@ -97,7 +97,7 @@ def canonical_row(w,t,mode,r):
             f"|mem={r['mem']:03d}|field={r['state']:021x}|frame={r['pix']}"
             f"|positions={r['pos']}|identities={r['id']}\n")
 
-def mutated_records(w,prior,keys,honest):
+def mutated_records(w,mode,prior,keys,honest):
     field=honest["state"]^1
     return {
       "pulse_flip":{**honest,"pulse":1-honest["pulse"]},
@@ -152,7 +152,7 @@ def run(root):
                 spikes[mode]+=honest["spike"]
                 if tick==81: terminal_prior=prior;terminal_honest=honest
                 prior=(honest["state"],honest["occ"],honest["mem"])
-            fake_cases=mutated_records(w,terminal_prior,keys,terminal_honest)
+            fake_cases=mutated_records(w,mode,terminal_prior,keys,terminal_honest)
             ensure(set(fake_cases)==set(ATTACKS),"Attack catalog changed")
             for attack,fake in fake_cases.items():
                 ensure(fake!=terminal_honest,"Unexercised mutation: "+attack)
