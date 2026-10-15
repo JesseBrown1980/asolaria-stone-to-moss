@@ -1,0 +1,10 @@
+PORTAL|schema=ASOLARIA-SEAT3-OAE-FACTORIAL-VERIFIED-20261015|digital_simulation=1|external_optics=0
+SOURCE|records=81|bank_rows=567|bank_sha256=52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345
+AXES|O=2|A=2|E=2|bands=7|sites=81|nominal_delays=1,10,60|models=6|rows=81648
+INTERACTION|direct_electronic60=30|direct_optical60=30|thermal_mimic_electronic60=30|thermal_mimic_optical60=0|fast_decay60=0
+CI|run=38772816511|ubuntu_py311_313=2/2_PASS|windows_py311_313=2/2_PASS|crossplatform_bytes=PASS|source_tamper=HELD|report_tamper=HELD
+HBP|bytes=14272434|sha256=f766c413ac6c959821f2771bf84f61105f68a81f2793f1dee8c2ffa90dc0cc60
+JSON|bytes=3538|sha256=4aca572509d12d368f445849f45d4401929e9ab42a5c2dc536138901a356ac59
+AUDIT|bytes=478|sha256=66c050514bfe886699f18ac08a7342cd2c69872963a0d6ebc55f1795aa53e04b
+BOUNDARY|wavelength_nm=NOT_MEASURED|acoustic_displacement=NOT_MEASURED|electronic_optical_custody=NOT_ATTESTED|real_retention=NOT_RUN|neurons=NOT_MEASURED
+END|main_history_unchanged=1|peer_review=PENDING|pr95=DRAFT
