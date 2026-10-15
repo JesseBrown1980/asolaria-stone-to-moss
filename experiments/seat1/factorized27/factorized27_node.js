@@ -111,7 +111,7 @@ function expectedFailure(label,fn,expected){
 }
 function canonical(o){
   return Buffer.from(JSON.stringify(Object.fromEntries(
-     Object.entries(o).sort(([a],[b])=>a.localeCompare(b,"en"))))+"\n","ascii");
+     Object.entries(o).sort(([a],[b])=>a<b?-1:a>b?1:0)))+"\n","ascii");
 }
 function main(){
   const args=process.argv.slice(2);
