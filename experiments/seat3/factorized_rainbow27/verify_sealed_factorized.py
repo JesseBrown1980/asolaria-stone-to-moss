@@ -28,7 +28,7 @@ def verify(stone,verified):
     side=(p.parent/(p.name+".sha256")).read_bytes()
     assert side==(STONE_SHA+"  "+p.name+"\n").encode("ascii"),"STONE_SIDECAR_DRIFT"
     lines=raw.decode("ascii").splitlines()
-    assert len(lines)==10,"STONE_ROW_COUNT_DRIFT"
+    assert len(lines)==11,"STONE_ROW_COUNT_DRIFT"
     assert lines[0]=="PORTAL|schema=ASOLARIA-SEAT3-FACTORIZED-R27-RECEIPT-V1|date=2026-10-15|digital_only=1|json=0"
     assert lines[-1]=="END|old_pr80_pr81_stones_unchanged=1|published_computational_release_unchanged=1|scientific_release_issue10=SEPARATE|new_pr_draft=1|json=0"
     root=Path(verified)
