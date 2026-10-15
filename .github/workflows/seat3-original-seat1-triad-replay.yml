@@ -4,6 +4,7 @@ on:
     paths:
       - 'experiments/seat3/independent_seat1_triad_replay.py'
       - 'experiments/seat3/seat1-triad-challenge-pinned.json'
+      - 'stones/2026-10-15-rainbow81/seat-3-original-seat1-triad-independent-replay.json'
       - '.github/workflows/seat3-original-seat1-triad-replay.yml'
   workflow_dispatch:
 permissions:
