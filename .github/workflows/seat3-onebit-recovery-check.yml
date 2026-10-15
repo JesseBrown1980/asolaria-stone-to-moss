@@ -1,0 +1,45 @@
+name: Seat 3 262440-state exact recovery
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat3/one_bit_recovery_*'
+      - 'experiments/seat3/one-bit-recovery-*'
+      - 'stones/2026-10-14-rainbow81/seat-3-one-bit-recovery-*'
+      - '.github/workflows/seat3-onebit-recovery-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independently run matrix and polynomial reconstruction
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/seat3"
+          python experiments/seat3/one_bit_recovery_matrix_v2.py experiments/seat3/one-bit-recovery-fixture-v2.json "$RUNNER_TEMP/seat3/py.hbp" > "$RUNNER_TEMP/seat3/py.json"
+          node experiments/seat3/one_bit_recovery_poly_v2.js experiments/seat3/one-bit-recovery-fixture-v2.json "$RUNNER_TEMP/seat3/node.hbp" > "$RUNNER_TEMP/seat3/node.json"
+          cmp "$RUNNER_TEMP/seat3/py.hbp" "$RUNNER_TEMP/seat3/node.hbp"
+          echo "08fc44cd8e5c2e41ce2dadf55ab96edacbbe11435ce4b21d436ae5e602d23c9d  $RUNNER_TEMP/seat3/py.hbp" | sha256sum -c -
+          python - "$RUNNER_TEMP/seat3" <<'PY'
+          import json,sys,pathlib,hashlib
+          p=pathlib.Path(sys.argv[1])
+          x=json.loads((p/'py.json').read_text())
+          y=json.loads((p/'node.json').read_text())
+          assert x==y
+          assert x['records']==131220 and x['recovered']==262440
+          assert x['one_bit_recoveries']==157464 and x['zero_bit_recoveries']==104976
+          assert x['evidence_class']=='PUBLIC_SOFTWARE_NOT_PHYSICAL_HOST'
+          assert (p/'py.hbp').stat().st_size==25063020
+          print("PASS Seat3 exact-recovery 262440; physical hosts unverified")
+          PY
