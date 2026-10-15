@@ -44,6 +44,8 @@ jobs:
         run: node experiments/seat1/optogenetics/opto_gate_node.js opto-evidence/opto-node.hbp opto-evidence/opto-node.json
       - name: Check 8748 whole-state records and 4 feedback-arm metrics
         run: python experiments/seat1/optogenetics/verify_opto.py opto-evidence
+      - name: Execute actual V2 injected faulty reports against recomputation
+        run: python experiments/seat1/optogenetics/adversarial_controls_v2.py
       - name: Compute run-bound SHA256 for all four raw outputs
         run: |
           python -c "from pathlib import Path;import hashlib; p=Path('opto-evidence'); [(p/(f.name+'.sha256')).write_text(hashlib.sha256(f.read_bytes()).hexdigest()+'  '+f.name+'\n', encoding='ascii') for f in sorted(p.iterdir()) if f.suffix in ('.hbp','.json')]"
@@ -52,7 +54,10 @@ jobs:
         with:
           name: seat1-optogate-${{ matrix.os }}
           if-no-files-found: error
-          path: opto-evidence/
+          path: |
+            opto-evidence/
+            seat1-actual-adversarial-controls.json
+            seat1-actual-adversarial-controls.json.sha256
 
   compare-operating-systems:
     name: compare-full-trace-ubuntu-windows
