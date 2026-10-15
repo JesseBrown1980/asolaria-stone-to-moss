@@ -10,6 +10,8 @@ HBP="077bf98dc7c10e3125ce1147270cc927ce978ab63a19ec30e4655267f1770400"
 DIGEST_2="ae3474a94a03e024ad41bd6d0c508a18cbb3ed43c551da0ed3c6ec701e5b61cf"
 DIGEST_4="7aead6f883579d8228341d2a16751b9f51e9fe622a48693315dbcd1a19fa6a1a"
 SHA_2="8e597ae4c8d5d1ff76a2d25ad394ec49e601afc4"
+# Verified exact GitHub PR merge commit: parents [frozen-main, PR-head].
+SHA_2_MERGE="5969b7de9ada80e8feaa18b497c1932c009d90db"
 SHA_4="5b2f3c9ad550c652a1e4a5d537ba6ae2b5f57176"
 RUN_2="38777263894";RUN_4="38777543919"
 FROZEN="5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86"
@@ -79,9 +81,9 @@ def main(d2,d4,source_root,output):
   check(node2["deterministic_workload_sha256"]==DIGEST_2 and
         node2["original_bank_sha256_reference_only"]==BANK,"SEAT2_INDEPENDENT_REPLAY_MISMATCH")
   check(h2["source_sha256"]==HBP and h2["source_commit"]==FROZEN and
-        h2["producing_git_sha"]==SHA_2 and h2["github_run_id"]==RUN_2 and
+        h2["producing_git_sha"]==SHA_2_MERGE and h2["github_run_id"]==RUN_2 and
         h2["runner_os"]==system and h2["python"].startswith(py),
-        "SEAT2_HOST_REPORTED_IDENTITY_MISMATCH:"+json.dumps({"found":{"source_sha256":h2["source_sha256"],"source_commit":h2["source_commit"],"producing_git_sha":h2["producing_git_sha"],"github_run_id":h2["github_run_id"],"runner_os":h2["runner_os"],"python":h2["python"]},"expected":{"head_sha":SHA_2,"run":RUN_2,"OS":system,"py":py}},sort_keys=True))
+        "SEAT2_HOST_REPORTED_IDENTITY_MISMATCH:"+json.dumps({"found":{"source_sha256":h2["source_sha256"],"source_commit":h2["source_commit"],"producing_git_sha":h2["producing_git_sha"],"github_run_id":h2["github_run_id"],"runner_os":h2["runner_os"],"python":h2["python"]},"expected":{"PR_head_sha":SHA_2,"CI_checkout_merge_sha":SHA_2_MERGE,"run":RUN_2,"OS":system,"py":py}},sort_keys=True))
   check(h2["cpu_elapsed_ns"]>0 and h2["wall_elapsed_ns"]>0 and
         h2["rss_during_bytes"]-h2["rss_before_bytes"]>=1024*1024 and
         h2["memory_allocated_bytes"]==24*1024*1024 and
@@ -125,6 +127,7 @@ def main(d2,d4,source_root,output):
    "seat4_original_host_file_sha256":sha(files4["r9-host.json"][1])})
  report={"schema":"ASOLARIA-SEAT4-R9B-INDEPENDENT-ARCHIVED-HOST-EVIDENCE-AUDIT-V1",
          "seat2_original_run_id":RUN_2,"seat2_original_git_head":SHA_2,
+         "seat2_verified_workflow_merge_commit":SHA_2_MERGE,
          "seat4_original_run_id":RUN_4,"seat4_original_git_head":SHA_4,
          "seat2_pinned_hbp_sha256":HBP,"original_full_bank_sha256":BANK,
          "seat2_recomputed_workload_sha256":DIGEST_2,
