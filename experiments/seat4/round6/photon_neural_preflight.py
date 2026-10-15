@@ -184,7 +184,7 @@ def run(root,out):
  (out/"r6-results.hbp").write_bytes(h)
  for name in ["r6-raw-synthetic-detector.jsonl","r6-results.json","r6-results.hbp"]:
   blob=(out/name).read_bytes()
-  (out/(name+".sha256")).write_text(f"{digest(blob)}  {name}\n",encoding="ascii")
+  (out/(name+".sha256")).write_bytes((f"{digest(blob)}  {name}\n").encode("ascii"))
  print(json.dumps({"status":"PASS_DIGITAL_ONLY","frames":len(rows),"attack_checks":len(faults),
  "trace_sha256":digest(trace),"hbp_sha256":digest(h),"physical":"HOLD","neural":"HOLD"},sort_keys=True))
 if __name__=="__main__":
