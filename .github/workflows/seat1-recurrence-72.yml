@@ -71,3 +71,30 @@ jobs:
             seat1-rim-evidence/seat1-recurrence.json.sha256
             seat1-rim-evidence/seat1-recurrence.hbi
             seat1-rim-evidence/seat1-recurrence.hbi.sha256
+
+  cross-os-audit:
+    name: Cross-OS strict semantic audit and raw-byte-drift disclosure
+    needs: recurrence
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-recurrence-72-ubuntu-latest
+          path: audit-input/ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-recurrence-72-windows-latest
+          path: audit-input/windows
+      - name: Verify exactly 72 canonical decisions, SHA sidecars and classify numerical source byte drift
+        run: python experiments/seat1/recurrence/verify_rim_cross_os.py audit-input/ubuntu audit-input/windows cross-os-audit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-recurrence-cross-os-audit
+          if-no-files-found: error
+          path: cross-os-audit
