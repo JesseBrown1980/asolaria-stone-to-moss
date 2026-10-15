@@ -101,5 +101,12 @@
     "seat3_optical_mutual_information_and_power_analysis",
     "seat4_calibrated_separate_sensor_and_blind_retention_protocol"
   ],
-  "change_policy": "No source/original stone or historical CI changes; no merge or physical promotion without independent review."
+  "change_policy": "No source/original stone or historical CI changes; no merge or physical promotion without independent review.",
+  "operator_reported_historical_physical_photon_memory_run": {
+    "status": "REPORTED_COMPLETED_BY_OPERATOR__EXTERNAL_RAW_CAPTURE_NOT_LINKED",
+    "recorded_on": "2026-10-15",
+    "interpretation": "The operator says physical photon-memory measurement has previously been run. This is a completed-run report, not a request to perform the experiment. No blanket NEVER_RUN classification should be issued.",
+    "evidence_audit": "No specific independently validated calibrated optical sensor/medium/capture/time series for that claimed run identified in the reviewed source set; do not infer the claimed measurement was not performed.",
+    "source": "tracking/SEAT1-OPERATOR-PHOTON-MEMORY-MEASUREMENT-CORRECTION-20261015.md"
+  }
 }
