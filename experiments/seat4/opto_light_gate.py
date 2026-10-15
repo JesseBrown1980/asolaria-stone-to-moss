@@ -67,9 +67,18 @@ def verify_step(w,t,mode,state,p,mem,actual_pulse,output):
     spike=int(next_mem>=240)
     if spike:next_mem=0
     return output==(next_state,next_p,next_mem,active,spike)
-def payload(w,t,mode,s,p,mem,gate,spike,keys):
-    return {"pulse":schedule(w,t,mode),"occ":p,"state":s,"pix":sha(frame(s)),
-            "id":identities(keys)}
+def verify_record(w,t,mode,state,p,mem,keys,reported):
+    """Independently verify ALL fields, including pulse, pixels and PID.
+    
+    This is a software reference held separately from the reported record.
+    Its correctness does not authenticate a real photon source.
+    """
+    result=(reported["state"],reported["occ"],reported["mem"],
+            reported["gate"],reported["spike"])
+    return (verify_step(w,t,mode,state,p,mem,reported["pulse"],result)
+            and reported["pix"]==sha(frame(reported["state"]))
+            and reported["id"]==identities(keys)
+            and reported["pos"]==positions(keys,t))
 def main():
     ar=argparse.ArgumentParser()
     ar.add_argument("--trace",type=Path,required=True)
@@ -101,30 +110,33 @@ def main():
                 )
                 if t==81:
                     honest={"pulse":pulse,"occ":newp,"state":nxt,
-                            "pix":pic,"id":frozen}
-                    fake=dict(honest);fake["pulse"]=1-pulse
-                    assert fake["pulse"]!=schedule(w,t,mode)
-                    assert fake["pulse"]!=honest["pulse"]
-                    faults["pulse"]+=1
-                    fake=dict(honest);fake["occ"]=(newp+1)%(MAX+1)
-                    assert fake["occ"]!=honest["occ"]
-                    faults["gate_occupancy"]+=1
-                    fake=dict(honest);fake["state"]=nxt^1
-                    assert fake["state"]!=honest["state"]
-                    faults["field"]+=1
-                    fake=dict(honest);fake["pix"]=sha(frame(nxt^(1<<40)))
-                    assert fake["pix"]!=honest["pix"]
-                    faults["pixel"]+=1
-                    changed=list(keys);changed[w]="0"*16
-                    fake=dict(honest);fake["id"]=identities(changed)
-                    assert fake["id"]!=honest["id"]
-                    faults["pid"]+=1
-                    # A second, *self-consistent* incorrect pulse-source
-                    # envelope can satisfy a watcher supplied the forged
-                    # schedule; a separately anchored schedule must reject.
+                            "pix":pic,"id":frozen,"pos":pos,"mem":newmem,
+                            "gate":gate,"spike":spike}
+                    assert verify_record(w,t,mode,state,p,mem,keys,honest)
+                    altered={"pulse":1-pulse,
+                             "gate_occupancy":(newp+1)%(MAX+1),
+                             "field":nxt^1,
+                             "pixel":sha(frame(nxt^(1<<40))),
+                             "pid":identities(keys[:w]+["0"*16]+keys[w+1:])}
+                    for label,value in altered.items():
+                        fake=dict(honest)
+                        key={"pulse":"pulse","gate_occupancy":"occ",
+                             "field":"state","pixel":"pix","pid":"id"}[label]
+                        fake[key]=value
+                        assert not verify_record(w,t,mode,state,p,mem,keys,fake),(
+                            "independent watcher accepted injected fault",w,t,mode,label)
+                        faults[label]+=1
+                    # The forged pulse plus a fully recomputed downstream
+                    # output is self-consistent under the forgery but must
+                    # fail the separately pinned pulse schedule.
                     forged_pulse=1-pulse
                     fakeoutput=compute_step(w,t,mode,state,p,mem,forged_pulse)
-                    assert verify_step(w,t,mode,state,p,mem,forged_pulse,fakeoutput) is False
+                    forged={"pulse":forged_pulse,"state":fakeoutput[0],
+                            "occ":fakeoutput[1],"mem":fakeoutput[2],
+                            "gate":fakeoutput[3],"spike":fakeoutput[4],
+                            "pix":sha(frame(fakeoutput[0])),
+                            "pos":pos,"id":frozen}
+                    assert not verify_record(w,t,mode,state,p,mem,keys,forged)
                     source_forgery+=1
                 state,p,mem=nxt,newp,newmem
                 identity_rows+=1
