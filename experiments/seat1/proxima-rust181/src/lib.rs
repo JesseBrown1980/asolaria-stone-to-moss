@@ -2,6 +2,7 @@
 //! Asolaria trit-only, integer-only, inspectable Proxima constellation kernel.
 //! All physical optical, stellar pixel, neural-weight and biological claims are HELD.
 pub mod memory;
+pub mod long_horizon;
 use std::collections::BTreeSet;
 pub type Trit=i8;
 pub const TRITS:[Trit;3]=[-1,0,1];
