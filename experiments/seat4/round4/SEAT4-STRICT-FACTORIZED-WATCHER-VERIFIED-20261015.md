@@ -5,7 +5,7 @@
 
 [Final five-job GitHub Actions #38753091017](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38753091017): **5/5 SUCCESS** (Ubuntu/Windows × Python3.11/3.13 plus a fifth independent downloadable-artifact byte-parity job). Every one of the four computation jobs rederived the committed append-only HBP stone and compared its entire byte content and SHA256 sidecar to the deposited immutable reference. Full scientific JSON/HBP bytes and SHA sidecars matched across OS.
 
-- Committed **290-byte** [Seat 4 HBP stone](../../stones/2026-10-15-rainbow81/seat4-factorized-strict-watcher-20261015.hbp) SHA256: `a20234785c4ef216feaa5adc97b6ead3a0b46a05bb1750947e829a41cfe3f5e2`.
+- Committed **290-byte** [Seat 4 HBP stone](../../../stones/2026-10-15-rainbow81/seat4-factorized-strict-watcher-20261015.hbp) SHA256: `a20234785c4ef216feaa5adc97b6ead3a0b46a05bb1750947e829a41cfe3f5e2`.
 - **1,204-byte JSON** `seat4-strict.json`, archived in the hosted artifacts; SHA256: `e6696a9db842df5028a7f39a035388dae5cd399130e125f726dcc5fa8da980a7`.
 - No prior Seat1/2/3/4 stones, branches or prior release were overwritten, and no merges or HF jobs were performed.
 - Earlier successful hosted job [38752578825](https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38752578825) is preserved. Final stronger run adds actual coherent bank+local anchor rewrite with an independently pinned source check and committed-stone readback.
