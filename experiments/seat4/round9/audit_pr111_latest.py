@@ -102,7 +102,7 @@ def tamper(directory,case):
  (directory/(where.name+".sha256")).write_bytes(
   (sha(raw)+"  "+where.name+"\n").encode("ascii"))
 def main(args):
- root,base,merge,archives,out=map(Path,args)
+ root,base,merge,archives,out=map(lambda p:Path(p).resolve(),args)
  out.mkdir(parents=True,exist_ok=True)
  inspect_api(root,base,merge)
  hbp=base/"stones/2026-10-15-rainbow81/seat4-round5-signed-spectrum-mapping-20261015.hbp"
