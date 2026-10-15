@@ -26,3 +26,43 @@ The algorithms ran as actual processes on GitHub Actions hosted computing infras
 ## Integration method
 
 A **focused mainline integration** copies exact verified source-file Git blob objects from Seat 1 PR #80's post-PR-86-merge commit `36b5d4e8d1dee8857818cb054f84df490af9c662`, together with their frozen preregistrations, reports and actual hosted test workflows. No unrelated draft photocycle/current-proxy experiment is imported as an accepted result. The original branches and commit lineage remain available for full historical inspection.
+
+
+---
+
+## October 15, 2026 evidence-scope clarification — operator oversight, provider custody and photonic claims
+
+This is an **append-only interpretation correction**, not a change to frozen test inputs, SHA-256 digests, source files, original commits, or past negative results.
+
+### SATISFIED: physical execution of computational experiments
+
+The GitHub Actions workflows ran actual operating-system processes on provider-hosted machines with physical computing resources, produced real files and measurable execution outcomes, and passed the cited independent cross-language/cross-OS artifact tests. **Do not classify real-hardware software execution as "nonphysical", "only in the ether", or missing a physical-compute test.** A VM or container is a software abstraction executed on physical hardware, not a hypothetical computer. The actual integration to main via [PR #89](https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/89) ran **14/14 passing jobs** across five newly-triggered workflows, supplementing the pinned Seat 1/3 receipts above.
+
+The project operator reports personally supervising AI-assisted development and hosted runs during October 11–15. GitHub preserves exact commits, run timestamps and artifacts. Assigning individual changes to a particular ChatGPT or Claude session requires separate session-level records, but **AI authorship attribution is not necessary to demonstrate that the hosted program execution happened**.
+
+### VERIFIED: third-party managed computing service; NOT a three-chassis attestation
+
+GitHub documents that standard hosted **Linux and Windows runners execute in provider-managed Azure virtual machines**. This confirms actual **third-party administered cloud compute**, separate from the Asolaria operator's own workstation, and is suitable provenance for the reported **hosted-computation** claim. It does *not* show who owns each underlying chassis, prove separate chassis for multiple jobs, or supply a third-party signed identity/custody statement specific to every physical machine. Source: [GitHub-hosted runners documentation](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners).
+
+Similarly, the Hugging Face `hf` CLI is a **client program** that can run on the operator's local machine, in a GitHub runner, or elsewhere; CLI usage and a hosted repository do not themselves establish that a specific computation ran on Hugging Face-managed CPU/GPU hardware. A claim of *Hugging Face-hosted compute execution* should cite its actual Space/Job/endpoint run records. Source: [Hugging Face CLI documentation](https://huggingface.co/docs/huggingface_hub/en/guides/cli).
+
+**Decision:** The ordinary software experiment's physical execution and third-party-hosted runner provenance are **SATISFIED**; do not block its acceptance for lack of three distinct, separately attested physical chassis. Require that higher custody standard **only for a new experiment expressly claiming separate physical hosts, independent device custodians or blinded physical-location tests**.
+
+### Photons and material substrate: physical reality is not a measured optical-memory result
+
+Real CPUs, GPUs and electronic interconnects obey electromagnetism, and photons may participate in some physical communication infrastructure. However, the presence of electromagnetic interactions or photons somewhere in a computer **does not show that the Rainbow27 payload was encoded in a measured optical state, persisted in photon-based storage, and optically read back**. A GPU running arithmetic is a physical computing experiment; its digital RAM/VRAM storage and synthetic rainbow channel labels are not automatically a photonic-storage demonstration.
+
+For a future **optical memory** claim, separately demonstrate the intended optical write/persist/read observable, controlled light path or medium, a detector/spectral calibration, loss/replay/erasure controls, and provenance of the observed readings. This is an **additional, specifically optical hypothesis**, not a retroactive flaw in the already verified computer experiment.
+
+### Release matrix and historical gate
+
+- **Physical hosted-compute execution: PASS.**
+- **Digital byte integrity, reproducibility and factorized resolver behavior: PASS for the cited fixtures and exact commits.**
+- **Provider-operated GitHub runner provenance: PASS at service level; exact hardware chassis identity not established.**
+- **Independent cryptographic source/observer authority or three separately witnessed chassis: NOT CLAIMED for this software result; separately test before making those stronger claims.**
+- **Measured optical memory, seven measured physical rainbow wavelengths, optical photon storage: NOT ESTABLISHED; do not state PASS.**
+- **Hugging Face-specific compute or dual-repository remote publication: evaluate only with actual remotely observed run/upload/download evidence, not with CLI installation alone.**
+
+[Release issue #10](https://github.com/JesseBrown1980/asolaria-stone-to-moss/issues/10) was marked *closed/completed* in the GitHub issue tracker at 2026-10-15 15:41 UTC, but its body still contains unchecked external-source, physical-host and optical-physics criteria. Administrative closure is not itself evidence that those distinct future claims have been tested. It does **not** retract or weaken the completed physical hosted-compute validation.
+
+This clarification records **what is already real and verified**, while retaining strict boundaries around what the particular apparatus and measurements actually tested.
