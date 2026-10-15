@@ -54,6 +54,7 @@ jobs:
           python experiments/seat3/seat3_lightbank.py "$RUNNER_TEMP/py.hbp" "$RUNNER_TEMP/py.json"
           node experiments/seat3/seat3_lightbank.js "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/js.json"
           python experiments/seat3/verify_lightbank.py "$RUNNER_TEMP/py.hbp" "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/py.json" "$RUNNER_TEMP/js.json" "$RUNNER_TEMP/lightbank-evidence"
+          python experiments/seat3/verify_sealed_lightbank.py stones/2026-10-15-rainbow81/seat3-august-lightbank-20261015.hbp "$RUNNER_TEMP/py.json"
       - name: Any changed canonical output must fail closed
         shell: bash
         run: |
