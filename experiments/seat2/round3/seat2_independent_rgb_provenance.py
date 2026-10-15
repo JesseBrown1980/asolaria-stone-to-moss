@@ -272,6 +272,40 @@ def image_checks(archive, fixture):
         "real_physical_optical_readback":False,
     }
 
+def jury_accept(proposal: dict, grounded_body: bytes, seq: int,
+                stable_pid: str, boat: int, lane: int, open_gate: bool) -> bool:
+    """Independent verifier: offered packet must bind to fixed source bytes."""
+    return (open_gate
+            and proposal["body"] == grounded_body
+            and sha(proposal["body"]) == proposal["claim"]
+            and sha(proposal["body"]) == sha(grounded_body)
+            and proposal["seq"] == seq
+            and proposal["pid"] == stable_pid
+            and proposal["origin"] == boat
+            and proposal["route"] == lane)
+
+
+def attack_packet(fixture: bytes, wave: int, address: int,
+                  lane: int, fault: str) -> dict:
+    """Create the *actual* falsification input, never infer it from HBP verdict."""
+    grounded=block(fixture,wave,address)
+    result={"body":grounded,"claim":sha(grounded),
+            "seq":wave*81+address, "pid":pid(wave,address),
+            "origin":(wave+address+lane)%7, "route":lane}
+    if fault=="CORRUPT":
+        altered=bytearray(grounded)
+        altered[0]^=1
+        result["body"]=bytes(altered)
+        result["claim"]=sha(result["body"])  # fake digest also consistent
+    elif fault=="STALE":
+        result["seq"]-=1
+    elif fault=="FORGED":
+        result["origin"]=(result["origin"]+1)%7
+    else:
+        demand(fault=="CLEAN","UNKNOWN_ATTACK_KIND")
+    return result
+
+
 def row_audit(archive, fixture):
     payload=archive.read("cases.hbp")
     demand(sha(payload)==HBP_HASH,"PUBLISHED_HBP_DIGEST_CHANGED")
@@ -283,6 +317,7 @@ def row_audit(archive, fixture):
     truth_gates={(name,mode):model_gate(name,mode)
                  for name,mode in product(MODELS,MODES)}
     stats=Counter()
+    independently_injected=Counter()
     lane_census=Counter()
     seen=set()
     p=0
@@ -328,7 +363,28 @@ def row_audit(archive, fixture):
                         demand(int(values["lane"])==lane,
                                "QUTRIT_ROUTE_NOT_SOURCE_ANCHORED")
                         stats[f"{fault}:{correct_verdict}"]+=1
+                        candidate=attack_packet(fixture,w,addr,lane,fault)
+                        expected_boat=(w+addr+lane)%7
+                        actual_accept=jury_accept(candidate,data,w*81+addr,
+                                      fixed_pid,expected_boat,lane,open_gate)
+                        demand(actual_accept==bool(correct_emit),
+                               "SEAT2_NEW_ACTUAL_ATTACK_ACCEPTED_INCORRECTLY")
+                        independently_injected[f"{fault}:{correct_verdict}"]+=1
+                        if open_gate and fault=="CLEAN":
+                            fake_lane=(lane+1)%3
+                            route_forgery=dict(candidate)
+                            route_forgery["route"]=fake_lane
+                            route_forgery["origin"]=(w+addr+fake_lane)%7
+                            demand(not jury_accept(route_forgery,data,w*81+addr,
+                                       fixed_pid,expected_boat,lane,True),
+                                   "SEAT2_FALSE_QUTRIT_ROUTE_ACCEPTED")
+                            independently_injected["FALSE_ROUTE:FAULT_HELD"]+=1
     demand(p==52488 and len(seen)==2187,"NOT_ALL_ROWS_TESTED")
+    demand(sum(v for k,v in independently_injected.items()
+               if not k.startswith("FALSE_ROUTE:"))==52488,
+           "INDEPENDENT_ACTUAL_ATTACKS_MISSING")
+    demand(independently_injected["FALSE_ROUTE:FAULT_HELD"]==8748,
+           "INDEPENDENT_FALSE_ROUTE_ATTACK_COUNT")
     demand(sum(stats.values())==52488,"BAD_ROW_TOTAL")
     demand(stats["CLEAN:PASS"]==8748,"CLEAN_ACCEPT_COUNT_WRONG")
     demand(sum(v for k,v in stats.items() if k.endswith("FAULT_HELD"))==26244,
@@ -343,7 +399,10 @@ def row_audit(archive, fixture):
             "distinct_wave_address_identities":len(seen),
             "independent_gate_schedule_verified":True,
             "every_block_sha_recomputed_from_source":True,
-            "every_born_lane_recomputed_from_source":True}
+            "every_born_lane_recomputed_from_source":True,
+            "independently_constructed_actual_attack_packets":dict(sorted(independently_injected.items())),
+            "extra_false_qutrit_lane_attacks_rejected":independently_injected["FALSE_ROUTE:FAULT_HELD"],
+            "replayed_HBP_contains_raw_attack_bytes":False}
 
 def main():
     ap=argparse.ArgumentParser()
@@ -357,6 +416,7 @@ def main():
     demand(len(fixture)==LENGTH and sha(fixture)==FIXTURE_HASH,
            "INDEPENDENT_FIXTURE_PIN_FAIL")
     both={}
+    transport={}
     extracted={}
     for label,path in (("ubuntu",args.ubuntu),("windows",args.windows)):
         demand(path.is_file(),f"MISSING_ARTIFACT_FILE:{label}")
@@ -373,11 +433,11 @@ def main():
                    "HBP_RESULT_DIGEST_DISAGREES")
             pix=image_checks(zipped,fixture)
             cases=row_audit(zipped,fixture)
-            both[label]={"zip_sha256":sha(path.read_bytes()),
-                         "zip_bytes":path.stat().st_size,
-                         "qr":pix,"cases":cases,
+            both[label]={"qr":pix,"cases":cases,
                          "canonical_results_sha256":sha(zipped.read("results.json")),
                          "hbp_sha256":sha(zipped.read("cases.hbp"))}
+            transport[label]={"local_repacked_artifact_zip_sha256":sha(path.read_bytes()),
+                              "local_repacked_artifact_zip_bytes":path.stat().st_size}
             extracted[label]={
               "results":zipped.read("results.json"),
               "cases":zipped.read("cases.hbp"),
@@ -417,6 +477,12 @@ def main():
             "physical_hosts_independently_attested":False,
             "neural_photo_kinetics_measured":False}
     args.output.parent.mkdir(parents=True,exist_ok=True)
+    transport_doc={"note":"Repacked local ZIP container hashes are runner metadata, not scientific identity or original GitHub artifact digest",
+                   "downloaded_from_run":RUN_ID,
+                   "original_actions_artifact_ids":{"ubuntu":11973675852,"windows":11974420144},
+                   "local_runner_zip_metadata":transport}
+    args.output.with_name("seat2-transport-manifest.json").write_text(
+         json.dumps(transport_doc,sort_keys=True,indent=2)+"\n",encoding="utf-8")
     encoded=(json.dumps(report,sort_keys=True,indent=2)+"\n").encode("utf-8")
     args.output.write_bytes(encoded)
     print(json.dumps({
