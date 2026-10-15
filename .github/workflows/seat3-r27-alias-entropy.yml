@@ -68,7 +68,7 @@ jobs:
           run-id: 38747014513
           name: rainbow27-v2-ubuntu-latest-py3.11
           path: ${{ runner.temp }}/upstream81
-      - name: Third implementation: read ALL 15,309 aliases and ALL 59,049 routes, compute conditional information
+      - name: Third implementation - read all 15309 aliases and 59049 routes and compute information
         shell: bash
         run: |
           python experiments/seat3/round3_alias_entropy/audit_round3_alias_route.py "$RUNNER_TEMP/upstream80" "$RUNNER_TEMP/upstream81" "$RUNNER_TEMP/seat3-independent-audit"
