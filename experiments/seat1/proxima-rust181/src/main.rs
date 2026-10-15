@@ -56,10 +56,10 @@ fn main()->io::Result<()>{
     let qr_fixture=asolaria_proxima_ternary::camera::synthetic_fits(77,88,3);
     let chunks=asolaria_proxima_ternary::camera::rainbow_qr_payloads(&qr_fixture)
         .expect("QR payload encoding");
-    let mut qr_tsv=String::from("index\\tlane\\tcolor\\tsource_size\\tindexed_chunk_hex\\n");
+    let mut qr_tsv=String::from("index\tlane\tcolor\tsource_size\tindexed_chunk_hex\n");
     for chunk in &chunks{
         let bytes=asolaria_proxima_ternary::camera::encode_transport(chunk);
-        qr_tsv.push_str(&format!("{}\\t{}\\t{}\\t{}\\t{}\\n",
+        qr_tsv.push_str(&format!("{}\t{}\t{}\t{}\t{}\n",
             chunk.ordinal,chunk.lane,asolaria_proxima_ternary::camera::COLOURS[chunk.lane],
             chunk.payload.len(),asolaria_proxima_ternary::sha256::hex(&bytes)));
     }
