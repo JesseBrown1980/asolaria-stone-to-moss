@@ -72,6 +72,31 @@ def rank(rows):
 def apply(rows,state):
     return sum((((r&state).bit_count() & 1)<<i) for i,r in enumerate(rows))
 
+def common_source_consistent(operator_rows, observed_states):
+    """Independent GF(2) row elimination for stacked consistency equations.
+
+    Each observed output bit appends a single RHS bit to the corresponding
+    row. A 0=1 residual certifies that NO shared source can explain inputs.
+    """
+    pivots={}
+    for rows,observed in zip(operator_rows,observed_states):
+        for output_bit,coefficients in enumerate(rows):
+            equation=coefficients
+            target=(observed>>output_bit)&1
+            while equation:
+                top=equation.bit_length()-1
+                if top in pivots:
+                    old_equation,old_target=pivots[top]
+                    equation ^= old_equation
+                    target ^= old_target
+                else:
+                    pivots[top]=(equation,target)
+                    break
+            if not equation and target:
+                return False
+    return True
+
+
 def oracle_small():
     # Exhaustive *independent source states* (NOT forced to share source).
     views=[lambda x:x&0b0011,lambda x:x&0b1110,lambda x:x&0b1101]
@@ -142,16 +167,24 @@ def main(source_path,out_json,out_hbp):
         assert (80+80-rank(B+other))==80
         assert rank(operators["CA150"]+B)==81
         assert (79+80-rank(operators["CA150"]+B))==78
-        # Construct always-consistent malicious source replacement in all views.
+        # A substituted common fake source is fully decodable by every
+        # mathematical view. The consistency decoder cannot infer custody.
         x=0
         forged=1<<17
         assert forged!=x
-        assert all(apply(operators[name],forged)==apply(operators[name],forged)
-                   for name in LAWS)
-        # Not merely tautological: show mismatched true and forged source can
-        # be distinguished *if* trusted source x is available to watcher.
-        assert any(apply(operators[name],x)!=apply(operators[name],forged)
-                   for name in LAWS)
+        selected=["CA150","CA90","CA60"]
+        views=[operators[name] for name in selected]
+        spoofed_outputs=[apply(rows,forged) for rows in views]
+        honest_outputs=[apply(rows,x) for rows in views]
+        assert common_source_consistent(views,spoofed_outputs)
+        assert common_source_consistent(views,honest_outputs)
+        # This *mixed* inconsistent experiment is rejected by actual
+        # decoder, unlike the coordinated forged-source triple above.
+        assert not common_source_consistent(views,[honest_outputs[0],
+                                                   spoofed_outputs[1],
+                                                   spoofed_outputs[2]])
+        # A trusted source/custody commitment distinguishes x and forged.
+        assert sha(f"trusted:{x}".encode())!=sha(f"trusted:{forged}".encode())
         # Identical-output attack on each B view from distinct sources.
         assert all(apply(operators[name],x)==apply(operators[name],x^FULL)
                    for name in LAWS if name!="CA150")
