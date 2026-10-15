@@ -160,6 +160,36 @@ function main(){
     expectedFailure("wrong_external_anchor",()=>pin(bank,"0".repeat(64),"BANK"),"PIN_BANK_MISMATCH")
   ];
   ck(tests.length===12&&tests.every(Boolean),"NEGATIVE_CONTROL_MISSING");
+  // Actually remove entries and probe all 15,309 symbolic addresses; restore source.
+  function erasure(removed,expected){
+    const saved=new Map();
+    for(const key of removed){
+      ck(resolver.lookup.has(key),"ERASURE_SETUP_MISSING_BASE_ROW");
+      saved.set(key,resolver.lookup.get(key));
+      resolver.lookup.delete(key);
+    }
+    let rejected=0,accepted=0;
+    try{
+      for(let sector=0;sector<27;sector++)for(const band of BANDS)for(let n=0;n<81;n++){
+        const id=site(n),key=band+"|"+id;
+        try{
+          resolver.resolve(sector,band,id);
+          ck(!saved.has(key),"ERASURE_NOT_DETECTED");
+          accepted++;
+        }catch(e){
+          ck(e.message==="MISSING_BASE_ROW"&&saved.has(key),
+             "ERASURE_FAILED_FOR_WRONG_REASON_"+e.message);
+          rejected++;
+        }
+      }
+      ck(rejected===expected&&accepted===15309-expected,"ERASURE_COUNT_MISMATCH");
+      return rejected;
+    }finally{
+      for(const [k,v] of saved)resolver.lookup.set(k,v);
+    }
+  }
+  const missingViolet=erasure(Array.from({length:81},(_,n)=>"violet|"+site(n)),2187);
+  const missingOne=erasure(["red|site-000"],27);
   const summary={
     schema:SCHEMA,
     source_sha256:SOURCE_SHA,bank_sha256:BANK_SHA,base_index_sha256:BASE_SHA,
@@ -169,7 +199,7 @@ function main(){
     expanded_index_bytes:bytes,factorized_base_index_bytes:resolver.indexBytes,
     retained_bank_bytes:bank.length,avoided_repeated_index_bytes:bytes-resolver.indexBytes,
     payload_compression_bytes:0,
-    missing_violet_logical_aliases:2187,missing_one_row_logical_aliases:27,
+    missing_violet_logical_aliases:missingViolet,missing_one_row_logical_aliases:missingOne,
     ordered_color_identity_preserved:true,symmetric_intensity_permutation_collision:true,
     dark_address_retained:true,negative_faults_rejected:tests.length,
     external_origin_authenticated:false,coherent_anchor_substitution:"HELD",
