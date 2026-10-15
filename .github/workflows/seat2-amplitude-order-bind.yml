@@ -1,0 +1,119 @@
+name: Seat2 exact rainbow amplitude/ordered-source sideband
+
+on:
+  push:
+    branches:
+      - agent/seat-2/round3-rgb-provenance-20261015
+    paths:
+      - experiments/seat2/round3/seat2_amplitude_order_bind.py
+      - experiments/seat2/round3/PREREG-AMPLITUDE-ORDER-BIND-V1-20261015.md
+      - .github/workflows/seat2-amplitude-order-bind.yml
+  pull_request:
+    paths:
+      - experiments/seat2/round3/seat2_amplitude_order_bind.py
+      - experiments/seat2/round3/PREREG-AMPLITUDE-ORDER-BIND-V1-20261015.md
+      - .github/workflows/seat2-amplitude-order-bind.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  independently-grounded-amplitude-binding:
+    name: Seat2 normalized-amplitude origin attack ${{ matrix.os }} Python3.11
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 24
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            source: round3-light-being-ubuntu-latest-py3.11
+          - os: windows-latest
+            source: round3-light-being-windows-latest-py3.13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install independent ZXing-C++ and pixel-array dependencies
+        shell: bash
+        run: python -m pip install --disable-pip-version-check zxing-cpp==3.0.0 Pillow==12.0.0 numpy==2.3.5
+      - name: Fetch real pinned source-run QR artifact plus Seat3 correction stone
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: JesseBrown1980/asolaria-stone-to-moss
+          SOURCE_ARTIFACT: ${{ matrix.source }}
+        run: |
+          set -euo pipefail
+          EXPECTED="a3e86a169ee9d45d64cd83973919e760ce7e65d9"
+          ACTUAL="$(gh api "repos/$GH_REPO/actions/runs/38735582094" --jq '.head_sha')"
+          test "$ACTUAL" = "$EXPECTED"
+          mkdir -p seat2-amplitude-input/artifact seat2-amplitude-results
+          gh run download 38735582094 -R "$GH_REPO" -n "$SOURCE_ARTIFACT" -D seat2-amplitude-input/artifact
+          gh api "repos/$GH_REPO/contents/stones/2026-10-15-rainbow81/seat3-round3-normalized-intensity-correction-20261015.hbp?ref=a9f7f73acf3c515de68b0dfff6edc5e30f544e47" --jq '.content' > seat2-amplitude-input/seat3-base64.txt
+          python - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,zipfile
+          p=Path('seat2-amplitude-input')
+          stone=base64.b64decode((p/'seat3-base64.txt').read_text())
+          assert len(stone)==1259
+          assert hashlib.sha256(stone).hexdigest()=="4d4c4c28ca76f6d97ab1f16916bfe79936e09189e8b8f904b377bbc77a57a69c"
+          raw=p/'artifact'
+          files=sorted(x for x in raw.rglob('*') if x.is_file())
+          assert len(files)==15, [str(x) for x in files]
+          with zipfile.ZipFile(p/'source.zip','w',compression=zipfile.ZIP_STORED) as z:
+              for f in files: z.write(f,f.relative_to(raw).as_posix())
+          print('SEAT2_SOURCE_PIN_VERIFIED',len(files),'FILES; SEAT3_STONE_SHA_VERIFIED')
+          PY
+      - name: Execute independent ordered-amplitude origin falsifiers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/seat2/round3/seat2_amplitude_order_bind.py \
+            --published-source-zip seat2-amplitude-input/source.zip \
+            --output-dir seat2-amplitude-results \
+            | tee seat2-amplitude-results/summary.txt
+          python - <<'PY'
+          from pathlib import Path
+          from hashlib import sha256
+          import json
+          p=Path('seat2-amplitude-results')
+          b=(p/'seat2-amplitude-order-cases.hbp').read_bytes()
+          result=json.loads((p/'seat2-amplitude-order-result.json').read_text())
+          math=result["independent_mathematics"]
+          photo=result["independent_qr_pixel_source_and_missing_channel"]
+          assert result["status"]=="SEAT2_AMPLITUDE_AND_ORDER_SIDEBAND_DIGITAL_PASS_WITH_ORIGIN_LIMITATIONS"
+          assert math["ordered_distinct_sectors"]==27
+          assert (math["raw_classes"],math["normalized_classes_plus_undefined"])==(10,7)
+          assert math["raw_directed_collisions"]==66
+          assert math["normalized_directed_collisions"]==104
+          assert math["additional_entropy_exact"]=="14/27"
+          assert math["all_702_substitutions_rejected_by_pinned_ordered_amplitude_sideband"]
+          assert math["scaled_unary_pair_digital_sha_modulo_routes"]==[2,1]
+          assert math["attacker_replaced_both_source_and_anchor_passes_local_hash"]
+          assert math["third_party_signed_authorship_proven"] is False
+          assert math["explicit_attack_counts"]["substitutions_held"]==702
+          assert photo["actual_indexed_missing_frame_controls_rejected"]==32
+          assert photo["source_channel_manifest_sha256"]=="c69e9e8cee0cc13130466129aed9d08e6367a546326918f16833396d8ae5287c"
+          assert len(b.splitlines())==result["evidence_hbp_rows"]
+          assert len(b)==result["evidence_hbp_bytes"]
+          assert sha256(b).hexdigest()==result["evidence_hbp_sha256"]
+          expected=[
+            f"{sha256((p/'seat2-amplitude-order-result.json').read_bytes()).hexdigest()}  seat2-amplitude-order-result.json",
+            f"{sha256(b).hexdigest()}  seat2-amplitude-order-cases.hbp"
+          ]
+          assert (p/'SHA256SUMS.txt').read_bytes()==('\n'.join(expected)+'\n').encode('ascii')
+          print('SEAT2_RB27_AMPLITUDE_ORIGIN_702_ALIAS_AND_32_MISSING_QR_PASS')
+          print('SEAT2_CANONICAL_RESULT_SHA',sha256((p/'seat2-amplitude-order-result.json').read_bytes()).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-amplitude-order-${{ matrix.os }}-py3.11
+          path: seat2-amplitude-results/*
+          if-no-files-found: error
+          retention-days: 90
