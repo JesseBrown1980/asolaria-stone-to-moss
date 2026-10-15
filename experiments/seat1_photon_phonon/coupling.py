@@ -286,7 +286,7 @@ def run(original,bankfile,indexfile,outpath):
       "model_type":"DECLARED_CLASSICAL_BINOMIAL_PROBABILITY_WITH_SYNTHETIC_PHONON_DRIVE",
       "negative_controls":recorded_negatives,"erased_violet_rows":erasure_rows,
       "missing_logical_27_sector_aliases":erasure_rows*27,
-      "scenario_results":summaries,"analytic_model_checks":analytic,
+      "scenario_results":summaries,"analytic_checked_arms":len(analytic),
       "hbp_sha256":sha(flat),"hbp_bytes":len(flat)}
     directory=Path(outpath);directory.mkdir(parents=True,exist_ok=True)
     for name,raw in {"coupling.hbp":flat,"results.json":canon(manifest)}.items():
