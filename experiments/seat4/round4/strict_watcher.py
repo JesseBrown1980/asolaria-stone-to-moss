@@ -5,7 +5,7 @@ from collections import Counter
 from pathlib import Path
 from factorized_reader import BANDS,EXPECTED,coords,load,pinned,resolve,require,sha,verify_index
 DOMAIN=b"ASOLARIA-R27-V2|TICKET|"
-ROW=re.compile(r"CASE\\|w=(\\d{2})\\|loc=(\\d{2})\\|id=(\\d{2})\\|rgb=([012]{3})\\|raw=(\\d+),(\\d+),(\\d+)\\|prim=(\\d+),(\\d+),(\\d+)\\|den=(\\d+)\\|lane=([012H])\\Z")
+ROW=re.compile(r"CASE\|w=(\d{2})\|loc=(\d{2})\|id=(\d{2})\|rgb=([012]{3})\|raw=(\d+),(\d+),(\d+)\|prim=(\d+),(\d+),(\d+)\|den=(\d+)\|lane=([012H])\Z")
 def weights(trit):
  s=sum(trit)
  q=sum((trit[i]-trit[(i+1)%3])**2 for i in range(3))//2
@@ -105,15 +105,15 @@ def run(source_root,v2_root,outdir):
   lane_counts={k:census[k] for k in ("0","1","2","H")},negative_controls=faults,
   external_origin_verified=False,physical_spectra_measured=False,physical_memory_verified=False,
   release_authorized=False)
- payload=(json.dumps(evidence,sort_keys=True,separators=(",",":"))+"\\n").encode("ascii")
- hbp=(f"PORTAL|seat=4|digital=1|source_signature=0|json=0\\n"
-      f"INDEX|aliases={aliases}|saved_bytes={expanded_bytes-70043}|json=0\\n"
-      f"TRACE|rows=59049|reads={reads}|sha256={EXPECTED['trace'][1]}|json=0\\n"
-      f"FAULTS|tested={len(faults)}|verdict=HELD|json=0\\n"
-      "END|physical_optics=0|release_gate=OPEN|json=0\\n").encode("ascii")
+ payload=(json.dumps(evidence,sort_keys=True,separators=(",",":"))+"\n").encode("ascii")
+ hbp=(f"PORTAL|seat=4|digital=1|source_signature=0|json=0\n"
+      f"INDEX|aliases={aliases}|saved_bytes={expanded_bytes-70043}|json=0\n"
+      f"TRACE|rows=59049|reads={reads}|sha256={EXPECTED['trace'][1]}|json=0\n"
+      f"FAULTS|tested={len(faults)}|verdict=HELD|json=0\n"
+      "END|physical_optics=0|release_gate=OPEN|json=0\n").encode("ascii")
  for name,blob in [("seat4-strict.json",payload),("seat4-strict.hbp",hbp)]:
   (out/name).write_bytes(blob)
-  (out/(name+".sha256")).write_bytes((sha(blob)+"  "+name+"\\n").encode("ascii"))
+  (out/(name+".sha256")).write_bytes((sha(blob)+"  "+name+"\n").encode("ascii"))
  print(json.dumps({"status":"PASS_DIGITAL","aliases":aliases,"reads":reads,"negatives":len(faults),"receipt_sha":sha(hbp)}))
 if __name__=="__main__":
  if len(sys.argv)!=4:raise SystemExit("usage: watcher PR80_INPUT PR81_INPUT OUT")
