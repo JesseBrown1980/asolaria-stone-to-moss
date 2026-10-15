@@ -8,12 +8,14 @@ on:
       - experiments/seat4/PREREG-LIGHTBANK-THREE-PATH-MEMORY-B3-20261015.md
       - experiments/seat4/ADDENDUM-COLOUR-QR-PROJECTOR-B3.md
       - experiments/seat4/lightbank_*
+      - stones/2026-10-15-rainbow81/seat4-lightbank-b3-three-path-memory.json*
       - .github/workflows/seat4-b3-lightbank-memory.yml
   pull_request:
     paths:
       - experiments/seat4/PREREG-LIGHTBANK-THREE-PATH-MEMORY-B3-20261015.md
       - experiments/seat4/ADDENDUM-COLOUR-QR-PROJECTOR-B3.md
       - experiments/seat4/lightbank_*
+      - stones/2026-10-15-rainbow81/seat4-lightbank-b3-three-path-memory.json*
       - .github/workflows/seat4-b3-lightbank-memory.yml
   workflow_dispatch:
 
@@ -128,6 +130,9 @@ jobs:
           assert p["pairwise_full_archive_exact_restore"]==n["pairwise_full_archive_reconstructions"]==3
           assert p["archive_sha256"]==n["canonical_source_sha256"]
           assert p["bank_sha256"]==n["bank_sha256"]
+          stone=pathlib.Path("stones/2026-10-15-rainbow81/seat4-lightbank-b3-three-path-memory.json")
+          assert stone.read_bytes()==(folder/"lightbank-result.json").read_bytes()
+          assert hashlib.sha256(stone.read_bytes()).hexdigest()=="40a1a961fb3bae45ad1253b9c0ad91ce31e8dfdb59ef48be3f1e0086291f8b4d"
           assert p["colour_qr_transport"]["sha256"]==n["qr_transport_sha256"]
           assert p["colour_qr_transport"]["chunks"]==n["colour_qr_payload_chunks"]
           assert p["projector"]==n["projector"]
