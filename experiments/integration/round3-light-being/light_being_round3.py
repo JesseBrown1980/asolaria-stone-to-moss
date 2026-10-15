@@ -308,12 +308,13 @@ def halt_and_scope() -> dict:
             "real_process_termination_tested":False,
             "real_external_permission_enforcement_tested":False}
 
-def integrated_cases(payload: bytes) -> tuple[dict, bytes]:
+def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict, bytes]:
     cache: OrderedDict[tuple[int,int], bytes] = OrderedDict()
     stats = Counter()
     by_condition = Counter()
     emitted_by_gate = Counter()
     h = hashlib.sha256()
+    writer = open(case_hbp, 'wb') if case_hbp else None
     qutrit_checks = 0
     pid_set = set()
     # Wave/address represent the 81 computational seats * 27 waves;
@@ -380,7 +381,12 @@ def integrated_cases(payload: bytes) -> tuple[dict, bytes]:
                               f"|gate={model}|illum={mode}|fault={fault}"
                               f"|emit={int(accepted)}|verdict={verdict}"
                               f"|lane={chosen_lane}|block_sha256={witness_sha}\n")
-                        h.update(line.encode("ascii"))
+                        encoded = line.encode("ascii")
+                        h.update(encoded)
+                        if writer:
+                            writer.write(encoded)
+    if writer:
+        writer.close()
     check(stats["cases"]==N_WAVES*N_ADDR*len(GATES)*len(MODES)*len(FAULTS)
           ==52488,"FULL_MATRIX_NOT_EXECUTED")
     check(len(pid_set)==N_WAVES*N_ADDR==2187,"PID_COUNT_INCORRECT")
@@ -417,6 +423,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--qr-dir",type=Path,help="Run real RGB PNG/independent zbar QR readback")
     ap.add_argument("--receipt",type=Path,help="Write canonical JSON")
+    ap.add_argument("--case-hbp",type=Path,help="Write all 52488 independently inspectable HBP case rows")
     args = ap.parse_args()
     payload = payload_fixture()
     check(len(payload)==65536,"PAYLOAD_SIZE_CHANGED")
@@ -424,7 +431,9 @@ def main():
     qr = qr_image_experiment(payload,args.qr_dir) if args.qr_dir else {
         "status":"NOT_RUN","optical_camera_readback":False}
     fleet = fleet_test()
-    matrix, _=integrated_cases(payload)
+    if args.case_hbp:
+        args.case_hbp.parent.mkdir(parents=True,exist_ok=True)
+    matrix, _=integrated_cases(payload,args.case_hbp)
     limits=halt_and_scope()
     receipt={"schema":EXPERIMENT,"class":"CLASSICAL_DIGITAL_SIMULATION",
              "status":"SOFTWARE_PASS" if args.qr_dir else "QR_NOT_EXECUTED",
