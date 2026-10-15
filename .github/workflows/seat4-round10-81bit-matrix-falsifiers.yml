@@ -1,0 +1,107 @@
+name: Seat4 Round10 original 81-bit matrix skip hostile independent audit
+on:
+  push:
+    branches:
+      - agent/seat-4/round10-81bit-matrix-adversarial-20261015
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay:
+    name: 81-bit polynomial versus Node matrices ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: afc1a7ffe26dff93d62dc0c6ada55200c122961b
+          persist-credentials: false
+          path: frozen-merged-main
+      - name: Pin original Seat3 merged 81-bit transition source and latest matrix merge
+        shell: bash
+        run: |
+          test "$(git -C frozen-merged-main rev-parse HEAD)" = afc1a7ffe26dff93d62dc0c6ada55200c122961b
+          test "$(git -C frozen-merged-main rev-parse HEAD:experiments/seat3/two_horizon_matrix.py)" = 2b0ed7e52776cd8a9b48086d83ba31c8486629fb
+          test -f frozen-merged-main/experiments/seat3/pr111_custody/v2/matrix_logical_hour.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independent 81-bit GF2 cyclic polynomial semigroup, nonlinear, switched-law and hash-chain falsifiers
+        shell: bash
+        run: |
+          python experiments/seat4/round10/polynomial_referee.py "$RUNNER_TEMP/r10-witness"
+      - name: Independent 81-column GF2 matrix arithmetic and full 195-case byte replay
+        shell: bash
+        run: |
+          node experiments/seat4/round10/matrix_referee.js "$RUNNER_TEMP/r10-witness"
+      - name: Regenerate and verify exact committed Seat4 R10 append-only HBP receipt
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,os
+          from pathlib import Path
+          stone=Path("stones/2026-10-15-rainbow81/seat4-r10-original81-matrix-falsification-20261015.hbp")
+          blob=stone.read_bytes();digest=hashlib.sha256(blob).hexdigest()
+          assert len(blob)==582
+          assert digest=="2a2fcb0a343b425e0ce456a32384f644f157ef321e17e4b56735b83f398566c6"
+          assert stone.with_suffix(stone.suffix+".sha256").read_bytes()==(digest+"  "+stone.name+"\n").encode("ascii")
+          root=Path(os.environ["RUNNER_TEMP"])/"r10-witness"
+          expected={"r10-81bit-cases.jsonl":"08a1ebbf1e7d24d7882258e9f341767b19093c1a4368b5e21f175592461f32ef",
+           "r10-results.json":"5d9b2a894af90a16695604fb3601941d2ca698834261e14c404b68bdd965ca8b",
+           "r10-independent-node.json":"c7b89255fdc4caf5146175364c786e6c727b3ff64fe034edcd57d5a645706c5e"}
+          for name,wanted in expected.items():
+              assert hashlib.sha256((root/name).read_bytes()).hexdigest()==wanted
+              assert wanted.encode("ascii") in blob
+          print("SEAT4_R10_COMMITTED_FULL_SOURCE_RECEIPT_RECREATED",len(blob),digest)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r10-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/r10-witness/*
+          if-no-files-found: error
+          retention-days: 30
+  parity:
+    name: Seat4 original 81-bit four-platform full evidence byte parity
+    runs-on: ubuntu-latest
+    needs: replay
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r10-*
+          merge-multiple: false
+          path: peer-evidence
+      - name: Verify all three full receipts, original 81-bit evidence and falsifier gates
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          roots=sorted(Path("peer-evidence").glob("seat4-r10-*"))
+          assert len(roots)==4,roots
+          for name in ("r10-81bit-cases.jsonl","r10-results.json","r10-independent-node.json"):
+              blobs=[(r/name).read_bytes() for r in roots]
+              assert len(set(blobs))==1,"SOURCE_OR_MACHINE_DRIFT:"+name
+              sha=hashlib.sha256(blobs[0]).hexdigest()
+              for r in roots:
+                  assert (r/(name+".sha256")).read_bytes()==(sha+"  "+name+"\n").encode("ascii")
+              print("SEAT4_R10_FOUR_HOSTS_FULL_BYTE_IDENTICAL",name,len(blobs[0]),sha)
+          summary=json.loads((roots[0]/"r10-results.json").read_bytes())
+          assert summary["model_dimension_bits"]==81 and summary["law_count"]==5
+          assert summary["total_independently_computed_cases"]==195
+          assert len(summary["forged_evidence_mutations_rejected"])==7
+          assert summary["nonlinear_law_switch_and_hash_chain"]["sha256_chain_steps_executed"]==128
+          assert summary["nonlinear_law_switch_and_hash_chain"]["arbitrary_hash_chain_matrix_jump_demonstrated"] is False
+          assert summary["physical_time_elapsed_for_logical_horizons"] is False
+          print("SEAT4_R10_81BIT_MATRIX_SKIP_PASS_NONLINEAR_AND_HASHCHAIN_SCOPE_HELD")
+          PY
