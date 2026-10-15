@@ -16,6 +16,9 @@ DIR=ROOT/"experiments"/"seat4"
 EXPECTED_FALSE={"A":648,"B":216,"C":243,"D":0}
 EXPECTED_HELD={"A":0,"B":0,"C":108,"D":216}
 ROWS_PER_ARM=972
+FROZEN_TRACE_SHA="c0b44be3857af23cef02e9274e335868d2efbfe2f73d59a290ddc24a1bd8ca14"
+FROZEN_STONE_SHA="b73b09e3e89d4af4d815d5e8f2456daec4103b206cbe0190d2ac5274590ae3a8"
+SEALED=ROOT/"stones"/"2026-10-15-rainbow81"/"seat4-recurrence-is-mind-3888.json"
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
@@ -42,14 +45,17 @@ def main():
         assert tr_py.read_bytes()==tr_js.read_bytes(),"Independent Python/Node row traces differ"
         raw=tr_py.read_bytes()
         assert raw.count(b"\n")==3888
-        assert p["trace_sha256"]==j["trace_sha256"]==sha(raw)
+        assert p["trace_sha256"]==j["trace_sha256"]==sha(raw)==FROZEN_TRACE_SHA
         # Both receipts must have identical semantic fields. Exact byte
         # comparisons remain for binary ASCII traces and their digest.
         left=json.loads(rec_py.read_bytes())
         right=json.loads(rec_js.read_bytes())
         assert left==right,"Cross-language semantics of receipt differ"
         assert rec_py.read_bytes()==rec_js.read_bytes(),"Canonical pretty JSON bytes differ"
-        assert p["receipt_sha256"]==j["receipt_sha256"]==sha(rec_py.read_bytes())
+        assert p["receipt_sha256"]==j["receipt_sha256"]==sha(rec_py.read_bytes())==FROZEN_STONE_SHA
+        assert rec_py.read_bytes()==SEALED.read_bytes(),"Receipt diverges from original CI-sealed JSON stone"
+        assert SEALED.with_name(SEALED.name+".sha256").read_text("ascii").split()==[
+            FROZEN_STONE_SHA,SEALED.name]
         for f in (rec_py,rec_js):
             side=f.with_name(f.name+".sha256").read_text("ascii").split()
             assert side==[sha(f.read_bytes()),f.name]
