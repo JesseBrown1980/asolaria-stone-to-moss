@@ -1,0 +1,78 @@
+name: N-Nest audited four-seat Hugging Face mirror
+on:
+  pull_request:
+    paths:
+      - 'tools/publish_nnest_four_seat_to_hf.py'
+      - '.github/workflows/publish-nnest-four-seat-huggingface.yml'
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: 'Successful four-seat N-Nest run with complete producer manifest'
+        type: string
+        required: true
+        default: '38712061897'
+      publish:
+        description: 'Upload only with protected HF_TOKEN and reread all SHA256 values'
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  stage-verify-optional-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Download producing-run four full seat artifacts
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event_name == 'workflow_dispatch' && inputs.source_run_id || '38712061897' }}
+          pattern: nested-seat-*
+          path: ${{ runner.temp }}/producer
+          merge-multiple: false
+          github-token: ${{ github.token }}
+      - name: Download producing-run master Q-PRISM and run-bound SHA manifest
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event_name == 'workflow_dispatch' && inputs.source_run_id || '38712061897' }}
+          name: nested-master-verdict
+          path: ${{ runner.temp }}/producer
+          github-token: ${{ github.token }}
+      - name: Verify full 4-seat evidence; stage safe public model-repo prefix
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python tools/publish_nnest_four_seat_to_hf.py "$RUNNER_TEMP/producer" "$RUNNER_TEMP/nnest-ready"
+      - name: Archive verified immutable Hugging Face-ready package
+        uses: actions/upload-artifact@v4
+        with:
+          name: nnest-four-seat-hf-ready
+          path: ${{ runner.temp }}/nnest-ready/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Require protected HF token before any remote writes
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/main'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::HF_TOKEN absent: secure upload not attempted."
+            exit 1
+          fi
+      - name: Install Hugging Face client
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/main'
+        run: python -m pip install --disable-pip-version-check 'huggingface_hub>=0.36,<2'
+      - name: Publish immutable new prefix to HF model repo; download-and-SHA-verify all files
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python tools/publish_nnest_four_seat_to_hf.py "$RUNNER_TEMP/producer" "$RUNNER_TEMP/nnest-publish" --publish
