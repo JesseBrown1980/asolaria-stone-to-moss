@@ -149,7 +149,7 @@ mod tests {
     fn nesting_depth_thirteen_is_an_address_count_not_live_agent_population() {
         assert_eq!(3u64.checked_pow(13), Some(1_594_323));
         assert_eq!(3u64.checked_pow(41), None);
-        assert_eq!(digits_to_ordinal(&vec![0; 13]), Ok(797_161));
+        assert_eq!(digits_to_ordinal(&[0; 13]), Ok(797_161));
         assert_eq!(digits(797_161, 13), Ok(vec![0; 13]));
     }
 
