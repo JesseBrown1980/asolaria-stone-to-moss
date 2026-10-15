@@ -64,6 +64,9 @@ fn main()->io::Result<()>{
             chunk.payload.len(),asolaria_proxima_ternary::sha256::hex(&bytes)));
     }
     fs::write(dir.join("RAINBOW-QR-R4.tsv"),qr_tsv)?;
+    let (motion_csv,motion_hbp)=asolaria_proxima_ternary::motion::emit();
+    fs::write(dir.join("NINE-JUMP-MOTION-R5.csv"),motion_csv)?;
+    fs::write(dir.join("NINE-JUMP-MOTION-R5.hbp"),motion_hbp)?;
     fs::write(dir.join("RUNTIME.hbp"),format!(
         "RUNTIME|hosted_os={}|arch={}|elapsed_ns={}|physical_device=HOSTED_CPU|distinct_host_custody=UNATTESTED|instrumented_optics=NONE|json=0\n",
         env::consts::OS,env::consts::ARCH,started.elapsed().as_nanos()))?;
