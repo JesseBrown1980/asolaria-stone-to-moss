@@ -269,6 +269,16 @@ def all_bank_files(outdir, manifest):
     return banks, parity
 
 
+def recover_colour_plane(planes, parity, missing):
+    """Actively refuse two missing RGB planes: one XOR equation is insufficient."""
+    assert len(planes) == 3 and len(missing) == 1, "INSUFFICIENT_RGB_PARITY"
+    lane = next(iter(missing))
+    assert lane in (0, 1, 2)
+    assert all(planes[j] is not None for j in range(3) if j != lane)
+    assert len(parity) == PLANE
+    return xor(parity, *(planes[j] for j in range(3) if j != lane))
+
+
 def reconstruct_bank(banks, parity, missing, stripes):
     assert len(missing) == 1, "INSUFFICIENT_ERASURE_CAPACITY"
     erased = next(iter(missing))
@@ -338,12 +348,17 @@ def verify(out_dir, source_dir, internal=False):
         lane = f % 3
         sources = [record[i * PLANE:(i + 1) * PLANE] for i in range(3)]
         shadow = record[3 * PLANE:4 * PLANE]
-        retained = [sources[i] for i in range(3) if i != lane]
-        assert xor(shadow, *retained) == sources[lane], "SINGLE_PLANE_ERASURE_NOT_RECOVERED"
+        submitted = [value if i != lane else None for i, value in enumerate(sources)]
+        assert recover_colour_plane(submitted, shadow, {lane}) == sources[lane], "SINGLE_PLANE_ERASURE_NOT_RECOVERED"
         one_lost += 1
     # TWO missing lanes plus one XOR relation have at least one free value.
     a, b = bytes(PLANE), bytes([1]) + bytes(PLANE - 1)
     assert xor(a, a) == xor(b, b) and a != b
+    try:
+        recover_colour_plane([None, None, bytes(PLANE)], bytes(PLANE), {0, 1})
+        raise AssertionError("Two erased RGB planes illegally recovered")
+    except AssertionError as exc:
+        assert str(exc) == "INSUFFICIENT_RGB_PARITY"
     two_lane_status = "HELD_INSUFFICIENT_EQUATIONS"
     # Single entire bank gone; parity cell must reconstruct exact full bytes.
     recovered = reconstruct_bank(banks, parity, {7}, manifest["stripes_per_bank"])
@@ -369,14 +384,19 @@ def verify(out_dir, source_dir, internal=False):
         assert str(exc) == "INSUFFICIENT_ERASURE_CAPACITY"
     # An index mismatch and duplicate read are never silently merged.
     tampered_bank = bytearray(first)
-    tampered_bank[2] ^= 0x01  # corrupt LE uint32 index of first R plane
+    tampered_bank[2] ^= 0x01  # forge LE uint32 index of first R plane
+    # Also forge matching local XOR shadow: the address gate must reject even
+    # when the local fourth parity plane is internally self-consistent.
+    tampered_bank[3 * PLANE:4 * PLANE] = xor(
+        tampered_bank[0:PLANE], tampered_bank[PLANE:2 * PLANE],
+        tampered_bank[2 * PLANE:3 * PLANE])
     forged_banks = list(banks)
     forged_banks[0] = tampered_bank
     try:
         restore_archive(forged_banks, manifest)
         raise AssertionError("Forged index accepted")
     except AssertionError as exc:
-        assert str(exc) in ("CHUNK_INDEX_INVALID_OR_DUPLICATED", "RGB_SHADOW_PARITY_FAILURE")
+        assert str(exc) == "CHUNK_INDEX_INVALID_OR_DUPLICATED"
     # Test projector on actual source trace memory.
     old = (source_dir / "ticks.hbp").read_bytes()
     projection = projector_trial(old)
