@@ -126,13 +126,13 @@ def check(original,py_output,node_output,verified):
                                             m=CASE.fullmatch(line)
                                             assertit(m is not None,"RECORD_PARSE")
                                             w=m.group(1)
-                                            dims=tuple(map(int,m.groups()[1:12]))
+                                            dims=tuple(map(int,m.groups()[1:13]))
                                             expected=(res,phase,electronic,thermal,k,block,shield,
                                                       light,acoustic,band,site,bit)
                                             assertit(w==world and dims==expected,
                                                      "FACTOR_OR_ORDER_MISMATCH")
-                                            assertit(m.group(13)==leaf,"WRONG_BANK_LEAF")
-                                            y=int(m.group(14))
+                                            assertit(m.group(14)==leaf,"WRONG_BANK_LEAF")
+                                            y=int(m.group(15))
                                             base=(100+7*light+11*acoustic+5*electronic
                                                   +3*thermal+((k+2*electronic+3*thermal+5*res)%7-3)
                                                   +2*bit)
