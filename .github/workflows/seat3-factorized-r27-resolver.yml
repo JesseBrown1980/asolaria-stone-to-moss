@@ -79,6 +79,7 @@ jobs:
           python experiments/seat3/factorized_rainbow27/factorized_resolver.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/python-results"
           node experiments/seat3/factorized_rainbow27/factorized_resolver.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/node-results"
           python experiments/seat3/factorized_rainbow27/verify_factorized.py "$RUNNER_TEMP/python-results" "$RUNNER_TEMP/node-results" "$RUNNER_TEMP/verified-results"
+          python experiments/seat3/factorized_rainbow27/verify_sealed_factorized.py stones/2026-10-15-rainbow81/seat3-factorized-r27-20261015.hbp "$RUNNER_TEMP/verified-results"
       - name: Fail closed on altered original bank in BOTH language implementations
         shell: bash
         run: |
