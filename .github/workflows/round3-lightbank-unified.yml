@@ -1,0 +1,83 @@
+name: Round3 Lightbank Unified Computational Replay
+on:
+  pull_request:
+    paths:
+      - "experiments/round3/**"
+      - ".github/workflows/round3-lightbank-unified.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: round3-lightbank-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  frozen-digital-parity:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run independent integer reference and audit actual full HBP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/round3/round3_unified.py round3-python.hbp > round3-python.json
+          node experiments/round3/round3_unified_node.js round3-node.hbp > round3-node.json
+          python experiments/round3/verify_round3.py round3-python.hbp > round3-audit-py.json
+          python experiments/round3/verify_round3.py round3-node.hbp > round3-audit-node.json
+          python -c "from pathlib import Path; assert Path('round3-python.hbp').read_bytes()==Path('round3-node.hbp').read_bytes(); print('ROUND3_BYTE_EXACT_PASS')"
+          python experiments/round3/round3_memory_resume.py round3-python.hbp round3-resume.hbp > round3-resume.json
+          python -c "import hashlib,pathlib; d=hashlib.sha256(pathlib.Path('round3-resume.hbp').read_bytes()).hexdigest(); assert d=='f6599677f934509604bcbf0f3a1913ce3f473223cbb08504ef7271e078c55d5f'; print('ROUND3_RESTART_648_PASS')"
+          python -c "import hashlib,pathlib; a=pathlib.Path('round3-python.hbp'); pathlib.Path('round3-python.sha256').write_text(hashlib.sha256(a.read_bytes()).hexdigest()+'  '+a.name+'\n')"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: round3-full-${{ matrix.os }}-py${{ matrix.python-version }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            round3-python.hbp
+            round3-node.hbp
+            round3-python.json
+            round3-node.json
+            round3-audit-py.json
+            round3-audit-node.json
+            round3-python.sha256
+            round3-resume.hbp
+            round3-resume.json
+  rgb-qr-software-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install open-source QR encoder and independent reader
+        run: python -m pip install --disable-pip-version-check "qrcode[pil]" pillow opencv-python-headless numpy
+      - name: Execute software RGB QR and erasure controls
+        env:
+          OPENBLAS_NUM_THREADS: "1"
+          OMP_NUM_THREADS: "1"
+        run: |
+          sudo mkdir -p /mnt/data
+          sudo chown "$USER" /mnt/data
+          python experiments/round3/round3_memory_pilot.py
+          python -c "import json; d=json.load(open('/mnt/data/round3-memory-pilot-result.json')); assert d['status']=='PASS_SOFTWARE_RGB_PILOT' and d['rgb_real_qr_render_and_decode']==3 and not d['physical_photon_storage']"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: round3-rgb-qr-software-pilot
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            /mnt/data/round3-memory-pilot-result.json
+            /mnt/data/round3-rgb-pilot.png
