@@ -87,7 +87,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: nested-master-verdict
-          path: ${{ runner.temp }}/nested-artifacts/master-referee.json
+          path: |
+            ${{ runner.temp }}/nested-artifacts/master-referee.json
             ${{ runner.temp }}/nested-artifacts/qprism-reductions-verdict.json
             ${{ runner.temp }}/nested-artifacts/qprism-wave-seals.hbi
           if-no-files-found: error
