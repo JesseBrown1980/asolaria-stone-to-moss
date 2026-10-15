@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 
 PRE_CORRECTION_SEMANTIC="30fcc0cef4bd0b8a1b25c4773781474d362ec93978d853626b3d2f13b752e545"
+EXPECTED_CORRECTED_SEMANTIC="e07558181ed548986398e6638187317fd1562698ce56210f78b8ebe8041b1c96"
 EXCLUDED_FIELD="received_proposal_sha256"
 
 def digest(raw):
@@ -51,28 +52,34 @@ def main():
     assert len(sa["results"])==len(sb["results"])==72
     assert sa==sb,"CASE_SEMANTIC_OUTCOME_DIVERGENCE"
     h=digest(canon(sa))
-    assert h!=PRE_CORRECTION_SEMANTIC,"W-arm correction was not reflected in new output"
+    assert h==EXPECTED_CORRECTED_SEMANTIC,"Corrected W-arm semantic digest drift: "+h
+    assert h!=PRE_CORRECTION_SEMANTIC,"W-arm correction not applied"
     assert all(x["watcher_attack_exercised"] is False and x["accepted_for_processing"] is True
                for x in a["results"] if x["arm"] in ("A","B") and x["scenario"]=="W")
     assert all(x["watcher_attack_exercised"] is True
                for x in a["results"] if x["arm"] in ("C","D") and x["scenario"]=="W")
     changed=sum(x[EXCLUDED_FIELD]!=y[EXCLUDED_FIELD]
                 for x,y in zip(a["results"],b["results"]))
-    assert changed==72,"Numerical proposal SHA drift profile changed; re-evaluate exclusions"
-    assert a["trace_sha256"]!=b["trace_sha256"],"Raw numerical SHA unexpectedly converged; re-evaluate"
+    # Raw Q-PRISM bytes have shown BOTH exact matches and full proposal-hash
+    # drift on repeated CI runs with identical source. Do not manufacture a
+    # permanently OS-specific explanation from an intermittent finding.
+    assert changed in (0,72),"Partial source SHA disagreement needs forensic investigation"
+    raw_equal=(a["trace_sha256"]==b["trace_sha256"])
+    assert raw_equal==(changed==0),"Unexplained raw-trace discrepancy"
+
     assert all(not z["release_authorized"] and not z["human_consent"]
                for z in a["results"]+b["results"])
     assert all(z["source_authenticated"] == (z["arm"]=="D" and z["scenario"] not in ("S","R"))
                for z in a["results"]+b["results"])
     verdict={
         "schema":"ASOLARIA-SEAT1-RIM-CROSS-OS-OBSERVABILITY-V1",
-        "status":"PASS_SEMANTIC_ONLY",
+        "status":"PASS_BYTE_EXACT" if raw_equal else "PASS_SEMANTIC_ONLY_RAW_DRIFT",
         "cases_compared":72,
         "per_case_semantic_mismatches":0,
-        "raw_trace_same_bytes":False,
+        "raw_trace_same_bytes":raw_equal,
         "raw_proposal_sha256_differences":changed,
         "excluded_from_semantic_comparison":[EXCLUDED_FIELD],
-        "approved_exclusion_reason":"Platform-sensitive Q-PRISM numerical proposal bytes; never imply exact source-byte equivalence",
+        "approved_exclusion_reason":"Raw Q-PRISM proposal digest has drifted on some cross-OS runs but matched exactly on others; root cause NOT isolated, no claim of permanent platform divergence",
         "semantic_sha256":h,
         "linux_trace_sha256":e1["hbp"],
         "windows_trace_sha256":e2["hbp"],
@@ -81,7 +88,7 @@ def main():
         "w_without_watcher_corrected":True,
         "all_human_release_authorizations_false":True,
         "physical_host_independence_attested":False,
-        "follow_up":"Pin dependency/compiler/float serialization; test quantized/canonical schedule encoding before demanding identical raw trace."
+        "follow_up":"Check dependency, BLAS/math-library versions and numerical serialization; compare repeated runs per same OS before inferring a platform cause."
     }
     out=Path(sys.argv[3]);out.mkdir(parents=True,exist_ok=True)
     payload=canon(verdict)+b"\n"
