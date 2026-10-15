@@ -46,5 +46,5 @@ def run(seed,leak,background):
                 pairs[n][idx]+=1
     return {str(k):dict(zip(('both_correct','both_wrong','repaired','degraded'),v)) for k,v in pairs.items()}
 result={'scope':'software-only, independent referee fixture, no real photons','source_root':trusted,'attacks':{'coherent_substitutions_rejected':6,'durable_replay_rejected':True,'violet_missing_aliases':2187,'one_base_row_missing_aliases':27},'heldout':{'nominal':run(2026101505,.09375,.05),'shifted':run(2026101506,.14,.14)}}
-(P/'results.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
+(P/'results.json').write_bytes((json.dumps(result,indent=2,sort_keys=True)+'\n').encode('utf-8'))
 print(json.dumps(result,indent=2))
