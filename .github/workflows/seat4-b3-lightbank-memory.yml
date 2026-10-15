@@ -189,6 +189,10 @@ jobs:
           print("B3_LIGHTBANK_MEMORY_DIGITAL_PASS",p["archive_sha256"],
                 "3 source erasures recovered, singleton HELD, P nullspace measured")
           PY
+      - name: Independently replay stored memory archive from packed offline capsule
+        shell: bash
+        run: |
+          python experiments/seat4/lightbank_offline_verify.py --bundle "$RUNNER_TEMP/lightbank"
       - uses: actions/upload-artifact@v4
         with:
           name: lightbank-b3-${{ matrix.os }}-py${{ matrix.python }}
