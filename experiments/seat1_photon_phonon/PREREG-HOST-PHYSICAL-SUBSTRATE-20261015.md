@@ -1,0 +1,28 @@
+# Seat 1 — Physical-substrate evidence: host CPU, memory, electrical/optical boundary (preregistered)
+
+**2026-10-15 | continuation of Issue #100 and Seat1 DRAFT PR #106.** Frozen before new telemetry implementation and hosted results. Do not rewrite the completed physical-hosted computational receipts or original source hashes, and do not prematurely merge.
+
+## Physical statement of the experiment
+
+Asolaria's reproducible photon–phonon–electronic **software model is physically executed** by OS processes backed by semiconductor switching, charge carriers, electronic memory cells, regulated DC rails supplied from powered infrastructure and an electrical return/reference. A container is a software abstraction, but instantiated processes have physical resource usage on their machine. A cloud-hosted CI environment can be virtualized: a container/VM identifier is not proof of a distinct identifiable chassis. No claim that a protective earth conductor is itself a net source of energy.
+
+The original frozen 81 QR-site synthetic source memories, 567 full-byte rainbow-bank entries, 184,815 bank bytes and the 12×567=6,804 frame HBP are source-pin ground truth. Recorded original source SHA256 `02ff42a93d934074ae9c83e1b989f097944c8c7cd2ed80197c2cfd8795391e22`, bank SHA256 `52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345`, base-index SHA `6b105769bf236c156cafa4dd4e3647fe45778c191a7e32ac7df63e84d287d0ee`, completed full HBP SHA `42f3b61117a2e771f4f21958e12771b92b7a5d7251d023dc9ab78b34c65f6058`. Existing final CI 38774494050 was 3/3 (Ubuntu, Windows, complete parity). Existing independent third auditor JSON digest `5d3cabce44810b08c8e898b0b64fd08eaaf5e160f79d8871af94a62508ac816e`.
+
+## New physically grounded host observer — real process activity, not a simulated counter
+
+Observe **one original producer process** executing the real 6,804-frame source-pinned memory workload *on an actual GitHub-hosted runner*, independently under Ubuntu and Windows. Have a **separate observer process** use OS-reported process metrics (`psutil.Process`) to sample actual process CPU time in nanoseconds, process resident set size (physical resident allocation as reported by OS/VM), wall-monotonic elapsed nanoseconds, number of samples and exit status. Record OS/architecture, logical CPUs and only non-identifying hardware/host metadata. Do NOT collect hostnames, private paths, IP addresses, MAC, serials, security tokens, environment dumps or software secrets.
+
+- First regenerate actual original QR images and independently verify original site records and source SHA, then rebuild 567 memory bytes/bank root and index root on each host, *before* launching the measurement.
+- Run `coupling.py` through the separately authored observer; write real telemetry to `seat1-host/host-telemetry.json`. The observer exits nonzero unless the process completes, actual sample count≥2, monotonic elapsed positive, nonzero CPU process user+system time and positive peak RSS. Confirm original source/outputs/trace and third-auditor receipts remain exactly pinned.
+- Cross-OS parity applies to **source/evidence** SHA/bytes, but **host measurements must be different permissible observations**, not forced to match byte for byte or cooked to agree; compare units and availability, not equality.
+- Linux may have accessible `/sys/class/powercap/**/energy_uj` power-domain counters; sample only if readable before/after, record names only if nonidentifying, handle wrap/reset/unavailable; this is **shared host-domain energy** (if exposed), not precisely this process's energy or an AC supply meter.
+- Windows may not expose equivalent power counters. Mark `not_exposed` with reason; **never invent joules, amperes, volts, photon counts, measured wavelength, photoelectric current or power factor**. CPU time and RSS are directly observed OS-reported metrics. They do not constitute electrical current measured in amperes or physical light-storage evidence by themselves.
+- Optional repeat a second independent observer on another OS; primary acceptance is each host's measured positive process CPU and resident memory with the same canonical model HBP, independent auditor and source roots.
+
+## Control and discrimination
+
+The experiment records (1) the **physical operational reality** of CPU/RAM use and elapsed execution; (2) computationally generated optical/electron model values, with mathematical conservation and source validation; (3) whether instrumented electrical energy/current counters exist on the host; (4) whether direct photon/spectrum/retention sensors exist. Underlying computers necessarily have electromagnetic/charge-carrier processes; an additional specific *photon-mediated memory mechanism* still calls for a correlated physical observable rather than relabeling a software variable.
+
+A positive telemetry result supports `REAL_ELECTRICALLY_POWERED_HARDWARE_EXECUTION=true` and `PROCESS_CPU_AND_RAM_OBSERVED=true`. It does NOT imply `DIRECT_REAL_PHOTON_FLUX_MEASURED=true`, `DC_RAIL_CURRENT_MEASURED=true`, `ELECTRICAL_GROUND_CURRENT_MEASURED=true`, or `MEDIUM_RETENTION_OF_OPTICAL_PAYLOAD_MEASURED=true` absent suitable sensors. Treat these as **open measurements**, not assumed negative or impossible processes.
+
+Keep Seat1 PR106 DRAFT. Record result as a separate additive `HOST-PHYSICAL-SUBSTRATE-V1` file and full validation. Ask Seat2 to audit real source identity, Seat3 to connect measurable energy/current to electron/photonic physical models, Seat4 to challenge host/counter custody and alternative heating/EMI mechanisms. Future actual calibrated Track B device setup is a separate study.
