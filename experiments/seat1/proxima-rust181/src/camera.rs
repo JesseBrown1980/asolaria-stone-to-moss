@@ -3,7 +3,7 @@
 //! PAYLOADS. Standard QR image rendering/decoding is a separate optical layer.
 //! A FITS pixel value is an instrument sample, not a resolved physical atom.
 use std::collections::BTreeMap;
-use crate::sha256::{digest,hex};
+use crate::sha256::digest;
 #[derive(Debug,Clone,PartialEq,Eq)]
 pub enum CameraError {
     MalformedFits,UnsupportedRaster,Overflow,InvalidTrit,TruncatedFrame,
@@ -289,7 +289,7 @@ mod tests{
             let width=trit_width(bitpix).unwrap();
             for n in [0u64,1,2,17,255,65_535,u64::MAX]{
                 // Values outside a BITPIX word are invalid *input*, not failed codec.
-                if bitpix<64 && (u128::from(n)>=1u128<<(bitpix.abs()as u32)){continue;}
+                if bitpix<64 && (u128::from(n)>=1u128<<bitpix.unsigned_abs()){continue;}
                 assert_eq!(from_balanced(&to_balanced(n,width).unwrap()),Ok(n));
             }
         }
@@ -297,6 +297,6 @@ mod tests{
     #[test] fn source_hash_changes_on_tamper(){
         let a=synthetic_fits(7,9,1);
         let mut b=a.clone();b[2880]^=1;
-        assert_ne!(hex(&digest(&a)),hex(&digest(&b)));
+        assert_ne!(crate::sha256::hex(&digest(&a)),crate::sha256::hex(&digest(&b)));
     }
 }
