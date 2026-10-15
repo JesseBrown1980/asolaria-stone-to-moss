@@ -160,7 +160,7 @@ def run(bank_path,index_path,parent_path,out_path):
     folder=Path(out_path);folder.mkdir(parents=True,exist_ok=True)
     for name,blob in {'neural-gate.hbp':data,'neural-gate.json':canon(summary)}.items():
         (folder/name).write_bytes(blob)
-        (folder/(name+'.sha256')).write_text(f'{sha(blob)}  {name}\n',encoding='ascii')
+        (folder/(name+'.sha256')).write_bytes((f'{sha(blob)}  {name}\n').encode('ascii'))
     print(json.dumps({'status':'PASS','sha256':sha(data),'bytes':len(data),
       'scenarios':[(s['scenario'],s['neural_only_matches'],s['false_green_neural_only'],
                     s['strict_authorized']) for s in stats],
