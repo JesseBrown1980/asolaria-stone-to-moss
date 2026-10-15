@@ -45,6 +45,10 @@ jobs:
         shell: bash
         run: |
           node experiments/seat2/round9/review_host_bridge.js frozen-main "$RUNNER_TEMP/seat2-r9"
+      - name: Execute 7 actual Node-review forgery tests with recomputed unsigned SHA sidecars
+        shell: bash
+        run: |
+          python experiments/seat2/round9/adversarial_host_context.py             frozen-main "$RUNNER_TEMP/seat2-r9" "$RUNNER_TEMP/seat2-r9/attack-review.json"             experiments/seat2/round9/review_host_bridge.js
       - name: Enforce per-host meter boundary, data checksums and measured CPU / memory
         shell: bash
         run: |
@@ -52,7 +56,7 @@ jobs:
           import hashlib,json,os
           from pathlib import Path
           folder=Path(os.environ['RUNNER_TEMP'])/'seat2-r9'
-          for name in ('digital.json','host-activity.json','instrument-status.json','node-review.json'):
+          for name in ('digital.json','host-activity.json','instrument-status.json','node-review.json','attack-review.json'):
               b=(folder/name).read_bytes()
               assert (folder/(name+'.sha256')).read_bytes()==(hashlib.sha256(b).hexdigest()+'  '+name+'\n').encode('ascii')
           d=json.loads((folder/'digital.json').read_bytes())
@@ -61,6 +65,14 @@ jobs:
           assert d['hash_loops']==256 and len(d['negative_controls'])==9
           assert h['cpu_elapsed_ns']>0 and h['wall_elapsed_ns']>0
           assert h['rss_during_bytes']-h['rss_before_bytes']>=1024*1024
+          assert h['github_run_id']==os.environ['GITHUB_RUN_ID']
+          assert h['producing_git_sha']==os.environ['GITHUB_SHA']
+          assert h['runner_os']==os.environ['RUNNER_OS']
+          assert h['github_job']==os.environ['GITHUB_JOB']
+          attacked=json.loads((folder/'attack-review.json').read_bytes())
+          assert attacked['case_count']==7 and attacked['status']=='ALL_HOST_CONTEXT_FORGERIES_REJECTED_WITH_AUTHENTIC_RUN_ENV'
+          assert all(x['actual_node_reviewer_rejected'] and x['recomputed_local_sha256_sidecar']
+                     for x in attacked['falsification_cases'])
           assert not i['externally_attested_instrument_data']
           assert all(not x['measured'] and x['value'] is None for x in i['channels'].values())
           print('HOST_OS_COUNTERS_OBSERVED_ELECTRIC_AND_OPTICAL_SENSORS_NOT_MEASURED')
@@ -87,7 +99,7 @@ jobs:
           from pathlib import Path
           folders=sorted(p for p in Path('evidence').iterdir() if p.is_dir())
           assert len(folders)==4,folders
-          static=('digital.json','instrument-status.json','node-review.json')
+          static=('digital.json','instrument-status.json','node-review.json','attack-review.json')
           for name in static:
               data=[(p/name).read_bytes() for p in folders]
               assert len(set(data))==1,'DIGITAL_BYTE_DRIFT:'+name
@@ -95,6 +107,11 @@ jobs:
               for p,b in zip(folders,data):
                   assert (p/(name+'.sha256')).read_bytes()==(h+'  '+name+'\n').encode('ascii')
               print('R9_FOUR_HOSTS_DIGITAL_BYTES_IDENTICAL',name,len(data[0]),h)
+          expected={'seat2-r9-ubuntu-latest-py3.11':('Linux','3.11.'),
+                    'seat2-r9-ubuntu-latest-py3.13':('Linux','3.13.'),
+                    'seat2-r9-windows-latest-py3.11':('Windows','3.11.'),
+                    'seat2-r9-windows-latest-py3.13':('Windows','3.13.')}
+          assert set(p.name for p in folders)==set(expected), 'WRONG_MATRIX_ARTIFACT_IDENTITY'
           for p in folders:
               name='host-activity.json';data=(p/name).read_bytes()
               digest=hashlib.sha256(data).hexdigest()
@@ -103,6 +120,13 @@ jobs:
               assert x['cpu_elapsed_ns']>0 and x['wall_elapsed_ns']>0
               assert x['rss_during_bytes']-x['rss_before_bytes']>=1024*1024
               assert x['runner_os'] in ('Linux','Windows')
+              expected_os,py_prefix=expected[p.name]
+              assert x['runner_os']==expected_os and x['platform_system']==expected_os, 'WRONG_RUNNER_OS'
+              assert x['python'].startswith(py_prefix),'WRONG_HOST_PYTHON_MATRIX'
+              assert x['github_run_id']==os.environ['GITHUB_RUN_ID'], 'FORGED_RUN_ID'
+              assert x['producing_git_sha']==os.environ['GITHUB_SHA'], 'FORGED_MERGE_COMMIT_SHA'
+              assert x['github_job']=='measured-host-activity', 'WRONG_PRODUCER_JOB'
+
               print('R9_REAL_HOST_PROCESS_COUNTERS',p.name,
                     'cpu_ns',x['cpu_elapsed_ns'],'wall_ns',x['wall_elapsed_ns'],
                     'rss_delta_bytes',x['rss_during_bytes']-x['rss_before_bytes'],
