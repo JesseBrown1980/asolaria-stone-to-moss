@@ -35,6 +35,10 @@ jobs:
         shell: bash
         run: |
           node experiments/seat2/round8/verify_fork.js "$RUNNER_TEMP/seat2-r8"
+      - name: Confirm post-hoc Git-pinned baseline rejects fork, rollback and decoder leakage
+        shell: bash
+        run: |
+          node experiments/seat2/round8/verify_external_checkpoint.js "$RUNNER_TEMP/seat2-r8" experiments/seat2/round8/PINNED-POSTHOC-BASELINE.json
       - name: Check signed fixture, negative control count, and scope
         shell: bash
         run: |
@@ -42,7 +46,7 @@ jobs:
           import hashlib,json,os
           from pathlib import Path
           dest=Path(os.environ['RUNNER_TEMP'])/'seat2-r8'
-          for name in ("fixture.json","results.json","independent-node.json"):
+          for name in ("fixture.json","results.json","independent-node.json","external-referee.json"):
               data=(dest/name).read_bytes()
               assert (dest/(name+'.sha256')).read_bytes()==(hashlib.sha256(data).hexdigest()+'  '+name+'\n').encode('ascii')
           r=json.loads((dest/'results.json').read_bytes())
@@ -75,7 +79,7 @@ jobs:
           from pathlib import Path
           folders=sorted(p for p in Path('evidence').iterdir() if p.is_dir())
           assert len(folders)==4,folders
-          for name in ("fixture.json","results.json","independent-node.json"):
+          for name in ("fixture.json","results.json","independent-node.json","external-referee.json"):
               blobs=[(p/name).read_bytes() for p in folders]
               assert len(set(blobs))==1,'CROSS_HOST_BYTE_DRIFT:'+name
               h=hashlib.sha256(blobs[0]).hexdigest()
