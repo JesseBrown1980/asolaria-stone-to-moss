@@ -1,0 +1,164 @@
+name: Seat3 PR111 new-head reviewer and matrix logical-hour validation
+on:
+  push:
+    branches: [agent/seat-3/pr111-crosshost-provenance-falsification-20261015]
+    paths:
+      - 'experiments/seat3/pr111_custody/v2/**'
+      - '.github/workflows/seat3-pr111-remediated-matrix.yml'
+  pull_request:
+    paths:
+      - 'experiments/seat3/pr111_custody/v2/**'
+      - '.github/workflows/seat3-pr111-remediated-matrix.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  new-head-independent:
+    name: Real original PR111 run and logical hour ${{ matrix.os }} ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          path: original-main
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: e2532396bbd42bb2a0bace2f26d4b5d6b8f2e966
+          path: original-seat2-head
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: e7011fe09868f0a84de0434964cc3dadc205b808
+          path: frozen-pull-merge
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm original PR111 revision and historical synthetic merge parentage
+        shell: bash
+        run: |
+          test "$(git -C original-main rev-parse HEAD)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          test "$(git -C original-seat2-head rev-parse HEAD)" = e2532396bbd42bb2a0bace2f26d4b5d6b8f2e966
+          test "$(git -C frozen-pull-merge rev-parse HEAD)" = e7011fe09868f0a84de0434964cc3dadc205b808
+          test "$(git -C frozen-pull-merge rev-parse HEAD^2)" = e2532396bbd42bb2a0bace2f26d4b5d6b8f2e966
+      - name: Download ALL actual final historical Seat2 CI bundles unchanged
+        uses: actions/download-artifact@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38783337268
+          github-token: ${{ github.token }}
+          pattern: seat2-r9-*
+          merge-multiple: false
+          path: ${{ runner.temp }}/original-seat2-artifacts
+      - name: Retrieve GitHub run, commit ancestry, and job timeline from authoritative API
+        shell: bash
+        env:
+          ${{ github.token }}: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/authoritative-api"
+          gh api repos/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38783337268 > "$RUNNER_TEMP/authoritative-api/run.json"
+          gh api repos/JesseBrown1980/asolaria-stone-to-moss/git/commits/e7011fe09868f0a84de0434964cc3dadc205b808 > "$RUNNER_TEMP/authoritative-api/merge.json"
+          gh api 'repos/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38783337268/jobs?per_page=100' > "$RUNNER_TEMP/authoritative-api/jobs.json"
+      - name: Independently validate four original packets and run 13 actual copied metadata attacks on UPDATED original Seat2 Node verifier
+        shell: bash
+        run: |
+          python experiments/seat3/pr111_custody/v2/remediated_referee.py "$RUNNER_TEMP/original-seat2-artifacts" "$RUNNER_TEMP/authoritative-api" original-main frozen-pull-merge original-seat2-head/experiments/seat2/round9/review_host_bridge.js "$RUNNER_TEMP/verified"
+      - name: Positive matrix jump one logical hour with physically honest CPU/wall clocks
+        shell: bash
+        run: |
+          python experiments/seat3/pr111_custody/v2/matrix_logical_hour.py "$RUNNER_TEMP/verified"
+          node experiments/seat3/pr111_custody/v2/matrix_logical_hour.js "$RUNNER_TEMP/node-proof"
+          python - <<'PY'
+          from pathlib import Path
+          import os,json,hashlib
+          root=Path(os.environ["RUNNER_TEMP"])
+          p=(root/"verified"/"matrix-logical-hour-proof.json").read_bytes()
+          n=(root/"node-proof"/"matrix-logical-hour-proof.json").read_bytes()
+          assert p==n,"PYTHON_NODE_MATRIX_LOGICAL_HOUR_DIVERGENCE"
+          proof=json.loads(p)
+          assert proof["logical_ticks"]==3600000
+          assert proof["logical_time_ns"]==3600000000000
+          assert proof["fast_equals_stepwise"] is True
+          assert proof["os_cpu_elapsed_ns_claimed_as_one_hour"] is False
+          telemetry=json.loads((root/"verified"/"matrix-os-process-telemetry.json").read_bytes())
+          assert telemetry["logical_elapsed_ns"]==3600000000000
+          assert telemetry["cpu_elapsed_ns"]>0
+          assert telemetry["wall_elapsed_ns"]>0
+          assert telemetry["wall_elapsed_ns"]!=telemetry["logical_elapsed_ns"]
+          assert telemetry["calibrated_rail_power"]=="NOT_MEASURED"
+          for parent in (root/"verified",root/"node-proof"):
+              assert (parent/"matrix-logical-hour-proof.json.sha256").read_bytes()==(
+                 hashlib.sha256(p).hexdigest()+"  matrix-logical-hour-proof.json\n").encode("ascii")
+          print("SEAT3_LOGICAL_HOUR_MATRIX_EQUALS_3600000_STEP_REFERENCE",
+                proof["fast_state_u64_hex"],hashlib.sha256(p).hexdigest())
+          print("SEAT3_ACTUAL_HOST_CPU_AND_ELAPSED_NOT_ONE_HOUR",
+                telemetry["cpu_elapsed_ns"],telemetry["wall_elapsed_ns"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-newhead-hour-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          retention-days: 30
+          if-no-files-found: error
+  fifth-byte-parity:
+    name: 4 platforms identical mathematical evidence, telemetry authentically variable
+    runs-on: ubuntu-latest
+    needs: new-head-independent
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-newhead-hour-*
+          merge-multiple: false
+          path: peer-evidence
+      - name: Require exact four-host source/matrix proof parity and real clock separation
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          roots=sorted(Path("peer-evidence").glob("seat3-newhead-hour-*"))
+          assert len(roots)==4,roots
+          for name in ("seat3-remediated-pr111-verdict.json","matrix-logical-hour-proof.json"):
+              raw=[(r/name).read_bytes() for r in roots]
+              assert all(b==raw[0] for b in raw),"SCIENTIFIC_CROSS_OS_OUTPUT_DIFFER"
+              for folder,body in zip(roots,raw):
+                  assert (folder/(name+".sha256")).read_bytes()==(
+                      hashlib.sha256(body).hexdigest()+"  "+name+"\n").encode("ascii")
+              print("FOUR_OS_DETERMINISTIC_REPORT_BYTE_EQUAL",name,len(raw[0]),hashlib.sha256(raw[0]).hexdigest())
+          report=json.loads((roots[0]/"seat3-remediated-pr111-verdict.json").read_bytes())
+          for host in report["executed_current_head_reviewer_attacks"].values():
+              for key,result in host["rehashed_copied_packet_attacks"].items():
+                  if key in ("hour_cpu_vs_utc","plausible_unsigned_cpu"):
+                      assert result=="UPSTREAM_ACCEPTED"
+                  else:
+                      assert result=="UPSTREAM_REJECTED",(key,result)
+          proof=json.loads((roots[0]/"matrix-logical-hour-proof.json").read_bytes())
+          assert proof["logical_time_ns"]==3600000000000 and proof["fast_equals_stepwise"] is True
+          for r in roots:
+              t=(r/"matrix-os-process-telemetry.json").read_bytes()
+              assert (r/"matrix-os-process-telemetry.json.sha256").read_bytes()==(
+                  hashlib.sha256(t).hexdigest()+"  matrix-os-process-telemetry.json\n").encode("ascii")
+              sample=json.loads(t)
+              assert sample["logical_elapsed_ns"]==3600000000000
+              assert sample["wall_elapsed_ns"]!=3600000000000
+              assert sample["cpu_elapsed_ns"]!=3600000000000
+              print("ACTUAL_PROCESS_VS_LOGICAL_HOUR",r.name,sample["cpu_elapsed_ns"],sample["wall_elapsed_ns"])
+          print("PR111_IDENTITY_REVIEW_DONE_UNSIGNED_CPU_CLOCK_SCOPE_HELD")
+          PY
