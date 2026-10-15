@@ -137,6 +137,14 @@ def run(bank_path,index_path,parent_path,out_path):
         ck(acc['strict_authorized']==acc['exact_byte_recall'],'SOURCE_GATE_FALSE_GREEN')
         stats.append(acc)
     ck(violet==81,'VIOLET_ERASURE_ROWS')
+    remaining=[json.loads(records[i]) for i in range(567) if rows[i]['band']!='violet']
+    ck(len(remaining)==486,'VIOLET_ERASURE_NOT_APPLIED')
+    try:
+        ck(len(remaining)==567,'ERASURE_FULL_BANK_INCOMPLETE')
+    except ValueError as error:
+        ck(str(error)=='ERASURE_FULL_BANK_INCOMPLETE','ERASURE_FAIL_OPEN')
+    else:
+        raise AssertionError('ERASURE_MUST_HALT')
     data=b''.join(lines)
     summary={'schema':'ASOLARIA-NEURAL-ELECTRON-GATE-DIGITAL-V1',
       'parent_hbp_sha256':PARENT,'bank_sha256':ROOT,'original_source_memories':81,
