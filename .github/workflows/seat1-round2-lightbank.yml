@@ -1,0 +1,73 @@
+name: Seat1 Round2 RGB QR memory bank and photocycle replay
+
+on:
+  push:
+    branches:
+      - agent/seat-1/round2-rate-current-20261015
+    paths:
+      - experiments/seat1/round2/**
+      - .github/workflows/seat1-round2-lightbank.yml
+  pull_request:
+    paths:
+      - experiments/seat1/round2/**
+      - .github/workflows/seat1-round2-lightbank.yml
+
+permissions:
+  contents: read
+
+jobs:
+  qr-pixel-and-kinetics:
+    name: Lightbank-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install open-source native QR decoder (Ubuntu)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install common ordinary QR image encoder and reader
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Encode 81 lightbank memories as real RGB QR PNG; scan all 3 pixel planes; inject failures; drive kinetic read gate
+        run: python experiments/seat1/round2/lightbank_81.py evidence
+      - name: Independently verify original decoded QR index bytes and full photocycle via JavaScript BigInt
+        run: node experiments/seat1/round2/verify_lightbank_81.js evidence
+      - name: Seal actual Python and Node results
+        run: |
+          python -c "import json,pathlib,hashlib; p=pathlib.Path('evidence');d=json.loads((p/'results.json').read_text());m=json.loads((p/'manifest.json').read_text());assert d['mass_checks']==1166400;assert d['frame_rows']==13608;assert d['controls']['erased_physical_pixel_plane']=='MISSING_CHUNK';assert d['physical_optical_storage_verified'] is False;print('REAL_RGB_QR_READBACK_AND_DUAL_RUNTIME_PASS memory_sha256='+m['source_sha256']+' trace_sha256='+d['hbp_sha256'])"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-round2-lightbank-${{ matrix.os }}
+          if-no-files-found: error
+          path: evidence/
+          retention-days: 30
+
+  cross-os:
+    needs: qr-pixel-and-kinetics
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-round2-lightbank-ubuntu-latest
+          path: linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-round2-lightbank-windows-latest
+          path: windows
+      - name: Require exact canonical synthetic memory, derived QR reads, metric JSON and full 13,608-frame HBP across OS
+        run: |
+          python -c "from pathlib import Path; import hashlib;files=['lightbank-memories.json','manifest.json','photocycle-frame.hbp','results.json'];[(lambda a,b,n: print('EXACT_OS_SHA_MATCH',n,hashlib.sha256(a).hexdigest()) if a==b else (_ for _ in ()).throw(AssertionError('CROSS_OS_RAW_DRIFT_'+n)))((Path('linux')/name).read_bytes(),(Path('windows')/name).read_bytes(),name) for name in files]"
+      - name: Report pixel PNG SHA individually without asserting cross-OS byte parity
+        run: |
+          python -c "from pathlib import Path;import hashlib;[(print(os,p.name,hashlib.sha256(p.read_bytes()).hexdigest())) for os in ('linux','windows') for p in sorted((Path(os)/'png').glob('*.png'))]"

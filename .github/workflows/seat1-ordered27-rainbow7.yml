@@ -1,0 +1,83 @@
+name: Seat1 Round3 ordered27 rainbow7 exact bank and permutation falsifiers
+
+on:
+  push:
+    branches:
+      - agent/seat-1/round3-ordered27-rainbow7-20261015
+    paths:
+      - experiments/seat1/ordered27/**
+      - .github/workflows/seat1-ordered27-rainbow7.yml
+  pull_request:
+    paths:
+      - experiments/seat1/ordered27/**
+      - .github/workflows/seat1-ordered27-rainbow7.yml
+
+permissions:
+  contents: read
+
+jobs:
+  digital-index-replay:
+    name: Ordered27-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install original open QR decode dependency on Ubuntu
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install regular QR and pixel dependencies (no paid jobs)
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Independently regenerate the earlier 81 memories from actual digital QR pixels
+        run: python experiments/seat1/round2/lightbank_81.py base-evidence
+      - name: Verify existing readback and original synthetic photocycle trace
+        run: node experiments/seat1/round2/verify_lightbank_81.js base-evidence
+      - name: Regenerate exact unchanged 567-source full-byte bank
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py base-evidence rainbow-evidence
+      - name: Verify unchanged 567 full-byte bank and prior faults
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js base-evidence rainbow-evidence
+      - name: New ordered 27-sector x seven-label x 81-identity address index
+        run: python experiments/seat1/ordered27/ordered27_index.py base-evidence rainbow-evidence ordered-evidence
+      - name: Independent Node address regeneration and permutation/source/erasure falsifiers
+        run: node experiments/seat1/ordered27/verify_ordered27.js base-evidence rainbow-evidence ordered-evidence
+      - name: Seal Node verification SHA256, assert actual negative controls and no optical claims
+        run: |
+          python -c "import json,hashlib,pathlib; p=pathlib.Path('ordered-evidence');v=json.loads((p/'ordered27-verification.json').read_text());m=json.loads((p/'ordered27-rainbow7-manifest.json').read_text());assert v['exact_logical_reads']==15309 and v['independent_stored_payloads']==567;assert len(v['negative_faults'])==9 and all(x['verdict']=='REJECT' for x in v['negative_faults']);assert v['lost_violet']=={'missing':2187,'remaining':13122};assert v['lost_single_bank_entry']=={'missing':27,'remaining':15282};assert m['normalized_intensity_equivalence_classes_including_zero']==7;assert m['physical_optical_storage_verified'] is False;name='ordered27-verification.json';b=(p/name).read_bytes();(p/(name+'.sha256')).write_text(hashlib.sha256(b).hexdigest()+'  '+name+'\n',encoding='ascii');print('SEAT1_ORDERED27_PASS',m['new_index_sha256'],hashlib.sha256(b).hexdigest())"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ordered27-rainbow7-${{ matrix.os }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            base-evidence/lightbank-memories.json
+            base-evidence/photocycle-frame.hbp
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+            ordered-evidence/
+  cross-os:
+    name: Canonical scientific bytes equal across Windows and Ubuntu
+    needs: digital-index-replay
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: ordered27-rainbow7-windows-latest
+          path: windows
+      - name: Verify original memories and new 15309 index, report and sidecar byte equality
+        run: |
+          python -c "from pathlib import Path;import hashlib;files=['base-evidence/lightbank-memories.json','rainbow-evidence/rainbow7-bank.jsonl','rainbow-evidence/rainbow7-index.hbi','ordered-evidence/ordered27-rainbow7-index.hbi','ordered-evidence/ordered27-rainbow7-manifest.json','ordered-evidence/ordered27-verification.json'];[(lambda f,a,b:print('CROSS_OS_EXACT',f,hashlib.sha256(a).hexdigest()) if a==b else (_ for _ in ()).throw(AssertionError('CROSS_OS_SHA_DRIFT_'+f)))(f,(Path('ubuntu')/f).read_bytes(),(Path('windows')/f).read_bytes()) for f in files]"
