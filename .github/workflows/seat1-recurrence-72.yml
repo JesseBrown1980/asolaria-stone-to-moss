@@ -1,0 +1,100 @@
+name: Seat1 recurrence 72-case source-trust ablation
+
+on:
+  push:
+    branches:
+      - agent/seat-1/recurrence-four-arm-72-20261015
+    paths:
+      - experiments/seat1/recurrence/**
+      - .github/workflows/seat1-recurrence-72.yml
+  pull_request:
+    paths:
+      - experiments/seat1/recurrence/**
+      - .github/workflows/seat1-recurrence-72.yml
+
+permissions:
+  contents: read
+
+jobs:
+  recurrence:
+    name: RIM-seat1-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: cf356383d397e7dbe2dc66baaf4981937afc8f01
+          path: external/seat1
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED
+          ref: 307903651f56e8a28ef98ca36aef22ee8cda935c
+          path: external/nnest
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/Q-PRISM-human-organoid-neural-stream-as-a-high-dimensional-control
+          ref: b4a21a25381d6920b7aab92c94c3c3e1420fc9e4
+          path: external/qprism
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Q-PRISM upstream dependencies + public key verification
+        run: python -m pip install --disable-pip-version-check -r external/qprism/requirements.txt "cryptography>=42,<49"
+      - name: Require compilable adapter and Seat1 experiment
+        run: python -m py_compile experiments/seat1/recurrence/seat1_recurrence_72.py external/seat1/experiments/integration/seat1/upstream_bridge.py
+      - name: Run 72 A/B/C/D × depth1/3/7 × six-source faults on actual Q-PRISM source
+        run: python experiments/seat1/recurrence/seat1_recurrence_72.py run --seat1 external/seat1 --nn external/nnest --q external/qprism --out seat1-rim-evidence
+      - name: Recompute receipts, sha256 sidecars and zero human-release claims
+        run: python experiments/seat1/recurrence/seat1_recurrence_72.py audit --out seat1-rim-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-recurrence-72-${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            seat1-rim-evidence/seat1-recurrence.hbp
+            seat1-rim-evidence/seat1-recurrence.hbp.sha256
+            seat1-rim-evidence/seat1-recurrence.json
+            seat1-rim-evidence/seat1-recurrence.json.sha256
+            seat1-rim-evidence/seat1-recurrence.hbi
+            seat1-rim-evidence/seat1-recurrence.hbi.sha256
+
+  cross-os-audit:
+    name: Cross-OS strict semantic audit and raw-byte-drift disclosure
+    needs: recurrence
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-recurrence-72-ubuntu-latest
+          path: audit-input/ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-recurrence-72-windows-latest
+          path: audit-input/windows
+      - name: Verify exactly 72 canonical decisions, SHA sidecars and classify numerical source byte drift
+        run: python experiments/seat1/recurrence/verify_rim_cross_os.py audit-input/ubuntu audit-input/windows cross-os-audit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-recurrence-cross-os-audit
+          if-no-files-found: error
+          path: cross-os-audit
