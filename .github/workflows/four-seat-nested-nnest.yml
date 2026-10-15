@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: nnest-four-seat-${{ github.ref }}
   cancel-in-progress: false
@@ -28,6 +29,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Declare execution-ready seat for common timestamp barrier
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/ready"
+          printf '%s\n' 'NEST_READY_V1 seat=${{ matrix.seat }}' > "$RUNNER_TEMP/ready/ready.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-ready-${{ matrix.seat }}
+          path: ${{ runner.temp }}/ready/ready.txt
+          if-no-files-found: error
+          retention-days: 7
+      - name: Synchronize all four seats on server-stamped artifact barrier
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: python experiments/nested/ready_barrier.py "${{ matrix.seat }}"
       - name: Run parent Python, child Node and grandchild Python in live subprocess tree
         shell: bash
         run: |
@@ -38,6 +55,7 @@ jobs:
         with:
           name: nested-${{ matrix.seat }}
           path: ${{ runner.temp }}/nested/${{ matrix.seat }}/*
+          if-no-files-found: error
           retention-days: 30
   master:
     name: N-Nest master independent receipt aggregator
@@ -57,8 +75,20 @@ jobs:
         shell: bash
         run: |
           python experiments/nested/master_verify.py "$RUNNER_TEMP/nested-artifacts"
+          python experiments/nested/qprism_reductions_gate.py "$RUNNER_TEMP/nested-artifacts"
+          python - "$RUNNER_TEMP/nested-artifacts/master-referee.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          assert data["verified_seats"] == 4
+          assert data["all_four_job_intervals_overlap"] is True, "4-worker math windows did NOT actually overlap"
+          assert data["cross_seat_wall_clock_overlap_ms"] > 0
+          print("NEST_ALL_FOUR_MATH_WINDOWS_OVERLAP_PASS",data["cross_seat_wall_clock_overlap_ms"])
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: nested-master-verdict
           path: ${{ runner.temp }}/nested-artifacts/master-referee.json
+            ${{ runner.temp }}/nested-artifacts/qprism-reductions-verdict.json
+            ${{ runner.temp }}/nested-artifacts/qprism-wave-seals.hbi
+          if-no-files-found: error
           retention-days: 30
