@@ -162,7 +162,7 @@ def run(frozen:Path,output:Path):
              "deterministic_payload_size_bytes":len(payload),
              "deterministic_payload_sha256":sha(payload),
              "hash_loops":HASH_LOOPS,
-             "algorithm":"SHA256(concat[256 × (source-derived 2MiB payload || little-endian u32 loop-index)])",
+             "algorithm":"SHA256(concat[256 * (source-derived 2MiB payload || little-endian u32 loop-index)])",
              "deterministic_workload_sha256":work_digest,
              "negative_controls":tests,
              "physical_optical_storage_measured":False}
