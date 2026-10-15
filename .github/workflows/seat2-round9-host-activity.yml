@@ -95,7 +95,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import hashlib,json
+          import hashlib,json,os
           from pathlib import Path
           folders=sorted(p for p in Path('evidence').iterdir() if p.is_dir())
           assert len(folders)==4,folders
