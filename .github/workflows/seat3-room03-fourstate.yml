@@ -1,0 +1,73 @@
+name: Seat3 Room03 four-state photocycle and heldout-control verifier
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*room03*"
+      - "experiments/seat3/PREREG-ROOM03*"
+      - ".github/workflows/seat3-room03-fourstate.yml"
+      - "stones/2026-10-15-rainbow81/seat3-room03*"
+  push:
+    branches:
+      - main
+      - agent/seat-3/room03-fourstate-controller-20261015
+    paths:
+      - "experiments/seat3/*room03*"
+      - "experiments/seat3/PREREG-ROOM03*"
+      - ".github/workflows/seat3-room03-fourstate.yml"
+      - "stones/2026-10-15-rainbow81/seat3-room03*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-four-state:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 19f21a880d16e84902d157a6d3bc4bcd908dc888
+          path: frozen-seat1-photocycle
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify frozen original baseline source bytes (do not run or edit producer)
+        shell: bash
+        run: |
+          test "$(git -C frozen-seat1-photocycle rev-parse HEAD)" = 19f21a880d16e84902d157a6d3bc4bcd908dc888
+          test "$(git -C frozen-seat1-photocycle hash-object -- experiments/seat1/optogenetics/PREREG-LIGHT-GATED-IDENTITY-1080.md)" = a9752cee6bd833af0ad1dbef7b01a50125c8baa1
+          test "$(git -C frozen-seat1-photocycle hash-object -- experiments/seat1/optogenetics/opto_gate.py)" = 32667d1172eae4856a1c31499c04509e96b1771f
+          test "$(git -C frozen-seat1-photocycle hash-object -- experiments/seat1/optogenetics/opto_gate_node.js)" = d5e5644b3e4d65759b3f7c44e006da8cc3310261
+      - name: New B2 four-state and controller experiments in independent Python / Node
+        shell: bash
+        run: |
+          python experiments/seat3/room03_fourstate_cost.py "$RUNNER_TEMP/py.hbp" "$RUNNER_TEMP/py.json"
+          node experiments/seat3/room03_fourstate_cost.js "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/js.json"
+          python experiments/seat3/verify_room03_fourstate.py "$RUNNER_TEMP/py.hbp" "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/py.json" "$RUNNER_TEMP/js.json" "$RUNNER_TEMP/room03"
+      - name: Changed canonical output must fail exact cross-language verification
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; d=pathlib.Path(os.environ["RUNNER_TEMP"]); b=(d/"py.hbp").read_bytes(); (d/"bad.hbp").write_bytes(bytes([b[0]^1])+b[1:])'
+          if python experiments/seat3/verify_room03_fourstate.py "$RUNNER_TEMP/bad.hbp" "$RUNNER_TEMP/js.hbp" "$RUNNER_TEMP/py.json" "$RUNNER_TEMP/js.json" "$RUNNER_TEMP/should-not-be-created"; then
+             echo "FAIL: altered trace incorrectly accepted"; exit 1
+          fi
+          echo "Tampered HBP correctly HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-room03-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/room03/*
+          if-no-files-found: error
+          retention-days: 30
