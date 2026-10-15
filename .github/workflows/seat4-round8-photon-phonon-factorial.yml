@@ -53,6 +53,21 @@ jobs:
         shell: bash
         run: |
           node experiments/seat4/round8/verify_factorial.js "$RUNNER_TEMP/r8-original-source" "$RUNNER_TEMP/r8-result"
+      - name: Compare freshly regenerated full HBP to committed immutable R8 stone
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,os
+          stone=Path("stones/2026-10-15-rainbow81/seat4-r8-photon-phonon-electronic-factorial-20261015.hbp")
+          blob=stone.read_bytes()
+          assert len(blob)==502
+          digest=hashlib.sha256(blob).hexdigest()
+          assert digest=="826bfd820f5cb34f79a3ab7f3ef1cf201a15c63c29801f8ddc8feb9f6137cd7e"
+          assert blob==(Path(os.environ["RUNNER_TEMP"])/"r8-result"/"r8-results.hbp").read_bytes()
+          assert stone.with_suffix(stone.suffix+".sha256").read_bytes()==(digest+"  "+stone.name+"\n").encode("ascii")
+          print("R8_SEALED_FACTORED_PHYSICS_TOY_HBP_REGENERATED",len(blob),digest)
+          PY
       - name: Upload scientific results and all source+sidecar digests
         uses: actions/upload-artifact@v4
         with:
