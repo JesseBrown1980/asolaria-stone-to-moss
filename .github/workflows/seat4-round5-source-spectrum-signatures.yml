@@ -58,6 +58,23 @@ jobs:
         shell: bash
         run: |
           python experiments/seat4/round5/verify_spectrum.py "$RUNNER_TEMP/pr80-source" "$RUNNER_TEMP/seat4-spectrum"
+      - name: Compare fresh full HBP against independently reconstructed committed evidence stone
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,os
+          stone=Path("stones/2026-10-15-rainbow81/seat4-round5-signed-spectrum-mapping-20261015.hbp")
+          regenerated=Path(os.environ["RUNNER_TEMP"])/"seat4-spectrum"/"seat4-results.hbp"
+          exact=stone.read_bytes()
+          assert len(exact)==701
+          digest=hashlib.sha256(exact).hexdigest()
+          assert digest=="077bf98dc7c10e3125ce1147270cc927ce978ab63a19ec30e4655267f1770400"
+          assert exact==regenerated.read_bytes(),"COMMITTED_STONE_DRIFT"
+          side=stone.with_suffix(stone.suffix+".sha256")
+          assert side.read_bytes()==(digest+"  "+stone.name+"\n").encode("ascii")
+          print("SIGNED_MAP_SEALED_STONE_REGENERATED",len(exact),digest)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-spectrum-${{ matrix.os }}-py${{ matrix.python }}
