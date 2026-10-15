@@ -226,11 +226,11 @@ def study(a,b,output):
     hbp=("\n".join(lines)+"\n").encode("ascii")
     (Path(output)/"lightbank.hbp").write_bytes(hbp)
     metrics["receipt_bytes"]=len(hbp);metrics["receipt_sha256"]=sha(hbp)
-    (Path(output)/"lightbank.json").write_text(json.dumps(metrics,sort_keys=True,
-        separators=(",",":"),ensure_ascii=True)+"\n",encoding="ascii")
+    (Path(output)/"lightbank.json").write_bytes((json.dumps(metrics,sort_keys=True,
+        separators=(",",":"),ensure_ascii=True)+"\n").encode("ascii"))
     for name in ("lightbank.lbk","lightbank.hbp","lightbank.json"):
         raw=(Path(output)/name).read_bytes()
-        (Path(output)/(name+".sha256")).write_text(sha(raw)+"  "+name+"\n",encoding="ascii")
+        (Path(output)/(name+".sha256")).write_bytes((sha(raw)+"  "+name+"\n").encode("ascii"))
     return metrics
 
 def main(args):
