@@ -185,4 +185,4 @@ def run(out,merged):
 
 if __name__=="__main__":
     if len(sys.argv)!=3:raise SystemExit("usage: python seat2_coupling.py MERGED_MAIN OUTPUT")
-    run(Path(sys.argv[2]),Path(sys.argv[1]))
+    run(Path(sys.argv[1]),Path(sys.argv[2]))
