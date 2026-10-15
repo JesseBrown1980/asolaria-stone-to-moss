@@ -105,7 +105,7 @@ jobs:
               assert len(set(contents))==1,'CROSS_OS_EVIDENCE_DRIFT:'+name
               digest=hashlib.sha256(contents[0]).hexdigest()
               for folder in dirs:
-                  assert (folder/(name+'.sha256')).read_bytes()==(digest+'  '+name+'\\n').encode('ascii')
+                  assert (folder/(name+'.sha256')).read_bytes()==(digest+'  '+name+'\n').encode('ascii')
               result=json.loads(contents[0])
               if name.startswith('cross-seat'):
                   assert result['frozen_archive_sets_checked']==8
