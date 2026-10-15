@@ -26,10 +26,19 @@ jobs:
           ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
           path: original/frozen-main
           persist-credentials: false
-      - name: Freeze true published Seat2 source-input commit
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 8e597ae4c8d5d1ff76a2d25ad394ec49e601afc4
+          path: original/seat2-pr111-source
+          persist-credentials: false
+      - name: Freeze true published Seat2 source-input and audited Python validator
         shell: bash
         run: |
           test "$(git -C original/frozen-main rev-parse HEAD)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          test "$(git -C original/seat2-pr111-source rev-parse HEAD)" = 8e597ae4c8d5d1ff76a2d25ad394ec49e601afc4
+      - name: Install only dependency needed to invoke frozen Seat2 Python validators
+        run: python -m pip install psutil==7.0.0
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
@@ -63,6 +72,10 @@ jobs:
         shell: bash
         run: |
           python experiments/seat4/round9/audit_seat2_seat4_host.py "seat2" "seat4" "original" "$RUNNER_TEMP/r9b-review"
+      - name: Actively replay nine original negative tests and seventeen new forged telemetry cases
+        shell: bash
+        run: |
+          python experiments/seat4/round9/attack_seat2_host.py "original/seat2-pr111-source" "seat2" "$RUNNER_TEMP/r9b-review"
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-r9b-${{ matrix.os }}-py${{ matrix.python }}
@@ -87,17 +100,22 @@ jobs:
           from pathlib import Path
           dirs=sorted(Path('audited').glob('seat4-r9b-*'))
           assert len(dirs)==4
-          name='cross-seat-archive-review.json'
-          contents=[(d/name).read_bytes() for d in dirs]
-          assert len(set(contents))==1,'CROSS_OS_EVIDENCE_DRIFT'
-          d=hashlib.sha256(contents[0]).hexdigest()
-          for path in dirs:
-              assert (path/(name+'.sha256')).read_bytes()==(d+'  '+name+'\n').encode('ascii')
-          result=json.loads(contents[0])
-          assert result['frozen_archive_sets_checked']==8
-          assert len(result['separate_host_measurements'])==4
-          assert result['evidence_level2_OS_reported_CPU_RAM']=='PASS'
-          assert result['evidence_level3_CALIBRATED_SENSOR_READINGS']=='NOT_COLLECTED_IN_EITHER_CI_RUN'
-          assert result['physical_photon_memory_newly_confirmed'] is False
-          print('SEAT4_R9B_FOUR_RUNS_ARCHIVED_EIGHT_SOURCE_HOST_AUDIT_IDENTICAL',len(contents[0]),d)
+          for name in ('cross-seat-archive-review.json','pr111-seat4-attacks.json'):
+              contents=[(d/name).read_bytes() for d in dirs]
+              assert len(set(contents))==1,'CROSS_OS_EVIDENCE_DRIFT:'+name
+              digest=hashlib.sha256(contents[0]).hexdigest()
+              for folder in dirs:
+                  assert (folder/(name+'.sha256')).read_bytes()==(digest+'  '+name+'\\n').encode('ascii')
+              result=json.loads(contents[0])
+              if name.startswith('cross-seat'):
+                  assert result['frozen_archive_sets_checked']==8
+                  assert len(result['separate_host_measurements'])==4
+                  assert result['evidence_level2_OS_reported_CPU_RAM']=='PASS'
+                  assert result['evidence_level3_CALIBRATED_SENSOR_READINGS']=='NOT_COLLECTED_IN_EITHER_CI_RUN'
+                  assert result['physical_photon_memory_newly_confirmed'] is False
+              else:
+                  assert result['original_negative_controls_count']==9
+                  assert result['additional_independently_mutated_cases_per_archive']==17
+                  assert result['coherent_positive_counter_run_sha_forgery_accepted_by_producer_validator'] is True
+              print('SEAT4_R9B_FOUR_RUNS_ARCHIVED_EIGHT_SOURCE_HOST_AUDIT_IDENTICAL',name,len(contents[0]),digest)
           PY
