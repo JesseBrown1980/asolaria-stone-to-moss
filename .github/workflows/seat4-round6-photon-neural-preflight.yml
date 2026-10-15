@@ -49,6 +49,21 @@ jobs:
         shell: bash
         run: |
           python experiments/seat4/round6/physical_capture_gate.py --self-test "$RUNNER_TEMP/seat4-r6-results"
+      - name: Confirm fresh preflight exactly matches new immutable hosted-receipt stone
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,os
+          stone=Path("stones/2026-10-15-rainbow81/seat4-r6-optical-neural-preflight-20261015.hbp")
+          expected="63c7988809d33d210be21aed1f579db220f13d98e86d2c896e6c753892edb424"
+          data=stone.read_bytes()
+          assert len(data)==528 and hashlib.sha256(data).hexdigest()==expected
+          live=(Path(os.environ["RUNNER_TEMP"])/"seat4-r6-results"/"r6-results.hbp").read_bytes()
+          assert live==data, "NEW_HOSTED_RUN_DISAGREES_WITH_COMMITTED_STONE"
+          assert (stone.parent/(stone.name+".sha256")).read_bytes()==(expected+"  "+stone.name+"\n").encode("ascii")
+          print("R6_REAL_HOSTED_REGENERATION_MATCHES_APPEND_ONLY_STONE",len(data),expected)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-r6-${{ matrix.os }}-py${{ matrix.python }}
