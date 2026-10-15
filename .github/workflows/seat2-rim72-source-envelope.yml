@@ -1,0 +1,71 @@
+name: Seat 2 Recurrence Is Mind signed-source 72-case trial
+
+on:
+  push:
+    branches:
+      - agent/seat-2/rim72-source-envelope-20261015
+  pull_request:
+    paths:
+      - experiments/seat2/recurrence/**
+      - .github/workflows/seat2-rim72-source-envelope.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seat2-rim72:
+    name: ${{ matrix.os }} Python ${{ matrix.py }} Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Ed25519 verifier (fixture contains NO private keys)
+        shell: bash
+        run: python -m pip install --disable-pip-version-check cryptography==46.0.4
+      - name: Verify frozen public test Ed25519 fixture independently with Node crypto
+        shell: bash
+        run: |
+          node -e 'const fs=require("fs"),crypto=require("crypto"),f=JSON.parse(fs.readFileSync("experiments/seat2/recurrence/seat2_rim_signed_source_v1.json"));const sort=o=>Array.isArray(o)?o.map(sort):o&&typeof o==="object"?Object.fromEntries(Object.entries(o).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>[k,sort(v)])):o;const pub=crypto.createPublicKey({key:Buffer.concat([Buffer.from("302a300506032b6570032100","hex"),Buffer.from(f.public_key_hex,"hex")]),format:"der",type:"spki"});if(!crypto.verify(null,Buffer.from(JSON.stringify(sort(f.body))),pub,Buffer.from(f.signature_hex,"hex")))process.exit(1);console.log("PASS_NODE_ED25519_TESTONLY_ROOT_FIXTURE");'
+      - name: Run all 72 cases in independently implemented Python and Node N-Nest gate
+        shell: bash
+        run: |
+          python experiments/seat2/recurrence/seat2_rim72_verify.py \
+            experiments/seat2/recurrence/seat2_rim_signed_source_v1.json \
+            experiments/seat2/recurrence/rim_node_watcher.js \
+            seat2-rim72-full.json seat2-rim72.hbp seat2-run-metrics.json
+      - name: Independently assert signed provenance, recurrence and complete factorial
+        shell: bash
+        run: |
+          python -c 'import json,collections,hashlib,pathlib; p=pathlib.Path("seat2-rim72-full.json"); o=json.loads(p.read_bytes());a=o["rows"];assert len(a)==72;assert len({(r["arm"],r["depth"],r["scenario"]) for r in a})==72;assert o["false_greens"]==24 and o["first_round_error_corrections_recovered"]==6;assert o["common_source_substitutions_rejected_D"]==3 and o["compromised_watcher_parent_rejected_C_D"]==6;assert all(not r["release_authorized"] for r in a);assert all(r["accepted_for_processing"] for r in a if r["scenario"]=="H");assert all(not r["source_authenticated"] for r in a if r["arm"]!="D");assert o["physical_hosts_attested"]==0 and not o["wasm_invoked"];print("PASS_SEAT2_72_OF_72_COMPLETE_FACTORIAL_AND_NEGATIVES")'
+      - name: Repeat full test to check cross-run deterministic evidence
+        shell: bash
+        run: |
+          python experiments/seat2/recurrence/seat2_rim72_verify.py \
+            experiments/seat2/recurrence/seat2_rim_signed_source_v1.json \
+            experiments/seat2/recurrence/rim_node_watcher.js \
+            repeat-rim72-full.json repeat-rim72.hbp repeat-run-metrics.json
+          python -c 'from pathlib import Path;import hashlib;files=["seat2-rim72-full.json","seat2-rim72.hbp"];alt=["repeat-rim72-full.json","repeat-rim72.hbp"];assert all(Path(x).read_bytes()==Path(y).read_bytes() for x,y in zip(files,alt));[(Path(n+".sha256")).write_bytes((hashlib.sha256(Path(n).read_bytes()).hexdigest()+"  "+n+"\n").encode("ascii")) for n in files];print("PASS_BYTE_IDENTICAL_INDEPENDENT_RECURSION_REPLAY")'
+      - name: Archive canonical software output and elapsed execution evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-rim72-${{ matrix.os }}-py${{ matrix.py }}
+          retention-days: 30
+          path: |
+            seat2-rim72-full.json
+            seat2-rim72-full.json.sha256
+            seat2-rim72.hbp
+            seat2-rim72.hbp.sha256
+            seat2-run-metrics.json
