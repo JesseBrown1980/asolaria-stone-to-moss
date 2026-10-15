@@ -23,7 +23,10 @@ CASES=("counter_cpu_positive",
        "runner_os_and_platform_consistent_but_wrong",
        "github_job_valid_looking_wrong",
        "fake_device_current_with_forged_sidecar",
-       "combined_counter_and_run_and_sha")
+       "combined_counter_and_run_and_sha",
+       "real_pr_head_valid_sha_wrong",
+       "run_attempt_positive_wrong",
+       "github_pr_number_wrong")
 
 
 def canon(obj):
@@ -46,6 +49,12 @@ def prepare(origin, dest, case):
         host["github_run_id"]=str(int(host["github_run_id"])+17)
     if case in ("producer_sha_valid_40_wrong","combined_counter_and_run_and_sha"):
         host["producing_git_sha"]="f"*40 if host["producing_git_sha"]!="f"*40 else "e"*40
+    if case=="real_pr_head_valid_sha_wrong":
+        host["pr_head_sha"]="f"*40 if host["pr_head_sha"]!="f"*40 else "e"*40
+    if case=="run_attempt_positive_wrong":
+        host["github_run_attempt"]+=1
+    if case=="github_pr_number_wrong":
+        host["github_pr_number"]+=1
     if case=="runner_os_and_platform_consistent_but_wrong":
         opposite = "Windows" if host["runner_os"]=="Linux" else "Linux"
         host["runner_os"]=opposite
@@ -122,7 +131,7 @@ def main(frozen,original,output,node_source):
     report={"schema":"ASOLARIA-SEAT2-R9-FORGED-TELEMETRY-NODE-REVIEW-V1",
             "source_fixture_sha256":
               "077bf98dc7c10e3125ce1147270cc927ce978ab63a19ec30e4655267f1770400",
-            "status":"SIX_CONTEXT_OR_SENSOR_FORGERIES_REJECTED_ONE_UNSIGNED_CPU_GAP",
+            "status":"NINE_CONTEXT_OR_SENSOR_FORGERIES_REJECTED_ONE_UNSIGNED_CPU_GAP",
             "untainted_reference_accepted":True,
             "falsification_cases":outcomes,
             "case_count":len(outcomes),
