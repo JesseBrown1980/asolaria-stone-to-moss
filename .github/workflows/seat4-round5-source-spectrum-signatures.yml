@@ -1,0 +1,116 @@
+name: Seat4 Round5 signed spectrum source-map falsifiers
+on:
+  push:
+    branches:
+      - agent/seat-4/round5-source-spectrum-signature-20261015
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  spectrum-signatures:
+    name: Digital signatures and S7 falsifiers ${{ matrix.os }} py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: frozen-pr80
+          persist-credentials: false
+      - name: Freeze actual upstream producer commit and blob
+        shell: bash
+        run: |
+          test "$(git -C frozen-pr80 rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-pr80 rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install only independent Ed25519 verifier dependency
+        shell: bash
+        run: python -m pip install 'cryptography>=44,<48'
+      - name: Download actual frozen independent PR80 source archive
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/pr80-source
+      - name: Generate 2187 signed synthetic witnesses and exhaustive S7 attacks
+        shell: bash
+        run: |
+          node experiments/seat4/round5/sign_spectrum.js "$RUNNER_TEMP/pr80-source" "$RUNNER_TEMP/seat4-spectrum"
+      - name: Independently verify all Ed25519 signatures source anchors and signed frames
+        shell: bash
+        run: |
+          python experiments/seat4/round5/verify_spectrum.py "$RUNNER_TEMP/pr80-source" "$RUNNER_TEMP/seat4-spectrum"
+      - name: Compare fresh full HBP against independently reconstructed committed evidence stone
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,os
+          stone=Path("stones/2026-10-15-rainbow81/seat4-round5-signed-spectrum-mapping-20261015.hbp")
+          regenerated=Path(os.environ["RUNNER_TEMP"])/"seat4-spectrum"/"seat4-results.hbp"
+          exact=stone.read_bytes()
+          assert len(exact)==701
+          digest=hashlib.sha256(exact).hexdigest()
+          assert digest=="077bf98dc7c10e3125ce1147270cc927ce978ab63a19ec30e4655267f1770400"
+          assert exact==regenerated.read_bytes(),"COMMITTED_STONE_DRIFT"
+          side=stone.with_suffix(stone.suffix+".sha256")
+          assert side.read_bytes()==(digest+"  "+stone.name+"\n").encode("ascii")
+          print("SIGNED_MAP_SEALED_STONE_REGENERATED",len(exact),digest)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-spectrum-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat4-spectrum/*
+          if-no-files-found: error
+          retention-days: 30
+
+  compare-receipts:
+    name: Five-seat-style four-run full-byte evidence comparison
+    needs: spectrum-signatures
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-spectrum-*
+          path: receipt-sets
+          merge-multiple: false
+      - name: SHA sidecar verification and four-way exact-byte parity for all scientific files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          dirs=sorted(Path("receipt-sets").glob("seat4-spectrum-*"))
+          assert len(dirs)==4,dirs
+          names=("seat4-map.json","seat4-signed-frames.jsonl","seat4-results.json",
+                 "seat4-results.hbp","seat4-independent-python.json","SHA256SUMS")
+          for name in names:
+              blobs=[(d/name).read_bytes() for d in dirs]
+              assert all(b==blobs[0] for b in blobs),"CROSS_PLATFORM_DRIFT:"+name
+              print("FOUR_RUNS_BYTE_EXACT",name,len(blobs[0]),hashlib.sha256(blobs[0]).hexdigest())
+          for d in dirs:
+              lines=(d/"SHA256SUMS").read_text("ascii").splitlines()
+              assert len(lines)==5
+              for line in lines:
+                  expected,name=line.split("  ",1)
+                  assert hashlib.sha256((d/name).read_bytes()).hexdigest()==expected
+          print("FOUR_RUNS_CRYPTOSYSTEM_AND_DIGITAL_SPECTRUM_VERIFIED")
+          PY
