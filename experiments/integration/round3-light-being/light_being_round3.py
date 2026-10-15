@@ -66,7 +66,8 @@ def unpack_chunks(raw_chunks: list[bytes], anchored_sha: str,
     check(digest(out) == anchored_sha, "WHOLE_PAYLOAD_SHA_MISMATCH")
     return out
 
-def qr_image_experiment(payload: bytes, output_dir: Path) -> dict:
+def qr_image_experiment(payload: bytes, output_dir: Path,
+                        png_manifest: Path | None = None) -> dict:
     # Genuine QR render and independent zbar pixel decode for EACH R/G/B plane.
     import qrcode
     from PIL import Image
@@ -78,6 +79,7 @@ def qr_image_experiment(payload: bytes, output_dir: Path) -> dict:
     anchored = digest(payload)
     decoded: list[bytes] = []
     images = []
+    png_containers = []
     for image_i in range(11):
         planes = []
         for channel in range(3):
@@ -98,10 +100,15 @@ def qr_image_experiment(payload: bytes, output_dir: Path) -> dict:
         combined = Image.merge("RGB", tuple(planes))
         destination = output_dir / f"round3-light-being-qr-{image_i:02d}.png"
         combined.save(destination, format="PNG")
-        images.append({"name": destination.name,
-                       "sha256": digest(destination.read_bytes())})
         # Read actual saved PNG pixels, not encoder's original chunk data.
         saved = Image.open(destination).convert("RGB")
+        images.append({"name": destination.name, "mode": "RGB",
+                       "width":saved.width, "height":saved.height,
+                       "rgb_pixel_sha256":digest(saved.tobytes())})
+        # Container compression bytes may differ across OS; separate receipt.
+        png_containers.append({"name": destination.name,
+            "png_file_sha256":digest(destination.read_bytes()),
+            "png_file_bytes":destination.stat().st_size})
         for channel in range(3):
             n = image_i * 3 + channel
             results = independent_zbar(saved.getchannel(channel))
@@ -111,6 +118,10 @@ def qr_image_experiment(payload: bytes, output_dir: Path) -> dict:
             check(len(results) == 1, f"QR_DECODE_FAILED_OR_DUPLICATE:{n}")
             decoded.append(base64.b64decode(results[0].data, validate=True))
     # Actual images are decoded, and the independently indexed payload rebuilt.
+    if png_manifest:
+        png_manifest.parent.mkdir(parents=True,exist_ok=True)
+        png_manifest.write_text(json.dumps(png_containers,sort_keys=True,indent=2)+"\n",
+                                encoding="utf-8")
     restored = unpack_chunks(list(reversed(decoded)), anchored, len(payload))
     check(restored == payload, "PIXEL_READBACK_BYTES_DIFFER")
     # Exercise actual missing-channel and coherent tampering failures.
@@ -139,7 +150,8 @@ def qr_image_experiment(payload: bytes, output_dir: Path) -> dict:
             "missing_green_rejected": True, "tamper_rejected": True,
             "duplicate_index_rejected": True,
             "optical_camera_readback": False, "image_geometry": "555x555",
-            "image_artifacts": images}
+            "image_artifacts": images,
+            "canonical_image_hash_basis":"Uncompressed RGB pixel bytes; PNG container hashes separate"}
 
 def qutrit_projection(v: tuple[int, int, int]) -> tuple[int, int, int]:
     s = sum(v)
@@ -365,6 +377,10 @@ def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict
                             check(accepted,"VALID_LIGHT_MEMORY_RECALL_REJECTED")
                             verdict = "PASS"
                             stats["clean_open_accepted"] += 1
+                            # Exercise actual read hit from bounded working stack.
+                            check(cache.get(key)==expected,"LRU_CACHE_RECALL_FAILED")
+                            cache.move_to_end(key)
+                            stats["cache_hits"] += 1
                         elif not active:
                             check(not accepted,"CLOSED_LIGHT_GATE_ACCEPTED")
                             verdict = "GATE_HELD"
@@ -391,7 +407,9 @@ def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict
           ==52488,"FULL_MATRIX_NOT_EXECUTED")
     check(len(pid_set)==N_WAVES*N_ADDR==2187,"PID_COUNT_INCORRECT")
     check(len(cache)==CACHE_CAP and stats["cache_misses"]==2187
-          and stats["cache_evictions"]==1458,"CACHE_BOUNDARY_WRONG")
+          and stats["cache_evictions"]==1458
+          and stats["cache_hits"]==stats["clean_open_accepted"],
+          "CACHE_BOUNDARY_WRONG")
     check(stats["clean_open_accepted"] > 0
           and stats["faults_rejected"] > 0,"TOY_PHOTO_GATE_NEVER_OPENED")
     check(not any("DARK" in k for k in emitted_by_gate),
@@ -422,13 +440,15 @@ def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--qr-dir",type=Path,help="Run real RGB PNG/independent zbar QR readback")
+    ap.add_argument("--png-manifest",type=Path,
+                    help="Separately record platform-dependent PNG container hashes")
     ap.add_argument("--receipt",type=Path,help="Write canonical JSON")
     ap.add_argument("--case-hbp",type=Path,help="Write all 52488 independently inspectable HBP case rows")
     args = ap.parse_args()
     payload = payload_fixture()
     check(len(payload)==65536,"PAYLOAD_SIZE_CHANGED")
     original_sha=digest(payload)
-    qr = qr_image_experiment(payload,args.qr_dir) if args.qr_dir else {
+    qr = qr_image_experiment(payload,args.qr_dir,args.png_manifest) if args.qr_dir else {
         "status":"NOT_RUN","optical_camera_readback":False}
     fleet = fleet_test()
     if args.case_hbp:
