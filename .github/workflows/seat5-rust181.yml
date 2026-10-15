@@ -1,0 +1,64 @@
+name: Seat5 Rust 1.81 canonical verification
+on:
+  push:
+    branches: [seat5-independent-referee-20261015]
+  pull_request:
+    paths:
+      - 'experiments/seat5/rust/**'
+      - '.github/workflows/seat5-rust181.yml'
+  workflow_dispatch:
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+      - name: Assert toolchain and run unit tests
+        shell: bash
+        working-directory: experiments/seat5/rust
+        run: |
+          rustc --version
+          test "$(rustc --version | cut -d' ' -f2)" = "1.81.0"
+          cargo test --locked --offline
+      - name: Execute Rust referee
+        shell: bash
+        working-directory: experiments/seat5/rust
+        run: |
+          mkdir -p out
+          if [ "${{ matrix.profile }}" = release ]; then cargo run --locked --offline --release -- out; else cargo run --locked --offline -- out; fi
+          sha256sum out/rust-receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat5-rust181-${{ matrix.profile }}
+          path: experiments/seat5/rust/out/rust-receipt.json
+          if-no-files-found: error
+  parity:
+    needs: rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat5-rust181-*
+          path: receipts
+      - name: Verify exact Rust debug/release parity
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          fs=sorted(Path('receipts').rglob('rust-receipt.json'))
+          assert len(fs)==2,fs
+          blobs=[p.read_bytes() for p in fs]
+          assert blobs[0]==blobs[1]
+          r=json.loads(blobs[0])
+          assert r['toolchain']=='rust-1.81'
+          assert r['aliases']==15309 and r['bank_entries']==567 and r['original_memories']==81
+          assert r['substitutions_rejected']==6 and r['persistent_replay_rejected']
+          print(hashlib.sha256(blobs[0]).hexdigest())
+          PY
