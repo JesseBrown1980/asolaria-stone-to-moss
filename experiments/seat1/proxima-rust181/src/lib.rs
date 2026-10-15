@@ -185,7 +185,7 @@ mod tests{
     #[test] fn gf3_exact_basis_and_collision(){
         assert!(nilpotent_after_81([0,1,3]));
         assert!(nilpotent_after_81([0,4,7]));
-        assert_eq!(2%27,29%27);
+        let p=2usize;let q=29usize;let modulus=27usize;assert_eq!(p%modulus,q%modulus);
     }
     #[test] fn exact_200_and_symbolic_e200(){
         assert_eq!(decimal_pow3(3),"27");
