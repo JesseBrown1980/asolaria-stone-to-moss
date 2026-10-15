@@ -31,6 +31,8 @@ jobs:
         run: |
           python -c "import hashlib,pathlib; ps=[pathlib.Path(x) for x in ('opto-python.hbp','opto-python.json','opto-node.hbp','opto-node.json')]; [(p.with_name(p.name+'.sha256').write_text(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n',encoding='ascii')) for p in ps]"
       - run: python experiments/seat1/optogenetics/verify_opto.py .
+      - name: Execute actual V2 adversarial transition faults (not historical V1 placeholders)
+        run: python experiments/seat1/optogenetics/adversarial_controls_v2.py
       - uses: actions/upload-artifact@v4
         with:
           name: optogate-${{ matrix.os }}
@@ -44,6 +46,8 @@ jobs:
             opto-node.hbp.sha256
             opto-node.json
             opto-node.json.sha256
+            seat1-actual-adversarial-controls.json
+            seat1-actual-adversarial-controls.json.sha256
   os-referee:
     name: exact-bitcrosscheck
     runs-on: ubuntu-latest
