@@ -272,6 +272,30 @@ def checks(q,pin,params):
         "apex_depth7":parent7["apex_green"],
         "held_at":parent7["failed_paths"]}
     assert stats["valid"]==1 and stats["held"]==8
+    # M1 falsifier: a self-consistent attacker-chosen substitute input still
+    # makes mathematically green watcher and parent results. No origin trust.
+    adversarial_params=dict(params)
+    adversarial_params["seed"]=params["seed"]+1
+    substitute=leaf(q,adversarial_params,pin)
+    assert substitute["input_sha256"]!=pristine["input_sha256"]
+    substitute_witness=independent_watcher(q,adversarial_params,pin,substitute)
+    substitute_parent=parent_recompute_watcher_gate(
+        q,pin,adversarial_params,substitute,substitute_witness)
+    tree3=check_nested(substitute_parent,3)
+    tree7=check_nested(substitute_parent,7)
+    assert substitute_parent["mathematical_consistency"] is True
+    assert tree3["apex_green"] and tree7["apex_green"]
+    assert substitute_parent["source_authenticated"] is False
+    stats["untrusted_source_false_green"]=1
+    stats["cases"]["self_consistent_untrusted_input"]={
+        "verdict":"SOFTWARE_PASS_ONLY",
+        "apex_depth3":tree3["apex_green"],
+        "apex_depth7":tree7["apex_green"],
+        "input_digest_changed":True,
+        "mathematical_consistency":True,
+        "source_authenticated":False,
+        "release_authorized":False
+    }
     return pristine,honest,stats,check_nested(honest,3),check_nested(honest,7)
 
 def experimental_controls(q):
@@ -307,6 +331,7 @@ def seal(out,payload):
         "|injected_oracle_coupling=0.9|json=0\n"+
         "BRIDGE|leaf_input_sha256="+payload["input_sha256"]+"|selector_sha256="+sha(payload["selector"].encode("utf-8"))+"|json=0\n"+
         "GATES|honest=1|held=8|depth3=PASS|depth7=PASS|mathematical_consistency=1|source_authenticated=0|release_authorized=0|physical=0|json=0\n"+
+        "M1|self_consistent_untrusted_source=GREEN_SOFTWARE_ONLY|false_green_for_origin_authentication=1|source_authenticated=0|release_authorized=0|json=0\n"+
         "RESULT|verdict=PASS|upstream_native_depth3=PASS|upstream_native_depth7=PASS|json=0\n"+
         "HBPEND|schema="+SCHEMA+"|json=0\n"
     ).encode()
@@ -384,6 +409,10 @@ def audit(out):
     assert receipt["version"]==SCHEMA and receipt["verdict"]=="PASS"
     assert receipt["negative_controls"]["held"]==8
     assert receipt["negative_controls"]["valid"]==1
+    assert receipt["negative_controls"]["untrusted_source_false_green"]==1
+    m1=receipt["negative_controls"]["cases"]["self_consistent_untrusted_input"]
+    assert m1["mathematical_consistency"] is True and m1["apex_depth7"] is True
+    assert m1["source_authenticated"] is False and m1["release_authorized"] is False
     layers=receipt["verification_layers"]
     assert layers["mathematical_consistency"] is True
     assert layers["watcher_digest_integrity_passed"] is True
@@ -395,6 +424,7 @@ def audit(out):
     assert receipt["negative_controls"]["cases"]["compromised_watcher_inconsistent_digest"]["apex_depth7"] is False
     assert receipt["watcher_pid"]!=0 and receipt["reported"]==receipt["recomputed"]
     assert "physical" in pairs[".hbp"].decode()
+    assert "self_consistent_untrusted_source=GREEN_SOFTWARE_ONLY" in pairs[".hbp"].decode()
     index=pairs[".hbi"].decode()
     for ext in (".json",".hbp"):
         assert "sha256="+sha(pairs[ext]) in index
