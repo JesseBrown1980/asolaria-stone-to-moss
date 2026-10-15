@@ -1,0 +1,226 @@
+name: Seat1 physical host CPU and memory witness
+
+on:
+  push:
+    branches:
+      - experiment/seat1-photon-phonon-electron-coupling-20261015
+    paths:
+      - experiments/seat1_photon_phonon/PREREG-HOST-PHYSICAL-SUBSTRATE-20261015.md
+      - experiments/seat1_photon_phonon/physical_host_witness.py
+      - .github/workflows/seat1-physical-host-observer.yml
+  pull_request:
+    paths:
+      - experiments/seat1_photon_phonon/physical_host_witness.py
+      - .github/workflows/seat1-physical-host-observer.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  observe-real-cpu-and-memory:
+    name: Seat1 observed physical process ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Original source QR decoder support on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install original QR libraries and real OS process counters
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9" "psutil>=5.9,<8"
+      - name: Original physical CPU workload rebuilds all 81 QR memory sources
+        run: python experiments/seat1/round2/lightbank_81.py original-evidence
+      - name: Independently check original source QR pixels using Node
+        run: node experiments/seat1/round2/verify_lightbank_81.js original-evidence
+      - name: Rebuild all 567 original full-byte bank rows
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py original-evidence rainbow-evidence
+      - name: Independently check original bank and index using Node
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js original-evidence rainbow-evidence
+      - name: Observe real host CPU time/RSS running independent Python model
+        shell: bash
+        run: |
+          python experiments/seat1_photon_phonon/physical_host_witness.py \
+            --label python-coupling \
+            --output host-metrics/python-host.json \
+            --log host-metrics/python-model.log \
+            -- python experiments/seat1_photon_phonon/coupling.py \
+            original-evidence/lightbank-memories.json \
+            rainbow-evidence/rainbow7-bank.jsonl \
+            rainbow-evidence/rainbow7-index.hbi py-coupling
+      - name: Observe real host CPU time/RSS running separate Node model
+        shell: bash
+        run: |
+          python experiments/seat1_photon_phonon/physical_host_witness.py \
+            --label node-coupling \
+            --output host-metrics/node-host.json \
+            --log host-metrics/node-model.log \
+            -- node experiments/seat1_photon_phonon/coupling.js \
+            original-evidence/lightbank-memories.json \
+            rainbow-evidence/rainbow7-bank.jsonl \
+            rainbow-evidence/rainbow7-index.hbi node-coupling
+      - name: Third independent exact 6804-frame source-byte and neural readback auditor
+        run: python experiments/seat1_photon_phonon/audit_coupling.py . host-metrics/third-audit.json
+      - name: Strict telemetry provenance and all complete digital evidence pins
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          from hashlib import sha256
+          def hashed(file):return sha256(Path(file).read_bytes()).hexdigest()
+          frozen={
+             "original-evidence/lightbank-memories.json":
+               "02ff42a93d934074ae9c83e1b989f097944c8c7cd2ed80197c2cfd8795391e22",
+             "rainbow-evidence/rainbow7-bank.jsonl":
+               "52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345",
+             "rainbow-evidence/rainbow7-index.hbi":
+               "6b105769bf236c156cafa4dd4e3647fe45778c191a7e32ac7df63e84d287d0ee",
+             "py-coupling/coupling.hbp":
+               "42f3b61117a2e771f4f21958e12771b92b7a5d7251d023dc9ab78b34c65f6058",
+             "node-coupling/coupling.hbp":
+               "42f3b61117a2e771f4f21958e12771b92b7a5d7251d023dc9ab78b34c65f6058",
+             "py-coupling/results.json":
+               "4debac19eb1238bb8495018f115aa53494705934ff304129f2f4807920c99804",
+             "node-coupling/results.json":
+               "4debac19eb1238bb8495018f115aa53494705934ff304129f2f4807920c99804",
+             "host-metrics/third-audit.json":
+               "5d3cabce44810b08c8e898b0b64fd08eaaf5e160f79d8871af94a62508ac816e",
+          }
+          for fname,expected in frozen.items():
+            assert hashed(fname)==expected,(fname,hashed(fname),expected)
+          assert Path("py-coupling/coupling.hbp").read_bytes()==Path("node-coupling/coupling.hbp").read_bytes()
+          for label in ("python","node"):
+            p=Path(f"host-metrics/{label}-host.json")
+            witness=json.loads(p.read_bytes())
+            assert witness["status"]=="PHYSICAL_HOST_PROCESS_OBSERVATION_PASS"
+            assert witness["cpu_total_time_ns_reported"]>0
+            assert witness["elapsed_monotonic_ns_reported"]>0
+            assert witness["peak_resident_memory_bytes_reported"]>0
+            assert witness["successful_process_metric_samples"]>=2
+            assert witness["exit_code"]==0
+            assert witness["operating_system_metrics_are_real_observations"]
+            assert witness["executed_using_real_electrically_powered_host"]
+            assert not witness["optical_photon_flux_or_spectrum_measured"]
+            assert not witness["regulated_dc_rail_current_amperes_measured"]
+            assert not witness["physical_optical_state_retention_measured"]
+            assert witness["powercap_status"] in (
+                "SHARED_HOST_DOMAIN_NOT_WORKLOAD_ENERGY","NOT_EXPOSED")
+            assert witness["stdout_stderr_log_sha256"]==hashed(f"host-metrics/{label}-model.log")
+            print("HOST_ACTUAL_CPU_AND_RAM_OBSERVATION", label,
+                 witness["os_reported_host"]["os_family"],
+                 "cpu_ns",witness["cpu_total_time_ns_reported"],
+                 "wall_ns",witness["elapsed_monotonic_ns_reported"],
+                 "peak_rss_bytes",witness["peak_resident_memory_bytes_reported"],
+                 "samples",witness["successful_process_metric_samples"],
+                 "powercap",witness["powercap_status"],
+                 "witness_sha256",hashed(p))
+          print("SEAT1_REAL_HOST_TELEMETRY_AND_FROZEN_SCIENCE_PASS")
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-physical-host-evidence-${{ matrix.os }}
+          retention-days: 90
+          if-no-files-found: error
+          path: |
+            host-metrics/python-host.json
+            host-metrics/node-host.json
+            host-metrics/python-model.log
+            host-metrics/node-model.log
+            host-metrics/third-audit.json
+            py-coupling/coupling.hbp
+            py-coupling/results.json
+            node-coupling/coupling.hbp
+            node-coupling/results.json
+            original-evidence/lightbank-memories.json
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+
+  independent-host-parity:
+    name: Seat1 real host observations and identical digital source
+    needs: observe-real-cpu-and-memory
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-physical-host-evidence-ubuntu-latest
+          path: host-ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-physical-host-evidence-windows-latest
+          path: host-windows
+      - name: Same exact source science on physically active independent OS processes
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          from hashlib import sha256
+          d={"ubuntu":Path("host-ubuntu"),"windows":Path("host-windows")}
+          fixed=[
+            "original-evidence/lightbank-memories.json",
+            "rainbow-evidence/rainbow7-bank.jsonl",
+            "rainbow-evidence/rainbow7-index.hbi",
+            "py-coupling/coupling.hbp",
+            "node-coupling/coupling.hbp",
+            "py-coupling/results.json",
+            "node-coupling/results.json",
+            "host-metrics/third-audit.json",
+          ]
+          for file in fixed:
+            u=(d["ubuntu"]/file).read_bytes()
+            w=(d["windows"]/file).read_bytes()
+            assert u==w,("SCIENCE_BYTES_NOT_REPRODUCED",file)
+            print("FROZEN_PHYSICAL_HOST_SCIENCE_PARITY", file,len(u),sha256(u).hexdigest())
+          observation={}
+          for system,root in d.items():
+            observation[system]={}
+            for label in ("python","node"):
+              telemetry=json.loads((root/f"host-metrics/{label}-host.json").read_bytes())
+              assert telemetry["status"]=="PHYSICAL_HOST_PROCESS_OBSERVATION_PASS"
+              assert telemetry["os_reported_host"]["os_family"] == (
+                "Windows" if system=="windows" else "Linux")
+              observation[system][label]={
+                "cpu_time_ns":telemetry["cpu_total_time_ns_reported"],
+                "wall_time_ns":telemetry["elapsed_monotonic_ns_reported"],
+                "peak_resident_memory_bytes":telemetry["peak_resident_memory_bytes_reported"],
+                "process_samples":telemetry["successful_process_metric_samples"],
+                "powercap_status":telemetry["powercap_status"],
+              }
+          receipt={
+             "schema":"SEAT1-PHYSICAL-HOST-OBSERVATION-CROSS-OS-V1",
+             "status":"REAL_CPU_AND_RAM_EXECUTION_OBSERVED_DIGITAL_MODEL_FROZEN",
+             "science_hbp_sha256":
+               "42f3b61117a2e771f4f21958e12771b92b7a5d7251d023dc9ab78b34c65f6058",
+             "independently_observed_processes":observation,
+             "host_specific_measurements_not_forced_equal":True,
+             "signed_hardware_custody":"NOT_ATTESTED",
+             "direct_supply_current_amperes":"NOT_MEASURED",
+             "photonic_state_readback":"NOT_MEASURED",
+          }
+          Path("seat1-host-parity.json").write_bytes(
+            (json.dumps(receipt,sort_keys=True,indent=2)+"\n").encode("utf8"))
+          print("PHYSICAL_HOST_OBSERVATION_RECEIPT",sha256(Path("seat1-host-parity.json").read_bytes()).hexdigest())
+          print("SEAT1_HOST_REAL_COMPUTE_AND_EXACT_SCIENCE_PASS")
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-host-cross-os-observation
+          retention-days: 90
+          path: seat1-host-parity.json
+          if-no-files-found: error
