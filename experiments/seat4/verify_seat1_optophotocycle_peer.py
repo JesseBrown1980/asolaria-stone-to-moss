@@ -109,8 +109,20 @@ def main():
         cmd(["node",source/"opto_gate_node.js",nh,nj])
         assert pyh.read_bytes()==nh.read_bytes()==raw
         p=json.loads(pyj.read_bytes());n=json.loads(nj.read_bytes())
-        assert p==n and p["trace_sha256"]==EXPECTED_HBP
-        assert p["arms"]==expected
+        # The two original Seat1 programs intentionally serialize different
+        # JSON shapes: Python includes control flags and arm metadata, whereas
+        # Node stores only experimental metrics. Their FULL HBP bytes match.
+        # Our first hosted peer test incorrectly required entire JSON equality
+        # and therefore failed despite agreeing source computation. Compare
+        # the actual common metrics explicitly and preserve that failed run.
+        assert p["trace_sha256"]==n["trace_sha256"]==EXPECTED_HBP
+        assert p["trace_bytes"]==n["trace_bytes"]==len(raw)
+        assert len(p["arms"])==len(n["arms"])==len(expected)==4
+        for py_arm,node_arm,third_arm in zip(p["arms"],n["arms"],expected):
+            for key in ("arm","total_absolute_open_error","light_commands",
+                        "total_closed_to_open_transitions","final_open_population"):
+                assert py_arm[key]==node_arm[key]==third_arm[key],(key,py_arm,node_arm,third_arm)
+            assert py_arm==third_arm
         # Independently verify each frozen tick's C+O+R mass conservation
         # and all snapshot identifiers, not merely comparing a receipt hash.
         assert len({i for i in range(N)})==N
