@@ -89,7 +89,7 @@
         "total": 16200
       },
       "three-loop": {
-        "accuracy": 1,
+        "accuracy": 1.0,
         "correct": 16200,
         "total": 16200
       }
