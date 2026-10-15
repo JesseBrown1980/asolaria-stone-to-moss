@@ -1,0 +1,57 @@
+name: Seat 4 minimal recovery vs digital information-loss gates
+
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-4/minimal-recovery-lift-20261014
+    paths:
+      - experiments/retention/**
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
+      - experiments/seat4/minimal_recovery_*
+      - experiments/seat4/verify_minimal_recovery.py
+      - stones/2026-10-14-rainbow81/seat-4-minimal-recovery*
+      - .github/workflows/seat4-minimal-recovery.yml
+  pull_request:
+    paths:
+      - experiments/retention/**
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
+      - experiments/seat4/minimal_recovery_*
+      - experiments/seat4/verify_minimal_recovery.py
+      - stones/2026-10-14-rainbow81/seat-4-minimal-recovery*
+      - .github/workflows/seat4-minimal-recovery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-reconstruction:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify reversible maps and lossy maps with minimal sidebit recovery
+        shell: bash
+        run: |
+          python experiments/seat4/verify_minimal_recovery.py | tee "$RUNNER_TEMP/seat4-recovery.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-recovery-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: ${{ runner.temp }}/seat4-recovery.json
+          retention-days: 30
