@@ -2,7 +2,7 @@
 """Seat4 independent active attacks on Seat2 frozen real-OS telemetry validators.
 Execute ORIGINAL Seat2 pinned code, not a mock. No physical instrument exists here.
 """
-import importlib.util,copy,json,hashlib,sys
+import importlib.util,copy,json,hashlib,sys,tempfile
 from pathlib import Path
 RUN="38777263894";PR_HEAD="8e597ae4c8d5d1ff76a2d25ad394ec49e601afc4"
 MERGE="5969b7de9ada80e8feaa18b497c1932c009d90db"
@@ -73,13 +73,31 @@ def run(source,archives,out):
     accepted=False
    must(not accepted,"ORIGINAL_INSTRUMENT_VALIDATOR_ACCEPTS_FALSE_SIGNAL:"+label)
    results[label]="ORIGINAL_VALIDATOR_REJECTS"
-  # Mutated raw bytes without original SHA-256 sidecar are distinguishable.
-  corrupt=bytearray(original_bytes)
-  position=corrupt.index(b'"cpu_elapsed_ns"')
-  corrupt[position]^=1
-  must(sha(corrupt)!=sha(original_bytes),"CORRUPTED_ARCHIVE_FILE_NOT_DETECTED")
-  results["corrupted_archived_host_file"]="RAW_SHA_CHANGED"
-  results["missing_host_file"]="REJECTED_BY_REQUIRED_FILE_INDEPENDENT_ARCHIVE_GATE"
+  # Physically mutate a TEMPORARY COPY of the true previous archive bytes,
+  # retaining the original SHA sidecar; demand a failed full-file readback.
+  with tempfile.TemporaryDirectory(prefix="seat4-pr111-negative-") as tmp:
+   copy_path=Path(tmp)/"host-activity.json"
+   checksum_path=Path(tmp)/"host-activity.json.sha256"
+   checksum_path.write_bytes((folder/"host-activity.json.sha256").read_bytes())
+   def verify_archived_file():
+    blob=copy_path.read_bytes()
+    must(checksum_path.read_bytes()==(sha(blob)+"  host-activity.json\n").encode("ascii"),
+         "CORRUPTED_HOST_SHA_SIDECAR")
+    return json.loads(blob)
+   corrupt=bytearray(original_bytes)
+   position=corrupt.index(b'"cpu_elapsed_ns"')
+   corrupt[position]^=1
+   copy_path.write_bytes(corrupt)
+   try:verify_archived_file()
+   except AssertionError as e:must(str(e)=="CORRUPTED_HOST_SHA_SIDECAR","WRONG_CORRUPTION_REJECT")
+   else:raise AssertionError("CORRUPTED_FULL_RAW_FILE_WAS_ACCEPTED")
+   results["corrupted_archived_host_file"]="ACTUAL_MODIFIED_RAW_FILE_FAILED_ORIGINAL_SHA"
+   # Actually delete the required original-host file; do not count a label as a test.
+   copy_path.unlink()
+   try:verify_archived_file()
+   except FileNotFoundError:pass
+   else:raise AssertionError("ABSENT_HOST_RECORD_NOT_DETECTED")
+   results["missing_host_file"]="ACTUAL_ABSENT_FILE_HARD_FAILURE"
   real_tests[name]=results
   coherent_bypasses[name]=sum(x=="ORIGINAL_VALIDATOR_ACCEPTS" for x in results.values())
  must(len(real_tests)==4 and all(x==5 for x in coherent_bypasses.values()),"UNKNOWN_SEAT2_TRUST_BEHAVIOR")
