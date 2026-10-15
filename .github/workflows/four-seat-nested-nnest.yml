@@ -1,0 +1,163 @@
+name: N-Nest Rainbow81 four-seat live nested verification
+on:
+  pull_request:
+    paths:
+      - 'experiments/nested/**'
+      - '.github/workflows/four-seat-nested-nnest.yml'
+  workflow_dispatch:
+    inputs:
+      publish_hf:
+        description: "Publish to Hugging Face only with protected HF_TOKEN GitHub Actions secret"
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: nnest-four-seat-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  live-nested-seat:
+    name: Live nested ${{ matrix.seat }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        seat: ['seat-1', 'seat-2', 'seat-3', 'seat-4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Declare execution-ready seat for common timestamp barrier
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/ready"
+          printf '%s\n' 'NEST_READY_V1 seat=${{ matrix.seat }}' > "$RUNNER_TEMP/ready/ready.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-ready-${{ matrix.seat }}
+          path: ${{ runner.temp }}/ready/ready.txt
+          if-no-files-found: error
+          retention-days: 7
+      - name: Synchronize all four seats on server-stamped artifact barrier
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: python experiments/nested/ready_barrier.py "${{ matrix.seat }}"
+      - name: Run parent Python, child Node and grandchild Python in live subprocess tree
+        shell: bash
+        run: |
+          python experiments/nested/parent_matrix.py "${{ matrix.seat }}" \
+            experiments/seat1/TRIAD-27-CHALLENGE-20261014.json \
+            "$RUNNER_TEMP/nested/${{ matrix.seat }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-${{ matrix.seat }}
+          path: ${{ runner.temp }}/nested/${{ matrix.seat }}/*
+          if-no-files-found: error
+          retention-days: 30
+  master:
+    name: N-Nest master independent receipt aggregator
+    needs: live-nested-seat
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: nested-seat-*
+          path: ${{ runner.temp }}/nested-artifacts
+          merge-multiple: false
+      - name: Verify 4 seat streams and 108 grandchild-verdict wave stones
+        env:
+          ASOLARIA_PRODUCER_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          python experiments/nested/master_verify.py "$RUNNER_TEMP/nested-artifacts"
+          python experiments/nested/qprism_reductions_gate.py "$RUNNER_TEMP/nested-artifacts"
+          python experiments/nested/evidence_manifest.py "$RUNNER_TEMP/nested-artifacts"
+          python - "$RUNNER_TEMP/nested-artifacts/master-referee.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          assert data["verified_seats"] == 4
+          assert data["all_four_job_intervals_overlap"] is True, "4-worker math windows did NOT actually overlap"
+          assert data["cross_seat_wall_clock_overlap_ms"] > 0
+          print("NEST_ALL_FOUR_MATH_WINDOWS_OVERLAP_PASS",data["cross_seat_wall_clock_overlap_ms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-master-verdict
+          path: |
+            ${{ runner.temp }}/nested-artifacts/master-referee.json
+            ${{ runner.temp }}/nested-artifacts/qprism-reductions-verdict.json
+            ${{ runner.temp }}/nested-artifacts/qprism-wave-seals.hbi
+            ${{ runner.temp }}/nested-artifacts/RECEIPT-MANIFEST.json
+            ${{ runner.temp }}/nested-artifacts/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 30
+
+  stage-hf:
+    name: Stage N-Nest GitHub-verified evidence for HF (no credential)
+    needs: master
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: nested-seat-*
+          path: ${{ runner.temp }}/nested-stage-in
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: nested-master-verdict
+          path: ${{ runner.temp }}/nested-stage-in
+      - name: Validate run-bound source, watchers, wave digests, Q-PRISM and stage all four seats
+        shell: bash
+        run: |
+          python experiments/nested/stage_huggingface.py "$RUNNER_TEMP/nested-stage-in" "$RUNNER_TEMP/nested-hf-ready"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nested-hf-publisher-ready
+          path: ${{ runner.temp }}/nested-hf-ready/
+          if-no-files-found: error
+          retention-days: 30
+  publish-hf:
+    name: Protected HF Hub publish with full SHA256 download verification
+    needs: stage-hf
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_hf == true && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --disable-pip-version-check 'huggingface_hub>=0.36,<2'
+      - uses: actions/download-artifact@v4
+        with:
+          name: nested-hf-publisher-ready
+          path: ${{ runner.temp }}/nested-hf-ready
+      - name: Upload through protected HF_TOKEN and check remote byte-for-byte SHA
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        shell: bash
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::GitHub Actions HF_TOKEN secret missing, so Hugging Face upload was not attempted."
+            exit 1
+          fi
+          python experiments/nested/stage_huggingface.py --publish-only "$RUNNER_TEMP/nested-hf-ready"
