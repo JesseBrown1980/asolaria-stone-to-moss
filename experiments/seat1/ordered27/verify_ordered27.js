@@ -186,10 +186,36 @@ function main(){
   const erasure=lines.filter(x=>!x.includes("|band=red|id=site-000|"));
   const onesource=verify(erasure,bank,source,{allowMissing:(s,b,id)=>b==="red"&&id==="site-000"});
   ck(onesource.reads===15282&&onesource.missing===27,"SOURCE_ALIAS_ERASURE_ACCOUNTING");
+  // Real coherent-source attack: change an original memory record, then rewrite
+  // the affected stored JSONL row and all 27 logical alias digests to agree.
+  // Independent original source pins must reject this even though self-checks pass.
+  function sortRecursive(value){
+    if(Array.isArray(value))return value.map(sortRecursive);
+    if(value!==null&&typeof value==="object"){
+      const out={};for(const key of Object.keys(value).sort())out[key]=sortRecursive(value[key]);
+      return out;
+    }
+    return value;
+  }
+  const forgedSource=JSON.parse(JSON.stringify(source));
+  ck(forgedSource[0].id==="site-000","ASSUMED_SOURCE_ID_DIFFERENT");
+  forgedSource[0].id="site-001";
+  const changedEntry=JSON.parse(bank.subarray(first.offset,first.offset+first.length).toString("utf8"));
+  ck(changedEntry.record.id==="site-000","ASSUMED_BANK_SOURCE_ID_DIFFERENT");
+  changedEntry.record.id="site-001";
+  const rewritten=Buffer.from(JSON.stringify(sortRecursive(changedEntry))+"\n","utf8");
+  ck(rewritten.length===first.length,"CHANGED_RECORD_SIZE_UNEXPECTED");
   const outside=Buffer.from(bank);
-  outside[first.offset+first.length-2]^=1;
-  ck(sha(outside)!==PIN_BANK,"FORGED_SOURCE_IDENTICAL_PIN");
-  // Local coherent SHA replacements are possible; only external pre-existing anchor detects them.
+  rewritten.copy(outside,first.offset);
+  const forgedHash=sha(rewritten);
+  const forgedLines=lines.map(x=>
+    x.includes("|band=red|id=site-000|")
+      ?x.replace("|source_sha256="+first.sha,"|source_sha256="+forgedHash):x);
+  ck(verify(forgedLines,outside,forgedSource).reads===15309,
+     "COHERENT_FORGED_LOCAL_RECOMPUTATION_SHOULD_PASS");
+  ck(sha(outside)!==PIN_BANK,"FORGED_BANK_EQUALS_EXTERNAL_PIN");
+  ck(sha(Buffer.from(JSON.stringify(forgedSource)))!==sha(Buffer.from(JSON.stringify(source))),
+     "FORGED_SOURCE_EQUALS_ORIGINAL");
   failures.push(negative("coherently_rehashed_source_against_external_pin",()=>{
     ck(sha(outside)===PIN_BANK,"EXTERNAL_PINNED_BANK_MISMATCH")
   },"EXTERNAL_PINNED_BANK_MISMATCH"));
@@ -204,6 +230,7 @@ function main(){
     lost_violet:{missing:oneband.missing,remaining:oneband.reads},
     lost_single_bank_entry:{missing:onesource.missing,remaining:onesource.reads},
     normalized_all_zero_case:"UNDEFINED",
+    coherent_forgery_locally_passes_without_external_pin:true,
     coherent_compromised_external_anchor:"HELD_CANNOT_AUTHENTICATE_USING_SHA256_ALONE",
     physical_optical_storage_verified:false,independent_wavelengths_measured:0,
     photon_or_biological_neuron_measurements:0};
