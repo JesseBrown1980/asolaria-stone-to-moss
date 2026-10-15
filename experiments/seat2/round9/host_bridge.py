@@ -11,6 +11,7 @@ import os
 import platform
 import sys
 import time
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 import psutil
@@ -82,7 +83,36 @@ def validate_host(sample):
     require(sample["runner_os"]==os.environ["RUNNER_OS"],"FORGED_RUNNER_OS")
     require(sample["github_job"]==os.environ["GITHUB_JOB"],"FORGED_GITHUB_JOB")
     require(sample["platform_system"]==platform.system(),"FORGED_PLATFORM_OS")
+    trusted=trusted_pr_context()
+    for field in ("pr_head_sha","github_pr_number","github_run_attempt","github_event_name"):
+        require(sample.get(field)==trusted[field],"FORGED_PR_CONTEXT:"+field)
     return True
+
+def trusted_pr_context():
+    """GitHub runner PR event; the two git-commit identities MUST differ."""
+    require(os.environ.get("GITHUB_EVENT_NAME")=="pull_request","REQUIRES_PR_EVENT")
+    event_path=os.environ.get("GITHUB_EVENT_PATH","")
+    require(event_path and Path(event_path).is_file(),"MISSING_PR_EVENT_PAYLOAD")
+    event=json.loads(Path(event_path).read_bytes())
+    pr=event.get("pull_request")
+    require(isinstance(pr,dict) and pr.get("number")==111,"WRONG_PR_NUMBER")
+    head=pr.get("head",{}).get("sha")
+    require(isinstance(head,str) and len(head)==40 and
+            all(c in "0123456789abcdef" for c in head),"BAD_PR_HEAD_SHA")
+    merge=os.environ.get("GITHUB_SHA","")
+    require(len(merge)==40 and all(c in "0123456789abcdef" for c in merge),
+            "BAD_PR_MERGE_SHA")
+    require(subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()==merge,
+            "CHECKOUT_NOT_PR_MERGE_SHA")
+    require(subprocess.check_output(["git","rev-parse","HEAD^2"],text=True).strip()==head,
+            "GIT_SECOND_PARENT_NOT_PR_HEAD")
+    attempt=os.environ.get("GITHUB_RUN_ATTEMPT","")
+    require(attempt.isdigit() and int(attempt)>0,"RUN_ATTEMPT_MISSING")
+    require(os.environ.get("GITHUB_RUN_ID","").isdigit(),"RUN_ID_MISSING")
+    return {"pr_head_sha":head,"github_pr_number":111,
+            "github_run_attempt":int(attempt),
+            "github_event_name":"pull_request"}
+
 
 def negative_controls(sample,inst):
     good=validate_host(sample) and validate_measurements(inst)
@@ -149,6 +179,7 @@ def run(frozen:Path,output:Path):
             "MEMORY_WRITEBACK_FAILED")
     cpu_ns=round(((cpu1.user+cpu1.system)-(cpu0.user+cpu0.system))*1_000_000_000)
     elapsed=tick1-tick0
+    pr_context=trusted_pr_context()
     measured={"schema":"ASOLARIA-SEAT2-R9-REAL-OS-PROCESS-METRICS-V1",
               "measurement_type":"OS_PROCESS_COUNTERS_NOT_INSTRUMENTED_RAIL_POWER",
               "source_sha256":SOURCE_SHA,"source_commit":SOURCE_COMMIT,
@@ -156,6 +187,7 @@ def run(frozen:Path,output:Path):
               "github_run_id":os.environ.get("GITHUB_RUN_ID",""),
               "runner_os":os.environ.get("RUNNER_OS",""),
               "github_job":os.environ.get("GITHUB_JOB",""),
+              **pr_context,
               "process_pid":os.getpid(),"python":platform.python_version(),
               "platform_system":platform.system(),
               "wall_utc_start":start,"wall_utc_end":end,
