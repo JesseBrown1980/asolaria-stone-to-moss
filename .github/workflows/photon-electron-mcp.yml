@@ -1,0 +1,108 @@
+name: Photon-electron MCP modeled memory - real hosted CPU replay
+
+on:
+  push:
+    branches:
+      - experiment/photon-electron-mcp-memory-20261015
+    paths:
+      - experiments/photon_electron_mcp/**
+      - .github/workflows/photon-electron-mcp.yml
+  pull_request:
+    paths:
+      - experiments/photon_electron_mcp/**
+      - .github/workflows/photon-electron-mcp.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  photon-electron:
+    name: PhotonElectrons-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Enable original QR decoder on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install pixel QR decoding dependencies
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Rebuild actual 81-memory QR pixel fixture
+        run: python experiments/seat1/round2/lightbank_81.py original-evidence
+      - name: Independently verify image QR reconstruction
+        run: node experiments/seat1/round2/verify_lightbank_81.js original-evidence
+      - name: Reconstruct 567 retained full-byte Rainbow7 entries
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py original-evidence rainbow-evidence
+      - name: Independently verify original full-byte bank
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js original-evidence rainbow-evidence
+      - name: Producer - Python modeled photons and electron.capture JSON-RPC
+        run: python experiments/photon_electron_mcp/photon_model.py original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-photon
+      - name: Independent verifier - Node modeled photons and electron.capture JSON-RPC
+        run: node experiments/photon_electron_mcp/electron_verifier.js original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi node-photon
+      - name: Cross-language fixed SHA and 12 negative controls
+        run: python experiments/photon_electron_mcp/verify_dual.py py-photon node-photon
+      - name: Upload complete trace and receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: photon-electron-${{ matrix.os }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            py-photon/photon-electron.hbp
+            py-photon/results.json
+            py-photon/*.sha256
+            node-photon/photon-electron.hbp
+            node-photon/results.json
+            node-photon/*.sha256
+            original-evidence/lightbank-memories.json
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+
+  cross-os-parity:
+    name: PhotonElectrons full-byte Ubuntu Windows parity
+    needs: photon-electron
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          name: photon-electron-ubuntu-latest
+          path: from-ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: photon-electron-windows-latest
+          path: from-windows
+      - name: Byte-for-byte compare four producer/OS combinations
+        run: python experiments/photon_electron_mcp/verify_dual.py from-ubuntu/py-photon from-ubuntu/node-photon from-windows/py-photon from-windows/node-photon
+      - name: Compare original source fixtures across hosts
+        shell: python
+        run: |
+          import hashlib
+          from pathlib import Path
+          names = ['original-evidence/lightbank-memories.json',
+                   'rainbow-evidence/rainbow7-bank.jsonl',
+                   'rainbow-evidence/rainbow7-index.hbi']
+          for name in names:
+              u = (Path('from-ubuntu')/name).read_bytes()
+              w = (Path('from-windows')/name).read_bytes()
+              assert u == w, name
+              print(name, len(u), hashlib.sha256(u).hexdigest())
