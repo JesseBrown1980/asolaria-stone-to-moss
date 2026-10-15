@@ -42,12 +42,12 @@ jobs:
         shell: bash
         run: |
           git clone -q https://github.com/JesseBrown1980/the-law-of-space-and-light-and-color-and-travel-at-the-speed-of-one.git "$RUNNER_TEMP/august-law"
-          test "$(git -C "$RUNNER_TEMP/august-law" hash-object -- README.md)" = 6412cb3b82ec084b03b68c9c4d074a58920ac1ee
+          test "$(git -C "$RUNNER_TEMP/august-law" rev-parse HEAD:README.md)" = 6412cb3b82ec084b03b68c9c4d074a58920ac1ee
           git clone -q https://github.com/JesseBrown1980/the-colour-qr.git "$RUNNER_TEMP/august-qr"
-          test "$(git -C "$RUNNER_TEMP/august-qr" hash-object -- README.md)" = dec43dd370de557f2511e69227b1e234e001ddfc
+          test "$(git -C "$RUNNER_TEMP/august-qr" rev-parse HEAD:README.md)" = dec43dd370de557f2511e69227b1e234e001ddfc
           git clone -q https://github.com/JesseBrown1980/light-boat-engine-ships-with-oils.git "$RUNNER_TEMP/august-boat"
-          test "$(git -C "$RUNNER_TEMP/august-boat" hash-object -- README.md)" = ba1c1a36ec1d4201297ccad325f848c6040dc95e
-          test "$(git hash-object -- README.md)" = 74a8e3c9b02fadc86305d47da6b90564334f24bc
+          test "$(git -C "$RUNNER_TEMP/august-boat" rev-parse HEAD:README.md)" = ba1c1a36ec1d4201297ccad325f848c6040dc95e
+          test "$(git rev-parse HEAD:README.md)" = 74a8e3c9b02fadc86305d47da6b90564334f24bc
       - name: Independently write/read 65536 B source into bounded RGB memory and verify all records
         shell: bash
         run: |
