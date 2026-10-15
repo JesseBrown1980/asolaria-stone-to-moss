@@ -1,0 +1,90 @@
+name: Seat4 autonomous simulation capsule offline package audit
+
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-4/autonomous-simulation-capsule-20261015
+    paths:
+      - experiments/seat4/autonomous_lattice*
+      - experiments/seat4/verify_autonomous_lattice.py
+      - experiments/seat4/capsule_verify.py
+      - experiments/seat4/package_autonomous_capsule.py
+      - experiments/seat4/AUTONOMOUS-CAPSULE-README.md
+      - experiments/seat4/PREREG-AUTONOMOUS-SIM-CAPSULE-20261015.md
+      - .github/workflows/seat4-autonomous-capsule.yml
+  pull_request:
+    paths:
+      - experiments/seat4/autonomous_lattice*
+      - experiments/seat4/verify_autonomous_lattice.py
+      - experiments/seat4/capsule_verify.py
+      - experiments/seat4/package_autonomous_capsule.py
+      - experiments/seat4/AUTONOMOUS-CAPSULE-README.md
+      - experiments/seat4/PREREG-AUTONOMOUS-SIM-CAPSULE-20261015.md
+      - .github/workflows/seat4-autonomous-capsule.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-capsule:
+    name: Autonomous bundle ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout original N-Nest complete source at immutable commit
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED
+          ref: 307903651f56e8a28ef98ca36aef22ee8cda935c
+          path: nnest-upstream
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Construct deterministic complete public source capsule and independently replay after extraction
+        shell: bash
+        run: |
+          python experiments/seat4/package_autonomous_capsule.py \
+            --build "$RUNNER_TEMP/ASOLARIA-Seat4-Autonomous-Sim-2026-10-15.zip" \
+            --nnest nnest-upstream --tamper-check > "$RUNNER_TEMP/seat4-capsule-audit.json"
+          cat "$RUNNER_TEMP/seat4-capsule-audit.json"
+          python - "$RUNNER_TEMP/seat4-capsule-audit.json" <<'PY'
+          import json,sys
+          a=json.load(open(sys.argv[1],encoding="utf8"))
+          assert a["status"]=="PASS"
+          assert a["corruption_rejected"] is True
+          assert a["offline_replay"]["status"]=="PASS"
+          assert a["offline_replay"]["zero_human_approvals_within_simulation"] is True
+          assert a["offline_replay"]["stable_entity_identifiers"] is True
+          assert a["offline_replay"]["recurrence_cases"]==3888
+          assert a["offline_replay"]["automatic_ticks"]==2187
+          assert a["offline_replay"]["movement_events"]==177147
+          assert a["offline_replay"]["original_triad_records"]==32805
+          assert a["offline_replay"]["upstream_nnest_scripts"]==2
+          assert a["offline_replay"]["exact_cross_language_replays"] is True
+          assert a["offline_replay"]["physical_optical_measurement"] is False
+          print("SEAT4_CAPSULE_REMOTE_SHA256",a["sha256"])
+          print("SEAT4_CAPSULE_REMOTE_MANIFEST_SHA256",a["manifest_sha256"])
+          PY
+      - name: Archive full tested offline capsule and audit receipt for other seats
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat4-autonomous-package-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/ASOLARIA-Seat4-Autonomous-Sim-2026-10-15.zip
+            ${{ runner.temp }}/seat4-capsule-audit.json
+          if-no-files-found: error
+          retention-days: 90
