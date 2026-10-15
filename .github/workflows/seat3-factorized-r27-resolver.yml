@@ -76,25 +76,25 @@ jobs:
       - name: Construct factorized resolver in TWO independent languages
         shell: bash
         run: |
-          python experiments/seat3/factorized_rainbow27/factorized_resolver.py "$${{ runner.temp }}/original-pr80" "$${{ runner.temp }}/original-pr81" "$${{ runner.temp }}/python-results"
-          node experiments/seat3/factorized_rainbow27/factorized_resolver.js "$${{ runner.temp }}/original-pr80" "$${{ runner.temp }}/original-pr81" "$${{ runner.temp }}/node-results"
-          python experiments/seat3/factorized_rainbow27/verify_factorized.py "$${{ runner.temp }}/python-results" "$${{ runner.temp }}/node-results" "$${{ runner.temp }}/verified-results"
+          python experiments/seat3/factorized_rainbow27/factorized_resolver.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/python-results"
+          node experiments/seat3/factorized_rainbow27/factorized_resolver.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/node-results"
+          python experiments/seat3/factorized_rainbow27/verify_factorized.py "$RUNNER_TEMP/python-results" "$RUNNER_TEMP/node-results" "$RUNNER_TEMP/verified-results"
       - name: Fail closed on altered original bank in BOTH language implementations
         shell: bash
         run: |
           python - <<'PY'
           import os
           from pathlib import Path
-          root=Path(os.environ["${{ runner.temp }}"])
+          root=Path(os.environ["RUNNER_TEMP"])
           src=root/"original-pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
           mutated=bytearray(src.read_bytes())
           mutated[0]^=1
           src.write_bytes(mutated)
           PY
-          if python experiments/seat3/factorized_rainbow27/factorized_resolver.py "$${{ runner.temp }}/original-pr80" "$${{ runner.temp }}/original-pr81" "$${{ runner.temp }}/rejected-python"; then
+          if python experiments/seat3/factorized_rainbow27/factorized_resolver.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/rejected-python"; then
             echo "FAILED - Python accepted mutated bank"; exit 1
           fi
-          if node experiments/seat3/factorized_rainbow27/factorized_resolver.js "$${{ runner.temp }}/original-pr80" "$${{ runner.temp }}/original-pr81" "$${{ runner.temp }}/rejected-node"; then
+          if node experiments/seat3/factorized_rainbow27/factorized_resolver.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/original-pr81" "$RUNNER_TEMP/rejected-node"; then
             echo "FAILED - Node accepted mutated bank"; exit 1
           fi
           echo "Both independently written digital bank verifiers fail closed on original-byte mutation"
@@ -104,11 +104,11 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import os
-          root=Path(os.environ["${{ runner.temp }}"])
+          root=Path(os.environ["RUNNER_TEMP"])
           p=root/"python-results"/"factorized-r27-results.hbp"
           changed=bytearray(p.read_bytes());changed[20]^=1;p.write_bytes(changed)
           PY
-          if python experiments/seat3/factorized_rainbow27/verify_factorized.py "$${{ runner.temp }}/python-results" "$${{ runner.temp }}/node-results" "$${{ runner.temp }}/invalid-receipt"; then
+          if python experiments/seat3/factorized_rainbow27/verify_factorized.py "$RUNNER_TEMP/python-results" "$RUNNER_TEMP/node-results" "$RUNNER_TEMP/invalid-receipt"; then
             echo "FAILED - mutated full evidence report accepted";exit 1
           fi
           echo "SHA and byte-parity report gates HELD tampered HBP"
