@@ -3,6 +3,7 @@ name: Seat 4 N-Nest Q-PRISM compromised watcher adversarial audit
 on:
   push:
     branches:
+      - main
       - agent/seat-4/nnest-qprism-compromised-watcher-20261015
     paths:
       - experiments/integration/seat4/**
