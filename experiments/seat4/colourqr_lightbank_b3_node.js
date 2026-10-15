@@ -15,6 +15,7 @@ const SHAS={
 };
 const ORDER=["original-phaseA.hbp","ticks.hbp","faults.hbp","receipt.json"];
 const SCHEMA="ASOLARIA-SEAT4-COLOURQR-LIGHTBANK-B3-V1";
+const PINNED_MANIFEST_SHA="a87d27bce1924f3fc4340a337706bf1365cb38919feee71e759f594c3549ced7";
 const WIDTH=2100,INDEX=2104,PLANE=2106,RECORD=8424,BANKS=27;
 const hash=raw=>crypto.createHash("sha256").update(raw).digest("hex");
 const read=(root,name)=>fs.readFileSync(path.join(root,name));
@@ -149,7 +150,11 @@ function projectorTest(ticks){
   minimal_worst_case_ground_bits_per_triple:8,physical_instantaneity_claimed:false};
 }
 function run(sourceRoot,root){
- const json=read(root,"bank_manifest.json"),meta=JSON.parse(json.toString("ascii"));
+ const json=read(root,"bank_manifest.json");
+ assert.equal(hash(json),PINNED_MANIFEST_SHA,"STALE_OR_TAMPERED_BANK_MANIFEST");
+ const changed=Buffer.from(json);changed[Math.floor(changed.length/2)]^=1;
+ assert.notEqual(hash(changed),PINNED_MANIFEST_SHA);
+ const meta=JSON.parse(json.toString("ascii"));
  assert(json.equals(canonical(meta)));
  assert.equal(meta.schema,SCHEMA);
  assert.equal(meta.classification,"SYNTHETIC_DIGITAL_MEMORY_ONLY");
