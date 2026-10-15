@@ -40,7 +40,7 @@ def verify(stone,out):
     assert r["ordered_id_count"]==27
     assert r["normalized_classes_including_dark"]==7
     assert r["valid_normalized_probabilities"]==6
-    assert r["maximum_normalized_equivalence_class"]==6
+    assert r["max_normalized_equivalence_class"]==6
     assert r["minimum_fixed_class_conditioned_side_bits"]==3
     assert r["fixed_class_plus_witness_total_bits"]==6
     assert r["standalone_direct_ordered_id_fixed_bits"]==5
