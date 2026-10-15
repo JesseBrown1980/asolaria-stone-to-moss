@@ -75,7 +75,7 @@ def verify(py_dir,node_dir,b1,b2,out):
     for name,raw in (("lightbank.lbk",stick),("lightbank.hbp",hbp),
                      ("lightbank.json",(py/"lightbank.json").read_bytes())):
         (dst/name).write_bytes(raw)
-        (dst/(name+".sha256")).write_text(sha(raw)+"  "+name+"\n",encoding="ascii")
+        (dst/(name+".sha256")).write_bytes((sha(raw)+"  "+name+"\n").encode("ascii"))
     j=(py/"lightbank.json").read_bytes()
     hbi=(f"INDEX|schema=ASOLARIA-SEAT3-AUGUST-LIGHTBANK-INDEX-V1|json=0\n"
          f"STICK|bytes={len(stick)}|sha256={sha(stick)}|json=0\n"
@@ -83,7 +83,7 @@ def verify(py_dir,node_dir,b1,b2,out):
          f"JSON|bytes={len(j)}|sha256={sha(j)}|json=0\n"
          "END|physical_optical_storage=0|camera_decode=0|origin_authenticated=0|json=0\n").encode("ascii")
     (dst/"lightbank.hbi").write_bytes(hbi)
-    (dst/"lightbank.hbi.sha256").write_text(sha(hbi)+"  lightbank.hbi\n",encoding="ascii")
+    (dst/"lightbank.hbi.sha256").write_bytes((sha(hbi)+"  lightbank.hbi\n").encode("ascii"))
     summary={"status":"PASS","pinned_source_sha256":list(EXPECTED_SHAS),
       "combined_bytes":977670,"indexed_packets":466,"rgb_frames":156,
       "held_cases":9,"evictions":27,"decoded_byte_exact":True,
@@ -91,8 +91,8 @@ def verify(py_dir,node_dir,b1,b2,out):
       "receipt_bytes":len(hbp),"receipt_sha256":sha(hbp),
       "hbi_sha256":sha(hbi),"real_optical_memory_tested":False}
     print(json.dumps(summary,sort_keys=True))
-    (dst/"verification.json").write_text(json.dumps(summary,sort_keys=True,
-        separators=(",",":"))+"\n",encoding="ascii")
+    (dst/"verification.json").write_bytes((json.dumps(summary,sort_keys=True,
+        separators=(",",":"))+"\n").encode("ascii"))
 
 if __name__=="__main__":
     if len(sys.argv)!=6:
