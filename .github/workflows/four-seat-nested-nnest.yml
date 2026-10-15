@@ -76,6 +76,7 @@ jobs:
         run: |
           python experiments/nested/master_verify.py "$RUNNER_TEMP/nested-artifacts"
           python experiments/nested/qprism_reductions_gate.py "$RUNNER_TEMP/nested-artifacts"
+          python experiments/nested/evidence_manifest.py "$RUNNER_TEMP/nested-artifacts"
           python - "$RUNNER_TEMP/nested-artifacts/master-referee.json" <<'PY'
           import json,sys
           data=json.load(open(sys.argv[1]))
@@ -91,5 +92,7 @@ jobs:
             ${{ runner.temp }}/nested-artifacts/master-referee.json
             ${{ runner.temp }}/nested-artifacts/qprism-reductions-verdict.json
             ${{ runner.temp }}/nested-artifacts/qprism-wave-seals.hbi
+            ${{ runner.temp }}/nested-artifacts/RECEIPT-MANIFEST.json
+            ${{ runner.temp }}/nested-artifacts/SHA256SUMS
           if-no-files-found: error
           retention-days: 30
