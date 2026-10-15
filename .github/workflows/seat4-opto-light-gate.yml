@@ -1,0 +1,74 @@
+name: Seat 4 optogenetics-inspired light-gated autonomous simulation
+
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-4/opto-photo-gate-20261015
+    paths:
+      - experiments/seat4/opto_light_gate*
+      - experiments/seat4/verify_opto_light_gate.py
+      - experiments/seat4/PREREG-OPTOGENETIC-LIGHT-GATE-20261015.md
+      - experiments/seat4/OPTO-GATE-RESULTS-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-opto-light-gate*
+      - .github/workflows/seat4-opto-light-gate.yml
+  pull_request:
+    paths:
+      - experiments/seat4/opto_light_gate*
+      - experiments/seat4/verify_opto_light_gate.py
+      - experiments/seat4/PREREG-OPTOGENETIC-LIGHT-GATE-20261015.md
+      - experiments/seat4/OPTO-GATE-RESULTS-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-opto-light-gate*
+      - .github/workflows/seat4-opto-light-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  light-gated-watcher:
+    runs-on: ${{ matrix.os }}
+    name: Digital photo-gate ${{ matrix.os }} Python ${{ matrix.python }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Independently replay 6561 ticks, frozen identities, source-pulse checks and 405 injected faults
+        shell: bash
+        run: |
+          python experiments/seat4/verify_opto_light_gate.py "$RUNNER_TEMP/seat4-opto-trace.hbp" "$RUNNER_TEMP/seat4-opto-stone.json" > "$RUNNER_TEMP/seat4-opto-audit.json"
+          cat "$RUNNER_TEMP/seat4-opto-audit.json"
+          python - "$RUNNER_TEMP/seat4-opto-audit.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['status']=='MEASURED_SOFTWARE_PASS'
+          assert x['exact_python_node_records']==6561
+          assert x['deliberate_mutations_rejected']==405
+          assert x['forged_pulses_anchored_rejected']==81
+          assert x['no_human_approval_each_tick']
+          assert not x['physical_light_photons_measured']
+          assert not x['biological_kinetic_parameter_validation']
+          print('SEAT4_SYNTHETIC_OPTO_GATE_SHA256',x['trace_sha256'])
+          print('SEAT4_SYNTHETIC_OPTO_STONE_SHA256',x['receipt_sha256'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-optogate-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/seat4-opto-trace.hbp
+            ${{ runner.temp }}/seat4-opto-stone.json
+            ${{ runner.temp }}/seat4-opto-audit.json
+          if-no-files-found: error
+          retention-days: 90
