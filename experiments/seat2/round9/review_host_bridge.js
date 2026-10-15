@@ -2,7 +2,7 @@
 "use strict";
 /* Separate Node22 source/output reviewer. OS metric integrity is only
    self-report consistency; this is NOT trusted power meter attestation. */
-const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto"),assert=require("node:assert/strict");
+const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto"),assert=require("node:assert/strict"),cp=require("node:child_process");
 const SOURCE_SHA="077bf98dc7c10e3125ce1147270cc927ce978ab63a19ec30e4655267f1770400";
 const BANK_SHA="52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345";
 const SOURCE_COMMIT="5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86";
@@ -70,6 +70,22 @@ function audit(frozen,out){
  assert.equal(host.runner_os,process.env.RUNNER_OS,"RUNNER_CONTEXT_MISMATCH");
  assert.equal(host.github_job,process.env.GITHUB_JOB,"GITHUB_JOB_CONTEXT_MISMATCH");
  assert.equal(host.platform_system,process.env.RUNNER_OS,"SYSTEM_CONTEXT_MISMATCH");
+ assert.equal(process.env.GITHUB_EVENT_NAME,"pull_request","PR_EVENT_REQUIRED");
+ assert(process.env.GITHUB_EVENT_PATH,"MISSING_GITHUB_EVENT_PATH");
+ const event=JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH,"utf8"));
+ assert.equal(event.pull_request?.number,111,"WRONG_PR_NUMBER_EVENT");
+ const prHead=event.pull_request?.head?.sha;
+ assert.match(prHead,/^[0-9a-f]{40}$/,"INVALID_REAL_PR_HEAD");
+ const attempt=Number(process.env.GITHUB_RUN_ATTEMPT);
+ assert(Number.isSafeInteger(attempt)&&attempt>0,"INVALID_RUN_ATTEMPT");
+ assert.equal(host.pr_head_sha,prHead,"PR_HEAD_NOT_EVENT_BOUND");
+ assert.equal(host.github_pr_number,event.pull_request.number,"PR_NUMBER_NOT_EVENT_BOUND");
+ assert.equal(host.github_run_attempt,attempt,"RUN_ATTEMPT_NOT_EVENT_BOUND");
+ assert.equal(host.github_event_name,"pull_request","EVENT_KIND_MISMATCH");
+ assert.equal(cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim(),
+              process.env.GITHUB_SHA,"CHECKOUT_NOT_MERGE_SHA");
+ assert.equal(cp.execFileSync("git",["rev-parse","HEAD^2"],{encoding:"utf8"}).trim(),
+              prHead,"CHECKOUT_SECOND_PARENT_NOT_PR_HEAD");
  assert(Number.isInteger(host.process_pid)&&host.process_pid>0);
  assert(Number.isInteger(host.wall_elapsed_ns)&&host.wall_elapsed_ns>0);
  assert(Number.isInteger(host.cpu_elapsed_ns)&&host.cpu_elapsed_ns>0);
