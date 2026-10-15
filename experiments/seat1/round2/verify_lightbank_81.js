@@ -141,7 +141,11 @@ function main(){
   ck(replay.frames===results.frame_rows&&replay.checks===results.mass_checks,"COUNTS_DRIFT");
   ck(sha(replay.hbp)===results.hbp_sha256,"INDEPENDENT_HBP_SHA_DRIFT");
   ck(replay.hbp.equals(get(root,"photocycle-frame.hbp")),"FULL_TRACE_DRIFT");
-  ck(JSON.stringify(replay.metrics)===JSON.stringify(results.metrics),"METRIC_DRIFT");
+  ck(replay.metrics.length===results.metrics.length,"METRIC_COUNT_DRIFT");
+  for(let i=0;i<replay.metrics.length;i++){
+    for(const [field,value] of Object.entries(replay.metrics[i]))
+      ck(results.metrics[i][field]===value,"METRIC_DRIFT_"+i+"_"+field);
+  }
   ck(results.controls.reordered_images===true,"IMAGE_REORDER_NOT_TESTED");
   ck(results.controls.projector_three_view_exact===81,"PROJECTOR_NOT_TESTED");
   ck(results.controls.erased_physical_pixel_plane==="MISSING_CHUNK","ERASURE_FAULT_NOT_TESTED");
