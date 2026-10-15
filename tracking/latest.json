@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-10-15T19:13:45Z",
+  "captured_at_utc": "2026-10-15T22:27:26Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -333,8 +333,16 @@
           "sha": "fb0f8b9939a84089d8cb64e303d23ee674254fd5"
         },
         {
+          "name": "agent/seat-4/round10-81bit-matrix-adversarial-20261015",
+          "sha": "dfbdcacf885123135f5fc088d7955d10d860f11c"
+        },
+        {
           "name": "agent/seat-4/seat3-pr19-peer-audit-20261015",
           "sha": "06239f30932ccb41920ec8f31b6996ab43a607b3"
+        },
+        {
+          "name": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621"
         },
         {
           "name": "audit/seat3-9720-release-integration-20261014",
@@ -394,29 +402,45 @@
         },
         {
           "name": "main",
-          "sha": "5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86"
+          "sha": "969aaa3924fb7b7f4655db3e49bbe698da80603b"
         },
         {
           "name": "publication/normal-hf-hub-four-seat-20261014",
           "sha": "a1eb215c878b68787766099033f1928743044664"
-        },
-        {
-          "name": "publication/round3-lightbank-hf-dataset-20261015",
-          "sha": "c29be950ba78596e06b96c37f790d84196611705"
-        },
-        {
-          "name": "publication/triad-retention-integration-20261014",
-          "sha": "69ac0039d1da4d9465149c9d5f570574eb6e610e"
         }
       ],
       "errors": [],
       "pull_requests": [
         {
           "github_actor": "JesseBrown1980",
-          "number": 118,
+          "number": 123,
           "state": "open",
+          "title": "[Seat 5 R13 DRAFT] Correct center-first N\u00d73\u00d73\u00d73 geometry with Chariot audit and Rust 1.81",
+          "updated_at": "2026-10-15T21:28:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/123"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 121,
+          "state": "open",
+          "title": "[Seat 5 / Round 11 DRAFT] Rust 1.81 independent 81-bit invertibility, kernel and law-switch verifier",
+          "updated_at": "2026-10-15T20:04:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/121"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 120,
+          "state": "closed",
+          "title": "[Seat 4 / Round 10] Independent original 81-bit matrix skip; nonlinear law-switch and hash-chain falsification",
+          "updated_at": "2026-10-15T19:54:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/120"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 118,
+          "state": "closed",
           "title": "[Seat 3] Independent cross-seat PR111 host counter provenance, forged telemetry and source SHA falsifiers",
-          "updated_at": "2026-10-15T18:33:37Z",
+          "updated_at": "2026-10-15T19:35:32Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/118"
         },
         {
@@ -546,30 +570,6 @@
           "title": "[Seat 4 / Round 7] Independent neural LIF false-green, electron RPC spoof and physical detector custody audit",
           "updated_at": "2026-10-15T16:49:52Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/99"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 97,
-          "state": "open",
-          "title": "[Neural Light Bank] Photon\u2192electron MCP\u2192LIF memory and false-green challenge",
-          "updated_at": "2026-10-15T16:48:07Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/97"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 96,
-          "state": "open",
-          "title": "[Seat 2 Round 6] Independent public fixture-key spoof, 5039 signed S7 attacks and replay gate",
-          "updated_at": "2026-10-15T16:32:39Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/96"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 95,
-          "state": "open",
-          "title": "[Seat 3] Source-pinned neural photon light-bank assay: noise, cross-talk, darkness, recall and optical measurement gate",
-          "updated_at": "2026-10-15T17:02:18Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/95"
         }
       ],
       "recent_commits": [
@@ -1240,122 +1240,122 @@
         {
           "branch": "main",
           "conclusion": null,
-          "id": 38792138591,
+          "id": 38817204018,
           "name": "Asolaria three-seat activity ledger",
-          "sha": "5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86",
+          "sha": "969aaa3924fb7b7f4655db3e49bbe698da80603b",
           "status": "in_progress",
-          "updated_at": "2026-10-15T19:13:37Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38792138591"
+          "updated_at": "2026-10-15T22:27:17Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38817204018"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "success",
-          "id": 38785669675,
-          "name": "Seat 3 computational preflight (same-host evidence only)",
-          "sha": "001f76509ccaa98c898a4ed4a423e7ff558658db",
+          "id": 38809902634,
+          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
+          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
           "status": "completed",
-          "updated_at": "2026-10-15T18:27:58Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785669675"
+          "updated_at": "2026-10-15T21:27:13Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809902634"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "success",
-          "id": 38785669496,
-          "name": "Seat3 PR111 new-head reviewer and matrix logical-hour validation",
-          "sha": "001f76509ccaa98c898a4ed4a423e7ff558658db",
+          "id": 38809902499,
+          "name": "Seat5 R13 23M real-host classical trit stress",
+          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
           "status": "completed",
-          "updated_at": "2026-10-15T18:31:09Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785669496"
+          "updated_at": "2026-10-15T21:27:30Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809902499"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "success",
-          "id": 38785669423,
-          "name": "Seat3 independent PR111 host counters and replay/custody challenge",
-          "sha": "001f76509ccaa98c898a4ed4a423e7ff558658db",
+          "id": 38809896018,
+          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
+          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
           "status": "completed",
-          "updated_at": "2026-10-15T18:29:15Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785669423"
+          "updated_at": "2026-10-15T21:27:07Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809896018"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "success",
-          "id": 38785662468,
-          "name": "Seat3 PR111 new-head reviewer and matrix logical-hour validation",
-          "sha": "001f76509ccaa98c898a4ed4a423e7ff558658db",
+          "id": 38809896001,
+          "name": "Seat5 R13 23M real-host classical trit stress",
+          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
           "status": "completed",
-          "updated_at": "2026-10-15T18:29:41Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785662468"
+          "updated_at": "2026-10-15T21:27:22Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809896001"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "failure",
-          "id": 38785571506,
-          "name": "Seat3 PR111 new-head reviewer and matrix logical-hour validation",
-          "sha": "b758a6d6637019bff3fbead22148d95bec55de5f",
+          "id": 38809538596,
+          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
+          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
           "status": "completed",
-          "updated_at": "2026-10-15T18:29:12Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785571506"
+          "updated_at": "2026-10-15T21:24:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809538596"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "success",
-          "id": 38785571491,
-          "name": "Seat3 independent PR111 host counters and replay/custody challenge",
-          "sha": "b758a6d6637019bff3fbead22148d95bec55de5f",
+          "id": 38809538580,
+          "name": "Seat5 R13 23M real-host classical trit stress",
+          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
           "status": "completed",
-          "updated_at": "2026-10-15T18:28:31Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785571491"
+          "updated_at": "2026-10-15T21:24:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809538580"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
-          "conclusion": "success",
-          "id": 38785571383,
-          "name": "Seat 3 computational preflight (same-host evidence only)",
-          "sha": "b758a6d6637019bff3fbead22148d95bec55de5f",
-          "status": "completed",
-          "updated_at": "2026-10-15T18:27:13Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785571383"
-        },
-        {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "failure",
-          "id": 38785559767,
-          "name": "Seat3 PR111 new-head reviewer and matrix logical-hour validation",
-          "sha": "b758a6d6637019bff3fbead22148d95bec55de5f",
+          "id": 38809532495,
+          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
+          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
           "status": "completed",
-          "updated_at": "2026-10-15T18:29:07Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785559767"
+          "updated_at": "2026-10-15T21:24:12Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809532495"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "success",
-          "id": 38785559697,
-          "name": "Seat3 independent PR111 host counters and replay/custody challenge",
-          "sha": "b758a6d6637019bff3fbead22148d95bec55de5f",
+          "id": 38809532459,
+          "name": "Seat5 R13 23M real-host classical trit stress",
+          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
           "status": "completed",
-          "updated_at": "2026-10-15T18:28:29Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785559697"
+          "updated_at": "2026-10-15T21:24:35Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809532459"
         },
         {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
-          "conclusion": "success",
-          "id": 38785551646,
-          "name": "Seat3 independent PR111 host counters and replay/custody challenge",
-          "sha": "dc3931c9105b7b9ff6cd0d568bfb72edf2c70821",
-          "status": "completed",
-          "updated_at": "2026-10-15T18:28:41Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785551646"
-        },
-        {
-          "branch": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
           "conclusion": "failure",
-          "id": 38785551584,
-          "name": "Seat3 PR111 new-head reviewer and matrix logical-hour validation",
-          "sha": "dc3931c9105b7b9ff6cd0d568bfb72edf2c70821",
+          "id": 38809416700,
+          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
+          "sha": "d5d9229bfb5c8118fb75fae6884428bee8aec217",
           "status": "completed",
-          "updated_at": "2026-10-15T18:27:47Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38785551584"
+          "updated_at": "2026-10-15T21:23:19Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809416700"
+        },
+        {
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "conclusion": "failure",
+          "id": 38809416698,
+          "name": "Seat5 R13 23M real-host classical trit stress",
+          "sha": "d5d9229bfb5c8118fb75fae6884428bee8aec217",
+          "status": "completed",
+          "updated_at": "2026-10-15T21:23:20Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809416698"
+        },
+        {
+          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "conclusion": "failure",
+          "id": 38809411221,
+          "name": "Seat5 R13 23M real-host classical trit stress",
+          "sha": "d5d9229bfb5c8118fb75fae6884428bee8aec217",
+          "status": "completed",
+          "updated_at": "2026-10-15T21:23:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809411221"
         }
       ]
     },
@@ -3974,5 +3974,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "3840cc4b5dd2ce1befd33a7f35b1d841923f38d1060d4ef393c9fa8d341c6c02"
+  "source_state_sha256": "dc72f78417dd6dfb50e30e94495684d18b2d7621e51721660b93677fc7b26b9f"
 }
