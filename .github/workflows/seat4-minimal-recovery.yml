@@ -3,14 +3,21 @@ name: Seat 4 minimal recovery vs digital information-loss gates
 on:
   push:
     branches:
+      - main
       - agent/seat-4/minimal-recovery-lift-20261014
     paths:
+      - experiments/retention/**
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
       - experiments/seat4/minimal_recovery_*
       - experiments/seat4/verify_minimal_recovery.py
       - stones/2026-10-14-rainbow81/seat-4-minimal-recovery*
       - .github/workflows/seat4-minimal-recovery.yml
   pull_request:
     paths:
+      - experiments/retention/**
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - stones/2026-10-14-rainbow81/retention-81-rank40*
       - experiments/seat4/minimal_recovery_*
       - experiments/seat4/verify_minimal_recovery.py
       - stones/2026-10-14-rainbow81/seat-4-minimal-recovery*
