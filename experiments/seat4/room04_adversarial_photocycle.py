@@ -328,9 +328,15 @@ def run(tick_path,fault_path,phase_a_path):
                 "total_closed_to_open_transitions":activated,
                 "final_open_population":sum(x[1] for x in states),
             }
+        # Seat 1 emits all ARM/WAVE lines first, then all MEASURE lines.
+        # Keep the original frozen canonical layout byte-for-byte.
+        for name in ARMS:
+            m=counters[name]
             phase_a.append(
-                f"MEASURE|arm={arm}|error={error}|light_commands={commands}"
-                f"|activations={activated}|open_final={sum(x[1] for x in states)}")
+                f"MEASURE|arm={name}|error={m['total_absolute_open_error']}"
+                f"|light_commands={m['light_commands']}"
+                f"|activations={m['total_closed_to_open_transitions']}"
+                f"|open_final={m['final_open_population']}")
         phase_a.append(
             "GATES|mass=PASS|ids_immutable=PASS|rate_mutation=HELD|id_swap=HELD"
             "|corrupt_obs_anchor=HELD|true_physical_source_authenticated=0")
