@@ -1,0 +1,53 @@
+name: Seat 4 independent third-algorithm replay of Seat 3 PR19
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-4/seat3-pr19-peer-audit-20261015
+    paths:
+      - experiments/seat4/verify_seat3_pr19_peer.py
+      - experiments/seat3/one_bit_recovery_*
+      - experiments/seat3/one-bit-recovery-fixture-v2.json
+      - stones/2026-10-15-rainbow81/seat4-seat3-pr19-third-algorithm-peer*
+      - .github/workflows/seat4-peer-seat3-pr19.yml
+  pull_request:
+    paths:
+      - experiments/seat4/verify_seat3_pr19_peer.py
+      - experiments/seat3/one_bit_recovery_*
+      - experiments/seat3/one-bit-recovery-fixture-v2.json
+      - stones/2026-10-15-rainbow81/seat4-seat3-pr19-third-algorithm-peer*
+      - .github/workflows/seat4-peer-seat3-pr19.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  seat4-third-solver:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify original Seat 3 source blobs and run three distinct implementations
+        shell: bash
+        run: |
+          python experiments/seat4/verify_seat3_pr19_peer.py > "$RUNNER_TEMP/seat4-peer.json"
+          python -c "import json,sys; a=json.load(open(sys.argv[1],encoding='utf-8')); b=json.load(open(sys.argv[2],encoding='utf-8')); assert a==b, 'Seat 4 verification receipt differs'" "$RUNNER_TEMP/seat4-peer.json" stones/2026-10-15-rainbow81/seat4-seat3-pr19-third-algorithm-peer.json
+          (cd stones/2026-10-15-rainbow81 && sha256sum -c seat4-seat3-pr19-third-algorithm-peer.json.sha256)
+          cat "$RUNNER_TEMP/seat4-peer.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-independent-peer-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: ${{ runner.temp }}/seat4-peer.json
+          retention-days: 30
