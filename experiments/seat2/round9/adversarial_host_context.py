@@ -126,6 +126,8 @@ def main(frozen,original,output,node_source):
     dest=Path(target)
     dest.parent.mkdir(parents=True,exist_ok=True)
     dest.write_bytes(out)
+    dest.with_name(dest.name+".sha256").write_bytes(
+        (sha(out)+"  "+dest.name+"\n").encode("ascii"))
     print(json.dumps({"status":report["status"],
                       "tested":len(outcomes),
                       "receipt_sha256":sha(out)},sort_keys=True))
