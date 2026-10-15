@@ -392,7 +392,7 @@ def main():
     for path in (opt.tick_hbp,opt.fault_hbp,opt.phase_a_hbp,opt.receipt):
         path.parent.mkdir(parents=True,exist_ok=True)
     receipt=run(opt.tick_hbp,opt.fault_hbp,opt.phase_a_hbp)
-    opt.receipt.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    opt.receipt.write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n")
     print(json.dumps({
         "status":"PASS",
         "seat":"seat-4","phase_a_sha256":receipt["frozen_phase_a_sha256"],
