@@ -29,9 +29,30 @@ def github_producing_run(manifest):
         run=json.load(response)
     if run.get("conclusion")!="success" or run.get("status")!="completed":
         raise RuntimeError("producing run is not successful and complete")
-    if run.get("head_sha")!=manifest["producing_git_head_sha"]:
-        raise RuntimeError("producing GitHub HEAD differs from sealed manifest")
-    return {"run_id":rid,"run_attempt":run.get("run_attempt"),"head_sha":run["head_sha"]}
+    sealed_sha=manifest["producing_git_head_sha"]
+    reported_sha=run.get("head_sha")
+    if sealed_sha != reported_sha:
+        # pull_request event: the runner GITHUB_SHA points to the GitHub-created
+        # test merge commit. The workflow-run API head_sha is the branch commit.
+        # Require that exact branch commit to be a parent of the immutable
+        # producer merge commit; no arbitrary SHA mismatch may be waived.
+        if run.get("event") != "pull_request":
+            raise RuntimeError("unexpected HEAD mismatch for non-PR run")
+        commit_url="https://api.github.com/repos/"+GH_REPO+"/git/commits/"+sealed_sha
+        merge_req=urllib.request.Request(commit_url,headers={
+            "Authorization":"Bearer "+token,
+            "Accept":"application/vnd.github+json",
+            "X-GitHub-Api-Version":"2022-11-28",
+            "User-Agent":"asolaria-nnest-pr-merge-provenance-v1"})
+        with urllib.request.urlopen(merge_req,timeout=20) as response:
+            merge=json.load(response)
+        parents=[p["sha"] for p in merge.get("parents",[])]
+        if len(parents)!=2 or reported_sha not in parents or merge.get("sha")!=sealed_sha:
+            raise RuntimeError("GitHub PR merge commit cannot be linked to producing branch SHA")
+    return {"run_id":rid,"run_attempt":run.get("run_attempt"),
+            "head_sha":sealed_sha,"branch_sha":reported_sha,
+            "head_semantics":"GITHUB_SHA PR merge commit with verified branch parent"
+                             if sealed_sha!=reported_sha else "branch HEAD exact match"}
 
 def stage(inputs,output):
     inputs=Path(inputs);output=Path(output)
