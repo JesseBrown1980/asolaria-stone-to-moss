@@ -59,6 +59,17 @@ function audit(frozen,out){
  assert(/^[0-9a-f]{40}$/.test(host.producing_git_sha));assert(/^\d+$/.test(host.github_run_id));
  assert(["Linux","Windows"].includes(host.runner_os));
  assert(["Linux","Windows"].includes(host.platform_system));
+ // Platform-mediated provenance, not a hardware-signed sensor. Require
+ // all exact values, including the PR synthetic merge GITHUB_SHA.
+ for(const key of ["GITHUB_RUN_ID","GITHUB_SHA","RUNNER_OS","GITHUB_JOB"]){
+  assert(typeof process.env[key]==="string" && process.env[key].length>0,
+         "MISSING_CI_CONTEXT_"+key);
+ }
+ assert.equal(host.github_run_id,process.env.GITHUB_RUN_ID,"RUN_ID_MISMATCH");
+ assert.equal(host.producing_git_sha,process.env.GITHUB_SHA,"PRODUCING_MERGE_SHA_MISMATCH");
+ assert.equal(host.runner_os,process.env.RUNNER_OS,"RUNNER_CONTEXT_MISMATCH");
+ assert.equal(host.github_job,process.env.GITHUB_JOB,"GITHUB_JOB_CONTEXT_MISMATCH");
+ assert.equal(host.platform_system,process.env.RUNNER_OS,"SYSTEM_CONTEXT_MISMATCH");
  assert(Number.isInteger(host.process_pid)&&host.process_pid>0);
  assert(Number.isInteger(host.wall_elapsed_ns)&&host.wall_elapsed_ns>0);
  assert(Number.isInteger(host.cpu_elapsed_ns)&&host.cpu_elapsed_ns>0);
