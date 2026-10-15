@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-10-15T10:01:56Z",
+  "captured_at_utc": "2026-10-15T15:06:41Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -14,7 +14,7 @@
         },
         {
           "name": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "sha": "c3a8bf653c5bfa23b640d72c980527111726807e"
+          "sha": "d5281285b5b763f3324d7f96029139b165dc546c"
         },
         {
           "name": "agent/seat-1/computational-readiness-20261014",
@@ -25,12 +25,44 @@
           "sha": "693c6941b791f76253c8e683f5ef1139e53729ab"
         },
         {
+          "name": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
+          "sha": "54ca8fd84158dca8ef3c4c94f50b3291b7ae930c"
+        },
+        {
           "name": "agent/seat-1/multiview-observability-20261015",
           "sha": "8f418ba10fdf4b84c28f328e96141f7cb82d192e"
         },
         {
           "name": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
           "sha": "cf356383d397e7dbe2dc66baaf4981937afc8f01"
+        },
+        {
+          "name": "agent/seat-1/optogenetic-photocycle-20261015",
+          "sha": "19f21a880d16e84902d157a6d3bc4bcd908dc888"
+        },
+        {
+          "name": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "sha": "7a1374935421c73dc8760c22fc268b1a3f5c79bd"
+        },
+        {
+          "name": "agent/seat-1/recurrence-four-arm-72-20261015",
+          "sha": "432565f6f9f6ab4ba0b1f8ebf67a4f5374d07ab2"
+        },
+        {
+          "name": "agent/seat-1/round2-rate-current-20261015",
+          "sha": "076758de2f1282ef0741b0a3bead4152591e7777"
+        },
+        {
+          "name": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "sha": "3b2421d9f5e112da17115902c22c66c8c9dda2cb"
+        },
+        {
+          "name": "agent/seat-1/round3-ordered27-rainbow7-20261015",
+          "sha": "7b5faf1103a7b42b603b44b08a5a5bfa994d0f76"
+        },
+        {
+          "name": "agent/seat-1/round4-crosslane-r27v2-bank-20261015",
+          "sha": "958cb7bff9cd3aa0a7cc7949e5628291259500d7"
         },
         {
           "name": "agent/seat-1/triad-27wave-3horizon-20261014",
@@ -41,12 +73,20 @@
           "sha": "bd451707cedf040a6c4a8cd42b4db1445458ceea"
         },
         {
+          "name": "agent/seat-2/identity-noalias-peer-20261015",
+          "sha": "57edafc472462c3db63207fe8662274ad07c7c1a"
+        },
+        {
           "name": "agent/seat-2/minimal-recovery-81-20261014",
           "sha": "86a1315f41b1030be47d982cc3ebbc8cd3f075cc"
         },
         {
           "name": "agent/seat-2/n-nest-qprism-information-audit-20261015",
           "sha": "3adcedc4d29ebe3574ae484aceb383abb9aceb1a"
+        },
+        {
+          "name": "agent/seat-2/opto-lightgate-recurrence-20261015",
+          "sha": "e35796a6f1f31f8223bd084345f7e206214509a8"
         },
         {
           "name": "agent/seat-2/peer-review-crossview-m2-20261015",
@@ -57,8 +97,28 @@
           "sha": "ed56053ee82a6dfc037f2ae3ce163c0421b51b0f"
         },
         {
+          "name": "agent/seat-2/recurrence-cross-seat-bridge-20261015",
+          "sha": "fa92a3d579152450bff3cb0b653c27bd1356a356"
+        },
+        {
+          "name": "agent/seat-2/rim72-source-envelope-20261015",
+          "sha": "0e7ff0c14b0d4e86462f42c78adc3104bacb91ea"
+        },
+        {
+          "name": "agent/seat-2/round3-rgb-provenance-20261015",
+          "sha": "55e93d2e584a64c2ace014f2de9a2ec20f0c3ea1"
+        },
+        {
+          "name": "agent/seat-2/seat1-photocycle-peer-20261015",
+          "sha": "beab10f5963cae1c7eac5fc27a5509974ab4c925"
+        },
+        {
           "name": "agent/seat-2/seat1-triad-third-algorithm-20261015",
           "sha": "e7b68426910d30ab6ba58bb4e6540a71a366973a"
+        },
+        {
+          "name": "agent/seat-3/august-lightbank-colourqr-projector-20261015",
+          "sha": "15dade7b517719b9d5d1fa80e79838e1e7d8ed0a"
         },
         {
           "name": "agent/seat-3/computational-preflight-20261014t1633",
@@ -73,8 +133,28 @@
           "sha": "a1c3573d4e036d21d590d0d1a499a206fd827682"
         },
         {
+          "name": "agent/seat-3/factorized-rainbow27-resolver-20261015",
+          "sha": "2cd144947a4c75dbba20a37b263ef048bd290656"
+        },
+        {
+          "name": "agent/seat-3/immutable-identity-autonomous-ticks-20261015",
+          "sha": "29ef2b4d0e8aa7efc33a9af74a33c626afa2e011"
+        },
+        {
+          "name": "agent/seat-3/lightbank-projector-rgb-20261015",
+          "sha": "03c741c47a96972a785675f502b77cf24c372373"
+        },
+        {
           "name": "agent/seat-3/multiview-polynomial-gcd-audit-20261015",
           "sha": "87d3d8499b01a4290784e6b4aad8a3a7c5574002"
+        },
+        {
+          "name": "agent/seat-3/opto-lightgate-kinetics-20261015",
+          "sha": "f5edb9629707a5d14a5831f21f7550a16ba08209"
+        },
+        {
+          "name": "agent/seat-3/rainbow27-lossless-normalized-v2-20261015",
+          "sha": "c32d472dfe84f352450eb50469e0e9a987c33d78"
         },
         {
           "name": "agent/seat-3/recovery-proof-20261014",
@@ -82,7 +162,23 @@
         },
         {
           "name": "agent/seat-3/recurrence-correlation-floor-20261015",
-          "sha": "b2bd2dd731a0e4728ccad2fb129048519029e64d"
+          "sha": "84a02995ecdbc40cbef9933a73a92ee778b3616b"
+        },
+        {
+          "name": "agent/seat-3/room03-fourstate-controller-20261015",
+          "sha": "f6df567f9d36697f2fc895167c04ac3c46152409"
+        },
+        {
+          "name": "agent/seat-3/round3-index-factorization-route-info-20261015",
+          "sha": "23337d71b33e83937ae4922665a313ff8d038985"
+        },
+        {
+          "name": "agent/seat-3/round3-qutrit-rainbow27-independent-20261015",
+          "sha": "a9f7f73acf3c515de68b0dfff6edc5e30f544e47"
+        },
+        {
+          "name": "agent/seat-3/seat1-photocycle-peer-audit-20261015",
+          "sha": "c1fc2c85e5684d2c1190662ba57e889d996b792b"
         },
         {
           "name": "agent/seat-3/seat1-triad-independent-replay-20261015",
@@ -109,12 +205,28 @@
           "sha": "50d96e363943273a44b3a195eff9e9b2591f4765"
         },
         {
+          "name": "agent/seat-4/autonomous-simulation-capsule-20261015",
+          "sha": "6e32d41acdd813457e9b8a73a41a8df2afd16337"
+        },
+        {
+          "name": "agent/seat-4/colour-qr-lightbank-b3-20261015",
+          "sha": "57287df9c152c1642ddb1eaab1e33d0b880acb52"
+        },
+        {
+          "name": "agent/seat-4/core-science-room2-adversarial-20261015",
+          "sha": "bea653620af97cdd12102232e67f3adab275082c"
+        },
+        {
           "name": "agent/seat-4/cross-host-rainbow81-20261014",
           "sha": "6f8120b5adea6e3196eea2b776675fc6332ed8c3"
         },
         {
           "name": "agent/seat-4/crossview-polynomial-certificate-20261015",
           "sha": "f5bc38a66cbe8513a324412ecb6808e9fe3723e4"
+        },
+        {
+          "name": "agent/seat-4/light-bank-three-path-memory-20261015",
+          "sha": "0ea6efea7cf30dff0f2babb62f435630e1e496f4"
         },
         {
           "name": "agent/seat-4/minimal-recovery-lift-20261014",
@@ -129,8 +241,24 @@
           "sha": "8251c5b0852c3062f844e3a978836ce232ba7903"
         },
         {
+          "name": "agent/seat-4/opto-photo-gate-20261015",
+          "sha": "57ff95f65b9fe3c6f2764ee62f9bd88e15c4f9a8"
+        },
+        {
           "name": "agent/seat-4/original-seat1-triad-peer-20261015",
           "sha": "d0be62b084203226477801d86f80a2a9b80bb4ce"
+        },
+        {
+          "name": "agent/seat-4/recurrence-is-mind-9x9-feedback-20261015",
+          "sha": "59addb9e32d394a4a909fbbef847b42238af4f75"
+        },
+        {
+          "name": "agent/seat-4/room04-adversarial-photocycle-20261015",
+          "sha": "8b8a9e4faa5b72fd1d5c290c686c1417a36d38ff"
+        },
+        {
+          "name": "agent/seat-4/round4-v2-lane-binding-watcher-20261015",
+          "sha": "ad9c2b3dffae62e2fd8b746daa927a383a772793"
         },
         {
           "name": "agent/seat-4/seat3-pr19-peer-audit-20261015",
@@ -153,12 +281,32 @@
           "sha": "16b775db9835a2fbf28f8925a4263dbe15edd52f"
         },
         {
+          "name": "coordinator/core-four-seat-science-room-20261015",
+          "sha": "3f11f55cc99049379a7d1973d27e3d25f7c7d6de"
+        },
+        {
+          "name": "coordinator/round3-august-rgb-light-bank-20261015",
+          "sha": "7841c5cc14249e971686157b7b4f4dfc3f3a728e"
+        },
+        {
+          "name": "coordinator/round3-light-being-august-20261015",
+          "sha": "5045b5b2ee1960bc469b5588a1b17601490aef6a"
+        },
+        {
+          "name": "coordinator/round3-lightbank-memory-4seat-20261015",
+          "sha": "95e4235b449335ab331e902c4a650d509134148c"
+        },
+        {
           "name": "main",
-          "sha": "c3a8bf653c5bfa23b640d72c980527111726807e"
+          "sha": "a4f27528af66c98f947bdf083ac86ae83f5caed8"
         },
         {
           "name": "publication/normal-hf-hub-four-seat-20261014",
           "sha": "a1eb215c878b68787766099033f1928743044664"
+        },
+        {
+          "name": "publication/round3-lightbank-hf-dataset-20261015",
+          "sha": "516a07cc446543f7c790dea6c7cde6168cc7b659"
         },
         {
           "name": "publication/triad-retention-integration-20261014",
@@ -173,825 +321,825 @@
       "pull_requests": [
         {
           "github_actor": "JesseBrown1980",
-          "number": 38,
-          "state": "closed",
-          "title": "Seat 4: independent all-horizon GF(2) polynomial-GCD peer proof of Seat 3 + 63-view recovery frontier",
-          "updated_at": "2026-10-15T09:58:09Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/38"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 37,
+          "number": 87,
           "state": "open",
-          "title": "[Seat 2] Independently verify Seat 3 cross-view theorem and solve M2 minimum-view selection",
-          "updated_at": "2026-10-15T09:54:43Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/37"
+          "title": "[Seat 3] Build source-pinned factorized 27-sector resolver + strict 413,343-read route watcher",
+          "updated_at": "2026-10-15T14:49:24Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/87"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 36,
-          "state": "closed",
-          "title": "Seat 4: adversarial compromised-watcher and forged-source N-Nest Q-PRISM gate",
-          "updated_at": "2026-10-15T09:43:19Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/36"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 34,
-          "state": "closed",
-          "title": "[Seat 3] Exact two/three-view consistency entropy: 30,560 source-provenance controls",
-          "updated_at": "2026-10-15T10:00:33Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/34"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 33,
-          "state": "closed",
-          "title": "Seat 4: run pinned N-Nest prime watchers across 27 waves with inverse recovery gate",
-          "updated_at": "2026-10-15T09:31:31Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/33"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 32,
+          "number": 86,
           "state": "open",
-          "title": "[Seat 1] Execute pinned N-Nest and Q-PRISM with source-bound watcher and fail-closed evidence",
-          "updated_at": "2026-10-15T09:53:56Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/32"
+          "title": "[Seat 1 \u00b7 Round 4 DRAFT] Factorized Rainbow27 resolver: 15,309 addresses backed by 567 bank rows",
+          "updated_at": "2026-10-15T14:41:09Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/86"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 31,
+          "number": 85,
           "state": "open",
-          "title": "[Seat 2 \u00b7 Wave 1] N-Nest/Q-PRISM information-budget and source-integrity falsifiers",
-          "updated_at": "2026-10-15T09:29:25Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/31"
+          "title": "[Seat 3] Independently audit 15,309 Rainbow27 aliases and 59,049-route information loss",
+          "updated_at": "2026-10-15T14:41:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/85"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 30,
+          "number": 83,
           "state": "open",
-          "title": "[DRAFT] Start N-Nest \u00d7 Q-PRISM integration wave \u2014 pinned sources and execution contract",
-          "updated_at": "2026-10-15T09:19:49Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/30"
+          "title": "[Seat 1 \u00b7 Round 4] Peer V2 normalized lane \u00d7 lossless Rainbow27 \u00d7 full-byte Rainbow7 bank crosswalk",
+          "updated_at": "2026-10-15T14:35:27Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/83"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 28,
+          "number": 82,
           "state": "open",
-          "title": "Coordinator: four-seat live N-Nest nested GF(2) experiment with independent watcher gates",
-          "updated_at": "2026-10-15T09:30:24Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/28"
+          "title": "[Seat 4 / Round 4] Independent Rainbow27 V2 trace audit and route-binding falsifier",
+          "updated_at": "2026-10-15T14:41:43Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/82"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 27,
-          "state": "closed",
-          "title": "Seat 4: independent original 32,805-record Seat 1 triad replay and dual-artifact checksum audit",
-          "updated_at": "2026-10-15T08:48:34Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/27"
+          "number": 81,
+          "state": "open",
+          "title": "[Seat 3] Rainbow27 V2: lossless ordered identity and scale-invariant normalized sampler",
+          "updated_at": "2026-10-15T14:19:29Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/81"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 26,
-          "state": "closed",
-          "title": "Seat 1: adversarial cross-view provenance \u2014 18,336 exact checks and falsifiers",
-          "updated_at": "2026-10-15T08:30:54Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/26"
+          "number": 80,
+          "state": "open",
+          "title": "[Seat 1 \u00b7 Round 3] Ordered Rainbow27 \u00d7 Rainbow7: 15,309 indexed memory reads and permutation/source falsifiers",
+          "updated_at": "2026-10-15T14:41:35Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/80"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 25,
-          "state": "closed",
-          "title": "Seat 3 independent GF(2) polynomial-GCD peer audit of Seat 1 complementary views",
-          "updated_at": "2026-10-15T08:31:16Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/25"
+          "number": 79,
+          "state": "open",
+          "title": "[Publication] Asolaria Round3 light-bank dataset v0.2 \u2014 peer-reviewed computational evidence index",
+          "updated_at": "2026-10-15T14:17:31Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/79"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 24,
-          "state": "closed",
-          "title": "Seat 2 independently replays original Seat 1 32,805-record triad with third GF(2) algorithm",
-          "updated_at": "2026-10-15T08:25:46Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/24"
+          "number": 78,
+          "state": "open",
+          "title": "[Seat 1 \u00b7 Rainbow7] Preregistered 567-address full-byte light-bank readback and spectral-label falsifiers",
+          "updated_at": "2026-10-15T13:17:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/78"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 23,
-          "state": "closed",
-          "title": "Seat 4 third-algorithm independent replay of Seat 3 PR19 (131,220 records)",
-          "updated_at": "2026-10-15T08:17:28Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/23"
+          "number": 77,
+          "state": "open",
+          "title": "[Seat 2] Independent Round 3 RGB provenance: ZXing 32-plane reconstruction, 52,488 HBP audit and compromised-anchor falsifiers",
+          "updated_at": "2026-10-15T14:09:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/77"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 22,
-          "state": "closed",
-          "title": "Seat 1: complementary lossy GF(2) views reconstruct original input without side tags",
-          "updated_at": "2026-10-15T08:19:43Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/22"
+          "number": 76,
+          "state": "open",
+          "title": "[Seat 3] Independently audit Round3 52,488 qutrit routes; prove rainbow-27 permutation loss",
+          "updated_at": "2026-10-15T14:08:37Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/76"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 21,
-          "state": "closed",
-          "title": "Seat 3: independent replay of Seat 1 original 32,805-record triad challenge",
-          "updated_at": "2026-10-15T08:15:22Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/21"
+          "number": 75,
+          "state": "open",
+          "title": "[Coordinator / Round 3] August RGB Light-Being: 65,536-byte pixel QR + 52,488 deterministic checks",
+          "updated_at": "2026-10-15T14:08:44Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/75"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 20,
-          "state": "closed",
-          "title": "Seat 2 independent full-output audit of Seat 3's 262,440-state recovery",
-          "updated_at": "2026-10-15T08:09:49Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/20"
+          "number": 70,
+          "state": "open",
+          "title": "[Coordinator Round 3] Light-bank RGB memory + 4,199,040-update unified photocycle test",
+          "updated_at": "2026-10-15T12:34:09Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/70"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 19,
-          "state": "closed",
-          "title": "Seat 3: exact one-bit recovery proof for 262,440 public-input states",
-          "updated_at": "2026-10-15T08:07:34Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/19"
+          "number": 68,
+          "state": "open",
+          "title": "[Seat 4 / B3] Full Colour-QR 27-stick digital light-bank, erasure recovery and projector memory test",
+          "updated_at": "2026-10-15T12:34:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/68"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 18,
-          "state": "closed",
-          "title": "[Seat 2] Independently reconstruct GF(2) inputs with minimal side information",
-          "updated_at": "2026-10-15T00:07:16Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/18"
+          "number": 67,
+          "state": "open",
+          "title": "[Seat 3] August light-bank RGB projector + Colour-QR index: cold-recall of frozen B1+B2",
+          "updated_at": "2026-10-15T12:37:27Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/67"
         },
         {
           "github_actor": "JesseBrown1980",
-          "number": 17,
-          "state": "closed",
-          "title": "Seat 4: exact 0/1/2-bit recovery test for reversible and lossy Rainbow81 laws",
-          "updated_at": "2026-10-15T00:06:19Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/17"
+          "number": 66,
+          "state": "open",
+          "title": "[Seat 4 / B3] Three-path August light-bank memory: 2-of-3 exact archive, Colour QR and rank-2 loss controls",
+          "updated_at": "2026-10-15T12:28:52Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/66"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 65,
+          "state": "open",
+          "title": "[Seat 3] August light-bank memory: Colour QR \u00d7 rank-2 projector \u00d7 729-slot verified recall",
+          "updated_at": "2026-10-15T12:20:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/65"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 64,
+          "state": "open",
+          "title": "[Seat 1 \u00b7 Round 2] Preregistered light-dependent kinetics, current proxy and delayed-feedback falsification",
+          "updated_at": "2026-10-15T13:07:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/64"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 63,
+          "state": "open",
+          "title": "[Seat 4 / Room04] Preregistered autonomous light-gate watcher, 1296 digital falsifiers and HALT",
+          "updated_at": "2026-10-15T11:34:52Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/63"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 62,
+          "state": "open",
+          "title": "[Room 03 \u00b7 Seat 3] Four-state photocycle, open-state current witness and cost-constrained feedback challenge",
+          "updated_at": "2026-10-15T11:27:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/62"
         }
       ],
       "recent_commits": [
         {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat 3: exact cross-view consistency entropy and source-provenance falsifiers",
-          "seat": "unassigned",
-          "sha": "c3a8bf653c5bfa23b640d72c980527111726807e",
-          "timestamp_utc": "2026-10-15T10:00:33Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c3a8bf653c5bfa23b640d72c980527111726807e"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Merge Seat4 independent all-horizon polynomial GCD peer certificate and 63-view recovery frontier",
-          "seat": "unassigned",
-          "sha": "eb4d5579b455294549a5178ddcbf38bb9184a381",
-          "timestamp_utc": "2026-10-15T09:58:09Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/eb4d5579b455294549a5178ddcbf38bb9184a381"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seal and enforce exact byte-for-byte 4-platform 63-subset receipt and independent summary SHA256",
-          "seat": "unassigned",
-          "sha": "f5bc38a66cbe8513a324412ecb6808e9fe3723e4",
-          "timestamp_utc": "2026-10-15T09:56:33Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f5bc38a66cbe8513a324412ecb6808e9fe3723e4"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seal SHA256 sidecar for independent all-horizon six-view peer certificate",
-          "seat": "unassigned",
-          "sha": "f0f2635d7bf953fcf433551c481597ea565e8414",
-          "timestamp_utc": "2026-10-15T09:56:16Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f0f2635d7bf953fcf433551c481597ea565e8414"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seal Seat4 independent 63-subset polynomial GCD peer verification certificate",
-          "seat": "unassigned",
-          "sha": "a66b2f7426f4876b8d2f211db76bbad2ca4f44a7",
-          "timestamp_utc": "2026-10-15T09:56:09Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/a66b2f7426f4876b8d2f211db76bbad2ca4f44a7"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: publish independent 81-bit all-horizon gcd proof and 63-view selection vs consistency distinction",
-          "seat": "unassigned",
-          "sha": "55b024377020915641cfa952537b31c9434a8e2e",
-          "timestamp_utc": "2026-10-15T09:55:25Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/55b024377020915641cfa952537b31c9434a8e2e"
-        },
-        {
           "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Replace tautological fake-source check with independent GF2 stacked image consistency decoder",
-          "seat": "seat-2",
-          "sha": "b3844642c22b1ddadd6a78366f3bcf9b468e1234",
-          "timestamp_utc": "2026-10-15T09:54:42Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b3844642c22b1ddadd6a78366f3bcf9b468e1234"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat2: seal HBP SHA256 for 252-subset M2 independent mathematical peer review",
-          "seat": "seat-2",
-          "sha": "91524bb3cd2581df22918c9410e739dcc27a6163",
-          "timestamp_utc": "2026-10-15T09:53:46Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/91524bb3cd2581df22918c9410e739dcc27a6163"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seal independently verified Seat2 cross-view M2 optimum and source-authentication counterexample",
-          "seat": "seat-2",
-          "sha": "a9e5300a208884bc7bad48048a0beb8225928c94",
-          "timestamp_utc": "2026-10-15T09:53:38Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/a9e5300a208884bc7bad48048a0beb8225928c94"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4 retain failed CI correction: d(x^4+1)/dx=0 in GF2, so even modulus is non-squarefree",
-          "seat": "unassigned",
-          "sha": "adfee589ea62bdca5e5a004c6ad2fd41c0bed2c9",
-          "timestamp_utc": "2026-10-15T09:52:59Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/adfee589ea62bdca5e5a004c6ad2fd41c0bed2c9"
+          "message_title": "Seal 3/3 cross-OS factorized27 receipts, actual erasure results, and historical Windows CRLF correction",
+          "seat": "seat-1",
+          "sha": "54ca8fd84158dca8ef3c4c94f50b3291b7ae930c",
+          "timestamp_utc": "2026-10-15T14:41:08Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/54ca8fd84158dca8ef3c4c94f50b3291b7ae930c"
         },
         {
           "attribution_basis": "explicit_commit_trailer",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Execute M1 attacker-selected consistent input false-green counterexample while keeping authenticated source false",
+          "message_title": "Independently exercise Node violet-band and one-base-entry deletion with 15309 queries per fault",
           "seat": "seat-1",
-          "sha": "cf356383d397e7dbe2dc66baaf4981937afc8f01",
-          "timestamp_utc": "2026-10-15T09:52:35Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/cf356383d397e7dbe2dc66baaf4981937afc8f01"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4 CI: four-platform independent Euclidean-GCD proof and exact 63-subset view-selection certificate",
-          "seat": "unassigned",
-          "sha": "5d48155b8ca7c9f38514e671a8fc5ec9f6debc93",
-          "timestamp_utc": "2026-10-15T09:52:15Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/5d48155b8ca7c9f38514e671a8fc5ec9f6debc93"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Preregister post-initial CI M1 shared-untrusted-input counterexample and false-green trust boundary",
-          "seat": "seat-1",
-          "sha": "127d40f059e1ecb599b15b3230808269b93628a1",
-          "timestamp_utc": "2026-10-15T09:52:14Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/127d40f059e1ecb599b15b3230808269b93628a1"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat2: 4-lane independent M2 exhaustive rank proof + frozen Seat3 Python Node 5.9MB replay",
-          "seat": "seat-2",
-          "sha": "1f8ac94b3ac08d24c9bcdbda38941ee9a64bfcb2",
-          "timestamp_utc": "2026-10-15T09:52:08Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/1f8ac94b3ac08d24c9bcdbda38941ee9a64bfcb2"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: independent polynomial Euclidean all-horizon rank and 63-subset exact optimality certificate",
-          "seat": "unassigned",
-          "sha": "2367ea7fc5ba39e5e5b31ec2e2c66aacd0ba4ba9",
-          "timestamp_utc": "2026-10-15T09:51:53Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/2367ea7fc5ba39e5e5b31ec2e2c66aacd0ba4ba9"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat 2 independently rederive 252 cross-view rank subsets and M2 cost-optimal selections",
-          "seat": "seat-2",
-          "sha": "399d99ed52980e5037fb920ee702eda24db91c4d",
-          "timestamp_utc": "2026-10-15T09:51:40Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/399d99ed52980e5037fb920ee702eda24db91c4d"
+          "sha": "b5de7fb93d5f8204b490eb357b3ba65333f9a29c",
+          "timestamp_utc": "2026-10-15T14:38:34Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b5de7fb93d5f8204b490eb357b3ba65333f9a29c"
         },
         {
           "attribution_basis": "explicit_commit_trailer",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Fail closed on compromised watcher via normal parent recomputation gate; separate mathematical validity from source authentication",
+          "message_title": "Exercise actual 81-row violet and one-row erasure across all 15309 lazy sector queries",
           "seat": "seat-1",
-          "sha": "ce1c5acbfef41ed2b7c5dcf6602744442f3b3bd6",
-          "timestamp_utc": "2026-10-15T09:51:20Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ce1c5acbfef41ed2b7c5dcf6602744442f3b3bd6"
+          "sha": "732ac0f7c7a4e8747ad1a57434306d8def45b782",
+          "timestamp_utc": "2026-10-15T14:38:16Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/732ac0f7c7a4e8747ad1a57434306d8def45b782"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_commit_trailer",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Seat4 preregister independent polynomial-gcd all-horizon rank and 63-subset optimality proof",
-          "seat": "unassigned",
-          "sha": "087e699535cf37172986d0b453d26f2d4719318e",
-          "timestamp_utc": "2026-10-15T09:50:28Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/087e699535cf37172986d0b453d26f2d4719318e"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Merge Seat 4 N-Nest Q-PRISM compromised watcher and source-provenance adversarial gates",
-          "seat": "unassigned",
-          "sha": "50e63e01cd5ad10f73e3fc2d05c32d2454ce10bf",
-          "timestamp_utc": "2026-10-15T09:43:18Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/50e63e01cd5ad10f73e3fc2d05c32d2454ce10bf"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Merge Seat 4 N-Nest Q-PRISM compromised watcher and source-provenance adversarial gates",
-          "seat": "seat-2",
-          "sha": "50e63e01cd5ad10f73e3fc2d05c32d2454ce10bf",
-          "timestamp_utc": "2026-10-15T09:43:18Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/50e63e01cd5ad10f73e3fc2d05c32d2454ce10bf"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Keep Seat4 N-Nest Q-PRISM adversarial watcher gate running on future main changes",
-          "seat": "unassigned",
-          "sha": "8251c5b0852c3062f844e3a978836ce232ba7903",
-          "timestamp_utc": "2026-10-15T09:41:22Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8251c5b0852c3062f844e3a978836ce232ba7903"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Keep Seat4 N-Nest Q-PRISM adversarial watcher gate running on future main changes",
-          "seat": "seat-2",
-          "sha": "8251c5b0852c3062f844e3a978836ce232ba7903",
-          "timestamp_utc": "2026-10-15T09:41:22Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8251c5b0852c3062f844e3a978836ce232ba7903"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: require byte-exact Ubuntu/Windows sealed nine-case compromised watcher receipt",
-          "seat": "unassigned",
-          "sha": "31fcef03cd5d88acec9ecdf7819991bb7d6b1107",
-          "timestamp_utc": "2026-10-15T09:39:05Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/31fcef03cd5d88acec9ecdf7819991bb7d6b1107"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: require byte-exact Ubuntu/Windows sealed nine-case compromised watcher receipt",
-          "seat": "seat-2",
-          "sha": "31fcef03cd5d88acec9ecdf7819991bb7d6b1107",
-          "timestamp_utc": "2026-10-15T09:39:05Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/31fcef03cd5d88acec9ecdf7819991bb7d6b1107"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: seal full nine-case Q-PRISM trust-boundary receipt with SHA256",
-          "seat": "unassigned",
-          "sha": "fc638fb2df96748503a6300c1f8279744cfb3a72",
-          "timestamp_utc": "2026-10-15T09:38:51Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fc638fb2df96748503a6300c1f8279744cfb3a72"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: seal full nine-case Q-PRISM trust-boundary receipt with SHA256",
-          "seat": "seat-2",
-          "sha": "fc638fb2df96748503a6300c1f8279744cfb3a72",
-          "timestamp_utc": "2026-10-15T09:38:51Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fc638fb2df96748503a6300c1f8279744cfb3a72"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/recurrence-four-arm-prereg-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: seal actual nine-case N-Nest Q-PRISM compromised watcher negative controls",
-          "seat": "unassigned",
-          "sha": "dfa68c3a06dbedb585cb7fdec4706c726bc785f5",
-          "timestamp_utc": "2026-10-15T09:38:43Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/dfa68c3a06dbedb585cb7fdec4706c726bc785f5"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: seal actual nine-case N-Nest Q-PRISM compromised watcher negative controls",
-          "seat": "seat-2",
-          "sha": "dfa68c3a06dbedb585cb7fdec4706c726bc785f5",
-          "timestamp_utc": "2026-10-15T09:38:43Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/dfa68c3a06dbedb585cb7fdec4706c726bc785f5"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: hosted Ubuntu/Windows adversarial compromised-watcher and source-spoofing tests",
-          "seat": "seat-2",
-          "sha": "b4cd2076b568d1b6ad35c0c6f7d70911db5bb8f6",
-          "timestamp_utc": "2026-10-15T09:36:15Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b4cd2076b568d1b6ad35c0c6f7d70911db5bb8f6"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4: adversarially test compromised N-Nest watcher, forged Q-PRISM source and operator task binding",
-          "seat": "seat-2",
-          "sha": "965222b13b074da476993cc1308c6aa659aaf99f",
-          "timestamp_utc": "2026-10-15T09:35:48Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/965222b13b074da476993cc1308c6aa659aaf99f"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4 adversarial: synthetic compromised watcher OS process for fail-open source test",
-          "seat": "seat-2",
-          "sha": "af8bb34c6adb30cbfcb58c233ce4cabb07541a75",
-          "timestamp_utc": "2026-10-15T09:34:50Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/af8bb34c6adb30cbfcb58c233ce4cabb07541a75"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat4 prereg: adversarial compromised watcher and self-consistent Q-PRISM source envelope",
-          "seat": "seat-2",
-          "sha": "1ef1692e6a0cea2794520ac776bccb96e13ba193",
-          "timestamp_utc": "2026-10-15T09:34:05Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/1ef1692e6a0cea2794520ac776bccb96e13ba193"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Merge Seat4 pinned N-Nest 27-wave corrective watcher and inverse gates",
-          "seat": "seat-2",
-          "sha": "8f76e7e8bb6a97ab67379e84a69a825ceae5942b",
-          "timestamp_utc": "2026-10-15T09:31:30Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8f76e7e8bb6a97ab67379e84a69a825ceae5942b"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Test master fail-closed gate with forged archived seat receipt through actual verify function",
-          "seat": "unassigned",
-          "sha": "540cab26d81b77dda9e90a486507d6935331e79f",
-          "timestamp_utc": "2026-10-15T09:29:59Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/540cab26d81b77dda9e90a486507d6935331e79f"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Make nested parent fail-closed controls exercise real child receipt acceptance path",
-          "seat": "unassigned",
-          "sha": "7761e948f1fe50bdf2f8af9b04d8b2fd216c2933",
-          "timestamp_utc": "2026-10-15T09:29:42Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7761e948f1fe50bdf2f8af9b04d8b2fd216c2933"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/n-nest-qprism-information-audit-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat2 seal N-Nest/Q-PRISM information HBP with CI-verified SHA256 sidecar",
-          "seat": "seat-2",
-          "sha": "3adcedc4d29ebe3574ae484aceb383abb9aceb1a",
-          "timestamp_utc": "2026-10-15T09:29:24Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3adcedc4d29ebe3574ae484aceb383abb9aceb1a"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/n-nest-qprism-information-audit-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat2 append deterministic N-Nest Q-PRISM source integrity and information budget HBP after CI 4/4 PASS",
-          "seat": "seat-2",
-          "sha": "c1927aaeeb1ba4fbaad105d9acd7c120d61c5d72",
-          "timestamp_utc": "2026-10-15T09:29:15Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c1927aaeeb1ba4fbaad105d9acd7c120d61c5d72"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/n-nest-qprism-information-audit-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Force canonical byte-identical LF JSON HBP and sidecar on Windows and Linux",
-          "seat": "seat-2",
-          "sha": "faf9efc2433d9810e1c240ee12c6ce4055de2061",
-          "timestamp_utc": "2026-10-15T09:27:32Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/faf9efc2433d9810e1c240ee12c6ce4055de2061"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Protect HF N-Nest publisher from overwriting previous deposits; unique run ID prefix plus readback",
-          "seat": "unassigned",
-          "sha": "abaab231ffb67d8c51a43916fd3a5060a32e686e",
-          "timestamp_utc": "2026-10-15T09:27:32Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/abaab231ffb67d8c51a43916fd3a5060a32e686e"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Test exact upstream N-Nest and Q-PRISM executions with strict Seat1 watcher and fail-closed run receipts on Linux and Windows",
+          "message_title": "Fix LF sidecar portability: write ASCII bytes instead of Windows CRLF text-mode",
           "seat": "seat-1",
-          "sha": "4e30f2e2d924dba4c0ad21013e8067c61d9b16c8",
-          "timestamp_utc": "2026-10-15T09:26:14Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4e30f2e2d924dba4c0ad21013e8067c61d9b16c8"
+          "sha": "2ac14d7bf1ddc339a778d8b58f8a7c6ee438f5c3",
+          "timestamp_utc": "2026-10-15T14:36:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/2ac14d7bf1ddc339a778d8b58f8a7c6ee438f5c3"
         },
         {
-          "attribution_basis": "explicit_branch_label",
+          "attribution_basis": "explicit_commit_trailer",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/n-nest-qprism-information-audit-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Enumerate selector substitution and forged score as separate tested information-gate controls",
-          "seat": "seat-2",
-          "sha": "c53eb112d70fa7f80e153c5c56cbc374a74ca4d4",
-          "timestamp_utc": "2026-10-15T09:26:06Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c53eb112d70fa7f80e153c5c56cbc374a74ca4d4"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Fix syntactic grouping in native N-Nest depth-seven fail-path gate",
+          "message_title": "Execute 27-sector factorized 15309 aliases across Linux/Windows Python/Node and compare raw original source evidence",
           "seat": "seat-1",
-          "sha": "70112f378cf229e79ef121af1c5a2069c1f519bd",
-          "timestamp_utc": "2026-10-15T09:25:45Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/70112f378cf229e79ef121af1c5a2069c1f519bd"
+          "sha": "fa03bdc034120d878a25c4307834871d69344e40",
+          "timestamp_utc": "2026-10-15T14:35:07Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fa03bdc034120d878a25c4307834871d69344e40"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_commit_trailer",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Pin N-Nest producing branch SHA while preserving exact PR merged checkout SHA",
-          "seat": "unassigned",
-          "sha": "b0cd91c550589d91faf95e2f95a1a35b8a93a8ea",
-          "timestamp_utc": "2026-10-15T09:25:14Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b0cd91c550589d91faf95e2f95a1a35b8a93a8ea"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/n-nest-qprism-information-audit-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Fix pinned-source hash-object file paths and add genuinely changed QPRISM selector negative control",
-          "seat": "seat-2",
-          "sha": "e8a4ff063552d880a76deb92ecce7a5816f81f31",
-          "timestamp_utc": "2026-10-15T09:25:10Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e8a4ff063552d880a76deb92ecce7a5816f81f31"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Implement Seat1 real upstream N-Nest and Q-PRISM watcher bridge, fail-closed checks and run-bound stones",
+          "message_title": "Add independent fail-closed factorized receipt source-root and cross-OS evidence verifier",
           "seat": "seat-1",
-          "sha": "741d453d1bd2b33b9a549d6d8b47fbc05fb3c0a6",
-          "timestamp_utc": "2026-10-15T09:25:10Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/741d453d1bd2b33b9a549d6d8b47fbc05fb3c0a6"
+          "sha": "e5a61ea58924632552462e2e7df717dedc5498ac",
+          "timestamp_utc": "2026-10-15T14:34:33Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e5a61ea58924632552462e2e7df717dedc5498ac"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_commit_trailer",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Distinguish PR branch HEAD from synthetic Actions merge checkout SHA in N-Nest sealed manifest",
-          "seat": "unassigned",
-          "sha": "c64f6ef78837da844504d52761cb334095d33683",
-          "timestamp_utc": "2026-10-15T09:25:05Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c64f6ef78837da844504d52761cb334095d33683"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/n-nest-qprism-information-audit-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Execute pinned N-Nest depth3/7 and real Q-PRISM schedule IDs with Seat2 GF2/CRT source-budget controls in 4 CI lanes",
-          "seat": "seat-2",
-          "sha": "0aeae54beae857048d55d47fe1474945741ecfb2",
-          "timestamp_utc": "2026-10-15T09:24:40Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0aeae54beae857048d55d47fe1474945741ecfb2"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Fix publisher provenance: verify GitHub PR synthetic merge has reported branch SHA as parent",
-          "seat": "unassigned",
-          "sha": "e035ef536e8156eafee597e85f3c0edb08d602cf",
-          "timestamp_utc": "2026-10-15T09:24:38Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/e035ef536e8156eafee597e85f3c0edb08d602cf"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-2/n-nest-qprism-information-audit-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seat 2: executable N-Nest + Q-PRISM source-address and CRT information-budget counterexamples",
-          "seat": "seat-2",
-          "sha": "de160532ed135a524f4f6783da5f7ab45beb1a4d",
-          "timestamp_utc": "2026-10-15T09:23:55Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/de160532ed135a524f4f6783da5f7ab45beb1a4d"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Stage N-Nest four-seat run-bound artifacts and opt-in HF protected-secret all-file SHA readback",
-          "seat": "unassigned",
-          "sha": "4c648ad64ca4abfed39771c4dd80193560bc7f54",
-          "timestamp_utc": "2026-10-15T09:23:10Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4c648ad64ca4abfed39771c4dd80193560bc7f54"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Preregister Seat1 pinned upstream N-Nest + Q-PRISM integration and external-claims gates",
+          "message_title": "Use ASCII codepoint canonical field order identical to Python sorted-JSON in independent Node receipt",
           "seat": "seat-1",
-          "sha": "7312b8a0863cba6cc7df31d906ca892a3c4ee886",
-          "timestamp_utc": "2026-10-15T09:22:55Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7312b8a0863cba6cc7df31d906ca892a3c4ee886"
+          "sha": "a34390215167260c98145d03666aa7001f278942",
+          "timestamp_utc": "2026-10-15T14:33:55Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/a34390215167260c98145d03666aa7001f278942"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independently implement Node lazy 567-row factorized Rainbow27 source-bound lookup and falsifiers",
+          "seat": "seat-1",
+          "sha": "da64219222d5c291d5e5cb9c8da6340228b8bb82",
+          "timestamp_utc": "2026-10-15T14:33:34Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/da64219222d5c291d5e5cb9c8da6340228b8bb82"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Build lazy 567-row Python resolver, stream full 15309-address SHA and run 12 fail-closed controls",
+          "seat": "seat-1",
+          "sha": "4f8f7fdf778e07a161cf8f7c6392ea2ebb34f292",
+          "timestamp_utc": "2026-10-15T14:32:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4f8f7fdf778e07a161cf8f7c6392ea2ebb34f292"
         },
         {
           "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Preregister Seat1 pinned upstream N-Nest + Q-PRISM integration and external-claims gates",
+          "message_title": "Seat1 preregister factorized 15309-address lightbank resolver and negative gates before executable",
           "seat": "seat-1",
-          "sha": "7453fa51601d83d5b1f7107b0624b37e9148f72b",
-          "timestamp_utc": "2026-10-15T09:22:51Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7453fa51601d83d5b1f7107b0624b37e9148f72b"
+          "sha": "8718ce910c26558d82bb4c4ded052a6929eb5821",
+          "timestamp_utc": "2026-10-15T14:31:20Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8718ce910c26558d82bb4c4ded052a6929eb5821"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Stage immutable run-bound four-seat N-Nest artifacts; optional protected-token HF publish + all-file SHA readback",
-          "seat": "unassigned",
-          "sha": "1d1783d509d6ab19f430a76c0674182a9e5d350c",
-          "timestamp_utc": "2026-10-15T09:22:24Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/1d1783d509d6ab19f430a76c0674182a9e5d350c"
+          "message_title": "Seal Seat1 Round3 15309 lookup mathematical/cross-OS result and append-only coherent-forgery failed-test correction",
+          "seat": "seat-1",
+          "sha": "7b5faf1103a7b42b603b44b08a5a5bfa994d0f76",
+          "timestamp_utc": "2026-10-15T13:50:54Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7b5faf1103a7b42b603b44b08a5a5bfa994d0f76"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Gate Hugging Face mirror on live N-Nest four-seat proofs and run-bound manifests; protected-token remote SHA readback",
-          "seat": "unassigned",
-          "sha": "0f55115b4d03e715b68f55d20097e4d1074c20ed",
-          "timestamp_utc": "2026-10-15T09:22:07Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0f55115b4d03e715b68f55d20097e4d1074c20ed"
+          "message_title": "Correct coherent-source falsifier to rewrite all 7 full-data replicas and 189 Rainbow27 aliases before external pin HOLD",
+          "seat": "seat-1",
+          "sha": "eba20fb0e3b0d607032df91787f3a7acb1b2276f",
+          "timestamp_utc": "2026-10-15T13:48:23Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/eba20fb0e3b0d607032df91787f3a7acb1b2276f"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Bind N-Nest/Q-PRISM/reductions lineage to July audit and create-only publisher; preserve failed run receipt",
-          "seat": "unassigned",
-          "sha": "13549fe4f1347a7f806a64c449dabecd292a3ec6",
-          "timestamp_utc": "2026-10-15T09:20:31Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/13549fe4f1347a7f806a64c449dabecd292a3ec6"
+          "message_title": "Strengthen Seat1 coherent-forgery falsifier: actually rewrite source bytes and 27 aliases, prove local false PASS versus pinned external HOLD",
+          "seat": "seat-1",
+          "sha": "ab550fe53229a69eab651745b68e36ab52380653",
+          "timestamp_utc": "2026-10-15T13:47:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ab550fe53229a69eab651745b68e36ab52380653"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Stage checked N-Nest four-seat full artifacts for HF and require remote download SHA before publication",
-          "seat": "unassigned",
-          "sha": "3f3187fba3e9766fd062b7d4f23f056b5c187ff8",
-          "timestamp_utc": "2026-10-15T09:20:21Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3f3187fba3e9766fd062b7d4f23f056b5c187ff8"
+          "message_title": "Execute Seat1 ordered27 rainbows 15309 verified digital reads and adversarial falsifiers independently on Ubuntu Windows",
+          "seat": "seat-1",
+          "sha": "0a65b6b0be2cc645852e25f4d3638366b899d487",
+          "timestamp_utc": "2026-10-15T13:45:21Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0a65b6b0be2cc645852e25f4d3638366b899d487"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Attach run-bound SHA manifest and all Q-PRISM output files to nested referee artifacts",
-          "seat": "unassigned",
-          "sha": "d2373bdc3df2c6965493642cd42b40d8c57c2ea0",
-          "timestamp_utc": "2026-10-15T09:19:07Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/d2373bdc3df2c6965493642cd42b40d8c57c2ea0"
+          "message_title": "Seat1 independently reconstruct 15309 Rainbow27\u00d77 addresses and actively reject ordered permutation, source, alias and digest faults",
+          "seat": "seat-1",
+          "sha": "888ff9bd25f460cfbd5c20927867d997db0bd12a",
+          "timestamp_utc": "2026-10-15T13:44:44Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/888ff9bd25f460cfbd5c20927867d997db0bd12a"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Bind N-Nest four-seat results to producing run, Git HEAD, Q-PRISM/reductions lineage and fail-closed SHA256SUMS",
-          "seat": "unassigned",
-          "sha": "4c0d2751bd7549d762d186292c5d2abbbc903f02",
-          "timestamp_utc": "2026-10-15T09:18:40Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4c0d2751bd7549d762d186292c5d2abbbc903f02"
+          "message_title": "Publish Seat1 Rainbow7 byte-verified software results and explicit four-seat scientific peer challenge",
+          "seat": "seat-1",
+          "sha": "7a1374935421c73dc8760c22fc268b1a3f5c79bd",
+          "timestamp_utc": "2026-10-15T13:17:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7a1374935421c73dc8760c22fc268b1a3f5c79bd"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Fix master N-Nest artifact multiline upload; preserve verified nested and QPRISM results",
-          "seat": "unassigned",
-          "sha": "f5b0c170c8a92ad1bba94668f5dc8a2bbb1a23c7",
-          "timestamp_utc": "2026-10-15T09:18:31Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f5b0c170c8a92ad1bba94668f5dc8a2bbb1a23c7"
+          "message_title": "Append immutable Seat1 Rainbow7 3/3 cross-OS PASS scientific/software receipt with exact bank and index SHA pins",
+          "seat": "seat-1",
+          "sha": "0ad39bcfc04768b2505b930fbe9a633bfcd101b4",
+          "timestamp_utc": "2026-10-15T13:17:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0ad39bcfc04768b2505b930fbe9a633bfcd101b4"
         },
         {
-          "attribution_basis": "no_explicit_seat_proof",
+          "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/coordinator/nested-four-seat-replay-20261015",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
           "github_actor": "JesseBrown1980",
-          "message_title": "Require four-seat server-stamped start barrier and Q-PRISM/reductions fail-closed master gate",
-          "seat": "unassigned",
-          "sha": "8e28db81c4663664f68cfc89fd88eb74020d6634",
-          "timestamp_utc": "2026-10-15T09:15:50Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8e28db81c4663664f68cfc89fd88eb74020d6634"
+          "message_title": "Run preregistered 7-band 567-record digital memory bank against actual prior RGB QR pixel scan, independent Node controls and Ubuntu Windows byte parity",
+          "seat": "seat-1",
+          "sha": "c0fd5bc96c472d9cb8ffe55dd0b0cf87451eff65",
+          "timestamp_utc": "2026-10-15T13:15:03Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c0fd5bc96c472d9cb8ffe55dd0b0cf87451eff65"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independent Node verifier for 567 rainbow indexed byte-retrievals, faults, band erasure and external provenance hold",
+          "seat": "seat-1",
+          "sha": "fba33a7f44ff5cda870a010ef4642ac13829faab",
+          "timestamp_utc": "2026-10-15T13:14:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fba33a7f44ff5cda870a010ef4642ac13829faab"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement SHA-pinned seven-band full-byte rainbow memory bank with 567 indexed addressable records",
+          "seat": "seat-1",
+          "sha": "89ed500f1d36df8ee8849633ae02a7fc10637698",
+          "timestamp_utc": "2026-10-15T13:13:22Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/89ed500f1d36df8ee8849633ae02a7fc10637698"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "PREREG Seat1 rainbow seven-band indexed light-bank challenge before implementation, separate real QR carrier and optical hardware claims",
+          "seat": "seat-1",
+          "sha": "83629415d338fa8713c1ca01faaa591fbb14ba04",
+          "timestamp_utc": "2026-10-15T13:12:47Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/83629415d338fa8713c1ca01faaa591fbb14ba04"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement actual negative injections, external permission denial and 10ms/20ms numerical convergence tests",
+          "seat": "seat-1",
+          "sha": "076758de2f1282ef0741b0a3bead4152591e7777",
+          "timestamp_utc": "2026-10-15T13:07:30Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/076758de2f1282ef0741b0a3bead4152591e7777"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement actual negative injections, external permission denial and 10ms/20ms numerical convergence tests",
+          "seat": "seat-1",
+          "sha": "076758de2f1282ef0741b0a3bead4152591e7777",
+          "timestamp_utc": "2026-10-15T13:07:30Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/076758de2f1282ef0741b0a3bead4152591e7777"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add independent Node implementation for preregistered 81-site current-proxy synthetic pulse/feedback challenge",
+          "seat": "seat-1",
+          "sha": "0ac94a8f40b4366b7cbb2156a9124e62c11e301a",
+          "timestamp_utc": "2026-10-15T13:06:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0ac94a8f40b4366b7cbb2156a9124e62c11e301a"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add independent Node implementation for preregistered 81-site current-proxy synthetic pulse/feedback challenge",
+          "seat": "seat-1",
+          "sha": "0ac94a8f40b4366b7cbb2156a9124e62c11e301a",
+          "timestamp_utc": "2026-10-15T13:06:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0ac94a8f40b4366b7cbb2156a9124e62c11e301a"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement Seat1 preregistered integer mass-conserving three-state photocycle and symbolic current traces",
+          "seat": "seat-1",
+          "sha": "70f1f94cef0ab5afc89320db185f25f1b5a3029c",
+          "timestamp_utc": "2026-10-15T13:06:11Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/70f1f94cef0ab5afc89320db185f25f1b5a3029c"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement Seat1 preregistered integer mass-conserving three-state photocycle and symbolic current traces",
+          "seat": "seat-1",
+          "sha": "70f1f94cef0ab5afc89320db185f25f1b5a3029c",
+          "timestamp_utc": "2026-10-15T13:06:11Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/70f1f94cef0ab5afc89320db185f25f1b5a3029c"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Compare independent lightbank kinetics metrics field by field, not JSON key serialization order",
+          "seat": "seat-1",
+          "sha": "457883e1479641c3b8d82709b018106c07474fff",
+          "timestamp_utc": "2026-10-15T12:19:59Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/457883e1479641c3b8d82709b018106c07474fff"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Compare independent lightbank kinetics metrics field by field, not JSON key serialization order",
+          "seat": "seat-1",
+          "sha": "457883e1479641c3b8d82709b018106c07474fff",
+          "timestamp_utc": "2026-10-15T12:19:59Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/457883e1479641c3b8d82709b018106c07474fff"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Execute real 3-plane RGB QR scanner, 81-memory software light gate, independent JS BigInt replay on Ubuntu and Windows",
+          "seat": "seat-1",
+          "sha": "34b28be8e94414ca488cefa0f00ff5f52145de66",
+          "timestamp_utc": "2026-10-15T12:18:41Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/34b28be8e94414ca488cefa0f00ff5f52145de66"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Execute real 3-plane RGB QR scanner, 81-memory software light gate, independent JS BigInt replay on Ubuntu and Windows",
+          "seat": "seat-1",
+          "sha": "34b28be8e94414ca488cefa0f00ff5f52145de66",
+          "timestamp_utc": "2026-10-15T12:18:41Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/34b28be8e94414ca488cefa0f00ff5f52145de66"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independent Node BigInt photocycle replay, indexed QR data reconstruction, projector invariants and manifest checks",
+          "seat": "seat-1",
+          "sha": "62c3fed48e7e506b1922324ae4732ee5e558956f",
+          "timestamp_utc": "2026-10-15T12:17:57Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/62c3fed48e7e506b1922324ae4732ee5e558956f"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independent Node BigInt photocycle replay, indexed QR data reconstruction, projector invariants and manifest checks",
+          "seat": "seat-1",
+          "sha": "62c3fed48e7e506b1922324ae4732ee5e558956f",
+          "timestamp_utc": "2026-10-15T12:17:57Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/62c3fed48e7e506b1922324ae4732ee5e558956f"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement real three-plane QR pixel roundtrip, 81 memories, projector proof, photocycle gate and fault injections",
+          "seat": "seat-1",
+          "sha": "090bff478adca684e1f655399b363084c8d40973",
+          "timestamp_utc": "2026-10-15T12:16:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/090bff478adca684e1f655399b363084c8d40973"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement real three-plane QR pixel roundtrip, 81 memories, projector proof, photocycle gate and fault injections",
+          "seat": "seat-1",
+          "sha": "090bff478adca684e1f655399b363084c8d40973",
+          "timestamp_utc": "2026-10-15T12:16:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/090bff478adca684e1f655399b363084c8d40973"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Preregister RGB QR 81-memory light-bank plus synthetic photocycle read gate before code or measured outputs",
+          "seat": "seat-1",
+          "sha": "152d778e9146e60bdfe18661c514cb62bb975dd3",
+          "timestamp_utc": "2026-10-15T12:14:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/152d778e9146e60bdfe18661c514cb62bb975dd3"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Preregister RGB QR 81-memory light-bank plus synthetic photocycle read gate before code or measured outputs",
+          "seat": "seat-1",
+          "sha": "152d778e9146e60bdfe18661c514cb62bb975dd3",
+          "timestamp_utc": "2026-10-15T12:14:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/152d778e9146e60bdfe18661c514cb62bb975dd3"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Exercise 243 actual independent per-wave corruption, erasure, identity, projector and coherent-source trust controls",
+          "seat": "seat-1",
+          "sha": "3b2421d9f5e112da17115902c22c66c8c9dda2cb",
+          "timestamp_utc": "2026-10-15T12:09:50Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3b2421d9f5e112da17115902c22c66c8c9dda2cb"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement independent Node BigInt 109350-frame August RGB memory, parity and synthetic photocycle challenge",
+          "seat": "seat-1",
+          "sha": "d0d3078af95b798dac3362c6a044f82f9b90a7a1",
+          "timestamp_utc": "2026-10-15T12:08:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/d0d3078af95b798dac3362c6a044f82f9b90a7a1"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement Seat 1 digital August Light Bank memory: indexed RGB chunking, XOR repair and 109350 synthetic photocycle frames",
+          "seat": "seat-1",
+          "sha": "66453fe1eaf671333558771691afcc305155a70b",
+          "timestamp_utc": "2026-10-15T12:07:53Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/66453fe1eaf671333558771691afcc305155a70b"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Freeze exact speed-of-one 3-lane projector algebra and noninvertible-memory falsifiers before execution",
+          "seat": "seat-1",
+          "sha": "ec96549a8601ac0bcb844ef8a6e4a94c8eebc949",
+          "timestamp_utc": "2026-10-15T12:06:37Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ec96549a8601ac0bcb844ef8a6e4a94c8eebc949"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat 1 PRE-REGISTER August Colour QR and Light-Boat sources, triad memory, synthetic photocycle and adversarial recovery challenge before code",
+          "seat": "seat-1",
+          "sha": "7355b60363954a1128d96e46614bae4dbdb2373b",
+          "timestamp_utc": "2026-10-15T12:03:36Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7355b60363954a1128d96e46614bae4dbdb2373b"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal cross-OS Round2 computational findings, exact old/new SHAs, quantitative feedback tradeoffs and explicit source-authentication hold",
+          "seat": "seat-1",
+          "sha": "c56fd2e42d41430bf9341a33a183315c4d3b3a67",
+          "timestamp_utc": "2026-10-15T11:24:43Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c56fd2e42d41430bf9341a33a183315c4d3b3a67"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal cross-OS Round2 computational findings, exact old/new SHAs, quantitative feedback tradeoffs and explicit source-authentication hold",
+          "seat": "seat-1",
+          "sha": "c56fd2e42d41430bf9341a33a183315c4d3b3a67",
+          "timestamp_utc": "2026-10-15T11:24:43Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c56fd2e42d41430bf9341a33a183315c4d3b3a67"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal cross-OS Round2 computational findings, exact old/new SHAs, quantitative feedback tradeoffs and explicit source-authentication hold",
+          "seat": "seat-1",
+          "sha": "c56fd2e42d41430bf9341a33a183315c4d3b3a67",
+          "timestamp_utc": "2026-10-15T11:24:43Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c56fd2e42d41430bf9341a33a183315c4d3b3a67"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "CI for frozen Phase A plus preregistered Phase B 1.75M site ticks, active adversarial controls and exact cross-OS trace readback",
+          "seat": "seat-1",
+          "sha": "f385570ce1636bb703f3e93225781b2370526661",
+          "timestamp_utc": "2026-10-15T11:21:54Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f385570ce1636bb703f3e93225781b2370526661"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "CI for frozen Phase A plus preregistered Phase B 1.75M site ticks, active adversarial controls and exact cross-OS trace readback",
+          "seat": "seat-1",
+          "sha": "f385570ce1636bb703f3e93225781b2370526661",
+          "timestamp_utc": "2026-10-15T11:21:54Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/f385570ce1636bb703f3e93225781b2370526661"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Lock exact old/new HBP digests and verify every Round2 row, current unit, fault receipt and operating-system parity",
+          "seat": "seat-1",
+          "sha": "71b3adf8a4fe1d158f2a363fc79f076d9c300ff1",
+          "timestamp_utc": "2026-10-15T11:21:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/71b3adf8a4fe1d158f2a363fc79f076d9c300ff1"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Lock exact old/new HBP digests and verify every Round2 row, current unit, fault receipt and operating-system parity",
+          "seat": "seat-1",
+          "sha": "71b3adf8a4fe1d158f2a363fc79f076d9c300ff1",
+          "timestamp_utc": "2026-10-15T11:21:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/71b3adf8a4fe1d158f2a363fc79f076d9c300ff1"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independently inject eight Node adversarial faults with explicit HALT and source-trust hold",
+          "seat": "seat-1",
+          "sha": "9c6c58442d4954db7fac4dec03179e18e595acd3",
+          "timestamp_utc": "2026-10-15T11:20:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/9c6c58442d4954db7fac4dec03179e18e595acd3"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independently inject eight Node adversarial faults with explicit HALT and source-trust hold",
+          "seat": "seat-1",
+          "sha": "9c6c58442d4954db7fac4dec03179e18e595acd3",
+          "timestamp_utc": "2026-10-15T11:20:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/9c6c58442d4954db7fac4dec03179e18e595acd3"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Preregistered active fault injections, positivity, dark recovery and step-refinement checks",
+          "seat": "seat-1",
+          "sha": "fd255ed8a5a92f6347c8b258f4c0abce42220d2f",
+          "timestamp_utc": "2026-10-15T11:20:08Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fd255ed8a5a92f6347c8b258f4c0abce42220d2f"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Preregistered active fault injections, positivity, dark recovery and step-refinement checks",
+          "seat": "seat-1",
+          "sha": "fd255ed8a5a92f6347c8b258f4c0abce42220d2f",
+          "timestamp_utc": "2026-10-15T11:20:08Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fd255ed8a5a92f6347c8b258f4c0abce42220d2f"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independent Node BigInt implementation of locked 3-state rate-law, checkpoint HBP and current proxy",
+          "seat": "seat-1",
+          "sha": "52d80981512c915733333182b83bb16f90d08aa5",
+          "timestamp_utc": "2026-10-15T11:19:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/52d80981512c915733333182b83bb16f90d08aa5"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Independent Node BigInt implementation of locked 3-state rate-law, checkpoint HBP and current proxy",
+          "seat": "seat-1",
+          "sha": "52d80981512c915733333182b83bb16f90d08aa5",
+          "timestamp_utc": "2026-10-15T11:19:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/52d80981512c915733333182b83bb16f90d08aa5"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round2-rate-current-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement preregistered 81-identity 3-state synthetic rate law, current proxy and six feedback arms",
+          "seat": "seat-1",
+          "sha": "c11bdf2dec7ef5f4bc9d2f81659438b523a10739",
+          "timestamp_utc": "2026-10-15T11:18:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c11bdf2dec7ef5f4bc9d2f81659438b523a10739"
+        },
+        {
+          "attribution_basis": "explicit_commit_trailer",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement preregistered 81-identity 3-state synthetic rate law, current proxy and six feedback arms",
+          "seat": "seat-1",
+          "sha": "c11bdf2dec7ef5f4bc9d2f81659438b523a10739",
+          "timestamp_utc": "2026-10-15T11:18:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c11bdf2dec7ef5f4bc9d2f81659438b523a10739"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat 1 Round 2 preregister rate/current synthetic photocycle and 81-site delayed-feedback falsifiers BEFORE executable code",
+          "seat": "seat-1",
+          "sha": "6cb3139d84f380b28d8c12387e84e08548fb69ce",
+          "timestamp_utc": "2026-10-15T11:13:37Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/6cb3139d84f380b28d8c12387e84e08548fb69ce"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/optogenetic-photocycle-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Prepare operator-ready four-seat optogenetic benchmark protocol with frozen Seat1 trace, distinct peer lanes, explicit trust & physics gates",
+          "seat": "seat-1",
+          "sha": "19f21a880d16e84902d157a6d3bc4bcd908dc888",
+          "timestamp_utc": "2026-10-15T10:41:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/19f21a880d16e84902d157a6d3bc4bcd908dc888"
+        },
+        {
+          "attribution_basis": "explicit_branch_label",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Prepare operator-ready four-seat optogenetic benchmark protocol with frozen Seat1 trace, distinct peer lanes, explicit trust & physics gates",
+          "seat": "seat-1",
+          "sha": "19f21a880d16e84902d157a6d3bc4bcd908dc888",
+          "timestamp_utc": "2026-10-15T10:41:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/19f21a880d16e84902d157a6d3bc4bcd908dc888"
         }
       ],
       "repo": "JesseBrown1980/asolaria-stone-to-moss",
@@ -1000,122 +1148,122 @@
         {
           "branch": "main",
           "conclusion": null,
-          "id": 38717296234,
+          "id": 38757380791,
           "name": "Asolaria three-seat activity ledger",
-          "sha": "c3a8bf653c5bfa23b640d72c980527111726807e",
+          "sha": "a4f27528af66c98f947bdf083ac86ae83f5caed8",
           "status": "in_progress",
-          "updated_at": "2026-10-15T10:01:47Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38717296234"
+          "updated_at": "2026-10-15T15:06:30Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38757380791"
         },
         {
-          "branch": "main",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38717150255,
-          "name": "Seat 3 cross-view consistency entropy (Python and independent Node)",
-          "sha": "c3a8bf653c5bfa23b640d72c980527111726807e",
+          "id": 38754279074,
+          "name": "Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher",
+          "sha": "2cd144947a4c75dbba20a37b263ef048bd290656",
           "status": "completed",
-          "updated_at": "2026-10-15T10:01:12Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38717150255"
+          "updated_at": "2026-10-15T14:46:57Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38754279074"
         },
         {
-          "branch": "main",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716853808,
-          "name": "Seat 4 independent cross-view polynomial GCD certificate",
-          "sha": "eb4d5579b455294549a5178ddcbf38bb9184a381",
+          "id": 38754279038,
+          "name": "Seat 3 computational preflight (same-host evidence only)",
+          "sha": "2cd144947a4c75dbba20a37b263ef048bd290656",
           "status": "completed",
-          "updated_at": "2026-10-15T09:58:42Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716853808"
+          "updated_at": "2026-10-15T14:46:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38754279038"
         },
         {
-          "branch": "agent/seat-4/crossview-polynomial-certificate-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716736550,
-          "name": "Seat 4 independent cross-view polynomial GCD certificate",
-          "sha": "f5bc38a66cbe8513a324412ecb6808e9fe3723e4",
+          "id": 38754270396,
+          "name": "Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher",
+          "sha": "2cd144947a4c75dbba20a37b263ef048bd290656",
           "status": "completed",
-          "updated_at": "2026-10-15T09:57:47Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716736550"
+          "updated_at": "2026-10-15T14:50:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38754270396"
         },
         {
-          "branch": "agent/seat-4/crossview-polynomial-certificate-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716661146,
-          "name": "Seat 4 independent cross-view polynomial GCD certificate",
-          "sha": "f5bc38a66cbe8513a324412ecb6808e9fe3723e4",
+          "id": 38754039667,
+          "name": "Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher",
+          "sha": "472406a4ae0cc6ed562f3733fec62457dab187f4",
           "status": "completed",
-          "updated_at": "2026-10-15T09:57:02Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716661146"
+          "updated_at": "2026-10-15T14:45:51Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38754039667"
         },
         {
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716437013,
-          "name": "Seat 2 independent crossview entropy and M2 optimal views",
-          "sha": "b3844642c22b1ddadd6a78366f3bcf9b468e1234",
+          "id": 38754039664,
+          "name": "Seat 3 computational preflight (same-host evidence only)",
+          "sha": "472406a4ae0cc6ed562f3733fec62457dab187f4",
           "status": "completed",
-          "updated_at": "2026-10-15T09:55:45Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716437013"
+          "updated_at": "2026-10-15T14:44:38Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38754039664"
         },
         {
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716430010,
-          "name": "Seat 2 independent crossview entropy and M2 optimal views",
-          "sha": "b3844642c22b1ddadd6a78366f3bcf9b468e1234",
+          "id": 38754024542,
+          "name": "Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher",
+          "sha": "472406a4ae0cc6ed562f3733fec62457dab187f4",
           "status": "completed",
-          "updated_at": "2026-10-15T09:55:23Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716430010"
+          "updated_at": "2026-10-15T14:45:17Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38754024542"
         },
         {
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716324898,
-          "name": "Seat 2 independent crossview entropy and M2 optimal views",
-          "sha": "91524bb3cd2581df22918c9410e739dcc27a6163",
+          "id": 38753993254,
+          "name": "Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher",
+          "sha": "be66daecdb13ae54fabf2ab220c8863a631a3cbc",
           "status": "completed",
-          "updated_at": "2026-10-15T09:55:10Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716324898"
+          "updated_at": "2026-10-15T14:45:34Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38753993254"
         },
         {
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716318567,
-          "name": "Seat 2 independent crossview entropy and M2 optimal views",
-          "sha": "91524bb3cd2581df22918c9410e739dcc27a6163",
+          "id": 38753993017,
+          "name": "Seat 3 computational preflight (same-host evidence only)",
+          "sha": "be66daecdb13ae54fabf2ab220c8863a631a3cbc",
           "status": "completed",
-          "updated_at": "2026-10-15T09:54:58Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716318567"
+          "updated_at": "2026-10-15T14:44:08Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38753993017"
         },
         {
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716308474,
-          "name": "Seat 2 independent crossview entropy and M2 optimal views",
-          "sha": "a9e5300a208884bc7bad48048a0beb8225928c94",
+          "id": 38753983403,
+          "name": "Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher",
+          "sha": "be66daecdb13ae54fabf2ab220c8863a631a3cbc",
           "status": "completed",
-          "updated_at": "2026-10-15T09:54:36Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716308474"
+          "updated_at": "2026-10-15T14:44:54Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38753983403"
         },
         {
-          "branch": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716303314,
-          "name": "Seat 2 independent crossview entropy and M2 optimal views",
-          "sha": "a9e5300a208884bc7bad48048a0beb8225928c94",
+          "id": 38753939427,
+          "name": "Seat 3 computational preflight (same-host evidence only)",
+          "sha": "878df2cbce011c13314005c2804dbc9afc5f19b2",
           "status": "completed",
-          "updated_at": "2026-10-15T09:54:29Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716303314"
+          "updated_at": "2026-10-15T14:43:50Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38753939427"
         },
         {
-          "branch": "agent/seat-4/crossview-polynomial-certificate-20261015",
+          "branch": "agent/seat-3/factorized-rainbow27-resolver-20261015",
           "conclusion": "success",
-          "id": 38716219931,
-          "name": "Seat 4 independent cross-view polynomial GCD certificate",
-          "sha": "adfee589ea62bdca5e5a004c6ad2fd41c0bed2c9",
+          "id": 38753939378,
+          "name": "Seat3 source-bound factorized Rainbow27 memory resolver and strict route watcher",
+          "sha": "878df2cbce011c13314005c2804dbc9afc5f19b2",
           "status": "completed",
-          "updated_at": "2026-10-15T09:53:26Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38716219931"
+          "updated_at": "2026-10-15T14:44:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38753939378"
         }
       ]
     },
@@ -3734,5 +3882,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "4c5afe0b3c0082007dcc373804cddb7ebd77fd5904434dfd981f40159d2af393"
+  "source_state_sha256": "ea1e4fe0d7244ed41a18c17211fce06f82c0cd4ba8bf9b9ccf143d72323c5093"
 }
