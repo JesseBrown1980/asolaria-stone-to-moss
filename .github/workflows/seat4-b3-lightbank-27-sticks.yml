@@ -113,6 +113,45 @@ jobs:
           print("SEAT4_B3_LIGHTBANK_27_EXACT_MEMORY_PASS",data["archive_sha256"])
           print("SEAT4_B3_MANIFEST_SHA",hashlib.sha256(checksum).hexdigest())
           PY
+      - name: Canonicalize audit-log line endings; pin ALL important results and seal cross-OS artifact manifest
+        shell: bash
+        run: |
+          python - "$RUNNER_TEMP/B3" <<'PY'
+          from pathlib import Path
+          import hashlib,sys,json
+          root=Path(sys.argv[1])
+          sh=lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+          for p in root.glob("*audit.json"):
+              p.write_bytes(p.read_bytes().replace(b"\r\n",b"\n"))
+          pins={
+              "banks/source.archive":"2f3a0b27a50a562205a500dd7e38e4318f658cdd05202a4b88312c812ae7ba30",
+              "banks/bank_manifest.json":"a87d27bce1924f3fc4340a337706bf1365cb38919feee71e759f594c3549ced7",
+              "banks/B3-RESULT.json":"0b9b9a36272c364a55e706ecb125e9b3aa93710b5be23daec0deb9cd90fed4cb",
+              "banks/SHA256SUMS":"893f1f62d317e68d9aa8f5404cd157d3660cca28c485473c5bbfdc7319a0e3c5",
+              "banks/bank-parity.hbp":"253bbf7b10df921e737a8dfeb8a3239b4d4bee35e870af37c53e4cc7ace4ea24",
+              "node-reader-audit.json":"c1189125439a0fe537a4b12918be7fb7d6b5f59787308728b4f67b7705f76db6",
+              "GF2-rank-audit.json":"4c2cdf1705743c567f09b4a872855ab66a1b3d9d3e75bd7a4f4c5e916fff9b9b",
+              "parent-B2-audit.json":"8d37e13c5f11e1c90ff8554896e6b70ac63642b2df8da81dad83973c074aefbe",
+              "python-build-audit.json":"e24349de03827b0c902f1cc4b5e26927350c385d9eff654023f4cbf96ba0ee97",
+              "python-replay-audit.json":"e24349de03827b0c902f1cc4b5e26927350c385d9eff654023f4cbf96ba0ee97",
+          }
+          for rel,expected in pins.items():
+              assert sh(root/rel)==expected,("CROSS_HOST_BYTES_CHANGED",rel)
+          manifest=(root/"banks"/"SHA256SUMS").read_text("ascii")
+          assert "\r" not in manifest and len(manifest.splitlines())==31
+          for line in manifest.splitlines():
+              digest,name=line.split("  ",1)
+              assert sh(root/"banks"/name)==digest
+          lines=[]
+          for p in sorted([*root.glob("*audit.json"),*root.glob("banks/*")],
+                          key=lambda p:p.relative_to(root).as_posix()):
+              rel=p.relative_to(root).as_posix()
+              lines.append(f"{sh(p)}  {rel}\n")
+          assert len(lines)==37
+          (root/"ARTIFACT-SHA256SUMS").write_text("".join(lines),encoding="ascii",newline="\n")
+          print("SEAT4_B3_CANONICAL_37_FILE_ARTIFACT_SHA",
+                sh(root/"ARTIFACT-SHA256SUMS"))
+          PY
       - name: Upload actual recovered digital bank bytes, typed source archive and SHA manifests
         uses: actions/upload-artifact@v4
         with:
@@ -120,5 +159,6 @@ jobs:
           path: |
             ${{ runner.temp }}/B3/banks/*
             ${{ runner.temp }}/B3/*audit.json
+            ${{ runner.temp }}/B3/ARTIFACT-SHA256SUMS
           if-no-files-found: error
           retention-days: 90
