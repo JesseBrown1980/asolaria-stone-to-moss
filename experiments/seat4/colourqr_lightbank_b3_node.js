@@ -74,6 +74,14 @@ function planePayload(raw,global,chunkCount){
  assert(Buffer.from(b64,"base64").equals(payload));
  return payload.subarray(4);
 }
+function recoverRGBPlane(planes,shadow,missing){
+ assert.equal(planes.length,3);
+ assert.equal(missing.length,1,"INSUFFICIENT_RGB_PARITY");
+ const lane=missing[0];assert(lane>=0&&lane<3);
+ const have=planes.filter((_,i)=>i!==lane);
+ assert(have.every(x=>x!==null));
+ return xorBytes(shadow,...have);
+}
 function parseFrames(banks,meta,sourceRoot,order){
  const count=meta.rgb_frame_count,total=meta.chunk_count;
  assert.equal(banks.length,BANKS);
@@ -183,8 +191,8 @@ function run(sourceRoot,root){
     Math.floor(f/BANKS)*RECORD,(Math.floor(f/BANKS)+1)*RECORD);
   const rgb=[0,1,2].map(i=>row.subarray(i*PLANE,(i+1)*PLANE));
   const lane=f%3;
-  const remaining=rgb.filter((_,index)=>index!==lane);
-  const recovered=xorBytes(row.subarray(3*PLANE,4*PLANE),...remaining);
+  const erased=rgb.map((value,index)=>index===lane?null:value);
+  const recovered=recoverRGBPlane(erased,row.subarray(3*PLANE,4*PLANE),[lane]);
   assert(recovered.equals(rgb[lane]));
   onePlane++;
  }
@@ -199,12 +207,18 @@ function run(sourceRoot,root){
  assert(parseFrames(damaged,meta,sourceRoot,ordered).equals(archive));
  assert.throws(()=>recoverWholeBank(banks,parity,[7,12],meta),
   /INSUFFICIENT_ERASURE_CAPACITY/);
+ assert.throws(()=>recoverRGBPlane([null,null,Buffer.alloc(PLANE)],Buffer.alloc(PLANE),[0,1]),
+   /INSUFFICIENT_RGB_PARITY/);
  const a=Buffer.alloc(PLANE),b=Buffer.alloc(PLANE);b[0]=1;
  assert(xorBytes(a,a).equals(xorBytes(b,b))&&!a.equals(b));
  const forged=Buffer.from(banks[0]);forged[2]^=1;
+ // The attacker also recomputes the local XOR parity so index verification,
+ // rather than a mere inconsistent parity bit, MUST reject the false address.
+ xorBytes(forged.subarray(0,PLANE),forged.subarray(PLANE,2*PLANE),
+   forged.subarray(2*PLANE,3*PLANE)).copy(forged,3*PLANE);
  const altered=[...banks];altered[0]=forged;
  assert.throws(()=>parseFrames(altered,meta,sourceRoot,ordered),
-   /(parity mismatch|index mismatch)/);
+   /index mismatch/);
  const ticks=read(sourceRoot,"ticks.hbp");
  const projection=projectorTest(ticks);
  const receipt=JSON.parse(read(root,"B3-RESULT.json").toString("ascii"));
