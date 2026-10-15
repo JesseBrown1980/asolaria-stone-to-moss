@@ -60,6 +60,11 @@ def check_original_n_nest(nn):
     discipline=(nn/"AGENT-DISCIPLINE.md").read_text("utf8")
     law=(nn/"LAW.md").read_text("utf8")
     readme=(nn/"README.md").read_text("utf8")
+    prism=(nn/"PRISM-COMB-0LOSS-NEST.md").read_text("utf8")
+    inverse=(nn/"PATH2-DBWH-NNEST-INVERSE-GATE-2026-07-11.md").read_text("utf8")
+    assert "inverse map" in prism and "biject" in prism
+    assert "child.reported == watcher.recomputed_truth" in inverse
+    assert "P(R(P(X))) = P(X)" in inverse
     assert "AGENT-DISCIPLINE.md" in preload
     for requirement in ("RUN IT. THEN SAY IT.","A VERDICT IS THREE-VALUED",
                         "MEASURED_IS","LET THE MACHINES DECIDE"):
