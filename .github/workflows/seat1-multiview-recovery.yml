@@ -1,0 +1,51 @@
+name: Seat 1 complementary lossy observations — exact recovery
+
+on:
+  push:
+    branches:
+      - agent/seat-1/multiview-observability-20261015
+    paths:
+      - experiments/seat1/multiview_81_*
+      - experiments/seat1/PREREG-MULTIVIEW-81-20261015.md
+      - .github/workflows/seat1-multiview-recovery.yml
+      - stones/2026-10-15-rainbow81/seat-1-complementary-views-21392.*
+  pull_request:
+    paths:
+      - experiments/seat1/multiview_81_*
+      - experiments/seat1/PREREG-MULTIVIEW-81-20261015.md
+      - .github/workflows/seat1-multiview-recovery.yml
+      - stones/2026-10-15-rainbow81/seat-1-complementary-views-21392.*
+
+permissions:
+  contents: read
+
+jobs:
+  reconstruct:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Python cyclic-polynomial multi-view exact recovery
+        run: python experiments/seat1/multiview_81_python.py python-multiview.hbp
+      - name: Independent Node transfer-matrix multi-view exact recovery
+        run: node experiments/seat1/multiview_81_node.js node-multiview.hbp
+      - name: Exact cross-language bytes, row counts and mutation checksum
+        run: |
+          python -c "import hashlib,pathlib; a=pathlib.Path('python-multiview.hbp').read_bytes(); b=pathlib.Path('node-multiview.hbp').read_bytes(); assert a==b,'PY_NODE_DIFFER'; assert a.count(b'RECORD|')==21392; assert a.endswith(b'END|rows=21392|zero_bits=4584|one_bit=16044|two_bits=764|kernel_witnesses=96|wrong_tags=88|future_rank_no_gain=14|physical_tested=0|json=0\n'); h=hashlib.sha256(a).hexdigest(); assert h!=hashlib.sha256(a[:-1]+b'X').hexdigest(); print('SEAT1_MULTIVIEW_PASS sha256='+h+' bytes='+str(len(a)))"
+      - name: Independently verify sealed JSON HBP HBI SHA256 sidecars and exact raw traces
+        run: python experiments/seat1/verify_multiview_release.py python-multiview.hbp node-multiview.hbp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-multiview-${{ matrix.os }}
+          path: |
+            python-multiview.hbp
+            node-multiview.hbp
