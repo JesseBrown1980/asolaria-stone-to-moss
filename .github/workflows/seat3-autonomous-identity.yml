@@ -1,0 +1,69 @@
+name: Seat 3 autonomous stable-identity recurrence audit
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*autonomous*"
+      - "experiments/seat3/PREREG-AUTONOMOUS*"
+      - ".github/workflows/seat3-autonomous-identity.yml"
+      - "stones/2026-10-15-rainbow81/seat3-autonomous-identity*"
+  push:
+    branches:
+      - main
+      - agent/seat-3/immutable-identity-autonomous-ticks-20261015
+    paths:
+      - "experiments/seat3/*autonomous*"
+      - "experiments/seat3/PREREG-AUTONOMOUS*"
+      - ".github/workflows/seat3-autonomous-identity.yml"
+      - "stones/2026-10-15-rainbow81/seat3-autonomous-identity*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  autonomous-state-replay:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify N-Nest LAW.md source pin (human apex is not per-tick consent)
+        shell: bash
+        run: |
+          git clone -q https://github.com/JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED.git "$RUNNER_TEMP/nnest"
+          git -C "$RUNNER_TEMP/nnest" checkout -q 307903651f56e8a28ef98ca36aef22ee8cda935c
+          test "$(git -C "$RUNNER_TEMP/nnest" rev-parse HEAD)" = 307903651f56e8a28ef98ca36aef22ee8cda935c
+          test "$(git -C "$RUNNER_TEMP/nnest" hash-object -- LAW.md)" = f84710d3018882b7282b9fda227638c57568ffe4
+          grep -q "Observation and correction nest infinitely" "$RUNNER_TEMP/nnest/LAW.md"
+          grep -q "Consent does not nest" "$RUNNER_TEMP/nnest/LAW.md"
+      - name: Execute both independent finite simulations and seal SHA artifacts
+        shell: bash
+        run: |
+          python experiments/seat3/seat3_autonomous_universe.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/python.json"
+          node experiments/seat3/seat3_autonomous_universe.js "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/node.json"
+          python experiments/seat3/verify_autonomous_universe.py "$RUNNER_TEMP/python.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" "$RUNNER_TEMP/seat3-audit"
+      - name: Tampered full output must fail byte-exact verifier
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; d=pathlib.Path(os.environ["RUNNER_TEMP"]); x=(d/"python.hbp").read_bytes(); (d/"tampered.hbp").write_bytes(bytes([x[0]^1])+x[1:])'
+          if python experiments/seat3/verify_autonomous_universe.py "$RUNNER_TEMP/tampered.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/python.json" "$RUNNER_TEMP/node.json" "$RUNNER_TEMP/should-not-exist"; then
+            echo "ERROR: tampered HBP was accepted"; exit 1
+          fi
+          echo "Expected full-trace tamper hold: PASS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-autonomous-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/seat3-audit/*
+          if-no-files-found: error
+          retention-days: 30
