@@ -1,0 +1,82 @@
+name: Seat2 Nobel optogenetic-inspired 81-site digital gate trial
+
+on:
+  push:
+    branches:
+      - agent/seat-2/opto-lightgate-recurrence-20261015
+    paths:
+      - experiments/seat2/optogate/**
+      - .github/workflows/seat2-optogate-light-recurrence.yml
+      - stones/2026-10-15-rainbow81/seat2-opto*
+  pull_request:
+    paths:
+      - experiments/seat2/optogate/**
+      - .github/workflows/seat2-optogate-light-recurrence.yml
+      - stones/2026-10-15-rainbow81/seat2-opto*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  digital-light-gates:
+    name: ${{ matrix.os }} · Python ${{ matrix.py }} · Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED
+          ref: 307903651f56e8a28ef98ca36aef22ee8cda935c
+          path: pinned-nnest
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute unchanged pinned N-Nest prime recursive corrective-gate tests
+        shell: bash
+        run: |
+          node pinned-nnest/nest-depth3-verify.cjs > nnest-depth3.log
+          node pinned-nnest/nest-depthN-prime-verify.cjs > nnest-depth7.log
+          python -c 'from pathlib import Path;a=Path("nnest-depth3.log").read_text();b=Path("nnest-depth7.log").read_text();assert "corrective-gate-catches-confabulation-at-depth=true" in a and "consent-clean-only=true" in a;assert "EVERY-LEVEL-CATCHES-CONFABULATION=true" in b;print("PASS_PINNED_NNEST_DEPTH3_DEPTH7")'
+      - name: Run independently authored Python and Node symbolic light gate/feedback models
+        shell: bash
+        run: |
+          python experiments/seat2/optogate/seat2_optogate.py opto-python.hbp opto-python.json
+          node experiments/seat2/optogate/seat2_optogate.js opto-node.hbp opto-node.json
+      - name: Require 324 exact records, expected fault behavior and byte-exact agreement
+        shell: bash
+        run: |
+          python -c 'from pathlib import Path;import hashlib,json;a=Path("opto-python.hbp").read_bytes();b=Path("opto-node.hbp").read_bytes();c=Path("opto-python.json").read_bytes();d=Path("opto-node.json").read_bytes();assert a==b,(hashlib.sha256(a).hexdigest(),hashlib.sha256(b).hexdigest());assert c==d,(hashlib.sha256(c).hexdigest(),hashlib.sha256(d).hexdigest());z=json.loads(c);assert len(a.splitlines())==z["cases"]==324;assert z["tallies"]=={"math_green":162,"source_green":216,"accepted":54,"held":270,"watcher_forgery_rejected":54};assert z["trace_sha256"]==hashlib.sha256(a).hexdigest();assert z["physical_hosts_attested"]==0 and z["real_opsins_used"] is False and z["http_or_wasm_executed"] is False;assert hashlib.sha256(bytes([a[0]^1])+a[1:]).hexdigest()!=z["trace_sha256"];assert len({tuple(v.split("|")[i] for i in (0,2,3)) for v in a.decode("ascii").splitlines()})==324;print("PASS_324_EXACT_SYMBOLIC_LIGHT_SOURCE_AND_WATCHER_CONTROLS",hashlib.sha256(a).hexdigest(),hashlib.sha256(c).hexdigest())'
+      - name: Rerun both engines and require unchanged full outputs
+        shell: bash
+        run: |
+          python experiments/seat2/optogate/seat2_optogate.py opto-repeat.hbp opto-repeat.json
+          node experiments/seat2/optogate/seat2_optogate.js opto-node-repeat.hbp opto-node-repeat.json
+          python -c 'from pathlib import Path;import hashlib;ns=["opto-python.hbp","opto-python.json","opto-node.hbp","opto-node.json"];ms=["opto-repeat.hbp","opto-repeat.json","opto-node-repeat.hbp","opto-node-repeat.json"];assert all(Path(x).read_bytes()==Path(y).read_bytes() for x,y in zip(ns,ms));[(Path(n+".sha256")).write_bytes((hashlib.sha256(Path(n).read_bytes()).hexdigest()+"  "+n+"\n").encode()) for n in ns];print("PASS_DOUBLE_REPLAY_SAME_DIGEST")'
+      - name: Archive software-only artifacts and original N-Nest regression evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-optogate-${{ matrix.os }}-py${{ matrix.py }}
+          retention-days: 30
+          path: |
+            opto-python.hbp
+            opto-python.hbp.sha256
+            opto-python.json
+            opto-python.json.sha256
+            opto-node.hbp
+            opto-node.hbp.sha256
+            opto-node.json
+            opto-node.json.sha256
+            nnest-depth3.log
+            nnest-depth7.log
