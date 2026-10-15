@@ -52,6 +52,7 @@ jobs:
           python experiments/seat3/neural_photon/cross_talk_B.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python"
           node experiments/seat3/neural_photon/cross_talk_B.js "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/node"
           python experiments/seat3/neural_photon/verify_cross_talk_B.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/verified"
+          python experiments/seat3/neural_photon/paired_cross_exam_B.py "$RUNNER_TEMP/verified" "$RUNNER_TEMP/verified"
       - name: Independently held-out attack on source bank must fail both engines
         shell: bash
         run: |
@@ -106,7 +107,7 @@ jobs:
           from pathlib import Path
           jobs=sorted(Path("receipts").glob("seat3-crosstalk-B-*"))
           assert len(jobs)==4,jobs
-          for f in ("photon-cross-talk-B.hbp","photon-cross-talk-B.json","independent-cross-talk-B.json"):
+          for f in ("photon-cross-talk-B.hbp","photon-cross-talk-B.json","independent-cross-talk-B.json","paired-cross-exam-B.json"):
               blobs=[(job/f).read_bytes() for job in jobs]
               assert all(x==blobs[0] for x in blobs),"CROSS_HOST_B_RECEIPTS_DIFFER"
               for job,data in zip(jobs,blobs):
