@@ -9,12 +9,14 @@ on:
       - experiments/seat4/recurrence_trial*
       - experiments/seat4/verify_recurrence_trial.py
       - experiments/seat4/PREREG-RECURRENCE-IS-MIND-MULTIENTITY-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-recurrence-is-mind-3888*
       - .github/workflows/seat4-recurrence-multi-entity.yml
   pull_request:
     paths:
       - experiments/seat4/recurrence_trial*
       - experiments/seat4/verify_recurrence_trial.py
       - experiments/seat4/PREREG-RECURRENCE-IS-MIND-MULTIENTITY-20261015.md
+      - stones/2026-10-15-rainbow81/seat4-recurrence-is-mind-3888*
       - .github/workflows/seat4-recurrence-multi-entity.yml
   workflow_dispatch:
 
