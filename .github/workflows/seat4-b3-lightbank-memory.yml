@@ -160,6 +160,10 @@ jobs:
               ("pinned-rainbor/README.md","sources/RAINBOR-README.md"),
               ("experiments/seat4/PREREG-LIGHTBANK-THREE-PATH-MEMORY-B3-20261015.md","sources/B3-PREREG.md"),
               ("experiments/seat4/ADDENDUM-COLOUR-QR-PROJECTOR-B3.md","sources/B3-QR-ADDENDUM.md"),
+              ("stones/2026-10-15-rainbow81/seat4-lightbank-b3-three-path-memory.json",
+               "stones/2026-10-15-rainbow81/seat4-lightbank-b3-three-path-memory.json"),
+              ("stones/2026-10-15-rainbow81/seat4-lightbank-b3-three-path-memory.json.sha256",
+               "stones/2026-10-15-rainbow81/seat4-lightbank-b3-three-path-memory.json.sha256"),
           ]
           for src,dst in original:
               dest=folder/dst;dest.parent.mkdir(parents=True,exist_ok=True)
@@ -167,7 +171,8 @@ jobs:
           for name,src in [
               ("sources/lightbank_fixture.py","experiments/seat4/lightbank_fixture.py"),
               ("sources/lightbank_python.py","experiments/seat4/lightbank_python.py"),
-              ("sources/lightbank_node.js","experiments/seat4/lightbank_node.js")
+              ("sources/lightbank_node.js","experiments/seat4/lightbank_node.js"),
+              ("sources/lightbank_offline_verify.py","experiments/seat4/lightbank_offline_verify.py")
           ]:
               path=folder/name;path.parent.mkdir(parents=True,exist_ok=True)
               path.write_bytes(pathlib.Path(src).read_bytes())
