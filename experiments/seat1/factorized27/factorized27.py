@@ -176,7 +176,7 @@ def run(original,bankdir,outdir):
     outdir.mkdir(parents=True,exist_ok=True)
     for name,blob in (("factorized27.json",report),("factorized27.hbp",hbp)):
         (outdir/name).write_bytes(blob)
-        (outdir/(name+".sha256")).write_text(f"{sha(blob)}  {name}\n",encoding="ascii")
+        (outdir/(name+".sha256")).write_bytes(f"{sha(blob)}  {name}\n".encode("ascii"))
     print(json.dumps({"status":"PASS","logical_addresses":logical,"expanded_sha256":digest,
         "factorized_base_bytes":resolver.base_bytes,"metadata_avoided":expanded_bytes-resolver.base_bytes,
         "receipt_sha256":sha(hbp),"actual_failures":len(negative),"optical_physical_verified":False},
