@@ -316,5 +316,5 @@ console.log(JSON.stringify({
   policies:Object.fromEntries(sortedEntries(report.chosen_policies)
     .map(([k,v])=>[k,v.policy])),
   four_state_continuous:report.protocols.continuous["4"],
-  negative_cases:Object.values(negatives).filter(x=>x==="HELD").length
+  negative_cases:Object.values(report.real_injected_negative_cases).filter(x=>x==="HELD").length
 }));
