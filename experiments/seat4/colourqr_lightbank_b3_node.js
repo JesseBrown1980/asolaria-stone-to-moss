@@ -129,7 +129,9 @@ function projectorTest(ticks){
   const r=ticks[pos],g=ticks[pos+1],b=ticks[pos+2];
   const [nr,ng,nb]=proj(r,g,b);
   assert.equal(nr+ng+nb,0);
-  assert.equal((nr-ng)%3,0);assert.equal((nr-nb)%3,0);
+  // A mathematically zero remainder may be -0 in JavaScript; strictEqual
+  // distinguishes -0 from +0, whereas modular divisibility does not.
+  assert((nr-ng)%3===0);assert((nr-nb)%3===0);
   const recover=[r,r-(nr-ng)/3,r-(nr-nb)/3];
   assert.deepEqual(recover,[r,g,b]);
   examples++;
