@@ -12,6 +12,10 @@ from pathlib import Path
 import subprocess
 import sys
 
+# The offline package is immutable: dynamic import must not create unsealed
+# __pycache__ artifacts in its source tree on Ubuntu or Windows.
+sys.dont_write_bytecode=True
+
 EXPECTED={
     "lightbank-source-archive.bin":"1288a63f2d5895bc555813b2703947b94c8179974a46bcf132b55d82dd9e7b9c",
     "lightbank-A.g27":"d0e59818cfc80c7c8ed9f1571c76cf7fed54bd2dc94dae9705a2a0f575f36939",
