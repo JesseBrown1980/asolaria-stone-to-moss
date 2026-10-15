@@ -181,7 +181,7 @@ def negative_tests(a,b,stick):
     must_hold("coherent_fake_source_anchored",lambda:decode_stick(fake_stick),results)
     results["coherent_fake_source_without_external_anchor"]="MATH_GREEN_ORIGIN_UNAUTHENTICATED"
     results["cache_eviction_without_archive"]=cache_test()["evicted_recall"]
-    assert len([k for k,v in results.items() if v=="HELD"])==8
+    assert len([k for k,v in results.items() if v=="HELD"])==9
     return results
 
 def study(a,b,output):
@@ -234,9 +234,6 @@ def study(a,b,output):
     return metrics
 
 def main(args):
-    if len(args)==4 and args[1]=="encode":
-        a=Path(args[2]).read_bytes();b=Path(args[3]).read_bytes()
-        raise SystemExit("encode requires output_dir after inputs")
     if len(args)==5 and args[1]=="encode":
         m=study(Path(args[2]).read_bytes(),Path(args[3]).read_bytes(),args[4])
         print(json.dumps({"status":m["status"],"lightstick_bytes":m["lightstick_bytes"],
