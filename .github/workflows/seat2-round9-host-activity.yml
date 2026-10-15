@@ -70,9 +70,13 @@ jobs:
           assert h['runner_os']==os.environ['RUNNER_OS']
           assert h['github_job']==os.environ['GITHUB_JOB']
           attacked=json.loads((folder/'attack-review.json').read_bytes())
-          assert attacked['case_count']==7 and attacked['status']=='ALL_HOST_CONTEXT_FORGERIES_REJECTED_WITH_AUTHENTIC_RUN_ENV'
-          assert all(x['actual_node_reviewer_rejected'] and x['recomputed_local_sha256_sidecar']
-                     for x in attacked['falsification_cases'])
+          assert attacked['case_count']==7 and attacked['status']=='SIX_CONTEXT_OR_SENSOR_FORGERIES_REJECTED_ONE_UNSIGNED_CPU_GAP'
+          assert attacked['forgeries_rejected']==6
+          assert attacked['unsigned_positive_cpu_counter_forgery_accepted_as_expected'] is True
+          assert all(x['recomputed_local_sha256_sidecar'] for x in attacked['falsification_cases'])
+          assert sum(x['actual_node_reviewer_rejected'] for x in attacked['falsification_cases'])==6
+          assert [x['case'] for x in attacked['falsification_cases']
+                  if x['unsigned_positive_cpu_forgery_accepted']]==['counter_cpu_positive']
           assert not i['externally_attested_instrument_data']
           assert all(not x['measured'] and x['value'] is None for x in i['channels'].values())
           print('HOST_OS_COUNTERS_OBSERVED_ELECTRIC_AND_OPTICAL_SENSORS_NOT_MEASURED')
