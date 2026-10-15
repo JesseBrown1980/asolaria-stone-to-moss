@@ -157,6 +157,7 @@ def gf2_source_recovery(source):
     # Reuse the previously *independently verified* 81-bit algebra, but test
     # its inverse/side-bits on 648 original source memory states, not fabricated
     # algebra-only basis vectors.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "retention"))
     from retention_poly import LEGACY, STRESS, power, cyclic_product, N
     from minimal_recovery_python import (basis_with_free_columns, tag_of, decode)
     targets = [("legacy", LEGACY[0]), ("legacy", LEGACY[4]),
