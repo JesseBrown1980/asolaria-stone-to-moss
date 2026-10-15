@@ -1,0 +1,81 @@
+name: Seat 2 independently replay Seat 1 full optogenetic three-state toy
+
+on:
+  push:
+    branches:
+      - agent/seat-2/seat1-photocycle-peer-20261015
+    paths:
+      - experiments/seat2/opto_peer/**
+      - .github/workflows/seat2-seat1-photocycle-peer.yml
+  pull_request:
+    paths:
+      - experiments/seat2/opto_peer/**
+      - .github/workflows/seat2-seat1-photocycle-peer.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-replay:
+    name: ${{ matrix.os }} - Python ${{ matrix.py }} + Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ['3.11','3.13']
+    steps:
+      - name: Checkout independent Seat 2 peer verification
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout immutable original Seat 1 three-state photocycle source
+        uses: actions/checkout@v4
+        with:
+          ref: dd5e47db9522141de3949a23759a5d647ecdafbd
+          path: original-seat1
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate the original complete 8748-record output from Seat 1 Python
+        shell: bash
+        run: |
+          python original-seat1/experiments/seat1/optogenetics/opto_gate.py seat1-py.hbp seat1-py.json
+      - name: Generate the same original output from Seat 1 Node independent model
+        shell: bash
+        run: |
+          node original-seat1/experiments/seat1/optogenetics/opto_gate_node.js seat1-node.hbp seat1-node.json
+      - name: Independent Seat 2 third-model full wave/tick reconstruction and actual tamper controls
+        shell: bash
+        run: |
+          python experiments/seat2/opto_peer/seat2_independent_seat1_photocycle.py \
+            --python-hbp seat1-py.hbp --node-hbp seat1-node.hbp \
+            --python-json seat1-py.json --node-json seat1-node.json \
+            --out seat2-opto-peer.json
+      - name: Repeat original models and independent verifier; byte-check stable source
+        shell: bash
+        run: |
+          python original-seat1/experiments/seat1/optogenetics/opto_gate.py seat1-py-again.hbp seat1-py-again.json
+          node original-seat1/experiments/seat1/optogenetics/opto_gate_node.js seat1-node-again.hbp seat1-node-again.json
+          python experiments/seat2/opto_peer/seat2_independent_seat1_photocycle.py \
+            --python-hbp seat1-py-again.hbp --node-hbp seat1-node-again.hbp \
+            --python-json seat1-py-again.json --node-json seat1-node-again.json \
+            --out seat2-opto-peer-again.json
+          python -c 'from pathlib import Path;import hashlib,json;first=Path("seat2-opto-peer.json").read_bytes();assert first==Path("seat2-opto-peer-again.json").read_bytes();assert Path("seat1-py.hbp").read_bytes()==Path("seat1-py-again.hbp").read_bytes();assert Path("seat1-node.hbp").read_bytes()==Path("seat1-node-again.hbp").read_bytes();z=json.loads(first);assert z["status"]=="PASS_BOUNDED_INDEPENDENT_SOFTWARE_PEER_REPLAY" and z["wave_snapshot_rows"]==8748;assert all(z["negative_mutations"].values());Path("seat2-opto-peer.json.sha256").write_bytes((hashlib.sha256(first).hexdigest()+"  seat2-opto-peer.json\n").encode("ascii"));print("PASS_SEAT2_FULL_SEAT1_PHOTOCYCLE_3_ALGORITHMS",hashlib.sha256(first).hexdigest())'
+      - name: Upload complete cross-language trace and independent source-bound peer receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-seat1-photocycle-${{ matrix.os }}-py${{ matrix.py }}
+          retention-days: 30
+          path: |
+            seat1-py.hbp
+            seat1-py.json
+            seat1-node.hbp
+            seat1-node.json
+            seat2-opto-peer.json
+            seat2-opto-peer.json.sha256
