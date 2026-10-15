@@ -70,8 +70,8 @@ def native_nnest(nn):
             for level in range(1,8):
                 line=next((line for line in transcript.splitlines()
                            if line.startswith("LEVEL-"+str(level)+"|")),None)
-                assert line is not None and "|CAUGHT=true" in line and
-                    ("@depth"+str(level)) in line, "Native depth-7 watcher did not catch planted fault"
+                assert (line is not None and "|CAUGHT=true" in line and
+                        ("@depth"+str(level)) in line), "Native depth-7 watcher did not catch planted fault"
             assert "EVERY-LEVEL-CATCHES-CONFABULATION=true" in transcript
         evidence[str(depth)]={"upstream_script":script,"native_hbp_sha256":sha(contents),
                               "native_hbp_bytes":len(contents),
