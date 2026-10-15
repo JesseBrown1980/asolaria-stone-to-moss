@@ -67,17 +67,24 @@ function assemble(a,b){
   header.writeUInt32LE(EPOCH,4);header.writeUInt32LE(a.length,8);
   header.writeUInt32LE(b.length,12);header.writeUInt32LE(num,16);
   shaBytes(a).copy(header,20);shaBytes(b).copy(header,52);shaBytes(combined).copy(header,84);
-  const parts=[header],rows=[];
+  // Store in three actual finite RGB lane banks before cold-stick
+  // serialization; the index (not a shared mutable channel) defines identity.
+  const laneBanks=[new Map(),new Map(),new Map()],rows=[];
   for(let i=0;i<num;i++){
     const body=combined.subarray(i*CHUNK,Math.min((i+1)*CHUNK,combined.length));
     const {wire,indexed_sha256}=packet(i,body);
-    parts.push(wire);
+    const bank=laneBanks[i%3];
+    if(bank.has(i)||bank.size>=CAPACITY)fail("duplicate or out-of-quota memory block");
+    bank.set(i,wire);
     rows.push("PACKET|index="+String(i).padStart(4,"0")+
       "|frame="+String(Math.floor(i/3)).padStart(3,"0")+
       "|lane="+LANE[i%3]+"|body_bytes="+body.length+
       "|indexed_sha256="+indexed_sha256+"|json=0");
   }
-  return {stick:Buffer.concat(parts),rows};
+  assert.deepEqual(laneBanks.map(x=>x.size),[156,155,155]);
+  const ordered=[header];
+  for(let i=0;i<num;i++)ordered.push(laneBanks[i%3].get(i));
+  return {stick:Buffer.concat(ordered),rows};
 }
 function decodeStick(stick,anchored=true){
   if(stick.length<HEADER_SIZE)fail("missing manifest");
