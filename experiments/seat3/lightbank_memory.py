@@ -74,15 +74,21 @@ def assemble(a,b):
            +hashlib.sha256(a).digest()+hashlib.sha256(b).digest()
            +hashlib.sha256(content).digest())
     assert len(header)==HEADER_SIZE
-    output=bytearray(header)
+    # Route packets into the actual three independently bounded RGB lane
+    # banks; serialize by canonical Fischer index only AFTER storing/recalling.
+    lane_banks=[OrderedDict(),OrderedDict(),OrderedDict()]
     rows=[]
     for index,body in enumerate(pieces):
         chunk,checksum=packet(index,body)
-        output.extend(chunk)
+        bank=lane_banks[index%3]
+        if index in bank:fail("duplicate lane identity")
+        if len(bank)>=CAPACITY:fail("source bank capacity exceeded")
+        bank[index]=chunk
         rows.append(f"PACKET|index={index:04d}|frame={index//3:03d}"
                     f"|lane={LANE[index%3]}|body_bytes={len(body)}"
                     f"|indexed_sha256={checksum}|json=0")
-    return bytes(output),rows
+    assert [len(bank) for bank in lane_banks]==[156,155,155]
+    return header+b"".join(lane_banks[i%3][i] for i in range(len(pieces))),rows
 
 def decode_stick(stick,anchored=True):
     if len(stick)<HEADER_SIZE:fail("missing manifest")
