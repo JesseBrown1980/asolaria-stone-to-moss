@@ -200,7 +200,7 @@ def run(nrepo:Path,qrepo:Path,output:Path,stone:Path,sidecar:Path):
         "python":platform.python_version(),
     }
     output.parent.mkdir(parents=True,exist_ok=True)
-    output.write_text(json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False)+"\n",encoding="utf8")
+    output.write_bytes((json.dumps(result,indent=2,sort_keys=True,ensure_ascii=False)+"\n").encode("utf8"))
     lines=[
         "HBP|schema=ASOLARIA-SEAT2-NNEST-QPRISM-INFORMATION-BUDGET-V1|json=0",
         f"PROVENANCE|nest_commit={NEST_SHA}|qprism_commit={QPRISM_SHA}|pinned_blobs={len(NEST_BLOBS)+len(Q_BLOBS)}",
@@ -214,8 +214,8 @@ def run(nrepo:Path,qrepo:Path,output:Path,stone:Path,sidecar:Path):
     ]
     body="\n".join(lines)+"\n"
     stone.parent.mkdir(parents=True,exist_ok=True)
-    stone.write_text(body,encoding="ascii")
-    sidecar.write_text(digest(body.encode("ascii"))+"  "+stone.name+"\n",encoding="ascii")
+    stone.write_bytes(body.encode("ascii"))
+    sidecar.write_bytes((digest(body.encode("ascii"))+"  "+stone.name+"\n").encode("ascii"))
     print(json.dumps({"status":"PASS","tests":len(checks),"audit_sha256":digest(output.read_bytes()),
                       "stone_sha256":digest(body.encode("ascii")), "selector_alias":True,
                       "GF2_stacked_rank":rank(lossy+preserving),"physical_authentication":False},
