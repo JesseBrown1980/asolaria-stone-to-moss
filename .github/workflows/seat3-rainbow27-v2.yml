@@ -1,0 +1,82 @@
+name: Seat3 Rainbow27 V2 lossless order and normalized probability
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/rainbow27_v2/**"
+      - ".github/workflows/seat3-rainbow27-v2.yml"
+      - "stones/2026-10-15-rainbow81/seat3-rainbow27-normalized-v2-20261015.hbp*"
+  push:
+    branches:
+      - "agent/seat-3/rainbow27-lossless-normalized-v2-20261015"
+    paths:
+      - "experiments/seat3/rainbow27_v2/**"
+      - ".github/workflows/seat3-rainbow27-v2.yml"
+      - "stones/2026-10-15-rainbow81/seat3-rainbow27-normalized-v2-20261015.hbp*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-rainbow27-v2:
+    name: ${{ matrix.os }} Python ${{ matrix.py }} Node22
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ["3.11","3.13"]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify exact original Round3 and Seat3 peer source commits
+        run: |
+          git clone -q https://github.com/JesseBrown1980/asolaria-stone-to-moss.git "$RUNNER_TEMP/upstream"
+          git -C "$RUNNER_TEMP/upstream" checkout -q 5045b5b2ee1960bc469b5588a1b17601490aef6a
+          test "$(git -C "$RUNNER_TEMP/upstream" rev-parse HEAD)" = 5045b5b2ee1960bc469b5588a1b17601490aef6a
+          git -C "$RUNNER_TEMP/upstream" checkout -q 98e62f1e7218c7fbb20e21fd5c3d734304e4ee6a
+          test "$(git -C "$RUNNER_TEMP/upstream" rev-parse HEAD)" = 98e62f1e7218c7fbb20e21fd5c3d734304e4ee6a
+          test "$(git -C "$RUNNER_TEMP/upstream" hash-object -- experiments/seat3/round3_qutrit_rainbow_peer.js)" = 4bbd3ce081958da7427261319ed5bd10efb7f06c
+      - name: Execute independent Python and Node calculations
+        run: |
+          python experiments/seat3/rainbow27_v2/rainbow27_v2.py "$RUNNER_TEMP/rainbow27"
+          node experiments/seat3/rainbow27_v2/rainbow27_v2.js "$RUNNER_TEMP/node.hbp"
+          python experiments/seat3/rainbow27_v2/verify_rainbow27_v2.py "$RUNNER_TEMP/rainbow27/rainbow27-v2.hbp" "$RUNNER_TEMP/node.hbp" "$RUNNER_TEMP/rainbow27/rainbow27-v2.json" "$RUNNER_TEMP/node.hbp.node.json" "$RUNNER_TEMP/rainbow27"
+      - name: Require append-only V2 stone and checksum matches newly executed result
+        run: |
+          python experiments/seat3/rainbow27_v2/verify_sealed_stone.py "$RUNNER_TEMP/rainbow27"
+      - name: Verify actual altered HBP fails independent gate
+        run: |
+          python -c 'import os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"]); b=(p/"rainbow27/rainbow27-v2.hbp").read_bytes(); (p/"tampered.hbp").write_bytes(bytes([b[0]^1])+b[1:])'
+          if python experiments/seat3/rainbow27_v2/verify_rainbow27_v2.py "$RUNNER_TEMP/rainbow27/rainbow27-v2.hbp" "$RUNNER_TEMP/tampered.hbp" "$RUNNER_TEMP/rainbow27/rainbow27-v2.json" "$RUNNER_TEMP/node.hbp.node.json" "$RUNNER_TEMP/should-reject"; then
+            echo "ERROR: forged full-trace HBP was accepted"
+            exit 1
+          fi
+          echo "Corrupted full HBP correctly HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rainbow27-v2-${{ matrix.os }}-py${{ matrix.py }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            ${{ runner.temp }}/rainbow27/rainbow27-v2.hbp
+            ${{ runner.temp }}/rainbow27/rainbow27-v2.hbp.sha256
+            ${{ runner.temp }}/rainbow27/rainbow27-v2.hbi
+            ${{ runner.temp }}/rainbow27/rainbow27-v2.hbi.sha256
+            ${{ runner.temp }}/rainbow27/rainbow27-v2.json
+            ${{ runner.temp }}/rainbow27/rainbow27-v2.json.sha256
+            ${{ runner.temp }}/rainbow27/rainbow27-v2-peer-verification.json
+            ${{ runner.temp }}/rainbow27/rainbow27-v2-peer-verification.json.sha256
+            ${{ runner.temp }}/node.hbp.node.json
