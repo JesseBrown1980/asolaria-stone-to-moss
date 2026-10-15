@@ -73,6 +73,10 @@ def pinned_inputs(root):
     assert sha((root/"ticks.hbp").read_bytes())==TICKS
     assert sha((root/"faults.hbp").read_bytes())==FAULTS
     assert sha((root/"receipt.json").read_bytes())==RECEIPT
+    stone=root/"stones"/"2026-10-15-rainbow81"/"seat4-room04-b2-watchers.json"
+    side=stone.with_name(stone.name+".sha256")
+    assert stone.read_bytes()==(root/"receipt.json").read_bytes()
+    assert side.read_text("ascii").split()==[RECEIPT,stone.name]
     assert receipt["b2_verified_site_tick_transitions"]==349920
     assert receipt["b2_negative_mutations_rejected"]==1296
     assert receipt["b2_clean_checkpoints_accepted"]==108
