@@ -70,7 +70,7 @@ jobs:
       - name: Retrieve GitHub run, commit ancestry, and job timeline from authoritative API
         shell: bash
         env:
-          ${{ github.token }}: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p "$RUNNER_TEMP/authoritative-api"
           gh api repos/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38783337268 > "$RUNNER_TEMP/authoritative-api/run.json"
