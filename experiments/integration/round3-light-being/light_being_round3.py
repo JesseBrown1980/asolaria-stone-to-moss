@@ -179,6 +179,33 @@ def quantum_math(v: tuple[int, int, int]) -> tuple[int, int, int]:
     # Output only the integer Fourier intensity numerators.
     return (s*s, q, q)
 
+def qutrit_sample(intensities: tuple[int,int,int],
+                  wave: int, address: int) -> tuple[int,int]:
+    """Exact INTEGER partition; deterministic SHA256 pseudo-sample, no photon measurement.
+
+    Rejection sampling removes modulo bias under the ideal uniform hash model;
+    this is not a quantum random-number generator or a physical Born sample.
+    """
+    total = sum(intensities)
+    check(total > 0, "DEGENERATE_QUTRIT_SAMPLE")
+    limit = ((1 << 256)//total)*total
+    rejects = 0
+    while True:
+        raw = hashlib.sha256(
+            SEED + b"|BORN-THRESHOLD|" + wave.to_bytes(2, "little") +
+            address.to_bytes(2, "little") + rejects.to_bytes(4, "little")
+        ).digest()
+        x = int.from_bytes(raw, "big")
+        if x < limit:
+            value = x % total
+            if value < intensities[0]:
+                return 0, rejects
+            if value < intensities[0] + intensities[1]:
+                return 1, rejects
+            return 2, rejects
+        rejects += 1
+        check(rejects < 10_000, "IMPOSSIBLE_HASH_REJECTION_RUN")
+
 def memory_block(payload: bytes, wave: int, address: int) -> bytes:
     n = wave*N_ADDR + address
     start = (n*29) % (len(payload)-64)
@@ -270,7 +297,12 @@ def packet(body: bytes, seq: int, origin: int, pid: str,
 
 def verify_packet(p: dict, expected: bytes, seq: int, origin: int,
                   pid: str, route: int, gate: bool) -> bool:
-    return (gate and p["seq"] == seq and p["origin"] == origin
+    # Independent input-anchored recomputation: the producer's chosen route
+    # is not itself trusted by the digital gate/referee.
+    independent_lane, _ = qutrit_sample(quantum_math(tuple(expected[:3])),
+                                        seq // N_ADDR, seq % N_ADDR)
+    return (gate and route == independent_lane
+            and p["seq"] == seq and p["origin"] == origin
             and p["pid"] == pid and p["route"] == route
             and digest(p["body"]) == p["claimed_sha256"]
             and digest(p["body"]) == digest(expected))
@@ -325,6 +357,8 @@ def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict
     stats = Counter()
     by_condition = Counter()
     emitted_by_gate = Counter()
+    lanes = Counter()
+    born_rejection_draws = 0
     h = hashlib.sha256()
     writer = open(case_hbp, 'wb') if case_hbp else None
     qutrit_checks = 0
@@ -357,10 +391,11 @@ def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict
             rgb = (stored[0],stored[1],stored[2])
             intensities = quantum_math(rgb)
             qutrit_checks += 1
-            # The exact Fourier-basis arithmetic determines a REAL routing
-            # choice in this digital model, not merely a decorative formula.
-            chosen_lane = max(range(3),
-                              key=lambda lane:(intensities[lane],-lane))
+            # Exact Fourier-state weight proportions select actual varied
+            # digital destinations using repeatable SHA256 pseudodraws.
+            chosen_lane, rejected_draws = qutrit_sample(intensities,wave,address)
+            lanes[chosen_lane] += 1
+            born_rejection_draws += rejected_draws
             origin = (wave+address+chosen_lane) % 7
             seq = wave*N_ADDR+address
             honest = packet(stored,seq,origin,pid,chosen_lane)
@@ -406,6 +441,8 @@ def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict
     check(stats["cases"]==N_WAVES*N_ADDR*len(GATES)*len(MODES)*len(FAULTS)
           ==52488,"FULL_MATRIX_NOT_EXECUTED")
     check(len(pid_set)==N_WAVES*N_ADDR==2187,"PID_COUNT_INCORRECT")
+    check(set(lanes)=={0,1,2} and sum(lanes.values())==2187,
+          "QUANTUM_MATH_ROUTING_STILL_DEGENERATE")
     check(len(cache)==CACHE_CAP and stats["cache_misses"]==2187
           and stats["cache_evictions"]==1458
           and stats["cache_hits"]==stats["clean_open_accepted"],
@@ -427,6 +464,9 @@ def integrated_cases(payload: bytes, case_hbp: Path | None = None) -> tuple[dict
             "cache_misses":stats["cache_misses"],
             "cache_evictions":stats["cache_evictions"],
             "qutrit_exact_integer_cases":qutrit_checks,
+            "qutrit_pseudorandom_lane_census":dict(sorted((str(k),v) for k,v in lanes.items())),
+            "qutrit_born_rejection_draws":born_rejection_draws,
+            "qutrit_sampler_is_physical_measurement":False,
             "projector_only_cannot_recover_absolute_rgb":True,
             "common_mode_register_separate_from_81_addresses":True,
             "emitted_by_gate":dict(sorted(emitted_by_gate.items())),
