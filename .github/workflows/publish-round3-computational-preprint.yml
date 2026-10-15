@@ -1,0 +1,81 @@
+name: Publish public Asolaria Round3 computational evidence preprint
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-round3-computational-preprint.yml
+      - publications/2026-10-15-lightbank/build_public_release.py
+      - publications/2026-10-15-lightbank/RELEASE-NOTES.md
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: public-asolaria-round3-preprint
+  cancel-in-progress: false
+jobs:
+  publish-computational-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Verify GitHub CLI is available
+        run: gh --version
+      - name: Download EXACT previously completed public CI artifact sets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p stage/{producer,seat2,seat3,unified,seat4}
+          gh run download 38735582094 -R "$GH_REPO" -n round3-light-being-ubuntu-latest-py3.11 -D stage/producer
+          gh run download 38741832217 -R "$GH_REPO" -n seat2-round3-zxing-ubuntu-latest-py3.11 -D stage/seat2
+          gh run download 38741669991 -R "$GH_REPO" -n seat3-round3-qutrit-rainbow-ubuntu-latest-3.11 -D stage/seat3
+          gh run download 38734762647 -R "$GH_REPO" -n round3-full-ubuntu-latest-py3.11 -D stage/unified
+          gh run download 38734811934 -R "$GH_REPO" -n seat4-b3-ubuntu-latest-py3.13 -D stage/seat4
+      - name: Verify pinned full bytes and construct immutable public artifact ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python publications/2026-10-15-lightbank/build_public_release.py \
+            --stage stage --out release \
+            --notes publications/2026-10-15-lightbank/RELEASE-NOTES.md
+          cd release
+          sha256sum -c "ASOLARIA-ROUND3-COMPUTATIONAL-PREPRINT-2026-10-15.zip.sha256"
+          python - <<'PY'
+          from zipfile import ZipFile
+          from pathlib import Path
+          z=ZipFile("ASOLARIA-ROUND3-COMPUTATIONAL-PREPRINT-2026-10-15.zip")
+          assert z.testzip() is None
+          assert "manifest.json" in z.namelist()
+          assert "data/producer/cases.hbp" in z.namelist()
+          assert "data/seat4/banks/source.archive" in z.namelist()
+          assert "data/seat2/seat2-independent-result.json" in z.namelist()
+          print('PUBLIC_COMPUTATIONAL_RELEASE_CONTENTS_PASS',len(z.namelist()))
+          PY
+      - name: Create PUBLIC GitHub prerelease, keep all experimental PRs unmerged
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TAG="round3-computational-2026-10-15"
+          if gh release view "$TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "This tag already exists; preserving prior public immutable release."
+            exit 0
+          fi
+          gh release create "$TAG" \
+            "release/ASOLARIA-ROUND3-COMPUTATIONAL-PREPRINT-2026-10-15.zip" \
+            "release/ASOLARIA-ROUND3-COMPUTATIONAL-PREPRINT-2026-10-15.zip.sha256" \
+            "release/manifest.json" \
+            "release/SHA256SUMS" \
+            --repo "$GH_REPO" \
+            --target "$GITHUB_SHA" \
+            --title "Asolaria Round 3 — Computational Light-Bank Evidence (2026-10-15)" \
+            --notes-file "publications/2026-10-15-lightbank/RELEASE-NOTES.md" \
+            --prerelease
+          gh release view "$TAG" --repo "$GH_REPO" --json url,isDraft,isPrerelease,assets
