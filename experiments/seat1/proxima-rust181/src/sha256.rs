@@ -23,7 +23,7 @@ pub fn digest(source:&[u8])->[u8;32]{
     let mut bytes=Vec::with_capacity(source.len()+9+extra);
     bytes.extend_from_slice(source);
     bytes.push(0x80);
-    bytes.extend(std::iter::repeat_n(0u8,extra));
+    bytes.extend(std::iter::repeat(0u8).take(extra));
     bytes.extend_from_slice(&len_bits.to_be_bytes());
     let mut h=INITIAL;
     for chunk in bytes.chunks_exact(64){
