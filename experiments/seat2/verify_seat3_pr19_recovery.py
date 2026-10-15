@@ -75,9 +75,9 @@ def expected_source(f,seat,ti,color,space,body):
 
 def parse(line):
     parts=line.rstrip("\n").split("|")
-    assert parts[0]=="W" and len(parts)==12, ("invalid record shape",parts[:3])
+    assert parts[0]=="W" and len(parts)==13, ("invalid record shape",parts[:3])
     data=dict(x.split("=",1) for x in parts[1:])
-    assert len(data)==11, "duplicate field"
+    assert len(data)==12, "duplicate field"
     return data
 
 def main():
