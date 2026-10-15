@@ -1,0 +1,58 @@
+name: Seat 4 original Seat 1 32805-state independent replay
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-4/original-seat1-triad-peer-20261015
+    paths:
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - experiments/seat1/triad_27_python.py
+      - experiments/seat1/triad_27_node.js
+      - experiments/seat1/triad_release_verify.py
+      - experiments/seat4/seat1_original_triad_replay.py
+      - experiments/seat4/verify_original_seat1_triad_peer.py
+      - stones/2026-10-15-rainbow81/seat4-seat1-original-triad-replay*
+      - .github/workflows/seat4-original-seat1-triad.yml
+  pull_request:
+    paths:
+      - experiments/seat1/TRIAD-27-CHALLENGE-20261014.json
+      - experiments/seat1/triad_27_python.py
+      - experiments/seat1/triad_27_node.js
+      - experiments/seat1/triad_release_verify.py
+      - experiments/seat4/seat1_original_triad_replay.py
+      - experiments/seat4/verify_original_seat1_triad_peer.py
+      - stones/2026-10-15-rainbow81/seat4-seat1-original-triad-replay*
+      - .github/workflows/seat4-original-seat1-triad.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-triad-peer:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify three separate algorithms, exact full HBP, original receipt and tamper controls
+        shell: bash
+        run: |
+          python experiments/seat4/verify_original_seat1_triad_peer.py > "$RUNNER_TEMP/seat4-seat1-peer.json"
+          cat "$RUNNER_TEMP/seat4-seat1-peer.json"
+      - name: Preserve independent run result
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat4-seat1-triad-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: ${{ runner.temp }}/seat4-seat1-peer.json
+          retention-days: 30
