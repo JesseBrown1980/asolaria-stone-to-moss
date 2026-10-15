@@ -50,7 +50,7 @@ def release_bytes(root:Path,notes:bytes):
      "no_external_source_authentication":True,"four_seat_accepted":False,
      "source_QR_sha256":EXPECTED_SOURCE,"source_QR_image_count":11}
     manifest_bytes=(json.dumps(manifest,indent=2,sort_keys=True)+"\n").encode()
-    sidecars="".join(f"{x['sha256']}  {rel}\n" for rel,x in sorted(fileinfo.items())).encode()
+    sidecars="".join(f"{x['sha256']}  data/{rel}\n" for rel,x in sorted(fileinfo.items())).encode()
     source=(b"Asolaria Public Digital Computational Preprint - October 15 2026\n"
         b"This archive contains historical verified GitHub Actions artifacts, not physical photon storage.\n"
         b"Original research pull requests remain unmerged and physical validation gates remain open.\n"
