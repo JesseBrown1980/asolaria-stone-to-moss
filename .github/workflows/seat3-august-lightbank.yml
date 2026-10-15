@@ -70,11 +70,11 @@ jobs:
         shell: bash
         run: |
           test "$(git -C frozen-B1 rev-parse HEAD)" = c1fc2c85e5684d2c1190662ba57e889d996b792b
-          test "$(git -C frozen-B1 hash-object -- experiments/seat3/seat3_peer_seat1_photocycle.js)" = 972d2873a4e5bd99d63ecc37d896f8aed054e382
+          test "$(git -C frozen-B1 rev-parse HEAD:experiments/seat3/seat3_peer_seat1_photocycle.js)" = 972d2873a4e5bd99d63ecc37d896f8aed054e382
           test "$(git -C frozen-B2 rev-parse HEAD)" = f6df567f9d36697f2fc895167c04ac3c46152409
-          test "$(git -C frozen-B2 hash-object -- experiments/seat3/room03_fourstate_cost.py)" = afa14fdaa951e4e982ef248dec5e8d545e5635e8
-          test "$(git -C august-colour-qr hash-object -- README.md)" = dec43dd370de557f2511e69227b1e234e001ddfc
-          test "$(git -C august-space-light hash-object -- README.md)" = 6412cb3b82ec084b03b68c9c4d074a58920ac1ee
+          test "$(git -C frozen-B2 rev-parse HEAD:experiments/seat3/room03_fourstate_cost.py)" = afa14fdaa951e4e982ef248dec5e8d545e5635e8
+          test "$(git -C august-colour-qr rev-parse HEAD:README.md)" = dec43dd370de557f2511e69227b1e234e001ddfc
+          test "$(git -C august-space-light rev-parse HEAD:README.md)" = 6412cb3b82ec084b03b68c9c4d074a58920ac1ee
       - name: Reproduce original 611999-byte B1 and 365671-byte B2 traces without changing sources
         shell: bash
         run: |
