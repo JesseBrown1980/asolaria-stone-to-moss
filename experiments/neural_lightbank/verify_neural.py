@@ -123,7 +123,7 @@ def validate(dir_name,rows,parent):
     return chunks
 
 def main():
-    if len(sys.argv) not in (5,7):
+    if len(sys.argv) not in (6,8):
         raise SystemExit('usage: verify_neural.py bank index photon-HBP python-output node-output [otheros-python otheros-node]')
     rows=reference_rows(sys.argv[1],sys.argv[2])
     parent=Path(sys.argv[3]).read_bytes()
