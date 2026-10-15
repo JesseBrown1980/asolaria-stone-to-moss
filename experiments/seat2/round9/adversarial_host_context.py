@@ -98,8 +98,13 @@ def main(frozen,original,output,node_source):
             candidate=folder/label
             prepare(origin,candidate,label)
             check=invoke(node_source,frozen,candidate)
-            assert check.returncode!=0,(
-               "FORGED_UNSIGNED_HOST_REPORT_ACCEPTED",label)
+            expected_unsigned_cpu_limit = label=="counter_cpu_positive"
+            if expected_unsigned_cpu_limit:
+                assert check.returncode==0,(
+                    "UNSIGNED_COUNTER_GAP_UNEXPECTEDLY_CLOSED",label)
+            else:
+                assert check.returncode!=0,(
+                    "FORGED_SOURCE_CONTEXT_OR_SENSOR_ACCEPTED",label)
             # Ensure each case actually exercised a changed file and rebuilt
             # its matching *untrusted* sidecar, not a broken checksum shortcut.
             changed=tuple(f for f in CORE
@@ -112,14 +117,17 @@ def main(frozen,original,output,node_source):
                     "SIDECAR_NOT_RECALCULATED",label)
             outcomes.append({"case":label,"recomputed_local_sha256_sidecar":True,
                              "mutated_file_fields":list(changed),
-                             "actual_node_reviewer_rejected":True})
+                             "actual_node_reviewer_rejected":not expected_unsigned_cpu_limit,
+                             "unsigned_positive_cpu_forgery_accepted":expected_unsigned_cpu_limit})
     report={"schema":"ASOLARIA-SEAT2-R9-FORGED-TELEMETRY-NODE-REVIEW-V1",
             "source_fixture_sha256":
               "077bf98dc7c10e3125ce1147270cc927ce978ab63a19ec30e4655267f1770400",
-            "status":"ALL_HOST_CONTEXT_FORGERIES_REJECTED_WITH_AUTHENTIC_RUN_ENV",
+            "status":"SIX_CONTEXT_OR_SENSOR_FORGERIES_REJECTED_ONE_UNSIGNED_CPU_GAP",
             "untainted_reference_accepted":True,
             "falsification_cases":outcomes,
             "case_count":len(outcomes),
+            "forgeries_rejected":sum(x["actual_node_reviewer_rejected"] for x in outcomes),
+            "unsigned_positive_cpu_counter_forgery_accepted_as_expected":True,
             "source_authentication_scope":"GITHUB_RUNNER_ENVIRONMENT_PLATFORM_MEDIATED",
             "hardware_measurement_signature_independently_validated":False}
     out=canon(report)
