@@ -1,0 +1,45 @@
+name: Seat3 independent replay of Seat1 32805 original rows
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat3/independent_seat1_triad_replay.py'
+      - 'experiments/seat3/seat1-triad-challenge-pinned.json'
+      - '.github/workflows/seat3-original-seat1-triad-replay.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest', 'windows-latest']
+        python-version: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Derive 32805 original states using independently authored polynomial solver
+        shell: bash
+        run: |
+          python experiments/seat3/independent_seat1_triad_replay.py experiments/seat3/seat1-triad-challenge-pinned.json "$RUNNER_TEMP/seat3-replay.hbp" | tee "$RUNNER_TEMP/seat3-replay.json"
+          python - "$RUNNER_TEMP/seat3-replay.hbp" "$RUNNER_TEMP/seat3-replay.json" <<'PY'
+          import json,hashlib,pathlib,sys
+          data=pathlib.Path(sys.argv[1]).read_bytes()
+          j=json.loads(pathlib.Path(sys.argv[2]).read_text())
+          assert len(data)==6392029 and j['records']==32805
+          expected='720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3'
+          assert hashlib.sha256(data).hexdigest()==expected==j['sha256']
+          assert j['original_seat1_challenge_replay']
+          assert j['evidence']=='public software, not physical host verification'
+          print('SEAT3_SEAT1_ORIGINAL_TRIAD_REPLAY_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-seat1-triad-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: |
+            ${{ runner.temp }}/seat3-replay.hbp
+            ${{ runner.temp }}/seat3-replay.json
+          retention-days: 30
