@@ -19,12 +19,14 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: '1.81.0'
+          components: clippy
       - name: Assert toolchain and run unit tests
         shell: bash
         working-directory: experiments/seat5/rust
         run: |
           rustc --version
           test "$(rustc --version | cut -d' ' -f2)" = "1.81.0"
+          cargo clippy --locked --offline --all-targets -- -D warnings
           cargo test --locked --offline
       - name: Execute Rust referee
         shell: bash
