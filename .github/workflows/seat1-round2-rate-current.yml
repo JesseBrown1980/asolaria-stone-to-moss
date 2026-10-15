@@ -1,0 +1,91 @@
+name: Seat 1 Round 2 photocycle rates, delayed feedback and source falsifiers
+
+on:
+  push:
+    branches:
+      - agent/seat-1/round2-rate-current-20261015
+    paths:
+      - experiments/seat1/round2/**
+      - .github/workflows/seat1-round2-rate-current.yml
+  pull_request:
+    paths:
+      - experiments/seat1/round2/**
+      - .github/workflows/seat1-round2-rate-current.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-independent-runtimes:
+    name: round2-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Phase B Python code syntax
+        run: python -m py_compile experiments/seat1/round2/photocycle_rates.py experiments/seat1/round2/test_rates_faults.py experiments/seat1/round2/verify_round2.py
+      - name: Prepare immutable public evidence directory
+        run: mkdir round2-evidence
+      - name: Regenerate frozen Phase A original benchmark Python and Node traces
+        run: |
+          python experiments/seat1/optogenetics/opto_gate.py round2-evidence/baseline-python.hbp round2-evidence/baseline-python.json
+          node experiments/seat1/optogenetics/opto_gate_node.js round2-evidence/baseline-node.hbp round2-evidence/baseline-node.json
+      - name: Execute new Phase B 3-state rates and feedback arms in Python
+        run: python experiments/seat1/round2/photocycle_rates.py round2-evidence/round2-python.hbp round2-evidence/round2-python.json
+      - name: Independently reimplement synthetic kinetics and trace in Node BigInt
+        run: node experiments/seat1/round2/photocycle_rates_node.js round2-evidence/round2-node.hbp round2-evidence/round2-node.json
+      - name: Execute Python synthetic fault injections (real corruption prior to actuation)
+        run: python experiments/seat1/round2/test_rates_faults.py round2-evidence/round2-faults.json
+      - name: Execute independent Node synthetic fault injections
+        run: node experiments/seat1/round2/test_rates_node.js
+      - name: Seal original and new source outputs as SHA256 sidecars
+        run: |
+          python -c "from pathlib import Path;import hashlib;p=Path('round2-evidence');[(p/(f.name+'.sha256')).write_text(hashlib.sha256(f.read_bytes()).hexdigest()+'  '+f.name+'\n',encoding='ascii') for f in sorted(p.iterdir()) if f.suffix in ('.hbp','.json')]"
+      - name: Verify original and new SHA, full state mass, current law, source-trust HELD
+        run: python experiments/seat1/round2/verify_round2.py round2-evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-round2-${{ matrix.os }}
+          if-no-files-found: error
+          path: round2-evidence/
+
+  exact-ubuntu-windows-reconciliation:
+    name: round2-cross-os-evidence
+    runs-on: ubuntu-latest
+    needs: test-independent-runtimes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-round2-ubuntu-latest
+          path: cross-os/ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-round2-windows-latest
+          path: cross-os/windows
+      - name: Independently enforce cross-OS frozen old and new HBP SHA parity
+        run: python experiments/seat1/round2/verify_round2.py cross-os/ubuntu cross-os/windows
+      - name: Publish source-conscious scientific acceptance manifest
+        run: |
+          python -c "from pathlib import Path;import json,hashlib;p=Path('cross-os/ubuntu');raw=(p/'round2-python.hbp').read_bytes();m=json.loads((p/'round2-python.json').read_text());a={'status':'COMPUTATIONAL_SOFTWARE_PASS_PEER_REVIEW_PENDING','source_class':'SYNTHETIC_RATE_LAW_NOT_CHR2_DATA','new_hbp_sha256':hashlib.sha256(raw).hexdigest(),'frozen_original_hbp_sha256':'de2c346a92e626403cc5c59b9ffa688d050163fbb48ab8b1cb6a4cde795b0a8b','snapshots':m['snapshot_count'],'site_ticks':m['site_tick_count'],'ci_cross_os_exact':True,'fault_controls_exercised':8,'coherent_watcher_forgery':'HELD_UNAUTHENTICATED','human_release_authorized':False,'independently_attested_physical_hosts':False,'biological_recordings':False};Path('round2-science-manifest.json').write_text(json.dumps(a,indent=2,sort_keys=True)+'\n');print(json.dumps(a))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-round2-cross-os-verification
+          if-no-files-found: error
+          path: round2-science-manifest.json
