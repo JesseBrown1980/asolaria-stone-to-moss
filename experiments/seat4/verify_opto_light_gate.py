@@ -32,6 +32,15 @@ def main():
         assert summary==node_receipt.read_bytes(),"Canonical receipt byte mismatch"
         assert sha(trace)==p["trace_sha256"]
         assert sha(summary)==p["receipt_sha256"]
+        # Freeze the first complete hosted positive result. Check actual
+        # uploaded CI bytes rather than a predicted or hand-made verdict.
+        frozen_stone=ROOT/"stones"/"2026-10-15-rainbow81"/"seat4-opto-light-gate.json"
+        frozen_sha="8583bc8571b87f12aa2021043c33c079eab95f51c3c83e80af9acec364960df2"
+        frozen_trace="3ca42d274909f3ba7b03a3a00662eda0375e2515acb93f769ec072d2695a0b93"
+        assert summary==frozen_stone.read_bytes(),"Measured source stone was mutated"
+        assert sha(summary)==frozen_sha and sha(trace)==frozen_trace
+        sidecar=frozen_stone.with_name(frozen_stone.name+".sha256")
+        assert sidecar.read_text("ascii").split()==[frozen_sha,frozen_stone.name]
         doc=json.loads(summary)
         assert doc["schema"]==SCHEMA
         assert doc["classification"]=="MEASURED_SOFTWARE_PASS"
