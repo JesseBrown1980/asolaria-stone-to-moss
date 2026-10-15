@@ -49,6 +49,21 @@ fn main()->io::Result<()>{
         .expect("separately retained particle histories at the target horizon");
     assert_eq!(history,restored);
     fs::write(dir.join("TEN-BILLION-YEAR-R1.hbp"),ten_gyr)?;
+    let (freeze_receipt,synthetic_fits)=asolaria_proxima_ternary::freeze_play::synthetic_freeze_play_receipt()
+        .expect("freeze two 2D frames with time-linked SHA and exact replay");
+    fs::write(dir.join("FREEZE-PLAY-R4.hbp"),freeze_receipt)?;
+    fs::write(dir.join("SYNTHETIC-FITS-R4.fits"),synthetic_fits)?;
+    let qr_fixture=asolaria_proxima_ternary::camera::synthetic_fits(77,88,3);
+    let chunks=asolaria_proxima_ternary::camera::rainbow_qr_payloads(&qr_fixture)
+        .expect("QR payload encoding");
+    let mut qr_tsv=String::from("index\\tlane\\tcolor\\tsource_size\\tindexed_chunk_hex\\n");
+    for chunk in &chunks{
+        let bytes=asolaria_proxima_ternary::camera::encode_transport(chunk);
+        qr_tsv.push_str(&format!("{}\\t{}\\t{}\\t{}\\t{}\\n",
+            chunk.ordinal,chunk.lane,asolaria_proxima_ternary::camera::COLOURS[chunk.lane],
+            chunk.payload.len(),asolaria_proxima_ternary::sha256::hex(&bytes)));
+    }
+    fs::write(dir.join("RAINBOW-QR-R4.tsv"),qr_tsv)?;
     fs::write(dir.join("RUNTIME.hbp"),format!(
         "RUNTIME|hosted_os={}|arch={}|elapsed_ns={}|physical_device=HOSTED_CPU|distinct_host_custody=UNATTESTED|instrumented_optics=NONE|json=0\n",
         env::consts::OS,env::consts::ARCH,started.elapsed().as_nanos()))?;
