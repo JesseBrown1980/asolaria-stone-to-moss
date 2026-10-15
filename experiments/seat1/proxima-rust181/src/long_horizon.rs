@@ -30,7 +30,7 @@ pub fn orbit_snapshot(years: u64) -> OrbitSnapshot {
 }
 
 /// Independent baseline: explicitly step each year for a bounded short horizon.
-fn direct_phase(years: u64, period: u128) -> Phase {
+pub fn direct_phase(years: u64, period: u128) -> Phase {
     let reference = orbital_phase(0, period);
     let increment = orbital_phase(1, period);
     let mut value = 0;
