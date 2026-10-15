@@ -35,6 +35,8 @@ jobs:
           python experiments/round3/verify_round3.py round3-python.hbp > round3-audit-py.json
           python experiments/round3/verify_round3.py round3-node.hbp > round3-audit-node.json
           python -c "from pathlib import Path; assert Path('round3-python.hbp').read_bytes()==Path('round3-node.hbp').read_bytes(); print('ROUND3_BYTE_EXACT_PASS')"
+          python experiments/round3/round3_memory_resume.py round3-python.hbp round3-resume.hbp > round3-resume.json
+          python -c "import hashlib,pathlib; d=hashlib.sha256(pathlib.Path('round3-resume.hbp').read_bytes()).hexdigest(); assert d=='f6599677f934509604bcbf0f3a1913ce3f473223cbb08504ef7271e078c55d5f'; print('ROUND3_RESTART_648_PASS')"
           python -c "import hashlib,pathlib; a=pathlib.Path('round3-python.hbp'); pathlib.Path('round3-python.sha256').write_text(hashlib.sha256(a.read_bytes()).hexdigest()+'  '+a.name+'\n')"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -50,6 +52,8 @@ jobs:
             round3-audit-py.json
             round3-audit-node.json
             round3-python.sha256
+            round3-resume.hbp
+            round3-resume.json
   rgb-qr-software-pilot:
     runs-on: ubuntu-latest
     steps:
