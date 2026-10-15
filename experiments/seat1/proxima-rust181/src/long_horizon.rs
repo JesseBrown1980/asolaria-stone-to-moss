@@ -84,9 +84,10 @@ pub fn individual_memory_witness() -> Result<(Ledger, String), MemoryError> {
     }
     for depth in 1..=7 {
         let address = memory::base3_address(0, depth)?;
-        let baseline = memory::virtual_state(&address, TEN_BILLION_YEARS)?;
+        let baseline = ledger.state(&address, TEN_BILLION_YEARS)?;
+        let mode = if ledger.notes_for(&address).is_some() { "MATERIALIZED" } else { "DERIVED_UNMODIFIED" };
         text.push_str(&format!(
-            "LEVEL|depth={depth}|cells={}|own_address={address}|own_memory_state={baseline}|HRM=CHECKED|MTP123=CHECKED|Fischer=PASS|Shannon=CHECKED|GNN=CHECKED|GULP=CHECKED|Chariots=CHECKED|json=0\n",
+            "LEVEL|depth={depth}|cells={}|own_address={address}|own_memory_state={baseline}|memory_mode={mode}|HRM=CHECKED|MTP123=CHECKED|Fischer=PASS|Shannon=CHECKED|GNN=CHECKED|GULP=CHECKED|Chariots=CHECKED|json=0\n",
             3usize.pow(depth as u32)
         ));
     }
