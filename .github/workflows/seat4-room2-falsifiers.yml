@@ -1,0 +1,75 @@
+name: Seat4 Room04 Round2 frozen-frame independent falsifiers
+
+on:
+  push:
+    branches:
+      - agent/seat-4/core-science-room2-adversarial-20261015
+    paths:
+      - experiments/seat4/round2_anchored_falsifiers.py
+      - experiments/seat4/PREREG-ROUND2-ANCHORED-DIGITAL-FALSIFIERS-20261015.md
+      - .github/workflows/seat4-room2-falsifiers.yml
+  pull_request:
+    paths:
+      - experiments/seat4/round2_anchored_falsifiers.py
+      - experiments/seat4/PREREG-ROUND2-ANCHORED-DIGITAL-FALSIFIERS-20261015.md
+      - .github/workflows/seat4-room2-falsifiers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-replay-and-faults:
+    runs-on: ${{ matrix.os }}
+    name: B2 ${{ matrix.os }} / Python ${{ matrix.py }}
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        py: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py }}
+      - name: Independent SHA-pinned replay, executed fault ledger and simulated HALT
+        shell: bash
+        run: |
+          mkdir -p round2-artifacts
+          python experiments/seat4/round2_anchored_falsifiers.py \
+            --repo . \
+            --trace round2-artifacts/trace.hbp \
+            --receipt round2-artifacts/receipt.json \
+            --fault-ledger round2-artifacts/fault-ledger.json \
+            | tee round2-artifacts/run.stdout.json
+          python - <<'PY'
+          import json, pathlib, hashlib
+          root=pathlib.Path('round2-artifacts')
+          r=json.loads((root/'receipt.json').read_text())
+          trace=(root/'trace.hbp').read_bytes()
+          ledger=json.loads((root/'fault-ledger.json').read_text())
+          expected='3ca42d274909f3ba7b03a3a00662eda0375e2515acb93f769ec072d2695a0b93'
+          print('CI_CHECK', 'actual',hashlib.sha256(trace).hexdigest(), 'receipt',r['independently_recomputed_hbp_sha256'], 'expected',expected, 'bytes',len(trace),flush=True)
+          assert hashlib.sha256(trace).hexdigest()==r['independently_recomputed_hbp_sha256']==expected
+          assert len(trace)==2092959
+          assert r['original_baseline_rows']==6561
+          assert len(ledger)==r['fault_injections_exercised']==729
+          assert all(v==81 for v in r['rejected_faults_by_type'].values())
+          assert r['cooperative_halt_cases']==81
+          assert r['simulated_privilege_escalation_denials']==81
+          assert r['unanchored_coherent_forgery_math_accepted']==81
+          assert not any(r[k] for k in ['authoritative_source_attested',
+             'real_optical_photons_measured','biological_rates_calibrated',
+             'real_external_permission_tested','physical_hosts_attested'])
+          assert all(e['attack_exercised'] and e['anchored_result']=='REJECTED' for e in ledger)
+          print('B2_ANCHORED_DIGITAL_PASS:',expected,'attacks:',len(ledger))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-room2-${{ matrix.os }}-py${{ matrix.py }}
+          path: round2-artifacts/*
+          if-no-files-found: error
+          retention-days: 90
