@@ -2,7 +2,7 @@
 //! Freeze exact 2D FITS source bytes, stack observations, and frame Rainbow7 QR
 //! PAYLOADS. Standard QR image rendering/decoding is a separate optical layer.
 //! A FITS pixel value is an instrument sample, not a resolved physical atom.
-use std::collections::{BTreeMap,BTreeSet};
+use std::collections::BTreeMap;
 use crate::sha256::{digest,hex};
 #[derive(Debug,Clone,PartialEq,Eq)]
 pub enum CameraError {
