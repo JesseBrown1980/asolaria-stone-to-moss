@@ -1,0 +1,105 @@
+name: Seat1 photon-phonon-electron 12-arm full-memory coupling review
+
+on:
+  push:
+    branches:
+      - experiment/seat1-photon-phonon-electron-coupling-20261015
+    paths:
+      - experiments/seat1_photon_phonon/**
+      - .github/workflows/seat1-photon-phonon.yml
+  pull_request:
+    paths:
+      - experiments/seat1_photon_phonon/**
+      - .github/workflows/seat1-photon-phonon.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independently-replay:
+    name: PhotonPhonon-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install ZBar pixel QR decoder on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install frozen QR image fixture dependencies
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Recreate actual original 81 synthetic memory QR pixels
+        run: python experiments/seat1/round2/lightbank_81.py original-evidence
+      - name: Independently reconstruct source bytes from pixel images
+        run: node experiments/seat1/round2/verify_lightbank_81.js original-evidence
+      - name: Recreate full-byte Rainbow7 stored bank and index
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py original-evidence rainbow-evidence
+      - name: Reverify source ancestry in independently coded Node
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js original-evidence rainbow-evidence
+      - name: Python 12-arm coupled photon phonon electron detector and neural gate model
+        run: python experiments/seat1_photon_phonon/coupling.py original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-coupling
+      - name: Independently reproduce full 6804 frames in pure Node
+        run: node experiments/seat1_photon_phonon/coupling.js original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi node-coupling
+      - name: Third independent source-anchored per-bit physical-model cross examination
+        run: python experiments/seat1_photon_phonon/verify_coupling.py original-evidence/lightbank-memories.json rainbow-evidence/rainbow7-bank.jsonl rainbow-evidence/rainbow7-index.hbi py-coupling node-coupling
+      - name: Upload full original bank and complete new software evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat1-photon-phonon-${{ matrix.os }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            original-evidence/lightbank-memories.json
+            rainbow-evidence/rainbow7-bank.jsonl
+            rainbow-evidence/rainbow7-index.hbi
+            py-coupling/coupling.hbp
+            py-coupling/results.json
+            py-coupling/*.sha256
+            node-coupling/coupling.hbp
+            node-coupling/results.json
+            node-coupling/*.sha256
+
+  full-cross-os:
+    name: PhotonPhonon source pinned full-byte OS referee
+    needs: independently-replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-photon-phonon-ubuntu-latest
+          path: from-ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-photon-phonon-windows-latest
+          path: from-windows
+      - name: Independently verify full original bytes and all four emitted model traces
+        run: python experiments/seat1_photon_phonon/verify_coupling.py from-ubuntu/original-evidence/lightbank-memories.json from-ubuntu/rainbow-evidence/rainbow7-bank.jsonl from-ubuntu/rainbow-evidence/rainbow7-index.hbi from-ubuntu/py-coupling from-ubuntu/node-coupling from-windows/py-coupling from-windows/node-coupling
+      - name: Original source files on both OS runners must be byte identical
+        shell: python
+        run: |
+          import hashlib
+          from pathlib import Path
+          for p in ['original-evidence/lightbank-memories.json','rainbow-evidence/rainbow7-bank.jsonl','rainbow-evidence/rainbow7-index.hbi']:
+              a=(Path('from-ubuntu')/p).read_bytes()
+              b=(Path('from-windows')/p).read_bytes()
+              assert a==b, ('ORIGINAL_SOURCE_OS_MISMATCH',p)
+              print(p,len(a),hashlib.sha256(a).hexdigest())
