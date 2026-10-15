@@ -1,0 +1,169 @@
+name: Seat4 B3 colour QR light-bank 27-stick recovery stress test
+
+on:
+  pull_request:
+    paths:
+      - experiments/seat4/PREREG-B3-COLOURQR-LIGHTBANK-20261015.md
+      - experiments/seat4/colourqr_lightbank_b3*
+      - .github/workflows/seat4-b3-lightbank-27-sticks.yml
+  push:
+    branches:
+      - agent/seat-4/colour-qr-lightbank-b3-20261015
+    paths:
+      - experiments/seat4/PREREG-B3-COLOURQR-LIGHTBANK-20261015.md
+      - experiments/seat4/colourqr_lightbank_b3*
+      - .github/workflows/seat4-b3-lightbank-27-sticks.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  memory-bank:
+    name: B3 RGB QR 27-bank ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconstruct original frozen B2 full state and fault trace on own CI worker
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/B3/input" "$RUNNER_TEMP/B3/banks"
+          python experiments/seat4/room04_adversarial_photocycle.py \
+            --tick-hbp "$RUNNER_TEMP/B3/input/ticks.hbp" \
+            --fault-hbp "$RUNNER_TEMP/B3/input/faults.hbp" \
+            --phase-a-hbp "$RUNNER_TEMP/B3/input/original-phaseA.hbp" \
+            --receipt "$RUNNER_TEMP/B3/input/receipt.json" > "$RUNNER_TEMP/B3/parent-B2-audit.json"
+          cat "$RUNNER_TEMP/B3/parent-B2-audit.json"
+      - name: Independently recheck baseline source recovery/loss rank suite
+        shell: bash
+        run: |
+          python experiments/retention/verify_retention.py > "$RUNNER_TEMP/B3/GF2-rank-audit.json"
+          cat "$RUNNER_TEMP/B3/GF2-rank-audit.json"
+      - name: Write actual four-source bytes into 27 digital RGB memory sticks with two levels of XOR parity
+        shell: bash
+        run: |
+          python experiments/seat4/colourqr_lightbank_b3.py \
+            --source-dir "$RUNNER_TEMP/B3/input" \
+            --out "$RUNNER_TEMP/B3/banks" > "$RUNNER_TEMP/B3/python-build-audit.json"
+          cat "$RUNNER_TEMP/B3/python-build-audit.json"
+      - name: Independently reconstruct all indexed RGB packets, erased bank and P projector with Node 22
+        shell: bash
+        run: |
+          node experiments/seat4/colourqr_lightbank_b3_node.js \
+            "$RUNNER_TEMP/B3/input" "$RUNNER_TEMP/B3/banks" > "$RUNNER_TEMP/B3/node-reader-audit.json"
+          cat "$RUNNER_TEMP/B3/node-reader-audit.json"
+      - name: Repeat Python verifier with all already deposited bank records and unchanged sources
+        shell: bash
+        run: |
+          python experiments/seat4/colourqr_lightbank_b3.py \
+            --verify-only \
+            --source-dir "$RUNNER_TEMP/B3/input" \
+            --out "$RUNNER_TEMP/B3/banks" > "$RUNNER_TEMP/B3/python-replay-audit.json"
+          cat "$RUNNER_TEMP/B3/python-replay-audit.json"
+      - name: Verify exact claims, hashes, original sources, 27 bank cells and all negative controls
+        shell: bash
+        run: |
+          python - "$RUNNER_TEMP/B3" <<'PY'
+          import json,hashlib,sys,pathlib
+          root=pathlib.Path(sys.argv[1])
+          data=json.loads((root/"python-build-audit.json").read_text())
+          replay=json.loads((root/"python-replay-audit.json").read_text())
+          node=json.loads((root/"node-reader-audit.json").read_text())
+          old=json.loads((root/"parent-B2-audit.json").read_text())
+          rank=json.loads((root/"GF2-rank-audit.json").read_text())
+          manifest=json.loads((root/"banks"/"bank_manifest.json").read_text())
+          assert data==replay
+          assert data["status"]==node["status"]==rank["status"]==old["status"]=="PASS"
+          assert data["source_payload_bytes"]==35607532
+          assert data["source_objects_restored"]==4
+          assert data["data_banks"]==node["bank_sticks"]==27
+          assert data["additional_parity_banks"]==node["parity_sticks"]==1
+          assert data["archive_sha256"]==node["archive_sha256"]==manifest["archive_sha256"]
+          assert data["qr_indexed_base64_chunks"]==node["indexed_base64_chunks"]
+          assert data["rgb_frames_recovered_shuffled"]==node["rgb_frames"]
+          assert data["colour_plane_erasure_recoveries"]==node["plane_erasure_roundtrips"]
+          assert data["one_whole_bank_erasure_recovered"] and data["one_whole_bank_corruption_detected_and_recovered"]
+          assert node["exact_whole_bank_recovery"] and node["exact_corrupted_bank_recovery"]
+          assert data["two_whole_bank_erasures"]==data["two_same_frame_colour_erasures"]=="HELD_INSUFFICIENT_EQUATIONS"
+          assert node["unrecoverable_two_bank_erasure"]=="HELD"
+          assert data["forged_address_rejected"]
+          assert data["exact_projector"]["exact_projector_lifts"]==node["independently_verified_projector_samples"]==6561
+          assert data["gf2_on_real_trace_memory"]["source_81bit_reconstructions"]==648
+          assert rank["rank_cases"]==40 and rank["independent_algorithm_parity"]
+          assert old["site_tick_checks"]==349920 and old["rejected_fault_cases"]==1296
+          assert old["phase_a_sha256"]=="de2c346a92e626403cc5c59b9ffa688d050163fbb48ab8b1cb6a4cde795b0a8b"
+          sealed=pathlib.Path("stones/2026-10-15-rainbow81/seat4-b3-colourqr-27-lightbank.json")
+          assert sealed.read_bytes()==(root/"banks"/"B3-RESULT.json").read_bytes()
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          assert sha(sealed.read_bytes())=="0b9b9a36272c364a55e706ecb125e9b3aa93710b5be23daec0deb9cd90fed4cb"
+          assert sealed.with_name(sealed.name+".sha256").read_text("ascii").split()==[sha(sealed.read_bytes()),sealed.name]
+          assert not data["physical_optical_storage_measured"] and not node["camera_or_photon_readout"]
+          assert not data["qr_raster_or_camera_decoding"]
+          checksum=(root/"banks"/"SHA256SUMS").read_bytes()
+          assert b"\r" not in checksum
+          print("SEAT4_B3_LIGHTBANK_27_EXACT_MEMORY_PASS",data["archive_sha256"])
+          print("SEAT4_B3_MANIFEST_SHA",hashlib.sha256(checksum).hexdigest())
+          PY
+      - name: Canonicalize audit-log line endings; pin ALL important results and seal cross-OS artifact manifest
+        shell: bash
+        run: |
+          python - "$RUNNER_TEMP/B3" <<'PY'
+          from pathlib import Path
+          import hashlib,sys,json
+          root=Path(sys.argv[1])
+          sh=lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+          for p in root.glob("*audit.json"):
+              p.write_bytes(p.read_bytes().replace(b"\r\n",b"\n"))
+          pins={
+              "banks/source.archive":"2f3a0b27a50a562205a500dd7e38e4318f658cdd05202a4b88312c812ae7ba30",
+              "banks/bank_manifest.json":"a87d27bce1924f3fc4340a337706bf1365cb38919feee71e759f594c3549ced7",
+              "banks/B3-RESULT.json":"0b9b9a36272c364a55e706ecb125e9b3aa93710b5be23daec0deb9cd90fed4cb",
+              "banks/SHA256SUMS":"893f1f62d317e68d9aa8f5404cd157d3660cca28c485473c5bbfdc7319a0e3c5",
+              "banks/bank-parity.hbp":"253bbf7b10df921e737a8dfeb8a3239b4d4bee35e870af37c53e4cc7ace4ea24",
+              "node-reader-audit.json":"c1189125439a0fe537a4b12918be7fb7d6b5f59787308728b4f67b7705f76db6",
+              "GF2-rank-audit.json":"4c2cdf1705743c567f09b4a872855ab66a1b3d9d3e75bd7a4f4c5e916fff9b9b",
+              "parent-B2-audit.json":"8d37e13c5f11e1c90ff8554896e6b70ac63642b2df8da81dad83973c074aefbe",
+              "python-build-audit.json":"e24349de03827b0c902f1cc4b5e26927350c385d9eff654023f4cbf96ba0ee97",
+              "python-replay-audit.json":"e24349de03827b0c902f1cc4b5e26927350c385d9eff654023f4cbf96ba0ee97",
+          }
+          for rel,expected in pins.items():
+              assert sh(root/rel)==expected,("CROSS_HOST_BYTES_CHANGED",rel)
+          manifest=(root/"banks"/"SHA256SUMS").read_text("ascii")
+          assert "\r" not in manifest and len(manifest.splitlines())==31
+          for line in manifest.splitlines():
+              digest,name=line.split("  ",1)
+              assert sh(root/"banks"/name)==digest
+          lines=[]
+          for p in sorted([*root.glob("*audit.json"),*root.glob("banks/*")],
+                          key=lambda p:p.relative_to(root).as_posix()):
+              rel=p.relative_to(root).as_posix()
+              lines.append(f"{sh(p)}  {rel}\n")
+          assert len(lines)==37
+          (root/"ARTIFACT-SHA256SUMS").write_text("".join(lines),encoding="ascii",newline="\n")
+          print("SEAT4_B3_CANONICAL_37_FILE_ARTIFACT_SHA",
+                sh(root/"ARTIFACT-SHA256SUMS"))
+          PY
+      - name: Upload actual recovered digital bank bytes, typed source archive and SHA manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat4-b3-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/B3/banks/*
+            ${{ runner.temp }}/B3/*audit.json
+            ${{ runner.temp }}/B3/ARTIFACT-SHA256SUMS
+          if-no-files-found: error
+          retention-days: 90
