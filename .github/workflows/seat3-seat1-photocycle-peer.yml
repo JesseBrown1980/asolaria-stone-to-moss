@@ -54,6 +54,7 @@ jobs:
         run: |
           node experiments/seat3/seat3_peer_seat1_photocycle.js "$RUNNER_TEMP/peer.hbp" "$RUNNER_TEMP/peer.json"
           python experiments/seat3/verify_seat1_photocycle_peer.py "$RUNNER_TEMP/peer.hbp" "$RUNNER_TEMP/peer.json" "$RUNNER_TEMP/seat3-photocycle"
+          python experiments/seat3/verify_sealed_seat1_photocycle_peer.py stones/2026-10-15-rainbow81/seat3-seat1-photocycle-peer-20261015.hbp "$RUNNER_TEMP/peer.json"
       - name: Corrupted trace must fail strict frozen SHA
         shell: bash
         run: |
