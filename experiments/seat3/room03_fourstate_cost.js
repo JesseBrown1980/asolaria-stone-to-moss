@@ -102,7 +102,7 @@ function protocolRun(protocol,model){
   rows.push(measureLine(protocol,model,output));
   return {state,rows,output};
 }
-function report(s,L,id=17,tick=1){
+function makeReport(s,L,id=17,tick=1){
   const nxt=stepFour(s,L);
   return {id,tick,light:Number(L),states:nxt.slice(),current:currentFour(nxt)};
 }
@@ -115,7 +115,7 @@ function gate(s,L,candidate,id=17,tick=1){
 }
 function negativeControls(){
   const prior=[Q,0,0,0],lit=true;
-  const original=report(prior,lit);
+  const original=makeReport(prior,lit);
   assert(gate(prior,lit,original));
   const altered={};
   const changing=original.states.slice();changing[0]--;changing[1]++;
@@ -138,7 +138,7 @@ function negativeControls(){
     verdict[label]="HELD";
   }
   assert.equal(Object.keys(verdict).length,7);
-  const forged=report(prior,false);
+  const forged=makeReport(prior,false);
   assert(gate(prior,false,forged));
   assert.equal(gate(prior,true,forged),false);
   verdict.coherent_forged_schedule="MATH_GREEN_ORIGIN_UNAUTHENTICATED";
