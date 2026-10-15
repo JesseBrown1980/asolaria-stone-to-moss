@@ -157,6 +157,42 @@ def independent_watcher(q,params,pin,reported):
     assert result["reported_sha256"]==sha(canonical(reported))
     return result
 
+def parent_recompute_watcher_gate(q,pin,params,reported,witness):
+    """Fail closed at the *parent*, not only within the watcher subprocess.
+
+    The parent separately computes the expected Q-PRISM trace from pinned code
+    and fixed input. This protects against a forged PASS/digest from the child,
+    but a shared attacker-controlled input is NOT authenticated by this check.
+    """
+    truth=check_leaf(reported,params,pin,q)
+    recomputed=truth["recomputed"]
+    faults=[]
+    def require(condition,label):
+        if not condition: faults.append(label)
+    require(isinstance(witness.get("watcher_pid"),int) and
+            witness["watcher_pid"]!=os.getpid(),"watcher_process_identity")
+    require(witness.get("reported_sha256")==sha(canonical(reported)),"watcher_report_digest")
+    require(witness.get("recomputed_sha256")==sha(canonical(recomputed)),"watcher_recomputed_digest")
+    require(witness.get("recomputed")==recomputed,"watcher_recomputation_content")
+    require(witness.get("checks") is truth["checks"],"watcher_claimed_status")
+    require(witness.get("verdict")==truth["verdict"],"watcher_claimed_verdict")
+    require(witness.get("failing_checks")==truth["failing_checks"],"watcher_failure_list")
+    faults.extend(truth["failing_checks"])
+    green=not faults
+    return {
+        "watcher_pid":witness.get("watcher_pid"),
+        "reported_sha256":sha(canonical(reported)),
+        "recomputed_sha256":sha(canonical(recomputed)),
+        "recomputed":recomputed,
+        "failing_checks":faults,
+        "checks":green,
+        "verdict":"PASS" if green else "HELD",
+        "mathematical_consistency":truth["checks"],
+        "watcher_digest_integrity_passed":not any(x.startswith("watcher_") for x in faults),
+        "source_authenticated":False,
+        "physical_host_attested":False
+    }
+
 def check_nested(watcher,depth,forced_hold=False):
     # Adapter, not native N-Nest leaf-injection API. Each parent rechecks the child's gate.
     path="R"+".0"*(depth-1)+".1"
@@ -180,12 +216,16 @@ def check_nested(watcher,depth,forced_hold=False):
 
 def checks(q,pin,params):
     pristine=leaf(q,params,pin)
-    honest=independent_watcher(q,params,pin,pristine)
+    honest_witness=independent_watcher(q,params,pin,pristine)
+    honest=parent_recompute_watcher_gate(q,pin,params,pristine,honest_witness)
     assert honest["checks"] and honest["verdict"]=="PASS"
+    assert honest["mathematical_consistency"] is True
+    assert honest["source_authenticated"] is False
     assert honest["watcher_pid"]!=os.getpid(),"Watcher must be another OS process"
     stats={"valid":0,"held":0,"cases":{}}
     def record(name,r,expect_green):
-        observed=independent_watcher(q,params,pin,r)
+        witness=independent_watcher(q,params,pin,r)
+        observed=parent_recompute_watcher_gate(q,pin,params,r,witness)
         tree3=check_nested(observed,3)
         tree7=check_nested(observed,7)
         assert tree3["apex_green"]==tree7["apex_green"]==expect_green,name
@@ -215,14 +255,22 @@ def checks(q,pin,params):
     stats["held"]+=1
     stats["cases"]["missing_consent"]={"verdict":"HELD","apex_depth7":False,
                                        "held_at":missing_consent["failed_paths"]}
-    # Compromised watcher: its word alone cannot authorize the apex.
-    forged={"watcher_pid":honest["watcher_pid"],"checks":True,"verdict":"PASS",
-            "recomputed_sha256":"0"*64}
-    master_detected=forged["recomputed_sha256"]!=honest["recomputed_sha256"]
-    assert master_detected
+    # Compromised watcher: forge the recomputation digest while claiming PASS.
+    # This attack MUST traverse the same normal parent->nested gate as clean data.
+    forged=json.loads(json.dumps(honest_witness))
+    forged["recomputed_sha256"]="0"*64
+    caught=parent_recompute_watcher_gate(q,pin,params,pristine,forged)
+    parent3=check_nested(caught,3)
+    parent7=check_nested(caught,7)
+    assert "watcher_recomputed_digest" in caught["failing_checks"]
+    assert caught["verdict"]=="HELD" and not parent3["apex_green"] and not parent7["apex_green"]
     stats["held"]+=1
     stats["cases"]["compromised_watcher_inconsistent_digest"]={
-        "verdict":"HELD","recomputed_digest_mismatch":master_detected}
+        "verdict":caught["verdict"],
+        "failure_checks":caught["failing_checks"],
+        "apex_depth3":parent3["apex_green"],
+        "apex_depth7":parent7["apex_green"],
+        "held_at":parent7["failed_paths"]}
     assert stats["valid"]==1 and stats["held"]==8
     return pristine,honest,stats,check_nested(honest,3),check_nested(honest,7)
 
@@ -258,7 +306,7 @@ def seal(out,payload):
         "CONTROL|zero_coupling_verdict="+payload["statistics"]["0.0"]["prism_vs_optimizer"]["verdict"].replace(" ","_")+
         "|injected_oracle_coupling=0.9|json=0\n"+
         "BRIDGE|leaf_input_sha256="+payload["input_sha256"]+"|selector_sha256="+sha(payload["selector"].encode("utf-8"))+"|json=0\n"+
-        "GATES|honest=1|held=8|depth3=PASS|depth7=PASS|physical=0|json=0\n"+
+        "GATES|honest=1|held=8|depth3=PASS|depth7=PASS|mathematical_consistency=1|source_authenticated=0|release_authorized=0|physical=0|json=0\n"+
         "RESULT|verdict=PASS|upstream_native_depth3=PASS|upstream_native_depth7=PASS|json=0\n"+
         "HBPEND|schema="+SCHEMA+"|json=0\n"
     ).encode()
@@ -294,6 +342,15 @@ def run(nn,q,out):
         "reported":reported,"recomputed":watcher["recomputed"],
         "parents":{"depth3":depth3["parents"],"depth7":depth7["parents"]},
         "verdict":"PASS" if all((depth3["apex_green"],depth7["apex_green"])) else "HELD",
+        "verification_layers":{
+            "mathematical_consistency":watcher["mathematical_consistency"],
+            "watcher_digest_integrity_passed":watcher["watcher_digest_integrity_passed"],
+            "software_parent_gates_green":all((depth3["apex_green"],depth7["apex_green"])),
+            "source_authenticated":False,
+            "source_identity_independently_attested":False,
+            "physical_host_attested":False,
+            "release_authorized":False
+        },
         "sources":pins["sources"],"verified_upstream_blobs":tested,
         "upstream_nnest_native":native,"qprism_upstream_pytest":upstream_tests,
         "statistics":statistics,"negative_controls":negative,
@@ -327,6 +384,15 @@ def audit(out):
     assert receipt["version"]==SCHEMA and receipt["verdict"]=="PASS"
     assert receipt["negative_controls"]["held"]==8
     assert receipt["negative_controls"]["valid"]==1
+    layers=receipt["verification_layers"]
+    assert layers["mathematical_consistency"] is True
+    assert layers["watcher_digest_integrity_passed"] is True
+    assert layers["software_parent_gates_green"] is True
+    assert layers["source_authenticated"] is False
+    assert layers["source_identity_independently_attested"] is False
+    assert layers["physical_host_attested"] is False
+    assert layers["release_authorized"] is False
+    assert receipt["negative_controls"]["cases"]["compromised_watcher_inconsistent_digest"]["apex_depth7"] is False
     assert receipt["watcher_pid"]!=0 and receipt["reported"]==receipt["recomputed"]
     assert "physical" in pairs[".hbp"].decode()
     index=pairs[".hbi"].decode()
