@@ -124,7 +124,7 @@ def negatives(bank,example,pt):
         raise AssertionError("FALSE_GREEN_"+name)
     w=WORLD[0]
     res,p,e,t,k,b,s,o,a=pt
-    held("altered_detector_readout",lambda:validate_record(example[:-1]+"0",w,pt,bank))
+    held("altered_detector_readout",lambda:validate_record(example.rsplit("|y=",1)[0]+"|y="+str(int(example.rsplit("|y=",1)[1])+1),w,pt,bank))
     held("wrong_mechanism",lambda:validate_record(example.replace(w,WORLD[1]),w,pt,bank))
     held("wrong_optical_blocker",lambda:validate_record(example.replace(f"|block={b}",f"|block={1-b}"),w,pt,bank))
     held("wrong_rf_shield",lambda:validate_record(example.replace(f"|shield={s}",f"|shield={1-s}"),w,pt,bank))
