@@ -163,8 +163,9 @@ function negativity(){
   // This need not be green under unchanged original route if a colour changed.
   // Derive coherent source-side change with a new independently consistent route.
   const newRoute=sample([...falseSource.body.subarray(0,3)],w,a).lane;
-  const coherent={...falseSource,route:newRoute};
-  assert(validPacket(coherent,coherent.body,seq,origin,id,newRoute,true,w,a));
+  const newOrigin=(w+a+newRoute)%7;
+  const coherent={...falseSource,route:newRoute,origin:newOrigin};
+  assert(validPacket(coherent,coherent.body,seq,newOrigin,id,newRoute,true,w,a));
   assert(!validPacket(coherent,src,seq,origin,id,route,true,w,a));
   cases["coherent_shared_source_math_green"]="ORIGIN_UNAUTHENTICATED";
   let thrown=false;
