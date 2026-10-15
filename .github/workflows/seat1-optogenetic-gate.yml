@@ -1,0 +1,83 @@
+name: Seat 1 optogenetic-inspired light-gate reproducibility
+
+on:
+  push:
+    branches:
+      - agent/seat-1/optogenetic-photocycle-20261015
+    paths:
+      - experiments/seat1/optogenetics/**
+      - .github/workflows/seat1-optogenetic-gate.yml
+  pull_request:
+    paths:
+      - experiments/seat1/optogenetics/**
+      - .github/workflows/seat1-optogenetic-gate.yml
+
+permissions:
+  contents: read
+
+jobs:
+  independent-execution:
+    name: opto-3state-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Compile Python benchmark
+        run: python -m py_compile experiments/seat1/optogenetics/opto_gate.py experiments/seat1/optogenetics/verify_opto.py
+      - name: Execute 81 immutable identities with 3-state closed/open/refractory feedback (Python)
+        run: |
+          mkdir opto-evidence
+          python experiments/seat1/optogenetics/opto_gate.py opto-evidence/opto-python.hbp opto-evidence/opto-python.json
+      - name: Independently reimplement state update in Node and compare complete traces
+        run: node experiments/seat1/optogenetics/opto_gate_node.js opto-evidence/opto-node.hbp opto-evidence/opto-node.json
+      - name: Check 8748 whole-state records and 4 feedback-arm metrics
+        run: python experiments/seat1/optogenetics/verify_opto.py opto-evidence
+      - name: Compute run-bound SHA256 for all four raw outputs
+        run: |
+          python -c "from pathlib import Path;import hashlib; p=Path('opto-evidence'); [(p/(f.name+'.sha256')).write_text(hashlib.sha256(f.read_bytes()).hexdigest()+'  '+f.name+'\n', encoding='ascii') for f in sorted(p.iterdir()) if f.suffix in ('.hbp','.json')]"
+      - name: Publish original software traces with checksums, no physical-host claims
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat1-optogate-${{ matrix.os }}
+          if-no-files-found: error
+          path: opto-evidence/
+
+  compare-operating-systems:
+    name: compare-full-trace-ubuntu-windows
+    runs-on: ubuntu-latest
+    needs: independent-execution
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-optogate-ubuntu-latest
+          path: cross-os/ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-optogate-windows-latest
+          path: cross-os/windows
+      - name: Require exact byte-by-byte HBP and metrics agreement
+        run: python experiments/seat1/optogenetics/verify_opto.py cross-os/ubuntu cross-os/windows
+      - name: Seal audited cross-run manifest
+        run: |
+          python -c "import json,hashlib,pathlib; d=pathlib.Path('cross-os/ubuntu'); b=(d/'opto-python.hbp').read_bytes(); p=json.loads((d/'opto-python.json').read_text()); x={'schema':'ASOLARIA-SEAT1-OPTOGATE-INTEGRITY-V1','source':'public software only','artifact_sha256':hashlib.sha256(b).hexdigest(),'trace_bytes':len(b),'rows':8748,'ubuntu_windows_exact':True,'physical_photon_data':False,'independently_attested_hardware':False,'four_arm_metrics':p['arms']}; out=pathlib.Path('opto-cross-os-manifest.json');out.write_text(json.dumps(x,sort_keys=True,indent=2)+'\n');print(json.dumps(x))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-optogate-cross-os-verified-manifest
+          if-no-files-found: error
+          path: opto-cross-os-manifest.json
