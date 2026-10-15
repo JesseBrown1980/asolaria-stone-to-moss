@@ -1,0 +1,81 @@
+name: Seat 1 Rainbow7 full-byte light-bank logical addressing and independently verified retrieval
+
+on:
+  push:
+    branches:
+      - agent/seat-1/rainbow7-lightbank-memory-20261015
+    paths:
+      - experiments/seat1/rainbow7/**
+      - .github/workflows/seat1-rainbow7-lightbank.yml
+  pull_request:
+    paths:
+      - experiments/seat1/rainbow7/**
+      - .github/workflows/seat1-rainbow7-lightbank.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seven-band:
+    name: Seven-band-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install standards QR scanner library
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y libzbar0
+      - name: Install open QR encoder and image readers (not paid Jobs)
+        run: python -m pip install --disable-pip-version-check "qrcode>=7.4,<9" "Pillow>=10,<13" "pyzbar==0.1.9"
+      - name: Re-execute existing real RGB pixel-plane QR scan and actual negative pixel erasure
+        run: python experiments/seat1/round2/lightbank_81.py base-evidence
+      - name: Independent Node proof of previous 81 original memory bytes and photocycle
+        run: node experiments/seat1/round2/verify_lightbank_81.js base-evidence
+      - name: Write exactly 567 NEW rainbow logical full-byte indexed memory entries
+        run: python experiments/seat1/rainbow7/rainbow7_bank.py base-evidence rainbow-evidence
+      - name: Independently verify 567 random-access memories, seven negative cases and missing-band isolation
+        run: node experiments/seat1/rainbow7/verify_rainbow7_bank.js base-evidence rainbow-evidence
+      - name: Seal source and retained data SHA256; check no optical measurements claimed
+        run: |
+          python -c "import json,pathlib,hashlib; p=pathlib.Path('rainbow-evidence');m=json.loads((p/'rainbow7-manifest.json').read_text());v=json.loads((p/'rainbow7-verification.json').read_text());assert m['addressable_full_replicas']==567 and v['addresses_read']==567 and len(v['negative_faults'])==7;assert all(x['result']=='REJECT' for x in v['negative_faults']);assert v['one_band_erasure']['remaining_exact']==486 and v['one_band_erasure']['missing']==81;assert m['physical_optical_storage_verified'] is False;print('SEAT1_RAINBOW7_CI_PASS bank_sha256='+m['bank_sha256']+' index_sha256='+m['index_sha256'])"
+      - name: Archive original pixel-scan proof and new unmerged digital bank outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat1-rainbow7-${{ matrix.os }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            base-evidence/manifest.json
+            base-evidence/lightbank-memories.json
+            base-evidence/results.json
+            base-evidence/photocycle-frame.hbp
+            rainbow-evidence/
+  cross-operating-systems:
+    name: Require entire full-byte bank and all outcomes to match Windows and Ubuntu
+    needs: seven-band
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-rainbow7-ubuntu-latest
+          path: ubuntu
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat1-rainbow7-windows-latest
+          path: windows
+      - name: Compare byte-identical source memory, bank, index and verification outcome
+        run: |
+          python -c "from pathlib import Path;import hashlib;fs=['base-evidence/lightbank-memories.json','base-evidence/photocycle-frame.hbp','rainbow-evidence/rainbow7-bank.jsonl','rainbow-evidence/rainbow7-index.hbi','rainbow-evidence/rainbow7-manifest.json','rainbow-evidence/rainbow7-verification.json'];[(lambda name,a,b: print('CROSS_OS_BYTE_EXACT',name,hashlib.sha256(a).hexdigest()) if a==b else (_ for _ in ()).throw(AssertionError('CROSS_OS_DRIFT_'+name)))(f,(Path('ubuntu')/f).read_bytes(),(Path('windows')/f).read_bytes()) for f in fs]"
