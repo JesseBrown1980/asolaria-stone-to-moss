@@ -6,10 +6,12 @@ on:
       - agent/seat-4/nnest-qprism-compromised-watcher-20261015
     paths:
       - experiments/integration/seat4/**
+      - stones/2026-10-15-rainbow81/seat4-nnest-qprism-compromised-watcher*
       - .github/workflows/seat4-nnest-qprism-adversarial.yml
   pull_request:
     paths:
       - experiments/integration/seat4/**
+      - stones/2026-10-15-rainbow81/seat4-nnest-qprism-compromised-watcher*
       - .github/workflows/seat4-nnest-qprism-adversarial.yml
   workflow_dispatch:
 
@@ -75,6 +77,11 @@ jobs:
           assert data["independent_physical_experiment"] is False
           parts=f.with_name(f.name+".sha256").read_text("ascii").split()
           assert parts==[hashlib.sha256(f.read_bytes()).hexdigest(),f.name]
+          sealed=pathlib.Path("stones/2026-10-15-rainbow81/seat4-nnest-qprism-compromised-watcher.json")
+          assert sealed.read_bytes()==f.read_bytes(), "Ubuntu/Windows computed receipts must exactly match sealed stone"
+          assert parts[0]=="fc550ada3e932af89febda013b2cfc95a5448354bc5b4d5bc3a5a66d02d3b82b"
+          sealed_side=pathlib.Path(str(sealed)+".sha256").read_text("ascii").split()
+          assert sealed_side==[parts[0],sealed.name]
           print("SEAT4_ADVERSARIAL_SHA256",parts[0],"CASES",data["case_count"])
           PY
       - uses: actions/upload-artifact@v4
