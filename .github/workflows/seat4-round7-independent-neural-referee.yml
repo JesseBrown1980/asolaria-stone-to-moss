@@ -60,6 +60,31 @@ jobs:
         shell: bash
         run: |
           node experiments/seat4/round7/verify_neural.js "$RUNNER_TEMP/original-PR93-artifacts" "$RUNNER_TEMP/seat4-r7-output"
+      - name: Verify fresh science receipts against committed append-only Seat4 R7 stone
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,os,json
+          from pathlib import Path
+          stone=Path("stones/2026-10-15-rainbow81/seat4-r7-independent-neural-source-referee-20261015.hbp")
+          digest=hashlib.sha256(stone.read_bytes()).hexdigest()
+          assert len(stone.read_bytes())==821
+          assert digest=="dc80458eedd505a07362173532b093495cd3c9bd3e5c1707e436f766c8f04eae"
+          assert stone.with_suffix(stone.suffix+".sha256").read_bytes()==(digest+"  "+stone.name+"\n").encode('ascii')
+          output=Path(os.environ['RUNNER_TEMP'])/'seat4-r7-output'
+          expected={
+            'seat4-r7-trace.hbp':'82f40a5dbc648b0dc50fa7e0dff99c512f1773b42086a7da9615e6b403da929b',
+            'seat4-r7-results.json':'db979f2a81cae2f721aa95424659ab0483caa70d684e6c9915e40e701b1aac37'
+          }
+          for name,expected_sha in expected.items():
+              actual=hashlib.sha256((output/name).read_bytes()).hexdigest()
+              assert actual==expected_sha
+              assert expected_sha.encode('ascii') in stone.read_bytes()
+          m=json.loads((output/'seat4-r7-results.json').read_bytes())
+          assert m['neural_false_green']==[0,0,27,89,0]
+          assert not m['actual_photons_measured'] and not m['biological_neurons_measured']
+          print('SEAT4_R7_STONE_HOSTED_REGENERATED',len(stone.read_bytes()),digest)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: seat4-r7-${{ matrix.os }}-py${{ matrix.python }}
