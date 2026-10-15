@@ -257,7 +257,7 @@ mod tests{
         assert!(altered.verify().is_err());
     }
     #[test] fn rainbow_qr_chunks_and_replay(){
-        let source=synthetic_fits(77,66,3);
+        let source=synthetic_fits(77,88,3);
         let packets=rainbow_qr_payloads(&source).unwrap();
         assert!(packets.len()>7);
         for p in &packets {
