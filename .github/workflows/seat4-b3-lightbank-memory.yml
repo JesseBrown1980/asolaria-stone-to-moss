@@ -193,6 +193,23 @@ jobs:
         shell: bash
         run: |
           python experiments/seat4/lightbank_offline_verify.py --bundle "$RUNNER_TEMP/lightbank"
+          python - "$RUNNER_TEMP/lightbank" <<'PY'
+          import hashlib,pathlib,sys
+          folder=pathlib.Path(sys.argv[1])
+          files=[p for p in folder.rglob("*") if p.is_file()]
+          assert not [p for p in files if "__pycache__" in p.parts or p.suffix==".pyc"]
+          declared={}
+          for line in (folder/"SHA256SUMS").read_text("ascii").splitlines():
+              h,n=line.split("  ",1)
+              assert n not in declared
+              declared[n]=h
+          observed={
+              p.relative_to(folder).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
+              for p in files if p.name!="SHA256SUMS"
+          }
+          assert declared==observed,("Artifact has files missing from sealed manifest",set(declared)^set(observed))
+          print("B3_ARCHIVE_CLOSED_WORLD_VERIFIED",len(files),len(declared),"SHA256SUMS")
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: lightbank-b3-${{ matrix.os }}-py${{ matrix.python }}
