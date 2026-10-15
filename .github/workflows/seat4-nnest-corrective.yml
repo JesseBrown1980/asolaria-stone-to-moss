@@ -59,6 +59,20 @@ jobs:
           python -c "import json,sys; a=json.load(open(sys.argv[1])); b=json.load(open(sys.argv[2])); assert a==b; assert a['gate_verdict']=='MEASURED_PASS'; assert a['nested']['leaves']==27; assert a['nested']['nodes']==40; assert a['nested']['tampered_wave_13_rejected']" "$RUNNER_TEMP/seat4-nnest.json" "$RUNNER_TEMP/seat4-nnest.stdout.json"
           python -c "import json,sys; a=json.load(open(sys.argv[1])); assert all(x['root_blocked'] and x['at_depth_detected'] for x in a['nested']['injected_node_faults']); assert all(x['clean_tree']=='MEASURED_PASS' for x in a['nnest_upstream']['original_script_results']); assert a['physical_host_independence']=='NOT_MEASURED'" "$RUNNER_TEMP/seat4-nnest.json"
           python -c "import hashlib,sys; p=sys.argv[1]; print('SEAT4_NNEST_RECEIPT_SHA256='+hashlib.sha256(open(p,'rb').read()).hexdigest())" "$RUNNER_TEMP/seat4-nnest.json"
+          python - "$RUNNER_TEMP/seat4-nnest.json" stones/2026-10-15-rainbow81/seat4-nnest-wave-27.json <<'PY'
+          import hashlib,json,pathlib,sys
+          actual=pathlib.Path(sys.argv[1]).read_bytes()
+          sealed=pathlib.Path(sys.argv[2]).read_bytes()
+          expected='f54f7d978ab63206d4b7c6c0135f0661b6486387714d30b610c9437db2e9c0bb'
+          assert actual==sealed, "N-Nest receipt differs from independently sealed first positive run"
+          assert hashlib.sha256(actual).hexdigest()==expected
+          sidecar=pathlib.Path(sys.argv[2]+'.sha256').read_text('ascii').split()
+          assert sidecar==[expected,pathlib.Path(sys.argv[2]).name]
+          obj=json.loads(actual)
+          assert obj['physical_host_independence']=='NOT_MEASURED'
+          assert obj['nested']['human_scale_authorization']=='NOT_REQUESTED'
+          print('SEAT4_NNEST_REPRODUCIBLE_SEAL_PASS',expected)
+          PY
       - name: Store timestamp-independent nested verification receipt
         uses: actions/upload-artifact@v4
         with:
