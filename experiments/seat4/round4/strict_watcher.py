@@ -64,7 +64,9 @@ def attack_suite(bank,lookup):
  ledger["dark_active"]="HOLD_ROUTE"
  # A matching self-proclaimed hash without a trusted anchor proves no provenance.
  corrupt=bytes([bank[0]^1])+bank[1:]
- require(sha(corrupt)!=EXPECTED["bank"][1],"ORIGINAL_SHA_COLLISION")
+ forged={**ok,"bank_sha":sha(corrupt)}
+ require(forged["bank_sha"]==sha(corrupt) and sha(corrupt)!=EXPECTED["bank"][1],"ORIGINAL_SHA_COLLISION")
+ require(watch(forged,ref,corrupt,lookup)=="HOLD_SOURCE","JOINT_SOURCE_AND_ANCHOR_FORGERY_ACCEPTED")
  ledger["source_and_local_hash_joint_rewrite"]="ORIGIN_UNAUTHENTICATED"
  ledger["post_halt_packet"]="HOLD_HALTED" # below verify actual permission gate
  halt=True;accepted=0
