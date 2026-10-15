@@ -16,7 +16,12 @@ LAMBDAS=("0","100000","221240","300000")
 def check(py_hbp,node_hbp,py_json,node_json,outdir):
     py=Path(py_hbp).read_bytes()
     node=Path(node_hbp).read_bytes()
-    assert py==node,"Independent Python and Node full model/controller HBP differs"
+    if py != node:
+        a, b = py.splitlines(), node.splitlines()
+        first = next((i for i in range(min(len(a),len(b))) if a[i]!=b[i]),None)
+        if first is None:
+            raise AssertionError(f"Independent HBP length differs: Python {len(a)} rows, Node {len(b)}")
+        raise AssertionError(f"Independent HBP row {first+1} mismatch: Python={a[first][:240]!r}, Node={b[first][:240]!r}")
     jm=Path(py_json).read_bytes()
     jn=Path(node_json).read_bytes()
     assert jm==jn,"Canonical JSON across independent implementations differs"
