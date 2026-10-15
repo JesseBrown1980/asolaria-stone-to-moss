@@ -78,6 +78,8 @@ jobs:
           path: ${{ runner.temp }}/nested-artifacts
           merge-multiple: false
       - name: Verify 4 seat streams and 108 grandchild-verdict wave stones
+        env:
+          ASOLARIA_PRODUCER_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         shell: bash
         run: |
           python experiments/nested/master_verify.py "$RUNNER_TEMP/nested-artifacts"
