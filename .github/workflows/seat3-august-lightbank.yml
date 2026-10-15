@@ -1,0 +1,116 @@
+name: Seat3 August Light-Bank RGB projector full memory replay
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*lightbank*"
+      - "experiments/seat3/PREREG-AUGUST-LIGHTBANK*"
+      - ".github/workflows/seat3-august-lightbank.yml"
+      - "stones/2026-10-15-rainbow81/seat3-august-lightbank*"
+  push:
+    branches:
+      - main
+      - agent/seat-3/august-lightbank-colourqr-projector-20261015
+    paths:
+      - "experiments/seat3/*lightbank*"
+      - "experiments/seat3/PREREG-AUGUST-LIGHTBANK*"
+      - ".github/workflows/seat3-august-lightbank.yml"
+      - "stones/2026-10-15-rainbow81/seat3-august-lightbank*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-light-memory:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / independent Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Frozen three-state original independent peer source
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: c1fc2c85e5684d2c1190662ba57e889d996b792b
+          path: frozen-B1
+          persist-credentials: false
+      - name: Frozen four-state optimization source
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: f6df567f9d36697f2fc895167c04ac3c46152409
+          path: frozen-B2
+          persist-credentials: false
+      - name: August Colour QR source contract
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/the-colour-qr
+          ref: main
+          path: august-colour-qr
+          persist-credentials: false
+      - name: August space light colour projector law
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/the-law-of-space-and-light-and-color-and-travel-at-the-speed-of-one
+          ref: main
+          path: august-space-light
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify the actual frozen inputs and August source Git blob contracts
+        shell: bash
+        run: |
+          test "$(git -C frozen-B1 rev-parse HEAD)" = c1fc2c85e5684d2c1190662ba57e889d996b792b
+          test "$(git -C frozen-B1 rev-parse HEAD:experiments/seat3/seat3_peer_seat1_photocycle.js)" = 972d2873a4e5bd99d63ecc37d896f8aed054e382
+          test "$(git -C frozen-B2 rev-parse HEAD)" = f6df567f9d36697f2fc895167c04ac3c46152409
+          test "$(git -C frozen-B2 rev-parse HEAD:experiments/seat3/room03_fourstate_cost.py)" = afa14fdaa951e4e982ef248dec5e8d545e5635e8
+          test "$(git -C august-colour-qr rev-parse HEAD:README.md)" = dec43dd370de557f2511e69227b1e234e001ddfc
+          test "$(git -C august-space-light rev-parse HEAD:README.md)" = 6412cb3b82ec084b03b68c9c4d074a58920ac1ee
+      - name: Reproduce original 611999-byte B1 and 365671-byte B2 traces without changing sources
+        shell: bash
+        run: |
+          node frozen-B1/experiments/seat3/seat3_peer_seat1_photocycle.js "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/b1.json"
+          python frozen-B2/experiments/seat3/room03_fourstate_cost.py "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/b2.json"
+          python -c 'import os,hashlib,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"]); a=(p/"b1.hbp").read_bytes();b=(p/"b2.hbp").read_bytes(); assert (len(a),len(b))==(611999,365671); assert hashlib.sha256(a).hexdigest()=="de2c346a92e626403cc5c59b9ffa688d050163fbb48ab8b1cb6a4cde795b0a8b";assert hashlib.sha256(b).hexdigest()=="435eccff256d119e608926ba3f3ec46a961d9f0d18801c440de2c3552200101d";print("Historical sources pinned and matched")'
+      - name: Independently make THREE 729-slot RGB light-bank sticks with exact projector and shared-component
+        shell: bash
+        run: |
+          python experiments/seat3/lightbank_memory.py encode "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/pybank"
+          node experiments/seat3/lightbank_memory.js encode "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/jsbank"
+          python experiments/seat3/verify_lightbank_memory.py "$RUNNER_TEMP/pybank" "$RUNNER_TEMP/jsbank" "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/lightbank-verification"
+          python experiments/seat3/verify_lightbank_stone.py stones/2026-10-15-rainbow81/seat3-august-lightbank-memory-20261015.hbp "$RUNNER_TEMP/pybank/lightbank.json" "$RUNNER_TEMP/lightbank-verification"
+      - name: Cold-read each other's serialized bank from a separate independent process
+        shell: bash
+        run: |
+          node experiments/seat3/lightbank_memory.js decode "$RUNNER_TEMP/pybank/lightbank.lbk" "$RUNNER_TEMP/JSfromPY-A.hbp" "$RUNNER_TEMP/JSfromPY-B.hbp"
+          python experiments/seat3/lightbank_memory.py decode "$RUNNER_TEMP/jsbank/lightbank.lbk" "$RUNNER_TEMP/PYfromJS-A.hbp" "$RUNNER_TEMP/PYfromJS-B.hbp"
+          cmp "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/JSfromPY-A.hbp"
+          cmp "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/JSfromPY-B.hbp"
+          cmp "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/PYfromJS-A.hbp"
+          cmp "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/PYfromJS-B.hbp"
+      - name: Tampered serialized light-bank is rejected by BOTH readers
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; d=pathlib.Path(os.environ["RUNNER_TEMP"]); p=d/"pybank"/"lightbank.lbk"; a=bytearray(p.read_bytes());a[157]^=1;(d/"tampered.lbk").write_bytes(a)'
+          if python experiments/seat3/lightbank_memory.py decode "$RUNNER_TEMP/tampered.lbk" "$RUNNER_TEMP/FORBIDDEN1" "$RUNNER_TEMP/FORBIDDEN2"; then
+            echo "FAILED: Python permitted corrupted memory"; exit 1
+          fi
+          if node experiments/seat3/lightbank_memory.js decode "$RUNNER_TEMP/tampered.lbk" "$RUNNER_TEMP/FORBIDDEN3" "$RUNNER_TEMP/FORBIDDEN4"; then
+            echo "FAILED: Node permitted corrupted memory"; exit 1
+          fi
+          echo "Both independent cold readers rejected altered serialized light-bank bytes"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-august-lightbank-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/lightbank-verification/*
+          if-no-files-found: error
+          retention-days: 30
