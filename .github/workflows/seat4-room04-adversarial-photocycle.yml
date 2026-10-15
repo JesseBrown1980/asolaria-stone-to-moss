@@ -1,0 +1,116 @@
+name: Seat4 Room04 independent photocycle watcher and HALT
+
+on:
+  pull_request:
+    paths:
+      - experiments/seat4/PREREG-ROOM04-PHOTOCYCLE-WATCHER-B2-20261015.md
+      - experiments/seat4/room04_*
+      - .github/workflows/seat4-room04-adversarial-photocycle.yml
+  push:
+    branches:
+      - agent/seat-4/room04-adversarial-photocycle-20261015
+    paths:
+      - experiments/seat4/PREREG-ROOM04-PHOTOCYCLE-WATCHER-B2-20261015.md
+      - experiments/seat4/room04_*
+      - .github/workflows/seat4-room04-adversarial-photocycle.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-watcher:
+    name: Room04 ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - name: Checkout current room source and preregistration
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Fetch exact frozen Seat1 PR50 source (do not change)
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: dd5e47db9522141de3949a23759a5d647ecdafbd
+          path: pinned-seat1-photocycle
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pin original Seat1 producer bytes and replay 8748 canonical wave snapshots
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/room04"
+          python experiments/seat4/verify_seat1_optophotocycle_peer.py --seat1 pinned-seat1-photocycle --receipt "$RUNNER_TEMP/room04/phaseA-peer-receipt.json" > "$RUNNER_TEMP/room04/phaseA-peer-audit.json"
+      - name: Execute Seat4 independent watcher and 1296 planted faults
+        shell: bash
+        run: |
+          python experiments/seat4/room04_adversarial_photocycle.py \
+            --tick-hbp "$RUNNER_TEMP/room04/ticks.hbp" \
+            --fault-hbp "$RUNNER_TEMP/room04/faults.hbp" \
+            --phase-a-hbp "$RUNNER_TEMP/room04/original-phaseA.hbp" \
+            --receipt "$RUNNER_TEMP/room04/receipt.json" > "$RUNNER_TEMP/room04/python-audit.json"
+          cat "$RUNNER_TEMP/room04/python-audit.json"
+      - name: Independently replay EVERY site tick with Node and audit the actual fault ledger
+        shell: bash
+        run: |
+          node experiments/seat4/room04_independent_node_watcher.js \
+            "$RUNNER_TEMP/room04/ticks.hbp" \
+            "$RUNNER_TEMP/room04/faults.hbp" \
+            "$RUNNER_TEMP/room04/original-phaseA.hbp" \
+            "$RUNNER_TEMP/room04/receipt.json" > "$RUNNER_TEMP/room04/node-audit.json"
+          cat "$RUNNER_TEMP/room04/node-audit.json"
+      - name: Recheck mathematical reversible/lossy classification (40 independent GF2 cases)
+        shell: bash
+        run: |
+          python experiments/retention/verify_retention.py > "$RUNNER_TEMP/room04/retention-audit.json"
+          cat "$RUNNER_TEMP/room04/retention-audit.json"
+      - name: Enforce original SHA, all negative controls and science scope, archive SHA256 manifest
+        shell: bash
+        run: |
+          python - "$RUNNER_TEMP/room04" <<'PY'
+          import hashlib,json,pathlib,sys
+          root=pathlib.Path(sys.argv[1])
+          receipt=json.loads((root/"receipt.json").read_text())
+          p=json.loads((root/"python-audit.json").read_text())
+          n=json.loads((root/"node-audit.json").read_text())
+          peer=json.loads((root/"phaseA-peer-audit.json").read_text())
+          rank=json.loads((root/"retention-audit.json").read_text())
+          frozen="de2c346a92e626403cc5c59b9ffa688d050163fbb48ab8b1cb6a4cde795b0a8b"
+          assert p["status"]==n["status"]==peer["status"]==rank["status"]=="PASS"
+          assert p["site_tick_checks"]==n["independent_node_tick_matches"]==349920
+          assert p["rejected_fault_cases"]==n["rejected_fault_rows"]==1296
+          assert receipt["b2_clean_checkpoints_accepted"]==n["accepted_genuine_checkpoints"]==108
+          assert receipt["frozen_phase_a_sha256"]==n["original_phase_a_sha256"]==peer["hbp_sha256"]==frozen
+          assert rank["rank_cases"]==40 and rank["negative_controls"]=="PASS"
+          assert not receipt["external_authorization_granted"]
+          assert not receipt["independent_physical_source_authenticated"]
+          assert not receipt["physical_light_or_biology_measured"]
+          assert receipt["coherent_fake_source_plus_fake_watcher_without_anchor"]=="PROVENANCE_HOLD"
+          assert receipt["halt"]["accepted_before_halt"]==17
+          assert receipt["halt"]["post_halt_denied"]==64
+          assert receipt["halt"]["human_prompts"]==receipt["halt"]["external_privileges_granted"]==0
+          manifest=[]
+          for path in sorted(root.iterdir()):
+              if path.is_file():
+                  digest=hashlib.sha256(path.read_bytes()).hexdigest()
+                  manifest.append(f"{digest}  {path.name}\n")
+          (root/"SHA256SUMS").write_text("".join(manifest),encoding="ascii")
+          print("SEAT4_ROOM04_ACCEPTANCE_PASS: strict software-only watch and HALT, full trace archived")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-room04-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/room04/*
+          if-no-files-found: error
+          retention-days: 90
