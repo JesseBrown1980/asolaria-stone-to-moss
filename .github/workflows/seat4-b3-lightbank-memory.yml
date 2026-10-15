@@ -1,0 +1,214 @@
+name: Seat4 B3 August light-bank memory, RGB QR and projector audit
+
+on:
+  push:
+    branches:
+      - agent/seat-4/light-bank-three-path-memory-20261015
+    paths:
+      - experiments/seat4/PREREG-LIGHTBANK-THREE-PATH-MEMORY-B3-20261015.md
+      - experiments/seat4/ADDENDUM-COLOUR-QR-PROJECTOR-B3.md
+      - experiments/seat4/lightbank_*
+      - .github/workflows/seat4-b3-lightbank-memory.yml
+  pull_request:
+    paths:
+      - experiments/seat4/PREREG-LIGHTBANK-THREE-PATH-MEMORY-B3-20261015.md
+      - experiments/seat4/ADDENDUM-COLOUR-QR-PROJECTOR-B3.md
+      - experiments/seat4/lightbank_*
+      - .github/workflows/seat4-b3-lightbank-memory.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  three-bank-memory:
+    name: LightBank 2-of-3 ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - name: Checkout current preregistered B3 source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout pinned original Seat1 closed-open-refractory source
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: dd5e47db9522141de3949a23759a5d647ecdafbd
+          path: pinned-seat1
+          persist-credentials: false
+      - name: Checkout pinned Seat4 Room04 349920 transitions and 1296 faults
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 8b8a9e4faa5b72fd1d5c290c686c1417a36d38ff
+          path: pinned-seat4
+          persist-credentials: false
+      - name: Checkout exact August RAINBOR light-bank design stone
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/RAINBOR
+          ref: 56de9ee137f204452d7dff41f7b1e953b6ff5c3e
+          path: pinned-rainbor
+          persist-credentials: false
+      - name: Checkout pinned original Colour QR protocol
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/the-colour-qr
+          ref: 1938a9b076b8fc3e81d0a271ca05e84a0e938854
+          path: pinned-colour-qr
+          persist-credentials: false
+      - name: Checkout pinned original 3-lane projector law
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/the-law-of-space-and-light-and-color-and-travel-at-the-speed-of-one
+          ref: 1b2dd747bccee378b94790bc4ad367bdbf7e5bf8
+          path: pinned-space-law
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check August source bytes and exact 3-lane projective rank framing
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,pathlib
+          def sha_blob(p):
+              b=pathlib.Path(p).read_bytes()
+              return hashlib.sha1(b"blob "+str(len(b)).encode()+b"\0"+b).hexdigest()
+          assert sha_blob("pinned-colour-qr/README.md")=="dec43dd370de557f2511e69227b1e234e001ddfc"
+          assert sha_blob("pinned-space-law/README.md")=="6412cb3b82ec084b03b68c9c4d074a58920ac1ee"
+          assert sha_blob("pinned-rainbor/RAINBOR-HUB-2026-08-08.hbp")=="f5e8a5004157229988f8a181e68773c0a2055955"
+          assert b"2,100 bytes" in pathlib.Path("pinned-colour-qr/README.md").read_bytes()
+          assert b"2100" in pathlib.Path("pinned-colour-qr/README.md").read_bytes()
+          assert b"P = I" in pathlib.Path("pinned-space-law/README.md").read_bytes()
+          print("AUGUST_COLOUR_QR_AND_PROJECTOR_SOURCES_PINNED")
+          PY
+      - name: Independently replay original archived memories into a five-record binary fixture
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/lightbank"
+          python experiments/seat4/lightbank_fixture.py \
+            --seat1 pinned-seat1 --seat4 pinned-seat4 \
+            --rainbor pinned-rainbor --out "$RUNNER_TEMP/lightbank" \
+            > "$RUNNER_TEMP/fixture-result.json"
+          cat "$RUNNER_TEMP/fixture-result.json"
+      - name: Generate three full symbolic light-memory sticks and RGB QR transport, prove full 2-of-3 recovery
+        shell: bash
+        run: |
+          python experiments/seat4/lightbank_python.py \
+            --archive "$RUNNER_TEMP/lightbank/lightbank-source-archive.bin" \
+            --out "$RUNNER_TEMP/lightbank" \
+            > "$RUNNER_TEMP/python-b3-result.json"
+          cat "$RUNNER_TEMP/python-b3-result.json"
+      - name: Independent Node full-byte archive parsing, stick regeneration and all pair reconstructions
+        shell: bash
+        run: |
+          node experiments/seat4/lightbank_node.js \
+            "$RUNNER_TEMP/lightbank/lightbank-source-archive.bin" "$RUNNER_TEMP/lightbank" \
+            > "$RUNNER_TEMP/node-b3-result.json"
+          cat "$RUNNER_TEMP/node-b3-result.json"
+      - name: Fail-closed B3 science and source-identity gate with LF SHA256 manifest
+        shell: bash
+        run: |
+          python - "$RUNNER_TEMP/lightbank" "$RUNNER_TEMP/python-b3-result.json" "$RUNNER_TEMP/node-b3-result.json" <<'PY'
+          import hashlib,json,pathlib,struct,sys
+          folder=pathlib.Path(sys.argv[1])
+          p=json.loads(pathlib.Path(sys.argv[2]).read_bytes())
+          n=json.loads(pathlib.Path(sys.argv[3]).read_bytes())
+          assert p["status"]==n["status"]=="PASS"
+          assert p["pairwise_full_archive_exact_restore"]==n["pairwise_full_archive_reconstructions"]==3
+          assert p["archive_sha256"]==n["canonical_source_sha256"]
+          assert p["bank_sha256"]==n["bank_sha256"]
+          assert p["colour_qr_transport"]["sha256"]==n["qr_transport_sha256"]
+          assert p["colour_qr_transport"]["chunks"]==n["colour_qr_payload_chunks"]
+          assert p["projector"]==n["projector"]
+          assert p["projector"]["exact_rank"]==2
+          assert p["projector"]["common_mode_collisions"]==1029
+          assert p["projector"]["restored_with_original_sum"]==343
+          assert p["negative_controls"]["single_bank_ambiguity_witnesses"]==3
+          assert not p["physical_photons_or_optical_memory_hardware_measured"]
+          assert not n["physical_optical_memory_measured"]
+          assert not p["source_encryption_or_secret_sharing"]
+          assert p["archive_bytes"]>35_000_000
+          assert p["stripes"]>50_000
+          assert p["colour_qr_transport"]["colour_frames"]>5000
+          for name,expected in [
+              ("seat1.hbp","de2c346a92e626403cc5c59b9ffa688d050163fbb48ab8b1cb6a4cde795b0a8b"),
+              ("seat4-ticks.hbp","2b9575a8d46c2d2f0842d590081641ed2b20daddccc7153107d76efa0d597277"),
+              ("seat4-faults.hbp","ad471bc627451f65d6f26797ddf6c03546ac1f74ab8e3698d9825f1409f9bbb2")
+          ]:
+              raw=(folder/name).read_bytes()
+              assert hashlib.sha256(raw).hexdigest()==expected,(name,"PINNED_SOURCE_MUTATION")
+          # Store public source documents, version/runner-independent.
+          original=[
+              ("pinned-colour-qr/README.md","sources/COLOUR-QR-README.md"),
+              ("pinned-space-law/README.md","sources/SPACE-LIGHT-PROJECTOR-README.md"),
+              ("pinned-rainbor/README.md","sources/RAINBOR-README.md"),
+              ("experiments/seat4/PREREG-LIGHTBANK-THREE-PATH-MEMORY-B3-20261015.md","sources/B3-PREREG.md"),
+              ("experiments/seat4/ADDENDUM-COLOUR-QR-PROJECTOR-B3.md","sources/B3-QR-ADDENDUM.md"),
+          ]
+          for src,dst in original:
+              dest=folder/dst;dest.parent.mkdir(parents=True,exist_ok=True)
+              dest.write_bytes(pathlib.Path(src).read_bytes())
+          for name,src in [
+              ("sources/lightbank_fixture.py","experiments/seat4/lightbank_fixture.py"),
+              ("sources/lightbank_python.py","experiments/seat4/lightbank_python.py"),
+              ("sources/lightbank_node.js","experiments/seat4/lightbank_node.js")
+          ]:
+              path=folder/name;path.parent.mkdir(parents=True,exist_ok=True)
+              path.write_bytes(pathlib.Path(src).read_bytes())
+          # Normalize only unsealed *auxiliary* JSON output. Original source
+          # HBP, indexed QR transport, all bank bytes, and sealed receipts stay exact.
+          for f in ("seat1.json","seat1-node.json"):
+              path=folder/f;path.write_bytes(path.read_bytes().replace(b"\r\n",b"\n"))
+          manifest=[]
+          for path in sorted(folder.rglob("*"),key=lambda p:p.relative_to(folder).as_posix()):
+              if path.is_file():
+                  name=path.relative_to(folder).as_posix()
+                  manifest.append(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {name}\n")
+          (folder/"SHA256SUMS").write_text("".join(manifest),encoding="ascii",newline="\n")
+          print("B3_LIGHTBANK_MEMORY_DIGITAL_PASS",p["archive_sha256"],
+                "3 source erasures recovered, singleton HELD, P nullspace measured")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lightbank-b3-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/lightbank/**
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 6
+
+  colourqr-image-spot:
+    name: Real QR PNG encode and RGB plane decode (software)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install ordinary QR imaging and independent zbar-based QR decoder
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libzbar0
+          python -m pip install "qrcode[pil]==8.2" "pyzbar==0.1.9"
+      - name: Generate genuine RGB QR version40 L images and decode every channel, including final filler
+        run: |
+          python experiments/seat4/lightbank_qr_pixels.py --out "$RUNNER_TEMP/b3-qr"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lightbank-b3-real-colourqr-pixel-spot
+          path: ${{ runner.temp }}/b3-qr/**
+          if-no-files-found: error
+          retention-days: 90
