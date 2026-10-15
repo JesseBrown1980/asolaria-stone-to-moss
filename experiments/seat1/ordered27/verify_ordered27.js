@@ -200,17 +200,30 @@ function main(){
   const forgedSource=JSON.parse(JSON.stringify(source));
   ck(forgedSource[0].id==="site-000","ASSUMED_SOURCE_ID_DIFFERENT");
   forgedSource[0].id="site-001";
-  const changedEntry=JSON.parse(bank.subarray(first.offset,first.offset+first.length).toString("utf8"));
-  ck(changedEntry.record.id==="site-000","ASSUMED_BANK_SOURCE_ID_DIFFERENT");
-  changedEntry.record.id="site-001";
-  const rewritten=Buffer.from(JSON.stringify(sortRecursive(changedEntry))+"\n","utf8");
-  ck(rewritten.length===first.length,"CHANGED_RECORD_SIZE_UNEXPECTED");
   const outside=Buffer.from(bank);
-  rewritten.copy(outside,first.offset);
-  const forgedHash=sha(rewritten);
-  const forgedLines=lines.map(x=>
-    x.includes("|band=red|id=site-000|")
-      ?x.replace("|source_sha256="+first.sha,"|source_sha256="+forgedHash):x);
+  const forgedHashes=new Map();
+  // Seven full-data copies share the original site-000 payload; compromise
+  // must modify all seven and all 27 sector references per copy (189 aliases).
+  for(const band of BANDS){
+    const ref=lookup.get(band+"|site-000");
+    ck(!!ref,"MISSING_FORGERY_BASE_REFERENCE");
+    const body=JSON.parse(bank.subarray(ref.offset,ref.offset+ref.length).toString("utf8"));
+    ck(body.record.id==="site-000","ASSUMED_BANK_SOURCE_ID_DIFFERENT");
+    body.record.id="site-001";
+    const rewritten=Buffer.from(JSON.stringify(sortRecursive(body))+"\n","utf8");
+    ck(rewritten.length===ref.length,"CHANGED_RECORD_SIZE_UNEXPECTED");
+    rewritten.copy(outside,ref.offset);
+    forgedHashes.set(band,sha(rewritten));
+  }
+  const forgedLines=lines.map(x=>{
+    if(!x.includes("|id=site-000|"))return x;
+    const band=x.split("|band=")[1].split("|")[0];
+    const oldHash=lookup.get(band+"|site-000").sha256;
+    return x.replace("|source_sha256="+oldHash,
+                     "|source_sha256="+forgedHashes.get(band));
+  });
+  ck(forgedLines.filter((x,i)=>x!==lines[i]).length===189,
+     "NOT_ALL_SEVEN_COPIES_AND_189_ALIASES_FORGED");
   ck(verify(forgedLines,outside,forgedSource).reads===15309,
      "COHERENT_FORGED_LOCAL_RECOMPUTATION_SHOULD_PASS");
   ck(sha(outside)!==PIN_BANK,"FORGED_BANK_EQUALS_EXTERNAL_PIN");
