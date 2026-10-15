@@ -87,6 +87,7 @@ jobs:
           python experiments/seat3/lightbank_memory.py encode "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/pybank"
           node experiments/seat3/lightbank_memory.js encode "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/jsbank"
           python experiments/seat3/verify_lightbank_memory.py "$RUNNER_TEMP/pybank" "$RUNNER_TEMP/jsbank" "$RUNNER_TEMP/b1.hbp" "$RUNNER_TEMP/b2.hbp" "$RUNNER_TEMP/lightbank-verification"
+          python experiments/seat3/verify_lightbank_stone.py stones/2026-10-15-rainbow81/seat3-august-lightbank-memory-20261015.hbp "$RUNNER_TEMP/pybank/lightbank.json" "$RUNNER_TEMP/lightbank-verification"
       - name: Cold-read each other's serialized bank from a separate independent process
         shell: bash
         run: |
