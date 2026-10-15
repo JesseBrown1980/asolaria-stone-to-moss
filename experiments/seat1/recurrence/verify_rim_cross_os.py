@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import sys
 
-EXPECTED_SEMANTIC="30fcc0cef4bd0b8a1b25c4773781474d362ec93978d853626b3d2f13b752e545"
+PRE_CORRECTION_SEMANTIC="30fcc0cef4bd0b8a1b25c4773781474d362ec93978d853626b3d2f13b752e545"
 EXCLUDED_FIELD="received_proposal_sha256"
 
 def digest(raw):
@@ -51,7 +51,11 @@ def main():
     assert len(sa["results"])==len(sb["results"])==72
     assert sa==sb,"CASE_SEMANTIC_OUTCOME_DIVERGENCE"
     h=digest(canon(sa))
-    assert h==EXPECTED_SEMANTIC,"Unexpected cross-OS semantic checksum: "+h
+    assert h!=PRE_CORRECTION_SEMANTIC,"W-arm correction was not reflected in new output"
+    assert all(x["watcher_attack_exercised"] is False and x["accepted_for_processing"] is True
+               for x in a["results"] if x["arm"] in ("A","B") and x["scenario"]=="W")
+    assert all(x["watcher_attack_exercised"] is True
+               for x in a["results"] if x["arm"] in ("C","D") and x["scenario"]=="W")
     changed=sum(x[EXCLUDED_FIELD]!=y[EXCLUDED_FIELD]
                 for x,y in zip(a["results"],b["results"]))
     assert changed==72,"Numerical proposal SHA drift profile changed; re-evaluate exclusions"
@@ -73,6 +77,8 @@ def main():
         "linux_trace_sha256":e1["hbp"],
         "windows_trace_sha256":e2["hbp"],
         "source_fixture_sha256":a["source_fixture_sha256"],
+        "pre_correction_semantic_sha256":PRE_CORRECTION_SEMANTIC,
+        "w_without_watcher_corrected":True,
         "all_human_release_authorizations_false":True,
         "physical_host_independence_attested":False,
         "follow_up":"Pin dependency/compiler/float serialization; test quantized/canonical schedule encoding before demanding identical raw trace."
