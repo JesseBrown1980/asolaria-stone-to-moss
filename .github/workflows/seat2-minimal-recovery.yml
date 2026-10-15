@@ -1,0 +1,53 @@
+name: Seat 2 minimum information recovery (software only)
+
+on:
+  push:
+    branches:
+      - agent/seat-2/minimal-recovery-81-20261014
+    paths:
+      - experiments/seat2/recoverability_minimal_81.py
+      - experiments/seat2/recoverability_minimal_81.js
+      - .github/workflows/seat2-minimal-recovery.yml
+  pull_request:
+    paths:
+      - experiments/seat2/recoverability_minimal_81.py
+      - experiments/seat2/recoverability_minimal_81.js
+      - .github/workflows/seat2-minimal-recovery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    name: Python/Node on ${{ matrix.os }} Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Constructively recover 81-bit inputs from minimal side information
+        run: |
+          python experiments/seat2/recoverability_minimal_81.py > python-report.json
+          node experiments/seat2/recoverability_minimal_81.js > node-report.json
+      - name: Compare independent implementations and check negative controls
+        run: |
+          python -c "import json; p=json.load(open('python-report.json')); n=json.load(open('node-report.json')); keys=('law','horizon','rank','lost_bits','minimal_probe_bit_indices','operator_hex'); assert len(p['laws'])==len(n['rows'])==20; assert all(all(a[k]==b[k] for k in keys) for a,b in zip(p['laws'],n['rows'])); assert p['total_reconstructions']==1980; assert all(a['full_reconstruction'] and a['each_probe_necessary'] for a in p['laws']); print('PASS_SEAT2_RANK_RECOVERY 20/20 independent Python/Node outputs; 1980/1980 original states reconstructed')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-rank-recovery-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: |
+            python-report.json
+            node-report.json
+          retention-days: 30
