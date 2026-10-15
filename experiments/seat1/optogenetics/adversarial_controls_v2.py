@@ -29,7 +29,7 @@ def check():
         assert result.startswith("HELD_"),(key,result)
         cases[key]=result
     hold("swapped_identity",gate(id0,18,prior,honest,light,light,AUTH_SHA,AUTH_SHA))
-    hold("mutated_rate",gate(id0,id0,prior,next_state(prior,light,300_001),light,light,AUTH_SHA,AUTH_SHA))
+    hold("mutated_rate",gate(id0,id0,prior,next_state(prior,light,300_002),light,light,AUTH_SHA,AUTH_SHA))
     corrupt=(honest[0]-1,honest[1]+1,honest[2]) # Mass conserved but recomputed mismatch
     hold("forged_observer_mass_conserving",gate(id0,id0,prior,corrupt,light,light,AUTH_SHA,AUTH_SHA))
     hold("stale_prior_replayed_output",gate(id0,id0,(1_000_000,0,0),honest,light,light,AUTH_SHA,AUTH_SHA))
