@@ -46,6 +46,13 @@ jobs:
             experiments/seat2/recurrence/seat2_rim_signed_source_v1.json \
             experiments/seat2/recurrence/rim_node_watcher.js \
             seat2-rim72-full.json seat2-rim72.hbp seat2-run-metrics.json
+      - name: Test actual consumed-nonce replay after persistent ledger reload
+        shell: bash
+        run: |
+          python experiments/seat2/recurrence/session_replay_gate.py \
+            experiments/seat2/recurrence/seat2_rim_signed_source_v1.json \
+            seat2-signed-fixture-replay-v2.json
+          python -c 'import json; x=json.load(open("seat2-signed-fixture-replay-v2.json")); assert x["control_count"]==14 and x["one_time_replay_state_persisted_across_reload"]; assert x["tests"]["same_exact_packet_second_use"]=="HOLD" and x["tests"]["same_packet_after_disk_reload"]=="HOLD"; assert not x["authenticated_physical_origin"] and not x["release_authorized"]; print("PASS_SEAT2_DURABLE_DUPLICATE_REPLAY_HOLD")'
       - name: Independently assert signed provenance, recurrence and complete factorial
         shell: bash
         run: |
@@ -69,3 +76,5 @@ jobs:
             seat2-rim72.hbp
             seat2-rim72.hbp.sha256
             seat2-run-metrics.json
+            seat2-signed-fixture-replay-v2.json
+            seat2-signed-fixture-replay-v2.json.sha256
