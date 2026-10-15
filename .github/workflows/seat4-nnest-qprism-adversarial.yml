@@ -1,0 +1,95 @@
+name: Seat 4 N-Nest Q-PRISM compromised watcher adversarial audit
+
+on:
+  push:
+    branches:
+      - main
+      - agent/seat-4/nnest-qprism-compromised-watcher-20261015
+    paths:
+      - experiments/integration/seat4/**
+      - stones/2026-10-15-rainbow81/seat4-nnest-qprism-compromised-watcher*
+      - .github/workflows/seat4-nnest-qprism-adversarial.yml
+  pull_request:
+    paths:
+      - experiments/integration/seat4/**
+      - stones/2026-10-15-rainbow81/seat4-nnest-qprism-compromised-watcher*
+      - .github/workflows/seat4-nnest-qprism-adversarial.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  adversarial-trust-boundary:
+    name: Source lock and forged watcher ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Fetch exact Seat 1 producer bridge at preregistered source revision
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 4e30f2e2d924dba4c0ad21013e8067c61d9b16c8
+          path: external/producer
+          persist-credentials: false
+      - name: Fetch original N-Nest source
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED
+          ref: 307903651f56e8a28ef98ca36aef22ee8cda935c
+          path: external/nnest
+          persist-credentials: false
+      - name: Fetch original Q-PRISM source
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/Q-PRISM-human-organoid-neural-stream-as-a-high-dimensional-control
+          ref: b4a21a25381d6920b7aab92c94c3c3e1420fc9e4
+          path: external/qprism
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install actual Q-PRISM source requirements
+        run: python -m pip install --disable-pip-version-check -r external/qprism/requirements.txt
+      - name: Run genuine and compromised watcher processes, source/policy negative controls
+        shell: bash
+        run: |
+          python experiments/integration/seat4/adversarial_watcher.py \
+            --seat1 external/producer --nnest external/nnest --qprism external/qprism \
+            --out "$RUNNER_TEMP/seat4-adversarial.json"
+          python - "$RUNNER_TEMP/seat4-adversarial.json" <<'PY'
+          import hashlib,json,pathlib,sys
+          f=pathlib.Path(sys.argv[1])
+          data=json.loads(f.read_bytes())
+          assert data["schema"]=="ASOLARIA-SEAT4-NNEST-QPRISM-COMPROMISED-WATCHER-V1"
+          assert data["case_count"]==9
+          assert data["unsafe_unanchored_acceptance_observed"] is True
+          assert data["external_source_bound_authorization_holds_for_all_attacks"] is True
+          assert data["independent_physical_experiment"] is False
+          parts=f.with_name(f.name+".sha256").read_text("ascii").split()
+          assert parts==[hashlib.sha256(f.read_bytes()).hexdigest(),f.name]
+          sealed=pathlib.Path("stones/2026-10-15-rainbow81/seat4-nnest-qprism-compromised-watcher.json")
+          assert sealed.read_bytes()==f.read_bytes(), "Ubuntu/Windows computed receipts must exactly match sealed stone"
+          assert parts[0]=="fc550ada3e932af89febda013b2cfc95a5448354bc5b4d5bc3a5a66d02d3b82b"
+          sealed_side=pathlib.Path(str(sealed)+".sha256").read_text("ascii").split()
+          assert sealed_side==[parts[0],sealed.name]
+          print("SEAT4_ADVERSARIAL_SHA256",parts[0],"CASES",data["case_count"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-nnest-qprism-adversarial-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/seat4-adversarial.json
+            ${{ runner.temp }}/seat4-adversarial.json.sha256
+          if-no-files-found: error
+          retention-days: 30
