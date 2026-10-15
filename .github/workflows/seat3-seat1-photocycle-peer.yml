@@ -1,0 +1,71 @@
+name: Seat3 independently reconstruct Seat1 photocycle baseline
+
+on:
+  pull_request:
+    paths:
+      - "experiments/seat3/*photocycle*"
+      - ".github/workflows/seat3-seat1-photocycle-peer.yml"
+      - "stones/2026-10-15-rainbow81/seat3-seat1-photocycle-peer*"
+  push:
+    branches:
+      - main
+      - agent/seat-3/seat1-photocycle-peer-audit-20261015
+    paths:
+      - "experiments/seat3/*photocycle*"
+      - ".github/workflows/seat3-seat1-photocycle-peer.yml"
+      - "stones/2026-10-15-rainbow81/seat3-seat1-photocycle-peer*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  peer-photocycle:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / independent Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11","3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 19f21a880d16e84902d157a6d3bc4bcd908dc888
+          path: frozen-seat1
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify producer commit and source Git blob fingerprints without executing producer code
+        shell: bash
+        run: |
+          test "$(git -C frozen-seat1 rev-parse HEAD)" = 19f21a880d16e84902d157a6d3bc4bcd908dc888
+          test "$(git -C frozen-seat1 hash-object -- experiments/seat1/optogenetics/PREREG-LIGHT-GATED-IDENTITY-1080.md)" = a9752cee6bd833af0ad1dbef7b01a50125c8baa1
+          test "$(git -C frozen-seat1 hash-object -- experiments/seat1/optogenetics/opto_gate.py)" = 32667d1172eae4856a1c31499c04509e96b1771f
+          test "$(git -C frozen-seat1 hash-object -- experiments/seat1/optogenetics/opto_gate_node.js)" = d5e5644b3e4d65759b3f7c44e006da8cc3310261
+      - name: Independently reconstruct ALL 8748 wave snapshots, crossover and real negative controls
+        shell: bash
+        run: |
+          node experiments/seat3/seat3_peer_seat1_photocycle.js "$RUNNER_TEMP/peer.hbp" "$RUNNER_TEMP/peer.json"
+          python experiments/seat3/verify_seat1_photocycle_peer.py "$RUNNER_TEMP/peer.hbp" "$RUNNER_TEMP/peer.json" "$RUNNER_TEMP/seat3-photocycle"
+          python experiments/seat3/verify_sealed_seat1_photocycle_peer.py stones/2026-10-15-rainbow81/seat3-seat1-photocycle-peer-20261015.hbp "$RUNNER_TEMP/peer.json"
+      - name: Corrupted trace must fail strict frozen SHA
+        shell: bash
+        run: |
+          python -c 'import os,pathlib; root=pathlib.Path(os.environ["RUNNER_TEMP"]); b=(root/"peer.hbp").read_bytes(); (root/"bad.hbp").write_bytes(bytes([b[0]^1])+b[1:])'
+          if python experiments/seat3/verify_seat1_photocycle_peer.py "$RUNNER_TEMP/bad.hbp" "$RUNNER_TEMP/peer.json" "$RUNNER_TEMP/SHOULD_NOT_EXIST"; then
+            echo "FAILURE: tampered trace was accepted"; exit 1
+          fi
+          echo "Changed output correctly held"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-seat1-photocycle-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/seat3-photocycle/*
+          if-no-files-found: error
+          retention-days: 30
