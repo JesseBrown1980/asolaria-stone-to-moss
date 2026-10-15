@@ -1,0 +1,154 @@
+name: Seat3 historical source and real host-process / selectivity mechanism test
+
+on:
+  push:
+    branches:
+      - agent/seat-3/physical-compute-selective-attenuator-audit-20261015
+    paths:
+      - "experiments/seat3/selective_physical/**"
+      - ".github/workflows/seat3-physical-selectivity-host.yml"
+  pull_request:
+    paths:
+      - "experiments/seat3/selective_physical/**"
+      - ".github/workflows/seat3-physical-selectivity-host.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-host-selectivity:
+    name: Original SHA, LIRIS history, exact mechanism and REAL OS counters - ${{ matrix.os }} ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11","3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout original public LIRIS August receipt at immutable revision
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/LIRIS-SH-PRELIGHT-QUANTUM-RECEIPT
+          ref: 69af655d7c52ddfffcfa62948737cc334d890725
+          path: frozen-liris
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: frozen-pr80
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify immutable Git commit ancestry and original reported-history scope
+        shell: bash
+        run: |
+          test "$(git -C frozen-liris rev-parse HEAD)" = 69af655d7c52ddfffcfa62948737cc334d890725
+          test "$(git -C frozen-pr80 rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-liris rev-parse HEAD:PUBLIC-MEASUREMENT.hbp)" = 3a04024316e1901f5df250fe472cbe4e0719e3e4
+      - name: Retrieve actual original full-byte bank from previously hosted source run
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/original-pr80
+      - name: Execute original bank and reported LIRIS source-preserving exact maths on real host and instrument OS process activity
+        shell: bash
+        run: |
+          python experiments/seat3/selective_physical/selective_host.py "$RUNNER_TEMP/original-pr80" frozen-liris "$RUNNER_TEMP/python"
+          node experiments/seat3/selective_physical/selective_host.js "$RUNNER_TEMP/original-pr80" frozen-liris "$RUNNER_TEMP/node"
+          python experiments/seat3/selective_physical/verify_selective.py "$RUNNER_TEMP/original-pr80" frozen-liris "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/verified"
+      - name: Source-byte mutation must fail BOTH implementations, even with real CPU counters
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path(os.environ["RUNNER_TEMP"])/"original-pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
+          b=bytearray(p.read_bytes());b[187]^=1;p.write_bytes(b)
+          PY
+          if python experiments/seat3/selective_physical/selective_host.py "$RUNNER_TEMP/original-pr80" frozen-liris "$RUNNER_TEMP/invalid-python"; then
+            echo "INVALID: accepted modified original bank";exit 1
+          fi
+          if node experiments/seat3/selective_physical/selective_host.js "$RUNNER_TEMP/original-pr80" frozen-liris "$RUNNER_TEMP/invalid-node"; then
+            echo "INVALID: Node accepted modified original bank";exit 1
+          fi
+          echo "ORIGINAL_DATA_SOURCE_MUTATION_HELD"
+      - name: Evidence mutation must fail independent mathematical/history/host audit
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path(os.environ["RUNNER_TEMP"])/"python"/"mechanism-exact.json"
+          b=bytearray(p.read_bytes());b[67]^=1;p.write_bytes(b)
+          PY
+          if python experiments/seat3/selective_physical/verify_selective.py "$RUNNER_TEMP/original-pr80" frozen-liris "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/invalid-check"; then
+            echo "INVALID: altered source/evidence receipt accepted";exit 1
+          fi
+          echo "EXACT_RECEIPT_MUTATION_HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-source-host-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          retention-days: 30
+          if-no-files-found: error
+
+  fifth-independent-check:
+    name: Four OS source/proof bytes equal; OS process measurements genuinely differ
+    runs-on: ubuntu-latest
+    needs: source-host-selectivity
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-source-host-*
+          merge-multiple: false
+          path: peer-evidence
+      - name: Preserve real volatile OS/VM measures while comparing deterministic result exactly
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          roots=sorted(Path("peer-evidence").glob("seat3-source-host-*"))
+          assert len(roots)==4, roots
+          for name in ("mechanism-exact.json","independent-exact-audit.json"):
+              b=[(r/name).read_bytes() for r in roots]
+              assert all(x==b[0] for x in b),"EXACT_MATH_OR_HISTORY_DRIFT"
+              for root,body in zip(roots,b):
+                  side=(hashlib.sha256(body).hexdigest()+"  "+name+"\n").encode("ascii")
+                  assert (root/(name+".sha256")).read_bytes()==side
+              print("FOUR_BYTE_IDENTICAL",name,len(b[0]),hashlib.sha256(b[0]).hexdigest())
+          for root in roots:
+              raw=(root/"host-process-telemetry.json").read_bytes()
+              side=(hashlib.sha256(raw).hexdigest()+"  host-process-telemetry.json\n").encode("ascii")
+              assert (root/"host-process-telemetry.json.sha256").read_bytes()==side
+              telemetry=json.loads(raw)
+              assert telemetry["process_monotonic_elapsed_ns"]>0
+              assert telemetry["process_cpu_time_ns"]>0
+              assert telemetry["peak_traced_python_allocated_bytes"]>0
+              assert telemetry["metered_ac_dc_electrical_joules"]=="NOT_MEASURED"
+              assert telemetry["metered_photon_detector_counts"]=="NOT_MEASURED"
+              print("REAL_OS_REPORTED_PROCESS_ACTIVITY",root.name,
+                    telemetry["platform_system"],
+                    "cpu_ns",telemetry["process_cpu_time_ns"],
+                    "monotonic_elapsed_ns",telemetry["process_monotonic_elapsed_ns"],
+                    "Python_traced_peak_B",telemetry["peak_traced_python_allocated_bytes"],
+                    "native_rss",telemetry["native_ru_maxrss"],
+                    "native_unit",telemetry["native_ru_maxrss_unit"])
+          report=json.loads((roots[0]/"mechanism-exact.json").read_bytes())
+          assert report["historical_photon_memory_measurement"]=="REPORTED_COMPLETED_NOT_INDEPENDENTLY_VALIDATED"
+          assert report["independent_liris_physical_measurement"]=="UNSEALED"
+          print("HISTORICAL_EXPERIMENT_PRESERVED_INSTRUMENT_REVIEW_PENDING")
+          PY
