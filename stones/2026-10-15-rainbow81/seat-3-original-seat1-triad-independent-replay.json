@@ -43,7 +43,6 @@
   "independent_replay_sha256": "720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3",
   "published_seat1_json_receipt_sha256": "720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3",
   "published_sidecar_sha256_line": "1db6389ba110e8b835e504deebc177e163f8b085d5a48cb47215bb372468700e",
-  "checksum_sidecar_discrepancy": "Published Seat 1 .hbp.sha256 sidecar lists a different digest from the Seat 1 JSON receipt and newly reproduced output; investigate the actual archived HBP and provenance before overwriting anything.",
   "self_test_controls": {
     "row_linearity": 32805,
     "successor_Tplus1": 10935,
@@ -51,8 +50,20 @@
     "rotation": 10935
   },
   "independent_local_execution": true,
-  "github_ci_status": "PENDING AT CREATION",
+  "github_ci_status": "PASS four jobs Ubuntu/Windows Python 3.11 and 3.13; run 38703905495",
   "physical_host_independence_verified": false,
   "new_blinded_challenge": false,
-  "classification": "public digitally reproduced software challenge; no physically independent host attestation or FTL result"
+  "classification": "public digitally reproduced software challenge; no physically independent host attestation or FTL result",
+  "original_seat1_summary_hbp": {
+    "git_blob_sha1": "8c5a3ec352babdc2665dad7749b59140dd0172b3",
+    "bytes": 1134,
+    "sha256": "1db6389ba110e8b835e504deebc177e163f8b085d5a48cb47215bb372468700e",
+    "sidecar_matches": true
+  },
+  "full_computed_hbp": {
+    "bytes": 6392029,
+    "sha256": "720d0c44ede086c9ff3cccb807f4ba222145455c80614cdf3abcd710b93a11c3",
+    "independent_seat3_replay_matches_seat1_json_receipt": true
+  },
+  "resolution": "RESOLVED: Seat 1 .hbp.sha256 correctly identifies the 1134-byte compact HBP summary receipt. The separate Seat 1 JSON metadata field hbp_sha256 refers to 6392029-byte full calculated HBP, independently reproduced by Seat 3. No integrity failure detected."
 }
