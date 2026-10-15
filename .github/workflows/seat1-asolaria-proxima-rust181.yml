@@ -1,0 +1,80 @@
+name: Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0
+on:
+  push:
+    branches: [agent/seat1/proxima-rust181-20261015]
+    paths:
+      - 'experiments/seat1/proxima-rust181/**'
+      - '.github/workflows/seat1-asolaria-proxima-rust181.yml'
+  pull_request:
+    paths:
+      - 'experiments/seat1/proxima-rust181/**'
+      - '.github/workflows/seat1-asolaria-proxima-rust181.yml'
+permissions:
+  contents: read
+jobs:
+  rust181:
+    name: Rust181 ${{ matrix.os }} ${{ matrix.profile }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        profile: [debug, release]
+    defaults:
+      run:
+        working-directory: experiments/seat1/proxima-rust181
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - name: Pin Rust, offline Clippy -D warnings and unit tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(rustc --version | awk '{print $2}')" = '1.81.0'
+          cargo clippy --offline --locked --all-targets -- -D warnings
+          cargo test --offline --locked
+      - name: Execute all levels and exact 200-year horizons
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ '${{ matrix.profile }}' = release ]; then
+            cargo run --locked --offline --release -- out
+          else
+            cargo run --locked --offline -- out
+          fi
+          python independent_referee.py out
+          (cd out && sha256sum ASOLARIA-PROXIMA-RUST181.hbp EPOCHS-RUST181.csv > COMPUTATIONAL.sha256)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: proxima-${{ matrix.os }}-${{ matrix.profile }}
+          path: experiments/seat1/proxima-rust181/out/*
+          if-no-files-found: error
+  independent-parity:
+    name: Four-artifact cross-OS byte referee
+    needs: rust181
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: proxima-*
+          path: fetched
+      - name: Check SHA and all four independent runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for os in ubuntu-latest windows-latest; do
+            for profile in debug release; do
+              p="fetched/proxima-$os-$profile"
+              (cd "$p" && sha256sum --check COMPUTATIONAL.sha256)
+              cmp fetched/proxima-ubuntu-latest-debug/ASOLARIA-PROXIMA-RUST181.hbp "$p/ASOLARIA-PROXIMA-RUST181.hbp"
+              cmp fetched/proxima-ubuntu-latest-debug/EPOCHS-RUST181.csv "$p/EPOCHS-RUST181.csv"
+            done
+          done
+          test "$(grep -c '^LEVEL|' fetched/proxima-ubuntu-latest-debug/ASOLARIA-PROXIMA-RUST181.hbp)" = 7
+          test "$(wc -l < fetched/proxima-ubuntu-latest-debug/EPOCHS-RUST181.csv)" = 201
+          echo ASOLARIA_CROSS_SEAT_GF3_RUST181_5OF5_PASS
