@@ -108,7 +108,6 @@ def main(outdir):
                 f"|matrix_vs_stepwise=PASS|sha256={hash_state(final,h,taps)}|json=0")
         require(step((1,)*N,taps)==step((0,)*N,taps)==(0,)*N,"CONSTANT_COLLISION_WITNESS_MISSING")
         require(all(advance(x,taps,81)==(0,)*N for x in selected),"MISSING_81_NILPOTENCE")
-        require(valuation((0,1,4)) != 1 or taps!=(0,1,3),"DUMMY_CONTROL")
         rows.append(f"COLLISION|taps={_fmt_taps(taps)}|zero_vs_all_ones_after_tick1=SAME_ZERO|kernel_after_27=3^27|kernel_after_81=3^81"
                     "|underlying_source_history_reconstructible_from_surface_only=FALSE|separate_history_required=TRUE|json=0")
     early=17;late=23
