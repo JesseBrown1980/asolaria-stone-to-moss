@@ -3,7 +3,7 @@
 No generated/AI-filled image pixels, no neural super-resolution, no calibrated
 photon-wavelength assertions. Pillow is only the JPEG decoder.
 """
-import hashlib, json, pathlib, time
+import hashlib, pathlib, time
 from PIL import Image
 
 ROOT=pathlib.Path("real_observations/output")
@@ -11,9 +11,17 @@ EXPECTED_SOURCE_SHA="481540dc6ddc65ddf0cf8d8bb495bf08d79552e505fba29916d41ed9f35
 EXPECTED_DECODED_SHA="f3ba34149a5c6f570af95b72211fd98c6952fcd8d10a161fab27d69b89ff472c"
 def digest(data):return hashlib.sha256(data).hexdigest()
 def main():
-    manifest=json.loads((ROOT/"ORIGINAL-SOURCE-MANIFEST.json").read_text())
-    image=manifest["image"]
-    assert image["available"] is True
+    original=(ROOT/"ORIGINAL-SOURCE-MANIFEST.hbp").read_text()
+    images=[line for line in original.splitlines() if line.startswith("IMAGE|")]
+    assert len(images)==1
+    pairs=images[0].split("|")[1:]
+    image={}
+    for pair in pairs:
+        assert "=" in pair
+        key,value=pair.split("=",1)
+        assert key not in image and value
+        image[key]=value
+    assert image["available"]=="true"
     assert image["encoded_format"]=="jpg"
     source=(ROOT/image["file"]).read_bytes()
     assert source[:3]==b"\xff\xd8\xff"
@@ -44,26 +52,16 @@ def main():
         reconstructed[idx]=restored
     assert reconstructed==rgb
     assert sum(hist.values())==len(rgb)*6
-    output={
-        "schema":"ASOLARIA-PROXIMA-REAL-HUBBLE-PUBLICATION-TERNARY-V1",
-        "instrument":"Hubble WFC3/UVIS","filter":"F555W",
-        "exposure_date":"2012-10-01","exposure_seconds":175,
-        "source":"NASA released rendered JPEG, NOT calibrated WCS FITS and NOT seven measured wavelength bands",
-        "source_jpeg_sha256":digest(source),
-        "decoded_rgb_sha256":digest(rgb),
-        "width":width,"height":height,"pixel_count":width*height,
-        "decoded_rgb_byte_samples":len(rgb),
-        "balanced_trits_per_byte":6,"trit_count":len(rgb)*6,
-        "trit_histogram":{"minus":hist[-1],"zero":hist[0],"plus":hist[1]},
-        "full_rgb_byte_roundtrip_exact":True,
-        "new_3d_particles_detected":0,
-        "new_planet_detected":False,
-        "physical_photon_wavelength_instrumented":False,
-        "raw_calibrated_fits_ingested":False,
-        "different_observation_epochs_in_image_test":1,
-        "code_exec_host":"GitHub Actions hosted physical CPU"
-    }
-    (ROOT/"REAL-HUBBLE-TERNARY-RECEIPT.json").write_text(json.dumps(output,sort_keys=True,indent=2)+"\n")
+    # Audit original image bytes and all six balanced trits per channel
+    # without emitting nested JSON or claiming calibrated wavelength data.
+    lines=[
+      "HBP1|schema=ASOLARIA-PROXIMA-REAL-HUBBLE-TERNARY-V2|field=GF3|trits=-1,0,+1|json=0",
+      "SOURCE|instrument=Hubble_WFC3_UVIS|filter=F555W|exposure_date=2012-10-01|exposure_seconds=175|source=NASA_RENDERED_JPEG_NOT_CALIBRATED_WCS_FITS|json=0",
+      f"BYTES|source_jpeg_sha256={digest(source)}|decoded_rgb_sha256={digest(rgb)}|width={width}|height={height}|pixel_count={width*height}|rgb_byte_samples={len(rgb)}|json=0",
+      f"TRITS|balanced_trits_per_byte=6|trit_count={len(rgb)*6}|negative={hist[-1]}|zero={hist[0]}|positive={hist[1]}|exact_rgb_roundtrip=PASS|json=0",
+      "BOUNDARY|new_3d_particles_detected=0|new_planet_detected=FALSE|physical_photon_wavelength_instrumented=FALSE|raw_calibrated_fits_ingested=FALSE|image_epochs=1|json=0"
+    ]
+    (ROOT/"REAL-HUBBLE-TERNARY-RECEIPT.hbp").write_bytes(("\\n".join(lines)+"\\n").encode("ascii"))
     print("REAL_HUBBLE_IMAGE_SOURCE_SHA",digest(source))
     print("REAL_HUBBLE_RGB_ROUNDTRIP_SHA",digest(rgb))
     print("REAL_HUBBLE_PIXELS",width*height,"TRITS",len(rgb)*6,"EXACT_RECONSTRUCTION_PASS")
