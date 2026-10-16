@@ -1,0 +1,135 @@
+name: C3 Rust181 source-pinned reversible GF3 memory-witness HBI HBP
+on:
+  push:
+    branches:
+      - agent/seat3/gf3-reversible-witness-rust181-20261016
+    paths:
+      - 'experiments/seat3/gf3_reversible/**'
+      - '.github/workflows/seat3-gf3-reversible-witness-rust181.yml'
+  pull_request:
+    paths:
+      - 'experiments/seat3/gf3_reversible/**'
+      - '.github/workflows/seat3-gf3-reversible-witness-rust181.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-lift:
+    name: Rust181 reversible trit HBI HBP ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5303c9b2ed0c0ce33da684706d57caef516ffd2b
+          path: original-seat1-rust
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Pin exact native Rust GF3 source and strict Rust1.81 Clippy no external crates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C original-seat1-rust rev-parse HEAD)" = 5303c9b2ed0c0ce33da684706d57caef516ffd2b
+          test "$(git -C original-seat1-rust rev-parse HEAD:experiments/seat1/proxima-rust181/src/lib.rs)" = 0a26e3d24ac0b0211c31c3aa32e23d50d7d0c3ec
+          test "$(rustc --version | awk '{print $2}')" = 1.81.0
+          cd experiments/seat3/gf3_reversible/rust
+          cargo clippy --offline --locked --all-targets -- -D warnings
+          cargo test --offline --locked
+      - name: Run exact Rust 55-case minimal reverse-sideband experiment
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo run --manifest-path experiments/seat3/gf3_reversible/rust/Cargo.toml --offline --locked --release -- "$RUNNER_TEMP/seat3-hbi"
+          python - <<'PY'
+          import hashlib,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'seat3-hbi'
+          for name in ('seat3-reversible.hbi','seat3-reversible.hbp'):
+              raw=(root/name).read_bytes()
+              (root/(name+'.sha256')).write_text(hashlib.sha256(raw).hexdigest()+'  '+name+'\n',encoding='ascii')
+          assert sorted(p.name for p in root.iterdir())==[
+              'seat3-reversible.hbi','seat3-reversible.hbi.sha256',
+              'seat3-reversible.hbp','seat3-reversible.hbp.sha256']
+          print("GF3_RUST181_HBI_HBP_NO_JSON_SHA_RECEIPTS_PASS")
+          PY
+          python experiments/seat3/gf3_reversible/verify_reversible.py "$RUNNER_TEMP/seat3-hbi" original-seat1-rust/experiments/seat1/proxima-rust181/src/lib.rs
+      - name: Independently deny coherent forged origin and padding even when attacker owns SHA sidecars
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,os,shutil
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])
+          source=root/'seat3-hbi'
+          for name,offset,delta in [('forged-witness',7+5+81,1),('forged-padding',7+5+81,3)]:
+              target=root/name
+              shutil.copytree(source,target)
+              p=target/'seat3-reversible.hbi'
+              raw=bytearray(p.read_bytes())
+              raw[offset]=(raw[offset]+delta)%243
+              p.write_bytes(raw)
+              (target/'seat3-reversible.hbi.sha256').write_text(
+                hashlib.sha256(raw).hexdigest()+'  seat3-reversible.hbi\n',encoding='ascii')
+          PY
+          if python experiments/seat3/gf3_reversible/verify_reversible.py "$RUNNER_TEMP/forged-witness" original-seat1-rust/experiments/seat1/proxima-rust181/src/lib.rs; then
+              echo 'UNSAFE: source-consistent forged witness accepted'; exit 1
+          fi
+          if python experiments/seat3/gf3_reversible/verify_reversible.py "$RUNNER_TEMP/forged-padding" original-seat1-rust/experiments/seat1/proxima-rust181/src/lib.rs; then
+              echo 'UNSAFE: noncanonical trit padding accepted'; exit 1
+          fi
+          echo 'C3_WITNESS_FORGERY_AND_NONCANONICAL_PADDING_REJECTED'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-c3-reversible-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/seat3-hbi/*
+          if-no-files-found: error
+          retention-days: 30
+  four-platform-parity:
+    name: All OS exact same HBI HBP and SHA256; minimal witnesses survive peer referee
+    runs-on: ubuntu-latest
+    needs: original-lift
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-c3-reversible-*
+          path: verified-results
+          merge-multiple: false
+      - name: Four independent Rust1.81 compiled HBI and HBP files exact byte parity
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          roots=sorted(Path('verified-results').glob('seat3-c3-reversible-*'))
+          assert len(roots)==4,roots
+          for fn in ('seat3-reversible.hbi','seat3-reversible.hbp'):
+              b=[(r/fn).read_bytes() for r in roots]
+              assert all(x==b[0] for x in b),'ORIGINAL_SOURCE_GROUNDED_BYTES_DRIFT'
+              sha=hashlib.sha256(b[0]).hexdigest()
+              for r in roots:
+                  assert (r/(fn+'.sha256')).read_bytes()==(sha+'  '+fn+'\n').encode('ascii')
+                  assert not any(f.suffix in ('.json','.jsonl','.ndjson') for f in r.iterdir())
+              print('SEAT3_GF3_REVERSIBLE_FOUR_HOST_BYTE_EXACT_PASS',fn,len(b[0]),sha)
+          body=(roots[0]/'seat3-reversible.hbp').read_text('ascii')
+          assert body.count('\nROW|')==55
+          assert body.count('|logical_ticks=81|')==10
+          assert body.count('|logical_ticks=40|')==5
+          assert '|minimal_recoverable_witness_trits=81|packed_witness_capacity_bytes=17|' in body
+          assert '|external_event_history_not_inferred=TRUE|' in body
+          print('SEAT3_C3_STANDALONE_GF3_SOURCE_BOUND_REVERSIBLE_MEMORY_CERT_PASS')
+          PY
