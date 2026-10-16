@@ -51,6 +51,14 @@ jobs:
           python independent_memory_referee.py out
           python independent_camera_referee.py out
           python independent_nine_jump_referee.py out
+          # Seat 5 contract: the core computational evidence is HBP/CSV/TSV,
+          # never JSON; retain separate original observational-source archives.
+          grep -q '^HBP1|schema=ASOLARIA-PROXIMA-RUST181-R1|field=GF3|trits=-1,0,+1|float_used=0' out/ASOLARIA-PROXIMA-RUST181.hbp
+          if find out -maxdepth 1 -type f -iname '*.json' | grep -q .; then
+            echo 'CORE_COMPUTATIONAL_JSON_FORBIDDEN' >&2
+            exit 1
+          fi
+          echo 'SEAT5_RUST181_BALANCED_TRITS_HBP_NO_JSON_PASS'
           (cd out && sha256sum ASOLARIA-PROXIMA-RUST181.hbp EPOCHS-RUST181.csv PARTICLE-MEMORY-R1.ledger PARTICLE-MEMORY-R1.hbp TEN-BILLION-YEAR-R1.hbp SYNTHETIC-FITS-R4.fits FREEZE-PLAY-R4.hbp RAINBOW-QR-R4.tsv NINE-JUMP-MOTION-R5.csv NINE-JUMP-MOTION-R5.hbp > COMPUTATIONAL.sha256)
       - uses: actions/upload-artifact@v4
         with:
