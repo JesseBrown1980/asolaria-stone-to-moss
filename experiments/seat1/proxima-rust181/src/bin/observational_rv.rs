@@ -3,7 +3,7 @@
 //! Real source data: CDS J/A+A/700/A11/spec.dat and /photo.dat.
 //! This program does NOT convert a residual improvement into a planet detection.
 use asolaria_proxima_ternary::sha256::{digest,hex};
-use std::{collections::BTreeMap, env, fmt::Write as _, fs, path::Path};
+use std::{collections::BTreeMap, env, fs, path::Path};
 
 const RV_RECORDS:usize=722;
 const PHOTO_RECORDS:usize=2212;
@@ -159,7 +159,7 @@ fn isqrt(num:u128)->u128{
         if mid<=num/mid{lo=mid;}else{hi=mid;}
     }lo
 }
-fn model_json(rows:&[Rv],image:&str)->String{
+fn model_hbp(rows:&[Rv],image:&str)->String{
     let train:Vec<_>=rows.iter().filter(|r|r.train).collect();
     let test:Vec<_>=rows.iter().filter(|r|!r.train).collect();
     let c0=fit(rows,10,None);
@@ -176,67 +176,46 @@ fn model_json(rows:&[Rv],image:&str)->String{
       weighted_error(&test,&c1,14,None),
       weighted_error(&test,&c2,16,Some(choice))
     );
+    let first=rows.iter().map(|r|r.mjd_milli).min().unwrap_or(0);
+    let last=rows.iter().map(|r|r.mjd_milli).max().unwrap_or(0);
+    let mut lines=vec![
+      "HBP1|schema=ASOLARIA-ACTUAL-PROXIMA-RV-NINE-WINDOW-V2|format=HBP|trits=-1,0,+1|json=0".to_string(),
+      "SOURCE|catalog=CDS J/A+A/700/A11|file=spec.dat|original_source_data=YES|json=0".to_string(),
+      format!("SUMMARY|source_measurements={}|source_photo_rows=2212|train_rows={}|heldout_rows={}|first_bjd_minus_2450000_milliday={}|last_bjd_minus_2450000_milliday={}|exploratory_trials=6|heldout_window_count=9|json=0",
+        rows.len(),train.len(),test.len(),first,last),
+      format!("SCORES|null_wrmse_mm_s={}|known_bd_wrmse_mm_s={}|extra_wrmse_mm_s={}|train_selected_extra_period_1e5_days={}|train_selected_wrmse_mm_s={}|json=0",
+        rmse0,rmse1,rmse2,choice,choice_train),
+      format!("IMAGE|source_hubble_status={image}|nine_image_epochs=UNAVAILABLE|json=0"),
+      "METHOD|model=integer-only_27-sector_phase|fit=instrument_offset_and_activity_proxies|holdout=70pct_training_per_instrument|json=0".to_string(),
+      "BOUNDARY|brown_edens_i=UNDETECTED_SIMULATION_ALIAS|new_planet_detected=FALSE|scan_significance_corrected=FALSE|json=0".to_string()
+    ];
+    let mut by_instrument=BTreeMap::new();
+    for row in rows {
+        let entry=by_instrument.entry(row.inst).or_insert((0usize,0usize));
+        if row.train{entry.0+=1;}else{entry.1+=1;}
+    }
+    for (id,(tr,te)) in by_instrument {
+        let subset:Vec<_>=test.iter().copied().filter(|row|row.inst==id).collect();
+        let a=weighted_error(&subset,&c0,10,None);
+        let b=weighted_error(&subset,&c1,14,None);
+        let c=weighted_error(&subset,&c2,16,Some(choice));
+        lines.push(format!("INSTRUMENT|id={id}|train={tr}|test={te}|n={}|baseline_wrmse_mm_s={a}|known_wrmse_mm_s={b}|extra_wrmse_mm_s={c}|json=0",subset.len()));
+    }
     let mut checkpoints=test.clone();
     checkpoints.sort_by_key(|r|r.mjd_milli);
-    let mut windows=String::new();
-    for i in 0..9{
-        let first=checkpoints.len()*i/9;
-        let last=checkpoints.len()*(i+1)/9;
-        let group=&checkpoints[first..last];
-        if group.is_empty(){continue;}
-        let bjd=group[group.len()/2].mjd_milli;
+    for i in 0..9 {
+        let low=checkpoints.len()*i/9;
+        let high=checkpoints.len()*(i+1)/9;
+        let group=&checkpoints[low..high];
+        assert!(!group.is_empty(),"expected nonempty chronological window");
+        let median=group[group.len()/2].mjd_milli;
         let n0=weighted_error(group,&c0,10,None);
         let n1=weighted_error(group,&c1,14,None);
         let n2=weighted_error(group,&c2,16,Some(choice));
-        let (sinb,cosb)=harmonic(bjd,KNOWN_B_PERIOD);
-        let _=write!(windows,
-          "{}{{\"index\":{},\"count\":{},\"median_bjd_minus_2450000_milliday\":{},\
-          \"baseline_wrmse_mm_s\":{},\"known_bd_wrmse_mm_s\":{},\
-          \"exploratory_wrmse_mm_s\":{},\"phase_b_sin1000\":{},\"phase_b_cos1000\":{}}}",
-          if windows.is_empty(){""}else{","},i+1,group.len(),bjd,n0,n1,n2,sinb,cosb);
+        let (sinb,cosb)=harmonic(median,KNOWN_B_PERIOD);
+        lines.push(format!("WINDOW|index={}|count={}|median_bjd_minus_2450000_milliday={median}|baseline_wrmse_mm_s={n0}|known_bd_wrmse_mm_s={n1}|exploratory_wrmse_mm_s={n2}|phase_b_sin1000={sinb}|phase_b_cos1000={cosb}|json=0",i+1,group.len()));
     }
-    let mut inst=BTreeMap::new();
-    for row in rows{
-        let entry=inst.entry(row.inst).or_insert((0usize,0usize));
-        if row.train{entry.0+=1;}else{entry.1+=1;}
-    }
-    let mut instrument_json=String::new();
-    for (id,(tr,te)) in inst{
-        let _=write!(instrument_json,"{}\"{}\":{{\"train\":{},\"test\":{}}}",
-          if instrument_json.is_empty(){""}else{","},id,tr,te);
-    }
-    // Instrument-stratified heldout checks to expose non-replicating periodic signals.
-    let mut instrument_scores=String::new();
-    for id in 0..6usize {
-        let subset:Vec<_>=test.iter().copied().filter(|row|row.inst==id).collect();
-        if subset.is_empty(){continue;}
-        let a=weighted_error(&subset,&c0,10,None);
-        let b=weighted_error(&subset,&c1,14,None);
-        let x=weighted_error(&subset,&c2,16,Some(choice));
-        let _=write!(instrument_scores,
-           "{}\"{}\":{{\"n\":{},\"baseline_wrmse_mm_s\":{},\"known_wrmse_mm_s\":{},\"extra_wrmse_mm_s\":{}}}",
-           if instrument_scores.is_empty(){""}else{","},id,subset.len(),a,b,x);
-    }
-    let full=rows.iter().map(|r|r.mjd_milli).min().unwrap_or(0);
-    let last=rows.iter().map(|r|r.mjd_milli).max().unwrap_or(0);
-    format!(
-        "{{\n  \"schema\":\"ASOLARIA-ACTUAL-PROXIMA-RV-NINE-WINDOW-V1\",\
-        \n  \"source\":\"CDS J/A+A/700/A11/spec.dat\",\
-        \n  \"source_measurements\":{},\"train_rows\":{},\"heldout_rows\":{},\
-        \n  \"first_bjd_minus_2450000_milliday\":{},\"last_bjd_minus_2450000_milliday\":{},\
-        \n  \"individual_uncertainties_used\":true,\"source_photo_rows\":2212,\
-        \n  \"source_hubble_status\":{},\
-        \n  \"method\":\"integer-only 27-sector phase templates; instrument offsets; approximate 83d stellar activity; FWHM/CRX proxies; 70pct early training per instrument; 30pct late holdout\",\
-        \n  \"null_wrmse_mm_s\":{},\"known_bd_wrmse_mm_s\":{},\"extra_wrmse_mm_s\":{},\
-        \n  \"train_selected_extra_period_1e5_days\":{},\"train_selected_wrmse_mm_s\":{},\
-        \n  \"exploratory_trials\":6,\"heldout_window_count\":9,\"per_instrument\":{{{}}},\
-        \n  \"heldout_instrument_scores\":{{{}}},\
-        \n  \"heldout_windows\":[{}],\
-        \n  \"scientific_limit\":\"fixed-sector planetary basis and fixed stellar proxy are not multidimensional GP fit; period scan not significance-corrected; no new planet proven\",\
-        \n  \"brown_edens_i\":\"UNDETECTED_SIMULATION_ALIAS; DO NOT PROMOTE\"\n}}\n",
-        rows.len(),train.len(),test.len(),full,last,image,rmse0,rmse1,rmse2,
-        choice,choice_train,instrument_json,instrument_scores,windows
-    )
+    lines.join("\n")+"\n"
 }
 fn main()->Result<(),String>{
     let dir=env::args().nth(1).unwrap_or_else(||"real_observations/output".to_string());
@@ -246,18 +225,20 @@ fn main()->Result<(),String>{
     let photo_rows=photo.split(|&b|b==b'\n').filter(|x|!x.is_empty()).count();
     if photo_rows!=PHOTO_RECORDS{return Err(format!("photometry row count: {photo_rows}"));}
     let rows=read_source(&spec)?;
-    let image=match fs::read_to_string(d.join("ORIGINAL-SOURCE-MANIFEST.json")){
-      Ok(manifest)=>if manifest.contains("\"available\": true"){"\"HUBBLE_PUBLIC_RENDERED_IMAGE_AVAILABLE\""}else{"\"HUBBLE_BINARY_SOURCE_HELD\""},
-      Err(_)=>"\"HUBBLE_NOT_FETCHED\""
+    let image=match fs::read_to_string(d.join("ORIGINAL-SOURCE-MANIFEST.hbp")){
+      Ok(manifest)=>if manifest.lines().any(|line|line.starts_with("IMAGE|available=true|")){
+        "HUBBLE_PUBLIC_RENDERED_IMAGE_AVAILABLE"
+      }else{"HUBBLE_BINARY_SOURCE_HELD"},
+      Err(_)=>"HUBBLE_NOT_FETCHED"
     };
-    let result=model_json(&rows,image);
-    fs::write(d.join("NINE-REAL-OBSERVATION-WINDOWS.json"),&result)
+    let result=model_hbp(&rows,image);
+    fs::write(d.join("NINE-REAL-OBSERVATION-WINDOWS.hbp"),&result)
         .map_err(|e|e.to_string())?;
     println!("REAL_SOURCE_RV_722_SPEC_SHA256 {}",hex(&digest(&spec)));
     println!("REAL_SOURCE_PHOTO_2212_SHA256 {}",hex(&digest(&photo)));
     println!("REAL_SOURCE_RESULTS_SHA256 {}",hex(&digest(result.as_bytes())));
     for line in result.lines().filter(|l|
-        l.contains("_wrmse_mm_s")||l.contains("selected_extra_period")||l.contains("train_rows"))
+        l.starts_with("SUMMARY|")||l.starts_with("SCORES|"))
     {println!("{}",line.trim());}
     println!("ACTUAL_PROXIMA_RV_NINE_CHECKPOINTS_ANALYSIS_PASS");
     Ok(())

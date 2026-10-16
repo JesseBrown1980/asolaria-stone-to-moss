@@ -44,7 +44,24 @@ jobs:
           python3 experiments/seat1/proxima-rust181/real_observations/independent_referee.py
           python3 -m pip install --quiet --disable-pip-version-check 'Pillow==12.3.0'
           python3 experiments/seat1/proxima-rust181/real_observations/verify_image_ternary.py
-          (cd real_observations/output && sha256sum spec.dat photo.dat NINE-REAL-OBSERVATION-WINDOWS.json ORIGINAL-SOURCE-MANIFEST.json INDEPENDENT-OBSERVATION-REVIEW.json REAL-HUBBLE-TERNARY-RECEIPT.json > SHA256SUMS.txt)
+          # No JSON in the raw-observation science pipeline, not just the core model.
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path("real_observations/output")
+          forbidden=[p.name for p in root.iterdir() if p.is_file() and p.suffix.lower() in (".json",".jsonl",".ndjson")]
+          assert not forbidden, ("NO_JSON_ASOLARIA_CONTRACT",forbidden)
+          names=("NINE-REAL-OBSERVATION-WINDOWS.hbp","ORIGINAL-SOURCE-MANIFEST.hbp",
+                 "INDEPENDENT-OBSERVATION-REVIEW.hbp","REAL-HUBBLE-TERNARY-RECEIPT.hbp")
+          for name in names:
+              content=(root/name).read_text(encoding="utf-8")
+              assert content.startswith("HBP1|"),name
+              assert content.endswith("\n"),name
+              assert all(line.endswith("|json=0") for line in content.splitlines()),name
+          assert "trits=-1,0,+1" in (root/"REAL-HUBBLE-TERNARY-RECEIPT.hbp").read_text()
+          print("SEAT4_HBP_ONLY_ORIGINAL_OBSERVATIONS_RUST181_CLIPPY_GF3_PASS")
+          PY
+          (cd real_observations/output && sha256sum spec.dat photo.dat NINE-REAL-OBSERVATION-WINDOWS.hbp ORIGINAL-SOURCE-MANIFEST.hbp INDEPENDENT-OBSERVATION-REVIEW.hbp REAL-HUBBLE-TERNARY-RECEIPT.hbp > SHA256SUMS.txt)
+          (cd real_observations/output && sha256sum --check SHA256SUMS.txt)
       - uses: actions/upload-artifact@v4
         with:
           name: original-real-observations-proxima
