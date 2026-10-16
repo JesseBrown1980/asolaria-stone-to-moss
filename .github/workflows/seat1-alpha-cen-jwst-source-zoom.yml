@@ -1,0 +1,29 @@
+name: Seat1 Alpha Centauri JWST true-source hash acquisition
+on:
+  push:
+    branches: [agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  free-public-archive-acquisition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Download and hash original NASA Webb and ESA public images
+        env:
+          SOURCE_OUT: ${{ runner.temp }}/alpha-centauri-webb-sources
+        run: python experiments/seat1/alpha-cen-webb-zoom/acquire_public_sources.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: alpha-centauri-public-webb-originals-sha-hbp
+          path: ${{ runner.temp }}/alpha-centauri-webb-sources/*
+          retention-days: 7
+          if-no-files-found: error
+          compression-level: 3
