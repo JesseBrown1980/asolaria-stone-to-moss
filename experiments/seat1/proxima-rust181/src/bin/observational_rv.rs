@@ -205,6 +205,18 @@ fn model_json(rows:&[Rv],image:&str)->String{
         let _=write!(instrument_json,"{}\"{}\":{{\"train\":{},\"test\":{}}}",
           if instrument_json.is_empty(){""}else{","},id,tr,te);
     }
+    // Instrument-stratified heldout checks to expose non-replicating periodic signals.
+    let mut instrument_scores=String::new();
+    for id in 0..6usize {
+        let subset:Vec<_>=test.iter().copied().filter(|row|row.inst==id).collect();
+        if subset.is_empty(){continue;}
+        let a=weighted_error(&subset,&c0,10,None);
+        let b=weighted_error(&subset,&c1,14,None);
+        let x=weighted_error(&subset,&c2,16,Some(choice));
+        let _=write!(instrument_scores,
+           "{}\"{}\":{{\"n\":{},\"baseline_wrmse_mm_s\":{},\"known_wrmse_mm_s\":{},\"extra_wrmse_mm_s\":{}}}",
+           if instrument_scores.is_empty(){""}else{","},id,subset.len(),a,b,x);
+    }
     let full=rows.iter().map(|r|r.mjd_milli).min().unwrap_or(0);
     let last=rows.iter().map(|r|r.mjd_milli).max().unwrap_or(0);
     format!(
@@ -218,11 +230,12 @@ fn model_json(rows:&[Rv],image:&str)->String{
         \n  \"null_wrmse_mm_s\":{},\"known_bd_wrmse_mm_s\":{},\"extra_wrmse_mm_s\":{},\
         \n  \"train_selected_extra_period_1e5_days\":{},\"train_selected_wrmse_mm_s\":{},\
         \n  \"exploratory_trials\":6,\"heldout_window_count\":9,\"per_instrument\":{{{}}},\
+        \n  \"heldout_instrument_scores\":{{{}}},\
         \n  \"heldout_windows\":[{}],\
         \n  \"scientific_limit\":\"fixed-sector planetary basis and fixed stellar proxy are not multidimensional GP fit; period scan not significance-corrected; no new planet proven\",\
         \n  \"brown_edens_i\":\"UNDETECTED_SIMULATION_ALIAS; DO NOT PROMOTE\"\n}}\n",
         rows.len(),train.len(),test.len(),full,last,image,rmse0,rmse1,rmse2,
-        choice,choice_train,instrument_json,windows
+        choice,choice_train,instrument_json,instrument_scores,windows
     )
 }
 fn main()->Result<(),String>{
