@@ -29,6 +29,8 @@ def run(binary, raw):
 
 
 def main():
+    # Preserve identical byte receipts across Windows and Linux runners.
+    sys.stdout.reconfigure(newline="\n")
     binary = pathlib.Path(sys.argv[1]).resolve()
     assert binary.is_file(), binary
     cases = [
