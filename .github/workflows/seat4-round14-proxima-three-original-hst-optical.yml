@@ -1,0 +1,108 @@
+name: Seat4 R14 original Proxima multi-epoch optical Rust1.81 GF3 HBI HBP
+on:
+  push:
+    branches: [agent/seat4/proxima-real-optical-multiepoch-20261016]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  real-hst-multiepoch:
+    name: Original F555W three optical frames ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Download three original unmodified STScI calibrated F555W FITS images
+        uses: actions/download-artifact@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          github-token: ${{ github.token }}
+          run-id: 38916527331
+          name: seat4-r14-original-three-stsci-hst-f555w-flc-fits
+          path: real-optical
+      - name: Validate immutable source SHA and exact rustc1.81 Clippy on full crate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(rustc --version | awk '{print $2}')" = '1.81.0'
+          (cd real-optical && sha256sum --check -- *.sha256)
+          cd experiments/seat4/proxima-hst-optical-rust181
+          cargo clippy --offline --locked --all-targets -- -D warnings
+          cargo test --offline --locked
+      - name: Actually analyze three independent HST SCI image data arrays using integer GF3 Rust, HBI HBP SHA and SH
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo run --manifest-path experiments/seat4/proxima-hst-optical-rust181/Cargo.toml --offline --locked --release --             real-optical/ic3j01a8q_flc.fits             real-optical/icdc03lzq_flc.fits             real-optical/icpc01xwq_flc.fits             "$RUNNER_TEMP/seat4-optical-witness"
+          python experiments/seat4/round14/independent_hst_referee.py real-optical "$RUNNER_TEMP/seat4-optical-witness"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'seat4-optical-witness'
+          expected=sorted(['three-original-proxima-optical-epochs.hbi',
+                           'three-original-proxima-optical-epochs.hbp',
+                           'three-original-proxima-optical-epochs.hbi.sha256',
+                           'three-original-proxima-optical-epochs.hbp.sha256'])
+          actual=sorted(x.name for x in p.iterdir())
+          assert actual==expected,('NO_JSON_HBI_HBP_ONLY_REQUIRED',actual)
+          hbp=(p/'three-original-proxima-optical-epochs.hbp').read_text()
+          assert hbp.startswith('HBP1|') and hbp.count('\nFRAME|')==3
+          assert 'trits=-1,0,+1' in hbp and 'field=GF3' in hbp
+          assert 'FITS_WCS_REGISTRATION=NOT_COMPLETED' in hbp
+          print('SEAT4_R14_HST_THREE_REAL_OPTICAL_FRAMES_RUST181_CLIPPY_GF3_NO_JSON_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r14-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat4-optical-witness/*
+          if-no-files-found: error
+          retention-days: 30
+  exact-original-source-parity:
+    name: Four-platform original HST pixels and SHA HBI HBP full-byte peer referee
+    runs-on: ubuntu-latest
+    needs: real-hst-multiepoch
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r14-*
+          path: evidence
+          merge-multiple: false
+      - name: Compare source-linked HBI and HBP in full across all four hosted executions
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          dirs=sorted(Path('evidence').glob('seat4-r14-*'))
+          assert len(dirs)==4
+          for name in ('three-original-proxima-optical-epochs.hbi',
+                       'three-original-proxima-optical-epochs.hbp'):
+              blobs=[(d/name).read_bytes() for d in dirs]
+              assert len(set(blobs))==1,('CROSS_PLATFORM_ORIGINAL_OPTICAL_DRIFT',name)
+              digest=hashlib.sha256(blobs[0]).hexdigest()
+              for directory in dirs:
+                  assert (directory/(name+'.sha256')).read_bytes()==(digest+'  '+name+'\n').encode('ascii')
+              print('SEAT4_R14_FOUR_PLATFORMS_TRUE_OPTICAL_BYTE_PARITY',name,len(blobs[0]),digest)
+          summary=(dirs[0]/'three-original-proxima-optical-epochs.hbp').read_text()
+          assert summary.count('\nFRAME|')==3
+          assert 'applied_corruptions=9|rejected_corruptions=9' in summary
+          assert 'three_real_optical_images=TRUE' in summary
+          assert 'registered_sky_motion=UNTESTED' in summary
+          assert 'photon_memory_retention=NOT_MEASURED' in summary
+          print('SEAT4_R14_MAST_STSCI_THREE_OBSERVED_F555W_IMAGE_EPOCHS_FULL_REPLAY_PASS')
+          PY
