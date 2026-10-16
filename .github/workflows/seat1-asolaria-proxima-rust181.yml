@@ -43,9 +43,9 @@ jobs:
         run: |
           set -euo pipefail
           if [ '${{ matrix.profile }}' = release ]; then
-            cargo run --locked --offline --release -- out
+            cargo run --locked --offline --release --bin asolaria-proxima-ternary -- out
           else
-            cargo run --locked --offline -- out
+            cargo run --locked --offline --bin asolaria-proxima-ternary -- out
           fi
           python independent_referee.py out
           python independent_memory_referee.py out
