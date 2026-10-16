@@ -61,7 +61,7 @@ def main():
       f"TRITS|balanced_trits_per_byte=6|trit_count={len(rgb)*6}|negative={hist[-1]}|zero={hist[0]}|positive={hist[1]}|exact_rgb_roundtrip=PASS|json=0",
       "BOUNDARY|new_3d_particles_detected=0|new_planet_detected=FALSE|physical_photon_wavelength_instrumented=FALSE|raw_calibrated_fits_ingested=FALSE|image_epochs=1|json=0"
     ]
-    (ROOT/"REAL-HUBBLE-TERNARY-RECEIPT.hbp").write_bytes(("\\n".join(lines)+"\\n").encode("ascii"))
+    (ROOT/"REAL-HUBBLE-TERNARY-RECEIPT.hbp").write_bytes(("\n".join(lines)+"\n").encode("ascii"))
     print("REAL_HUBBLE_IMAGE_SOURCE_SHA",digest(source))
     print("REAL_HUBBLE_RGB_ROUNDTRIP_SHA",digest(rgb))
     print("REAL_HUBBLE_PIXELS",width*height,"TRITS",len(rgb)*6,"EXACT_RECONSTRUCTION_PASS")
