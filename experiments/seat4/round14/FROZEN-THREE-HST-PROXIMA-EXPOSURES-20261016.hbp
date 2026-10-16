@@ -1,0 +1,7 @@
+HBP1|schema=ASOLARIA-SEAT4-PROXIMA-HST-ORIGINAL-OPTICAL-SELECTION|date=2026-10-16|json=0
+ARCHIVE|owner=NASA_STSCI_MAST|mission=HST|instrument=WFC3_UVIS|filter=F555W|source=INDIVIDUAL_CALIBRATED_FLC_NOT_MOSAIC|json=0
+SELECT|epoch=0|proposal_id=12985|group_obsid=24810128|rootname=ic3j01a8q|file=ic3j01a8q_flc.fits|group_target=PROXIMA-CEN-SOURCE|source_product_bytes=42526080|json=0
+SELECT|epoch=1|proposal_id=13466|group_obsid=24812930|rootname=icdc03lzq|file=icdc03lzq_flc.fits|group_target=PROXIMA-CEN-SOURCE|source_product_bytes=42341760|json=0
+SELECT|epoch=2|proposal_id=13847|group_obsid=24980896|rootname=icpc01xwq|file=icpc01xwq_flc.fits|group_target=PROXIMA-CEN-SOURCE|source_product_bytes=42393600|json=0
+VALIDATION|require_hst_rootname=TRUE|check_FITS_DATE_OBS=TRUE|require_three_distinct_UTC_dates=TRUE|differing_original_proposals=TRUE|same_optical_filter=TRUE|only_published_calibrated_files=TRUE|no_json_outputs=TRUE|json=0
+BOUNDARY|archive_TLS_and_public_MAST_metadata=SOURCE_PROVENANCE|sensor_raw_external_detached_signature=NOT_YET_VERIFIED|calibrated_3D_ASTROMETRY=NOT_DONE|json=0
