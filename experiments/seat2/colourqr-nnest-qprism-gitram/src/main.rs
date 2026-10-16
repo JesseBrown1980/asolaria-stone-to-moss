@@ -174,6 +174,25 @@ fn shard(lane: usize, source: &[u8], root: &Path) -> Result<(), String> {
 
 fn seal(source: &[u8], root: &Path, output: &Path) -> Result<(), String> {
     let n = parts(source)?;
+    // An unexpected extra/stale checkpoint must not silently bypass the watcher.
+    for lane in 0..3 {
+        let mut allowed = BTreeSet::new();
+        for i in (lane..n).step_by(3) {
+            for suffix in ["hbi", "hbp", "qr.txt"] {
+                let item = format!("frame-{i:06}.{suffix}");
+                allowed.insert(format!("{item}.sha256"));
+                allowed.insert(item);
+            }
+        }
+        let dir = root.join(["R", "G", "B"][lane]);
+        for entry in fs::read_dir(&dir).map_err(|e| e.to_string())? {
+            let entry = entry.map_err(|e| e.to_string())?;
+            let name = entry.file_name().to_string_lossy().to_string();
+            if name.starts_with("frame-") && !allowed.contains(&name) {
+                return Err(format!("unexpected or duplicate checkpoint: {name}"));
+            }
+        }
+    }
     let mut seen = BTreeSet::new();
     let mut chain = ReceiptChain::new();
     let mut reconstructed = Vec::new();
@@ -272,6 +291,62 @@ mod tests {
         assert_eq!(qprism_roundtrip(&bytes, 0).unwrap(), agt(&bytes));
         assert_eq!(hex(&bytes[..4]), "1e000000");
     }
+    #[test]
+    fn full_gitram_roundtrip_and_five_forgery_negatives() {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let stamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+        let temp = std::env::temp_dir().join(format!("seat2-qr-{}-{stamp}", std::process::id()));
+        let root = temp.join("cells");
+        let output = temp.join("sealed");
+        let source: Vec<u8> = (0..4201).map(|i| (i % 251) as u8).collect();
+        for l in 0..3 {
+            shard(l, &source, &root).unwrap();
+        }
+        seal(&source, &root, &output).unwrap();
+
+        // Case 1: payload alteration with a newly recalculated SHA sidecar.
+        let p = path_for(&root, 0, 0, "hbi");
+        let original = fs::read(&p).unwrap();
+        let mut wrong = original.clone();
+        wrong[8] ^= 1;
+        seal_sidecar(&p, &wrong).unwrap();
+        assert!(seal(&source, &root, &output).is_err());
+        seal_sidecar(&p, &original).unwrap();
+
+        // Case 2: change the Fischer index but rehash the raw file.
+        let mut wrong = original.clone();
+        wrong[0] = 3;
+        seal_sidecar(&p, &wrong).unwrap();
+        assert!(seal(&source, &root, &output).is_err());
+        seal_sidecar(&p, &original).unwrap();
+
+        // Case 3: a separately rehashed QR-ready representation disagrees.
+        let pqr = path_for(&root, 1, 1, "qr.txt");
+        let raw_qr = fs::read(&pqr).unwrap();
+        let mut forged_qr = raw_qr.clone();
+        forged_qr[5] = if forged_qr[5] == b'A' { b'B' } else { b'A' };
+        seal_sidecar(&pqr, &forged_qr).unwrap();
+        assert!(seal(&source, &root, &output).is_err());
+        seal_sidecar(&pqr, &raw_qr).unwrap();
+
+        // Case 4: a missing independent channel must HALT.
+        let missing = path_for(&root, 2, 2, "hbi");
+        let raw_missing = fs::read(&missing).unwrap();
+        fs::remove_file(&missing).unwrap();
+        assert!(seal(&source, &root, &output).is_err());
+        seal_sidecar(&missing, &raw_missing).unwrap();
+
+        // Case 5: unexpected extra frame is not silently ignored.
+        let extra = root.join("R/frame-999999.hbi");
+        seal_sidecar(&extra, b"\0\0\0\0fake").unwrap();
+        assert!(seal(&source, &root, &output).is_err());
+        fs::remove_file(&extra).unwrap();
+        fs::remove_file(format!("{}.sha256", extra.display())).unwrap();
+
+        seal(&source, &root, &output).unwrap();
+        fs::remove_dir_all(&temp).unwrap();
+    }
+
     #[test]
     fn reject_empty_and_missing_consent() {
         assert!(parts(b"").is_err());
