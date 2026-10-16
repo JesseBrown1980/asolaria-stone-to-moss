@@ -1,6 +1,11 @@
 name: Seat2 ColourQR N-Nest Q-PRISM GitRAM
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/seat2/colourqr-nnest-qprism-gitram/**'
+      - '.github/workflows/seat2-colourqr-nnest-qprism-gitram.yml'
   pull_request:
     paths:
       - 'experiments/seat2/colourqr-nnest-qprism-gitram/**'
