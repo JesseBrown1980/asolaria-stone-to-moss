@@ -259,7 +259,7 @@ mod tests{
     }
     #[test] fn period_and_trit_sector_wrap(){
         assert_eq!(harmonic(0,KNOWN_B_PERIOD),(0,1000));
-        assert_eq!(harmonic((KNOWN_B_PERIOD/100)as i64,KNOWN_B_PERIOD),(0,1000));
+        assert_eq!(harmonic((KNOWN_B_PERIOD/5)as i64,KNOWN_B_PERIOD),(0,1000));
         assert_eq!(EXPLORATORY_PERIODS.len(),6);
     }
     #[test] fn integer_sqrt_reference(){
