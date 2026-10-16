@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Independent original-byte and nine-checkpoint review, integer-only.
-Does not validate the Rust fitted model coefficients; this separately checks
-original source integrity, chronology, observations, and reviewer controls.
+"""Seat4 independent source-byte & nine-window observer, HBP text only.
+
+Original CDS bytes and numerical output decisions are unchanged; HBP records
+are bounded one-pass text fields, not a JSON serializer or parser.
 """
-import hashlib, json, pathlib
+import hashlib
+import pathlib
 from collections import Counter
 from itertools import product
 from decimal import Decimal
@@ -11,7 +13,29 @@ from decimal import Decimal
 HERE=pathlib.Path("real_observations/output")
 RV_SHA="027cff5c10b541608b727abada2af531037223edec3bb9112fcbb45fc333e474"
 PH_SHA="d42dad64fcbf80159bfc1edf20c35db82d01ce2aa7830248d7198aad05bc6dd5"
-def sha(x):return hashlib.sha256(x).hexdigest()
+
+def sha(b):return hashlib.sha256(b).hexdigest()
+
+def read_hbp(file, schema):
+    rows=[]
+    for i,line in enumerate(file.read_text(encoding="utf-8").splitlines(),1):
+        columns=line.split("|")
+        assert columns[0] and columns[-1]=="json=0",("INVALID_HBP",file,i)
+        values={}
+        for item in columns[1:]:
+            assert "=" in item,("UNKEYED_FIELD",file,i)
+            key,value=item.split("=",1)
+            assert key not in values and key and value!="",("DUPLICATE_OR_EMPTY",file,i,key)
+            values[key]=value
+        rows.append((columns[0],values))
+    assert rows and rows[0][0]=="HBP1" and rows[0][1]["schema"]==schema
+    return rows
+
+def sole(rows,tag):
+    matched=[p for t,p in rows if t==tag]
+    assert len(matched)==1,(tag,len(matched))
+    return matched[0]
+
 def main():
     spec=(HERE/"spec.dat").read_bytes()
     photo=(HERE/"photo.dat").read_bytes()
@@ -28,98 +52,95 @@ def main():
         er=int(Decimal(row[28:32].decode().strip())*1000)
         assert er>0 and 0<=inst<=5
         data.append((inst,tm,rv,er))
-    train=[];test=[];inst_counts={}
+    train=[];test=[];counts={}
     for inst in range(6):
         subset=sorted((x for x in data if x[0]==inst),key=lambda r:r[1])
         cutoff=(len(subset)*7//10) if len(subset)>=10 else len(subset)
         train+=subset[:cutoff];test+=subset[cutoff:]
-        inst_counts[str(inst)]={"train":cutoff,"test":len(subset)-cutoff}
-    result=json.loads((HERE/"NINE-REAL-OBSERVATION-WINDOWS.json").read_text())
-    assert result["source_measurements"]==722
-    assert result["source_photo_rows"]==2212
-    assert result["train_rows"]==len(train)
-    assert result["heldout_rows"]==len(test)
-    assert result["per_instrument"]==inst_counts
-    instrument_scores=result["heldout_instrument_scores"]
-    assert set(instrument_scores)==set(str(i) for i in range(6))
-    for inst,values in instrument_scores.items():
-        assert values["n"]==inst_counts[inst]["test"]
+        counts[str(inst)]=(cutoff,len(subset)-cutoff)
+    result=read_hbp(HERE/"NINE-REAL-OBSERVATION-WINDOWS.hbp",
+                    "ASOLARIA-ACTUAL-PROXIMA-RV-NINE-WINDOW-V2")
+    assert result[0][1]["trits"]=="-1,0,+1"
+    summary=sole(result,"SUMMARY");scores=sole(result,"SCORES")
+    assert int(summary["source_measurements"])==722
+    assert int(summary["source_photo_rows"])==2212
+    assert int(summary["train_rows"])==len(train)
+    assert int(summary["heldout_rows"])==len(test)
+    assert int(summary["first_bjd_minus_2450000_milliday"])==min(r[1] for r in data)
+    assert int(summary["last_bjd_minus_2450000_milliday"])==max(r[1] for r in data)
+    assert int(summary["exploratory_trials"])==6
+    assert int(summary["heldout_window_count"])==9
+    assert sole(result,"BOUNDARY")["new_planet_detected"]=="FALSE"
+    assert sole(result,"IMAGE")["source_hubble_status"] in (
+        "HUBBLE_BINARY_SOURCE_HELD","HUBBLE_PUBLIC_RENDERED_IMAGE_AVAILABLE")
+    instruments=[p for t,p in result if t=="INSTRUMENT"]
+    assert len(instruments)==6 and set(x["id"] for x in instruments)==set(map(str,range(6)))
+    for row in instruments:
+        inst=row["id"]
+        tr,te=counts[inst]
+        assert int(row["train"])==tr and int(row["test"])==te
+        assert int(row["n"])==te
         for key in ("baseline_wrmse_mm_s","known_wrmse_mm_s","extra_wrmse_mm_s"):
-            assert 0<=values[key]<100000
+            assert 0<=int(row[key])<100000
 
-    assert result["first_bjd_minus_2450000_milliday"]==min(r[1] for r in data)
-    assert result["last_bjd_minus_2450000_milliday"]==max(r[1] for r in data)
-    assert result["exploratory_trials"]==6
-    assert result["brown_edens_i"].startswith("UNDETECTED")
-    assert result["source_hubble_status"] in ("HUBBLE_BINARY_SOURCE_HELD","HUBBLE_PUBLIC_RENDERED_IMAGE_AVAILABLE")
-    assert 0<=result["extra_wrmse_mm_s"]<100000
-    assert 0<=result["known_bd_wrmse_mm_s"]<100000
-    assert 0<=result["null_wrmse_mm_s"]<100000
+    for key in ("null_wrmse_mm_s","known_bd_wrmse_mm_s","extra_wrmse_mm_s"):
+        assert 0<=int(scores[key])<100000
     periods=[900_000,2_700_000,8_100_000,24_300_000,72_900_000,190_000_000]
-    assert result["train_selected_extra_period_1e5_days"] in periods
+    assert int(scores["train_selected_extra_period_1e5_days"]) in periods
     alltest=sorted(test,key=lambda r:r[1])
-    checkpoints=result["heldout_windows"]
-    assert len(checkpoints)==9
+    windows=[p for t,p in result if t=="WINDOW"]
+    assert len(windows)==9
     nearby=[]
-    for i,row in enumerate(checkpoints):
+    for i,row in enumerate(windows):
         subset=alltest[len(alltest)*i//9:len(alltest)*(i+1)//9]
-        assert row["index"]==i+1
-        assert row["count"]==len(subset)
-        assert row["median_bjd_minus_2450000_milliday"]==subset[len(subset)//2][1]
-        assert all(row[k]>=0 for k in ["baseline_wrmse_mm_s","known_bd_wrmse_mm_s","exploratory_wrmse_mm_s"])
-        median=row["median_bjd_minus_2450000_milliday"]
-        count1=sum(abs(x[1]-median)<=1000 for x in subset)
-        count2=sum(abs(x[1]-median)<=2000 for x in subset)
-        nearby.append({"index":i+1,"observation_date_bjd_minus2450000_milli":median,
-            "within_1_day_count":count1,"within_2_days_count":count2})
-    # A nine-window robustness check, distinct from the RV fit itself:
-    # Do not confuse an extra fitted period with a newly detected planet.
-    differences=[
-        w["known_bd_wrmse_mm_s"]-w["exploratory_wrmse_mm_s"]
-        for w in checkpoints
-    ]
-    gains=[
-        w["known_bd_wrmse_mm_s"]**2-w["exploratory_wrmse_mm_s"]**2
-        for w in checkpoints
-    ]
+        assert int(row["index"])==i+1
+        assert int(row["count"])==len(subset)
+        assert int(row["median_bjd_minus_2450000_milliday"])==subset[len(subset)//2][1]
+        assert all(int(row[k])>=0 for k in (
+            "baseline_wrmse_mm_s","known_bd_wrmse_mm_s","exploratory_wrmse_mm_s"))
+        median=int(row["median_bjd_minus_2450000_milliday"])
+        nearby.append((i+1,median,
+            sum(abs(x[1]-median)<=1000 for x in subset),
+            sum(abs(x[1]-median)<=2000 for x in subset)))
+    gains=[int(w["known_bd_wrmse_mm_s"])**2-int(w["exploratory_wrmse_mm_s"])**2
+           for w in windows]
     observed=sum(gains)
     extreme=sum(sum(g*s for g,s in zip(gains,signs))>=observed
                 for signs in product((-1,1),repeat=9))
-    assert len(checkpoints)==9
-    assert extreme>=1
-    better=sum(d>0 for d in differences)
-    worse=sum(d<0 for d in differences)
-    source=HERE/"ORIGINAL-SOURCE-MANIFEST.json"
-    manifest=json.loads(source.read_text())
-    assert manifest["files"][0]["sha256"]==RV_SHA
-    assert manifest["files"][1]["sha256"]==PH_SHA
-    assert manifest["image"]["available"] is False or (HERE/manifest["image"]["file"]).exists()
-    doc={
-      "schema":"ASOLARIA-INDEPENDENT-REAL-PROXIMA-SOURCE-WINDOWS-V1",
-      "source_rv_sha256":RV_SHA,"source_photometry_sha256":PH_SHA,
-      "rv_instruments_seen":dict(Counter(str(x[0]) for x in data)),
-      "real_rv_rows":722,"real_photometry_rows":2212,
-      "train_rows":len(train),"heldout_rows":len(test),
-      "actual_observation_date_range_milliday":
-        [min(x[1] for x in data),max(x[1] for x in data)],
-      "nine_checkpoints":nearby,
-      "extra_period_windows_better":better,
-      "extra_period_windows_worse":worse,
-      "extra_period_signflip_extreme_sums":extreme,
-      "extra_period_signflip_total_assignments":512,
-      "signflip_statistic":"nine aggregated windows, post-selection diagnostic, NOT multiple-trial-adjusted planet-detection p-value",
+    better=sum(g>0 for g in gains);worse=sum(g<0 for g in gains)
+    assert 1<=extreme<=512
 
-      "independently_recalculated_source_chronology":True,
-      "independent_fit_coefficients_reimplementation":False,
-      "new_planet_from_this_data":False,
-      "raw_telescope_fits_images_loaded":False,
-      "model_significance_or_external_validation":False
-    }
-    (HERE/"INDEPENDENT-OBSERVATION-REVIEW.json").write_text(json.dumps(doc,indent=2,sort_keys=True)+"\n")
+    manifest=read_hbp(HERE/"ORIGINAL-SOURCE-MANIFEST.hbp",
+                      "ASOLARIA-REAL-PROXIMA-ORIGINAL-CATALOG-V2")
+    src=[p for t,p in manifest if t=="SOURCE"]
+    assert len(src)==2
+    byname={p["file"]:p for p in src}
+    assert set(byname)=={"spec.dat","photo.dat"}
+    assert byname["spec.dat"]["sha256"]==RV_SHA
+    assert byname["photo.dat"]["sha256"]==PH_SHA
+    assert int(byname["spec.dat"]["logical_records"])==722
+    assert int(byname["photo.dat"]["logical_records"])==2212
+    image=sole(manifest,"IMAGE")
+    assert image["available"] in ("true","false")
+    if image["available"]=="true":
+        assert (HERE/image["file"]).is_file()
+        assert sha((HERE/image["file"]).read_bytes())==image["sha256"]
+
+    lines=[
+        "HBP1|schema=ASOLARIA-INDEPENDENT-REAL-PROXIMA-SOURCE-WINDOWS-V2|format=HBP|json=0",
+        f"SOURCE|source_rv_sha256={RV_SHA}|source_photometry_sha256={PH_SHA}|real_rv_rows=722|real_photometry_rows=2212|json=0",
+        f"CHRONOLOGY|train_rows={len(train)}|heldout_rows={len(test)}|start_milliday={min(x[1] for x in data)}|end_milliday={max(x[1] for x in data)}|json=0",
+        f"FALSIFY|windows_better={better}|windows_worse={worse}|signflip_extreme={extreme}|signflip_assignments=512|post_selection_diagnostic=TRUE|json=0",
+        "BOUNDARY|independent_coefficients_reimplemented=FALSE|new_planet_detected=FALSE|raw_calibrated_telescope_FITS_loaded=FALSE|model_significance_established=FALSE|json=0"
+    ]
+    for inst in range(6):
+        lines.append(f"INSTRUMENT|id={inst}|source_rows={Counter(x[0] for x in data)[inst]}|train_rows={counts[str(inst)][0]}|test_rows={counts[str(inst)][1]}|json=0")
+    for index,median,near1,near2 in nearby:
+        lines.append(f"WINDOW|index={index}|median_milliday={median}|within_1_day={near1}|within_2_days={near2}|json=0")
+    (HERE/"INDEPENDENT-OBSERVATION-REVIEW.hbp").write_bytes(("\n".join(lines)+"\n").encode("ascii"))
     print("REAL_RV_SOURCE_722_PHOTO_2212_SHA_MATCH_PASS")
     print("REAL_NINE_WINDOWS_CHRONOLOGY_INDEPENDENT_PASS",len(train),len(test))
-    print("SOURCE_INSTRUMENT_COUNTS",doc["rv_instruments_seen"])
-    print("OBSERVATION_EPOCHS_MILLIDAY",doc["actual_observation_date_range_milliday"])
     print("EXTRA_PERIOD_9_WINDOWS",better,"better",worse,"worse","signflip",extreme,"/ 512; descriptive only")
     print("NO_CLAIM_OF_NEW_PLANET")
+
 if __name__=="__main__":main()
