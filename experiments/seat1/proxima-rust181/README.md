@@ -7,11 +7,17 @@
 ```bash
 cargo clippy --locked --offline --all-targets -- -D warnings
 cargo test --locked --offline
-cargo run --locked --offline --release -- out
+cargo run --locked --offline --release --bin asolaria-proxima-ternary -- out
 python independent_referee.py out
 ```
 
 Open `web/index.html` locally (HTTP-0: no app server), then select `out/EPOCHS-RUST181.csv` to inspect all 200 exact epochs. The `ASOLARIA-PROXIMA-RUST181.hbp` source/observation report and `RUNTIME.hbp` are separate: only actual hosted CPU wall-clock is described by RUNTIME, while huge logical epochs are exact mathematical shortcuts.
+
+## Seat 4 fixed executable selection / No JSON runtime evidence
+
+This crate has two executable targets: the main `asolaria-proxima-ternary` program and the separately declared `observational_rv` program. Rust/Cargo 1.81 requires explicit `--bin` selection when both exist. The original four-job failure was at `cargo run` after Clippy and Rust tests had passed.
+
+All report outputs are explicit `.hbp`, `.ledger`, `.csv`, `.tsv`, binary `.fits`, and checksum text; this workflow rejects files ending in `.json`, `.jsonl`, or `.ndjson`. These formats are not substitutes for individually authenticated external detector data. The computational engine uses declared GF(3) trits `-1,0,+1`, not a binary replacement of the transition law. Clippy remains warnings-as-errors on Rust 1.81.
 
 ## Historical Asolaria source mapping
 
