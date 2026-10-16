@@ -3,7 +3,7 @@
 //! Real source data: CDS J/A+A/700/A11/spec.dat and /photo.dat.
 //! This program does NOT convert a residual improvement into a planet detection.
 use asolaria_proxima_ternary::sha256::{digest,hex};
-use std::{collections::BTreeMap, env, fmt::Write as _, fs, path::Path};
+use std::{collections::BTreeMap, env, fs, path::Path};
 
 const RV_RECORDS:usize=722;
 const PHOTO_RECORDS:usize=2212;
