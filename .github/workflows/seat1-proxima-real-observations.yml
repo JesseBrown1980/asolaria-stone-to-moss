@@ -55,7 +55,7 @@ jobs:
           for name in names:
               content=(root/name).read_text(encoding="utf-8")
               assert content.startswith("HBP1|"),name
-              assert content.endswith("\\n"),name
+              assert content.endswith("\n"),name
               assert all(line.endswith("|json=0") for line in content.splitlines()),name
           assert "trits=-1,0,+1" in (root/"REAL-HUBBLE-TERNARY-RECEIPT.hbp").read_text()
           print("SEAT4_HBP_ONLY_ORIGINAL_OBSERVATIONS_RUST181_CLIPPY_GF3_PASS")
