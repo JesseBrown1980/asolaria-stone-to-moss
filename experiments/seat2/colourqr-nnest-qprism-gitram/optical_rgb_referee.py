@@ -30,7 +30,7 @@ def render(content: str) -> Image.Image:
     qr = qrcode.QRCode(
         version=40,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=4,
+        box_size=12,
         border=4,
     )
     qr.add_data(content, optimize=0)
@@ -39,7 +39,11 @@ def render(content: str) -> Image.Image:
     return img.convert("L")
 
 def read_mono(img: Image.Image):
-    decoded = zxingcpp.read_barcodes(img)
+    # Original Colour QR uses high-density V40 symbols. Feed ZXing the actual
+    # full-size native plane; the pure-symbol option avoids camera finder noise.
+    decoded = zxingcpp.read_barcodes(img, is_pure=True)
+    if len(decoded) != 1:
+        decoded = zxingcpp.read_barcodes(img)
     check(len(decoded) == 1, "QR_REAL_BITMAP_NOT_DECODABLE_ONE_CHANNEL")
     return decoded[0].text
 
