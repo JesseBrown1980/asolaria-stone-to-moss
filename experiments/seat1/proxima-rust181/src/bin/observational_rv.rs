@@ -234,7 +234,7 @@ fn main()->Result<(),String>{
     if photo_rows!=PHOTO_RECORDS{return Err(format!("photometry row count: {photo_rows}"));}
     let rows=read_source(&spec)?;
     let image=match fs::read_to_string(d.join("ORIGINAL-SOURCE-MANIFEST.json")){
-      Ok(manifest)=>if manifest.contains("\"available\": true"){"\"HUBBLE_PUBLIC_TIFF_AVAILABLE\""}else{"\"HUBBLE_BINARY_SOURCE_HELD\""},
+      Ok(manifest)=>if manifest.contains("\"available\": true"){"\"HUBBLE_PUBLIC_RENDERED_IMAGE_AVAILABLE\""}else{"\"HUBBLE_BINARY_SOURCE_HELD\""},
       Err(_)=>"\"HUBBLE_NOT_FETCHED\""
     };
     let result=model_json(&rows,image);
