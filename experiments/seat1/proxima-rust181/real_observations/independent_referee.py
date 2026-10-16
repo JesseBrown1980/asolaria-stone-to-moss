@@ -5,6 +5,7 @@ original source integrity, chronology, observations, and reviewer controls.
 """
 import hashlib, json, pathlib
 from collections import Counter
+from itertools import product
 from decimal import Decimal
 
 HERE=pathlib.Path("real_observations/output")
@@ -43,7 +44,7 @@ def main():
     assert result["last_bjd_minus_2450000_milliday"]==max(r[1] for r in data)
     assert result["exploratory_trials"]==6
     assert result["brown_edens_i"].startswith("UNDETECTED")
-    assert result["source_hubble_status"] in ("HUBBLE_BINARY_SOURCE_HELD","HUBBLE_PUBLIC_TIFF_AVAILABLE")
+    assert result["source_hubble_status"] in ("HUBBLE_BINARY_SOURCE_HELD","HUBBLE_PUBLIC_RENDERED_IMAGE_AVAILABLE")
     assert 0<=result["extra_wrmse_mm_s"]<100000
     assert 0<=result["known_bd_wrmse_mm_s"]<100000
     assert 0<=result["null_wrmse_mm_s"]<100000
@@ -64,6 +65,23 @@ def main():
         count2=sum(abs(x[1]-median)<=2000 for x in subset)
         nearby.append({"index":i+1,"observation_date_bjd_minus2450000_milli":median,
             "within_1_day_count":count1,"within_2_days_count":count2})
+    # A nine-window robustness check, distinct from the RV fit itself:
+    # Do not confuse an extra fitted period with a newly detected planet.
+    differences=[
+        w["known_bd_wrmse_mm_s"]-w["exploratory_wrmse_mm_s"]
+        for w in checkpoints
+    ]
+    gains=[
+        w["known_bd_wrmse_mm_s"]**2-w["exploratory_wrmse_mm_s"]**2
+        for w in checkpoints
+    ]
+    observed=sum(gains)
+    extreme=sum(sum(g*s for g,s in zip(gains,signs))>=observed
+                for signs in product((-1,1),repeat=9))
+    assert len(checkpoints)==9
+    assert extreme>=1
+    better=sum(d>0 for d in differences)
+    worse=sum(d<0 for d in differences)
     source=HERE/"ORIGINAL-SOURCE-MANIFEST.json"
     manifest=json.loads(source.read_text())
     assert manifest["files"][0]["sha256"]==RV_SHA
@@ -78,6 +96,12 @@ def main():
       "actual_observation_date_range_milliday":
         [min(x[1] for x in data),max(x[1] for x in data)],
       "nine_checkpoints":nearby,
+      "extra_period_windows_better":better,
+      "extra_period_windows_worse":worse,
+      "extra_period_signflip_extreme_sums":extreme,
+      "extra_period_signflip_total_assignments":512,
+      "signflip_statistic":"nine aggregated windows, post-selection diagnostic, NOT multiple-trial-adjusted planet-detection p-value",
+
       "independently_recalculated_source_chronology":True,
       "independent_fit_coefficients_reimplementation":False,
       "new_planet_from_this_data":False,
@@ -89,5 +113,6 @@ def main():
     print("REAL_NINE_WINDOWS_CHRONOLOGY_INDEPENDENT_PASS",len(train),len(test))
     print("SOURCE_INSTRUMENT_COUNTS",doc["rv_instruments_seen"])
     print("OBSERVATION_EPOCHS_MILLIDAY",doc["actual_observation_date_range_milliday"])
+    print("EXTRA_PERIOD_9_WINDOWS",better,"better",worse,"worse","signflip",extreme,"/ 512; descriptive only")
     print("NO_CLAIM_OF_NEW_PLANET")
 if __name__=="__main__":main()
