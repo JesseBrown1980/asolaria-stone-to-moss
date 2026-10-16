@@ -79,3 +79,25 @@ jobs:
             kernel/behcs1024-60d/seat3-reference.hbp
             kernel/behcs1024-60d/seat3-reference.hbp.sha256
           if-no-files-found: error
+
+  cross-platform-byte-parity:
+    needs: bound-parity-falsification
+    runs-on: ubuntu-22.04
+    timeout-minutes: 8
+    steps:
+      - name: Retrieve both source-run artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-clean-60d-*
+          path: downloaded
+          merge-multiple: false
+      - name: Rehash both HBP results and require literal byte identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd downloaded/seat3-clean-60d-ubuntu-22.04 && sha256sum -c seat3-reference.hbp.sha256)
+          (cd downloaded/seat3-clean-60d-windows-2022 && sha256sum -c seat3-reference.hbp.sha256)
+          cmp downloaded/seat3-clean-60d-ubuntu-22.04/seat3-reference.hbp downloaded/seat3-clean-60d-windows-2022/seat3-reference.hbp
+          cmp downloaded/seat3-clean-60d-ubuntu-22.04/seat3-reference.hbp.sha256 downloaded/seat3-clean-60d-windows-2022/seat3-reference.hbp.sha256
+          sha256sum downloaded/seat3-clean-60d-ubuntu-22.04/seat3-reference.hbp
+          echo 'CROSS_PLATFORM_BYTE_IDENTICAL_PASS'
