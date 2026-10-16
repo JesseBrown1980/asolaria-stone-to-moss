@@ -196,9 +196,10 @@ fn model_json(rows:&[Rv],image:&str)->String{
           if windows.is_empty(){""}else{","},i+1,group.len(),bjd,n0,n1,n2,sinb,cosb);
     }
     let mut inst=BTreeMap::new();
-    for row in rows{*inst.entry(row.inst).or_insert((0usize,0usize))=
-      {let(old_train,old_test)=inst.get(&row.inst).copied().unwrap_or((0,0));
-       (old_train+usize::from(row.train),old_test+usize::from(!row.train))};}
+    for row in rows{
+        let entry=inst.entry(row.inst).or_insert((0usize,0usize));
+        if row.train{entry.0+=1;}else{entry.1+=1;}
+    }
     let mut instrument_json=String::new();
     for (id,(tr,te)) in inst{
         let _=write!(instrument_json,"{}\"{}\":{{\"train\":{},\"test\":{}}}",
