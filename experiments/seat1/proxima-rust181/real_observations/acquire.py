@@ -5,7 +5,6 @@ No scientific result or simulated planet is emitted by acquisition alone.
 """
 import datetime as dt
 import hashlib
-import json
 import os
 import pathlib
 import time
@@ -86,7 +85,22 @@ def main():
        "files":[get_catalog("spec.dat",120,722),get_catalog("photo.dat",43,2212)],
        "image":get_hubble()
     }
-    (BASE/"ORIGINAL-SOURCE-MANIFEST.json").write_text(json.dumps(manifest,indent=2,sort_keys=True)+"\n")
+    # No JSON payloads or hidden JSON sidecars. Versioned HBP text only.
+    def cleaned(value):
+        return str(value).replace("|","%7C").replace("\\r"," ").replace("\\n"," ")
+    lines=["HBP1|schema=ASOLARIA-REAL-PROXIMA-ORIGINAL-CATALOG-V2|format=HBP|trits=-1,0,+1|json=0",
+      "META|catalog="+cleaned(CATALOG)+"|retrieved_utc="+cleaned(manifest["retrieved_utc"])+
+       "|bibliography="+cleaned(manifest["bibliography"])+"|raw_observations=UNCHANGED|json=0"]
+    for source in manifest["files"]:
+        lines.append("SOURCE|"+"|".join(f"{key}={cleaned(source[key])}" for key in
+          ("file","dataset","url","size_bytes","logical_records","record_width","sha256"))+"|json=0")
+    image=manifest["image"]
+    image_keys=("file","encoded_format","sha256","bytes","observation_date_utc","camera","filter","exposure_seconds","source")
+    lines.append("IMAGE|available="+("true" if image["available"] else "false")+
+      "|"+"|".join(f"{key}={cleaned(image.get(key,''))}" for key in image_keys)+"|json=0")
+    lines.append("BOUNDARY|hubble_rendered_image_is_not_calibrated_fits=TRUE|nine_optical_image_epochs=UNAVAILABLE|new_planet_claim=NONE|json=0")
+    (BASE/"ORIGINAL-SOURCE-MANIFEST.hbp").write_bytes(("\\n".join(lines)+"\\n").encode("utf-8"))
+
     for item in manifest["files"]:
         print("AUTHENTIC_SOURCE",item["dataset"],item["logical_records"],item["size_bytes"],"SHA256",item["sha256"],"URL",item["url"])
     print("HUBBLE_IMAGE",manifest["image"])
