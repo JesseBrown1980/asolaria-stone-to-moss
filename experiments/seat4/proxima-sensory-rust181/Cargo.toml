@@ -1,0 +1,10 @@
+[package]
+name = "seat4-proxima-sensory"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.81"
+license = "MIT"
+description = "Source-pinned Proxima sensory HBI/HBP balanced-ternary readback"
+
+[dependencies]
+asolaria-proxima-ternary = { path = "../../seat1/proxima-rust181" }
