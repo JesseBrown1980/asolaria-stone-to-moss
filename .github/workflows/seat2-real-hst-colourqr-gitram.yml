@@ -1,0 +1,175 @@
+name: Seat2 authentic HST RGB ColourQR QPRISM N-Nest GitRAM
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat2/colourqr-nnest-qprism-gitram/optical_*.py'
+      - '.github/workflows/seat2-real-hst-colourqr-gitram.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/seat2/colourqr-nnest-qprism-gitram/optical_*.py'
+      - '.github/workflows/seat2-real-hst-colourqr-gitram.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: seat2-real-hst-rgb-qr-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  ROOT: experiments/seat2/colourqr-nnest-qprism-gitram
+  SOURCE: input/proxima-three-epochs-sci-slices.bin
+
+jobs:
+  prepare:
+    name: Original STScI full HST FITS source integrity + SCI pixels
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Independently download frozen archival Hubble source artifact
+        uses: actions/download-artifact@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          github-token: ${{ github.token }}
+          run-id: 38916527331
+          name: seat4-r14-original-three-stsci-hst-f555w-flc-fits
+          path: originals
+
+      - name: Validate FULL original three FITS SHA256, then sample actual 525 SCI words per date
+        shell: bash
+        run: |
+          set -euo pipefail
+          python "$ROOT/optical_hst_source.py" originals prepared
+          (cd prepared && sha256sum -c -- *.sha256)
+          test "$(wc -c < prepared/proxima-three-epochs-sci-slices.bin)" = 6300
+          grep -q 'single_passband=F555W' prepared/ORIGINAL-HST-SOURCE-CUSTODY.hbp || grep -q 'single_passband' prepared/ORIGINAL-HST-SOURCE-CUSTODY.hbp || grep -q 'measured_filters=1' prepared/ORIGINAL-HST-SOURCE-CUSTODY.hbp
+      - name: Preserve original-custody-bounded SCI digital source
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-original-hst-sci-source
+          retention-days: 30
+          if-no-files-found: error
+          path: prepared/
+
+  cell:
+    name: GitRAM real HST optical SCI lane ${{ matrix.lane }} (Rust1.81)
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [R, G, B]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Download exact prepared original SCI detector source
+        uses: actions/download-artifact@v4
+        with:
+          name: seat2-original-hst-sci-source
+          path: input
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.81.0
+          components: clippy
+      - name: Test Rust1.81 and original QPRISM library; generate this shard
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd input && sha256sum -c -- *.sha256)
+          cargo fetch --manifest-path "$ROOT/Cargo.toml"
+          cargo test --manifest-path "$ROOT/Cargo.toml" --offline
+          cargo clippy --manifest-path "$ROOT/Cargo.toml" --all-targets --offline -- -D warnings
+          cargo run --manifest-path "$ROOT/Cargo.toml" --offline -- shard "${{ matrix.lane }}" "$SOURCE" cells | tee "cell-${{ matrix.lane }}.log"
+          grep -q 'GITRAM_SHARD_PASS' "cell-${{ matrix.lane }}.log"
+          test "$(find cells/${{ matrix.lane }} -name '*.hbi' | wc -l)" -eq 1
+          cp "cell-${{ matrix.lane }}.log" "cells/${{ matrix.lane }}/cell-${{ matrix.lane }}.log"
+      - name: Publish this independently produced GitRAM checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-original-hst-rgb-${{ matrix.lane }}
+          if-no-files-found: error
+          retention-days: 30
+          path: cells/
+
+  fanin:
+    name: All three original image epochs to RGB QR bitmap and source-bound apex
+    needs: [prepare, cell]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: seat2-original-hst-sci-source
+          path: input
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat2-original-hst-rgb-*
+          path: cells
+          merge-multiple: true
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.81.0
+          components: clippy
+      - name: Fail closed unless every lane actually passed and every source SHA matches
+        shell: bash
+        env:
+          PREP_RESULT: ${{ needs.prepare.result }}
+          CELL_RESULT: ${{ needs.cell.result }}
+        run: |
+          set -euo pipefail
+          test "$PREP_RESULT" = success
+          test "$CELL_RESULT" = success
+          (cd input && sha256sum -c -- *.sha256)
+          for lane in R G B; do
+            test -f "cells/$lane/cell-$lane.log"
+            grep -q 'GITRAM_SHARD_PASS' "cells/$lane/cell-$lane.log"
+            test "$(find "cells/$lane" -name '*.hbi' | wc -l)" -eq 1
+          done
+      - name: Independent full-source Rust QPRISM/N-Nest corrective reconstruction
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo fetch --manifest-path "$ROOT/Cargo.toml"
+          cargo test --manifest-path "$ROOT/Cargo.toml" --offline
+          cargo clippy --manifest-path "$ROOT/Cargo.toml" --all-targets --offline -- -D warnings
+          cargo run --manifest-path "$ROOT/Cargo.toml" --offline -- seal "$SOURCE" cells sealed | tee apex.log
+          grep -q 'GITRAM_APEX_PASS' apex.log
+          (cd sealed && sha256sum -c SEAT2-GITRAM-SEALED.hbp.sha256)
+      - name: Install standard QR encoder and independent ZXing C++ decoder
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check qrcode==8.2 Pillow==11.3.0 zxing-cpp==2.3.0
+      - name: Generate real RGB QR PNG and independently decode R G B from the saved pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+          python "$ROOT/optical_rgb_referee.py" input cells rgb-photo | tee rgb-photo.log
+          grep -q 'SEAT2_REAL_HST_SCI_RGB_QR_ZXING_REPLAY_PASS' rgb-photo.log
+          (cd rgb-photo && sha256sum -c -- *.sha256)
+          test -f rgb-photo/three-hst-sci-colourqr.png
+      - name: Upload full fidelity real SCI-source QR and apex receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-three-HST-RGB-QR-independent-readback
+          retention-days: 30
+          if-no-files-found: warn
+          path: |
+            rgb-photo/
+            sealed/
+            apex.log
+            rgb-photo.log
