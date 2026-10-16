@@ -49,7 +49,7 @@ fn decimal_scaled(raw:&str, decimals:usize)->Result<i64,String>{
         .ok_or("decimal overflow")?;
     Ok(if negative{-total}else{total})
 }
-fn col<'a>(line:&'a [u8],start:usize,end:usize)->Result<&'a str,String>{
+fn col(line:&[u8],start:usize,end:usize)->Result<&str,String>{
     std::str::from_utf8(line.get(start..end).ok_or("short record")?)
         .map_err(|_|"non ASCII".to_string())
 }
