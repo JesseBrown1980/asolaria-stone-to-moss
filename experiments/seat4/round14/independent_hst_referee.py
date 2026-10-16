@@ -29,7 +29,7 @@ def cards(blob,start):
   if key=="END":break
   if p[8:10]==b"= ":
    tail=p[10:].decode("ascii").strip()
-   val=(tail[1:].split("'")[0] if tail.startswith("'")
+   val=(tail[1:].split("'")[0].strip() if tail.startswith("'")
        else tail.split("/")[0].strip())
    if key not in info:info[key]=val
   guard(i<=8000,"HDU_TOO_MANY_CARDS")
