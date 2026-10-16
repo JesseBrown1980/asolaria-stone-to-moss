@@ -87,7 +87,7 @@ def main():
     }
     # No JSON payloads or hidden JSON sidecars. Versioned HBP text only.
     def cleaned(value):
-        return str(value).replace("|","%7C").replace("\\r"," ").replace("\\n"," ")
+        return str(value).replace("|","%7C").replace("\r"," ").replace("\n"," ")
     lines=["HBP1|schema=ASOLARIA-REAL-PROXIMA-ORIGINAL-CATALOG-V2|format=HBP|trits=-1,0,+1|json=0",
       "META|catalog="+cleaned(CATALOG)+"|retrieved_utc="+cleaned(manifest["retrieved_utc"])+
        "|bibliography="+cleaned(manifest["bibliography"])+"|raw_observations=UNCHANGED|json=0"]
@@ -97,9 +97,9 @@ def main():
     image=manifest["image"]
     image_keys=("file","encoded_format","sha256","bytes","observation_date_utc","camera","filter","exposure_seconds","source")
     lines.append("IMAGE|available="+("true" if image["available"] else "false")+
-      "|"+"|".join(f"{key}={cleaned(image.get(key,''))}" for key in image_keys)+"|json=0")
+      "|"+"|".join(f"{key}={cleaned(image.get(key,"UNAVAILABLE"))}" for key in image_keys)+"|json=0")
     lines.append("BOUNDARY|hubble_rendered_image_is_not_calibrated_fits=TRUE|nine_optical_image_epochs=UNAVAILABLE|new_planet_claim=NONE|json=0")
-    (BASE/"ORIGINAL-SOURCE-MANIFEST.hbp").write_bytes(("\\n".join(lines)+"\\n").encode("utf-8"))
+    (BASE/"ORIGINAL-SOURCE-MANIFEST.hbp").write_bytes(("\n".join(lines)+"\n").encode("utf-8"))
 
     for item in manifest["files"]:
         print("AUTHENTIC_SOURCE",item["dataset"],item["logical_records"],item["size_bytes"],"SHA256",item["sha256"],"URL",item["url"])
