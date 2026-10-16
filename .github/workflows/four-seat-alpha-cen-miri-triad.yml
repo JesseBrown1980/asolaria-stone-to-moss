@@ -1,0 +1,110 @@
+name: Asolaria four-seat JWST MIRI three-epoch archive catch-up
+on:
+  push:
+    branches: [coordinator/alpha-cen-miri-three-epoch-four-seat-20261016]
+    paths:
+      - 'experiments/seat1/alpha-cen-miri-triad/**'
+      - '.github/workflows/four-seat-alpha-cen-miri-triad.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: four-seat-miri-triad-archive-source-review
+  cancel-in-progress: false
+jobs:
+  public-mast-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preregistered structure and mutation self-test
+        run: python experiments/seat1/alpha-cen-miri-triad/mast_inventory.py --self-test
+      - name: Discover original source MAST observations and candidate FITS products
+        env:
+          OUTPUT_DIR: ${{ runner.temp }}/miri-inventory
+        run: python experiments/seat1/alpha-cen-miri-triad/mast_inventory.py --out "$OUTPUT_DIR"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: miri-mast-source-inventory
+          path: ${{ runner.temp }}/miri-inventory/*
+          retention-days: 21
+          if-no-files-found: error
+  four-logical-seats:
+    needs: public-mast-inventory
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - seat: 1
+            os: ubuntu-latest
+          - seat: 2
+            os: ubuntu-latest
+          - seat: 3
+            os: windows-latest
+          - seat: 4
+            os: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: miri-mast-source-inventory
+          path: ${{ runner.temp }}/miri-inventory
+      - name: Four-seat digital self-tests and active malicious-source mutation
+        shell: bash
+        run: python experiments/seat1/alpha-cen-miri-triad/four_seat_audit.py --self-test
+      - name: Seat-specific audit of the exact same MAST source SHA
+        shell: bash
+        run: >-
+          python experiments/seat1/alpha-cen-miri-triad/four_seat_audit.py
+          --seat ${{ matrix.seat }}
+          --in-dir "${{ runner.temp }}/miri-inventory"
+          --out-dir "${{ runner.temp }}/seat-receipt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: miri-seat-${{ matrix.seat }}-hbp-evidence
+          path: ${{ runner.temp }}/seat-receipt/*
+          retention-days: 21
+          if-no-files-found: error
+  coordinator:
+    needs: four-logical-seats
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: miri-mast-source-inventory
+          path: ${{ runner.temp }}/verify
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: miri-seat-*-hbp-evidence
+          path: ${{ runner.temp }}/verify
+          merge-multiple: true
+      - name: Independent coordinator checks all four sources and receipts
+        run: >-
+          python experiments/seat1/alpha-cen-miri-triad/four_seat_audit.py
+          --final --in-dir "${{ runner.temp }}/verify"
+          --out-dir "${{ runner.temp }}/coordinator-receipts"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: miri-four-seat-coordinator-verdict
+          path: ${{ runner.temp }}/coordinator-receipts/*
+          retention-days: 21
+          if-no-files-found: error
