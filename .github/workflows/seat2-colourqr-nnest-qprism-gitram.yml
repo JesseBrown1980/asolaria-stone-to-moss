@@ -1,0 +1,167 @@
+name: Seat2 ColourQR N-Nest Q-PRISM GitRAM
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat2/colourqr-nnest-qprism-gitram/**'
+      - '.github/workflows/seat2-colourqr-nnest-qprism-gitram.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seat2-qr-gitram-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  ROOT: experiments/seat2/colourqr-nnest-qprism-gitram
+  SOURCE: upstream/colour-qr/README.md
+
+jobs:
+  cell:
+    name: GitRAM lane ${{ matrix.lane }} (Rust1.81 original source)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [R, G, B]
+    steps:
+      - name: Checkout integration
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned original Colour QR
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/the-colour-qr
+          ref: 1938a9b076b8fc3e81d0a271ca05e84a0e938854
+          path: upstream/colour-qr
+          persist-credentials: false
+
+      - name: Install exact Rust1.81 + Clippy
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.81.0
+          components: clippy
+
+      - name: Check original source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/colour-qr rev-parse HEAD)" = 1938a9b076b8fc3e81d0a271ca05e84a0e938854
+          sha256sum "$SOURCE"
+
+      - name: Compile, all-targets Clippy, unit tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo fetch --manifest-path "$ROOT/Cargo.toml"
+          cargo test --manifest-path "$ROOT/Cargo.toml" --offline
+          cargo clippy --manifest-path "$ROOT/Cargo.toml" --all-targets --offline -- -D warnings
+
+      - name: Produce original Colour QR lane and Q-PRISM/N-Nest receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo run --manifest-path "$ROOT/Cargo.toml" --offline -- shard "${{ matrix.lane }}" "$SOURCE" out | tee "cell-${{ matrix.lane }}.log"
+          grep -q 'GITRAM_SHARD_PASS' "cell-${{ matrix.lane }}.log"
+          test "$(find out/${{ matrix.lane }} -name '*.hbi' | wc -l)" -gt 0
+          cp "cell-${{ matrix.lane }}.log" "out/${{ matrix.lane }}/cell-${{ matrix.lane }}.log"
+
+      - name: Upload stateless checkpoint, always preserve real red results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-qr-cell-${{ matrix.lane }}
+          retention-days: 30
+          if-no-files-found: error
+          path: out/
+
+  fanin:
+    name: GitRAM ALL 3 + source-grounded N-Nest apex
+    needs: cell
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout integration
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout pinned original Colour QR
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/the-colour-qr
+          ref: 1938a9b076b8fc3e81d0a271ca05e84a0e938854
+          path: upstream/colour-qr
+          persist-credentials: false
+
+      - name: Checkout pinned original N-Nest corrective gate scripts
+        uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED
+          ref: 307903651f56e8a28ef98ca36aef22ee8cda935c
+          path: upstream/n-nest
+          persist-credentials: false
+
+      - name: Install exact Rust1.81 + Clippy
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.81.0
+          components: clippy
+
+      - name: Fetch ALL three stateless checkpoints
+        uses: actions/download-artifact@v4
+        with:
+          pattern: seat2-qr-cell-*
+          path: out
+          merge-multiple: true
+
+      - name: Require every GitRAM worker success and actual indexed frames
+        shell: bash
+        env:
+          CELL_RESULT: ${{ needs.cell.result }}
+        run: |
+          set -euo pipefail
+          test "$CELL_RESULT" = success
+          for lane in R G B; do
+            test -f "out/$lane/cell-$lane.log"
+            grep -q 'GITRAM_SHARD_PASS' "out/$lane/cell-$lane.log"
+            test "$(find "out/$lane" -name '*.hbi' | wc -l)" -gt 0
+          done
+
+      - name: Original depth 3 and prime depth 7 recurrence checker
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd upstream/n-nest && node nest-depth3-verify.cjs && node nest-depthN-prime-verify.cjs) | tee "nest-corrective-gates.log"
+          grep -q 'EVERY-LEVEL-CATCHES-CONFABULATION=true' nest-corrective-gates.log
+          grep -q 'GATE-CAUGHT=true' nest-corrective-gates.log
+          test "$(git -C upstream/n-nest rev-parse HEAD)" = 307903651f56e8a28ef98ca36aef22ee8cda935c
+
+      - name: Watcher independently checks source, QR framing, Q-PRISM and N-Nest chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo fetch --manifest-path "$ROOT/Cargo.toml"
+          cargo test --manifest-path "$ROOT/Cargo.toml" --offline
+          cargo clippy --manifest-path "$ROOT/Cargo.toml" --all-targets --offline -- -D warnings
+          cargo run --manifest-path "$ROOT/Cargo.toml" --offline -- seal "$SOURCE" out sealed | tee "seat2-gitram-fanin.log"
+          grep -q 'GITRAM_APEX_PASS' seat2-gitram-fanin.log
+          (cd sealed && sha256sum -c SEAT2-GITRAM-SEALED.hbp.sha256)
+
+      - name: Preserve all-or-nothing seal and original regression logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat2-qr-gitram-apex
+          retention-days: 30
+          if-no-files-found: warn
+          path: |
+            sealed/
+            seat2-gitram-fanin.log
+            nest-corrective-gates.log
