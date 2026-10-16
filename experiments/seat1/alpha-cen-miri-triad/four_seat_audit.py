@@ -33,7 +33,8 @@ def audit(seat,input_dir,out):
         linesout.append("SEAT2|MAST_catalog_digest=PASS|original_FITS_sha=NOT_DOWNLOADED|independent_original_signer=UNKNOWN|HuggingFace_uploaded_and_readback=NOT_PROVEN|json=0")
     elif seat==3:
         for p in ep:
-            ct=sum(1 for ln in lines if ln.startswith("OBS|") and "|proposal="+p+"|" in ln and "F1550C" in ln)
+            ct=sum(1 for ln in lines if ln.startswith("OBS|") and "|proposal_id="+p+"|" in ln and "F1550C" in ln)
+            check(ct>0,"MISSING_REAL_F1550C_"+p)
             linesout.append(f"SEAT3|proposal={p}|F1550C_obs={ct}|spectral_band_count=ONE_FILTER_NOT_SEVEN|json=0")
         linesout.append("SEAT3|PSF_null_and_false_alarm_rate=HOLD_UNTIL_SCIENCE_FITS|orbit_new_planet=NOT_CLAIMED|json=0")
     elif seat==4:
