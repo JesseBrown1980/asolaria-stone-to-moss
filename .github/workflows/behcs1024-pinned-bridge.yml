@@ -1,0 +1,29 @@
+name: BEHCS1024 pinned source and ternary bridge
+on:
+  push:
+    paths:
+      - 'experiments/behcs1024-60d/BEHCS1024-60D-*'
+      - 'experiments/behcs1024-60d/verify_bridge.py'
+      - '.github/workflows/behcs1024-pinned-bridge.yml'
+  pull_request:
+    paths:
+      - 'experiments/behcs1024-60d/BEHCS1024-60D-*'
+      - 'experiments/behcs1024-60d/verify_bridge.py'
+      - '.github/workflows/behcs1024-pinned-bridge.yml'
+permissions:
+  contents: read
+jobs:
+  public-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Exact git checkout without Node actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+      - name: Verify original pinned kernel and ternary coordinates
+        run: python3 experiments/behcs1024-60d/verify_bridge.py
