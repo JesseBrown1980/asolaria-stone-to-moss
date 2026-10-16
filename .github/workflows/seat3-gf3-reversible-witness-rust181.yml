@@ -60,7 +60,7 @@ jobs:
           root=Path(os.environ['RUNNER_TEMP'])/'seat3-hbi'
           for name in ('seat3-reversible.hbi','seat3-reversible.hbp'):
               raw=(root/name).read_bytes()
-              (root/(name+'.sha256')).write_text(hashlib.sha256(raw).hexdigest()+'  '+name+'\n',encoding='ascii')
+              (root/(name+'.sha256')).write_bytes((hashlib.sha256(raw).hexdigest()+'  '+name+'\n').encode('ascii'))
           assert sorted(p.name for p in root.iterdir())==[
               'seat3-reversible.hbi','seat3-reversible.hbi.sha256',
               'seat3-reversible.hbp','seat3-reversible.hbp.sha256']
@@ -83,8 +83,8 @@ jobs:
               raw=bytearray(p.read_bytes())
               raw[offset]=(raw[offset]+delta)%243
               p.write_bytes(raw)
-              (target/'seat3-reversible.hbi.sha256').write_text(
-                hashlib.sha256(raw).hexdigest()+'  seat3-reversible.hbi\n',encoding='ascii')
+              (target/'seat3-reversible.hbi.sha256').write_bytes(
+                (hashlib.sha256(raw).hexdigest()+'  seat3-reversible.hbi\n').encode('ascii'))
           PY
           if python experiments/seat3/gf3_reversible/verify_reversible.py "$RUNNER_TEMP/forged-witness" original-seat1-rust/experiments/seat1/proxima-rust181/src/lib.rs; then
               echo 'UNSAFE: source-consistent forged witness accepted'; exit 1
