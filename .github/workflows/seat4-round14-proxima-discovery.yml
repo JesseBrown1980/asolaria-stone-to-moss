@@ -1,0 +1,24 @@
+name: Seat4 R14 discover real HST Proxima optical epochs
+on:
+  push:
+    branches:
+      - agent/seat4/proxima-real-optical-multiepoch-20261016
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mast-source-discovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Search actual public HST Proxima observations and preserve only HBP stdout
+        shell: bash
+        run: |
+          python experiments/seat4/round14/discover_hst.py | tee "$RUNNER_TEMP/proxima-discovery.hbp"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-proxima-maST-live-discovery
+          path: ${{ runner.temp }}/proxima-discovery.hbp
+          if-no-files-found: error

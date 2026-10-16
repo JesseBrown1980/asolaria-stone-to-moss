@@ -1,0 +1,36 @@
+name: Seat4 R14 acquire real HST Proxima F555W three optical epochs
+on:
+  push:
+    branches: [agent/seat4/proxima-real-optical-multiepoch-20261016]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-optical-FITS:
+    name: Three authentic distinct Proxima HST FLC primary FITS and SHA
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Query MAST live and collect FITS original raw bytes, validate all three original FITS times
+        shell: bash
+        run: |
+          python experiments/seat4/round14/acquire_flc.py "$RUNNER_TEMP/original-hst-flc"
+      - name: Check every original archive SHA-256 readback and HBP-only document
+        shell: bash
+        run: |
+          cd "$RUNNER_TEMP/original-hst-flc"
+          sha256sum --check -- *.sha256
+          ls -lah *.fits *.hbp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r14-original-three-stsci-hst-f555w-flc-fits
+          path: ${{ runner.temp }}/original-hst-flc/*
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 4
