@@ -49,33 +49,33 @@ jobs:
       - name: Independent Python matrix Gaussian rank and fast logical skips
         shell: bash
         run: |
-          python experiments/seat3/gf3_rank/seat3_gf3.py "$${{ runner.temp }}/c3-python"
+          python experiments/seat3/gf3_rank/seat3_gf3.py "$RUNNER_TEMP/c3-python"
       - name: Independent Node GF3 rank, selected state skip and per-state SHA
         shell: bash
         run: |
-          node experiments/seat3/gf3_rank/seat3_gf3.js "$${{ runner.temp }}/c3-node"
+          node experiments/seat3/gf3_rank/seat3_gf3.js "$RUNNER_TEMP/c3-node"
       - name: Independently source audit full HBP with polynomial convolution
         shell: bash
         run: |
-          python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$${{ runner.temp }}/c3-python"
-          python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$${{ runner.temp }}/c3-node"
-          cmp "$${{ runner.temp }}/c3-python/seat3-gf3-rank-certificate.hbp" "$${{ runner.temp }}/c3-node/seat3-gf3-rank-certificate.hbp"
-          cmp "$${{ runner.temp }}/c3-python/seat3-gf3-rank-certificate.hbp.sha256" "$${{ runner.temp }}/c3-node/seat3-gf3-rank-certificate.hbp.sha256"
-          mkdir -p "$${{ runner.temp }}/c3-verified"
-          cp "$${{ runner.temp }}/c3-python/seat3-gf3-rank-certificate.hbp" "$${{ runner.temp }}/c3-verified/"
-          cp "$${{ runner.temp }}/c3-python/seat3-gf3-rank-certificate.hbp.sha256" "$${{ runner.temp }}/c3-verified/"
+          python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$RUNNER_TEMP/c3-python"
+          python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$RUNNER_TEMP/c3-node"
+          cmp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp" "$RUNNER_TEMP/c3-node/seat3-gf3-rank-certificate.hbp"
+          cmp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp.sha256" "$RUNNER_TEMP/c3-node/seat3-gf3-rank-certificate.hbp.sha256"
+          mkdir -p "$RUNNER_TEMP/c3-verified"
+          cp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp" "$RUNNER_TEMP/c3-verified/"
+          cp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp.sha256" "$RUNNER_TEMP/c3-verified/"
       - name: Mutated HBP evidence must be rejected by independent polynomial referee
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           import os
-          p=Path(os.environ["${{ runner.temp }}"])/"c3-python"/"seat3-gf3-rank-certificate.hbp"
+          p=Path(os.environ["RUNNER_TEMP"])/"c3-python"/"seat3-gf3-rank-certificate.hbp"
           b=bytearray(p.read_bytes())
           b[110]^=1
           p.write_bytes(b)
           PY
-          if python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$${{ runner.temp }}/c3-python"; then
+          if python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$RUNNER_TEMP/c3-python"; then
              echo 'FAILED: accepted altered GF3 certificate'; exit 1
           fi
           echo 'SEAT3_GF3_ALTERED_HBP_REJECTED'
