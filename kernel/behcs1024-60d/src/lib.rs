@@ -160,11 +160,15 @@ pub fn project_60d(tuple: &[u8]) -> Result<Projection, ProjectionError> {
 #[cfg(test)]
 mod tests {
     extern crate std;
-    use self::std::format;
+    use self::std::fmt::Write as _;
     use super::*;
 
     fn hex(bytes: &[u8]) -> std::string::String {
-        bytes.iter().map(|b| format!("{b:02x}")).collect()
+        let mut out = std::string::String::with_capacity(bytes.len() * 2);
+        for b in bytes {
+            write!(&mut out, "{b:02x}").expect("in-memory write");
+        }
+        out
     }
 
     #[test]
