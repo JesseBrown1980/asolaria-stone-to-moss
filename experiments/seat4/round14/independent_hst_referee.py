@@ -124,9 +124,9 @@ def main(origin,output):
  hbi_name="three-original-proxima-optical-epochs.hbi"
  hbp_name="three-original-proxima-optical-epochs.hbp"
  hbi=(output/hbi_name).read_bytes();hbp=(output/hbp_name).read_bytes()
- for name,bytes in [(hbi_name,hbi),(hbp_name,hbp)]:
+ for name,payload in [(hbi_name,hbi),(hbp_name,hbp)]:
   guard((output/(name+".sha256")).read_bytes()==
-        (sha(bytes)+"  "+name+"\n").encode("ascii"),"MALFORMED_SHA_SIDECAR")
+        (sha(payload)+"  "+name+"\n").encode("ascii"),"MALFORMED_SHA_SIDECAR")
  seen=witness(hbi,exposures)
  parsed=parse_hbp(hbp)
  guard(parsed[0][1]["schema"]=="SEAT4-HST-PROXIMA-THREE-ACTUAL-OPTICAL-IMAGES-R14","WRONG_EVIDENCE_SCHEMA")
