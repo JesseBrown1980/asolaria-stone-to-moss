@@ -13,7 +13,7 @@ def scan(in_dir):
     ep={p:[] for p in ("1618","6797","9252")}
     for line in lines:
         if line.startswith("EPOCH|"):
-            m=re.search(r"\\bproposal=(\\d+)",line)
+            m=re.search(r"\bproposal=(\d+)",line)
             if m and m.group(1) in ep:ep[m.group(1)].append(line)
     check(all(len(v)==1 for v in ep.values()),"EXACT_THREE_EPOCHS_REQUIRED")
     return data,source,lines,ep
@@ -24,8 +24,8 @@ def audit(seat,input_dir,out):
     if seat==1:
         for p in ep:
             e=ep[p][0]
-            coron=re.search(r"coronagraph_obs=(\\d+)",e)
-            cal=re.search(r"calibrated_candidates=(\\d+)",e)
+            coron=re.search(r"coronagraph_obs=(\d+)",e)
+            cal=re.search(r"calibrated_candidates=(\d+)",e)
             check(coron is not None and cal is not None,"BAD_EPOCH_COUNTS")
             linesout.append(f"SEAT1|proposal={p}|coronagraph_obs={coron.group(1)}|calibrated_candidates={cal.group(1)}|next=PIN_CALIBRATED_SOURCE_PSF_ROLL|json=0")
     elif seat==2:
@@ -39,15 +39,15 @@ def audit(seat,input_dir,out):
     elif seat==4:
         mutant=data.replace(b"S1_UNCONFIRMED=TRUE",b"S1_UNCONFIRMED=FALSE",1)
         check(mutant!=data and sha(mutant)!=source,"ALTERED_VERDICT_ACCEPTED")
-        missing=b"\\n".join(s.encode() for s in lines if not s.startswith("EPOCH|proposal=6797"))+b"\\n"
+        missing=b"\n".join(s.encode() for s in lines if not s.startswith("EPOCH|proposal=6797"))+b"\n"
         check(sha(missing)!=source,"MISSING_EPOCH_ACCEPTED")
         linesout.append("SEAT4|altered_science_verdict=REJECTED|removed_epoch=REJECTED|negative_controls=2|json=0")
     else:raise RuntimeError("INVALID_SEAT")
     out.mkdir(parents=True,exist_ok=True)
-    result="\\n".join(linesout)+"\\n"
+    result="\n".join(linesout)+"\n"
     f=out/f"SEAT{seat}-MIRI-CATCHUP.hbp"
     f.write_text(result)
-    (out/(f.name+".sha256")).write_text(sha(result.encode())+"  "+f.name+"\\n")
+    (out/(f.name+".sha256")).write_text(sha(result.encode())+"  "+f.name+"\n")
     print(f"SEAT{seat}_DIGITAL_AUDIT_PASS|scientific_fits_reduction=HOLD|source_sha256={source}|json=0")
 def final(indir,out):
     _,root,_,_=scan(indir)
@@ -62,7 +62,7 @@ def final(indir,out):
         lines.append(f"SEAT|number={n}|HBP_sha256={expected}|source_match=PASS|physical_host_independent=NOT_ATTESTED|json=0")
     lines.append("VERDICT|four_logical_roles=PASS|FITS_S1_three_epoch_reconstruction=PENDING|no_new_planet=CLAIMED_NONE|HF_external_write_and_readback=UNVERIFIED|json=0")
     out.mkdir(parents=True,exist_ok=True)
-    (out/"FOUR-SEAT-MIRI-COORDINATOR.hbp").write_text("\\n".join(lines)+"\\n")
+    (out/"FOUR-SEAT-MIRI-COORDINATOR.hbp").write_text("\n".join(lines)+"\n")
     print("CROSS_SEAT_SHA=PASS|science=HOLD")
 def test():
     import tempfile
@@ -71,9 +71,9 @@ def test():
         lines=["HBP1|schema=ASOLARIA-MIRI-S1-THREE-EPOCH-FAKE|json=0","BOUNDARY|S1_UNCONFIRMED=TRUE|json=0"]
         for n in (1618,6797,9252):
             lines += [f"EPOCH|proposal={n}|coronagraph_obs=1|calibrated_candidates=1|json=0",f"OBS|proposal={n}|filters=F1550C|json=0"]
-        data=("\\n".join(lines)+"\\n").encode()
+        data=("\n".join(lines)+"\n").encode()
         (p/"MAST-THREE-EPOCH-INVENTORY.hbp").write_bytes(data)
-        (p/"MAST-THREE-EPOCH-INVENTORY.hbp.sha256").write_text(sha(data)+"  MAST-THREE-EPOCH-INVENTORY.hbp\\n")
+        (p/"MAST-THREE-EPOCH-INVENTORY.hbp.sha256").write_text(sha(data)+"  MAST-THREE-EPOCH-INVENTORY.hbp\n")
         for n in (1,2,3,4):audit(n,p,p)
         final(p,p)
         (p/"MAST-THREE-EPOCH-INVENTORY.hbp").write_bytes(data+b"FORGERY")
