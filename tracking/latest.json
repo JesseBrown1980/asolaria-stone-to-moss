@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-10-15T22:27:26Z",
+  "captured_at_utc": "2026-10-16T01:27:46Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -19,6 +19,10 @@
         {
           "name": "agent/seat1/august-device-carrier-reconciliation-20261015",
           "sha": "2bb8f0abbac1fefb7c468761855b4fedc1aa0202"
+        },
+        {
+          "name": "agent/seat1/proxima-rust181-20261015",
+          "sha": "35284e29e5dbe352dfc0458b801b2a914d33bbeb"
         },
         {
           "name": "agent/seat-1/computational-readiness-20261014",
@@ -402,15 +406,19 @@
         },
         {
           "name": "main",
-          "sha": "969aaa3924fb7b7f4655db3e49bbe698da80603b"
-        },
-        {
-          "name": "publication/normal-hf-hub-four-seat-20261014",
-          "sha": "a1eb215c878b68787766099033f1928743044664"
+          "sha": "a745c5e619f06528e617d55557541776ecb175aa"
         }
       ],
       "errors": [],
       "pull_requests": [
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 124,
+          "state": "open",
+          "title": "[Seat 1 DRAFT] Asolaria Rust1.81 seven-level Proxima ternary HRM/MTP/Fischer Chariots + HTTP-0",
+          "updated_at": "2026-10-15T23:50:19Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/124"
+        },
         {
           "github_actor": "JesseBrown1980",
           "number": 123,
@@ -562,17 +570,174 @@
           "title": "[Seat 4 / Round 8] Photon\u2013phonon\u2013electronic memory coupling: light\u00d7vibration factorial and thermal confound falsifier",
           "updated_at": "2026-10-15T17:15:43Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/102"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 99,
-          "state": "open",
-          "title": "[Seat 4 / Round 7] Independent neural LIF false-green, electron RPC spoof and physical detector custody audit",
-          "updated_at": "2026-10-15T16:49:52Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/99"
         }
       ],
       "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "ci(seat1): nine-rung moving-particle referee with six failures and four-platform byte parity",
+          "seat": "unassigned",
+          "sha": "35284e29e5dbe352dfc0458b801b2a914d33bbeb",
+          "timestamp_utc": "2026-10-15T23:48:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/35284e29e5dbe352dfc0458b801b2a914d33bbeb"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "test(seat3): independent nine-jump aliasing, velocity offset, six failures and checkpoint hash oracle",
+          "seat": "unassigned",
+          "sha": "71ee3461177d04a952c2a500230afbeffce7c025",
+          "timestamp_utc": "2026-10-15T23:48:07Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/71ee3461177d04a952c2a500230afbeffce7c025"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "feat(seat1): integrate nine-rung moving-particle falsifier into Rust1.81 executable",
+          "seat": "unassigned",
+          "sha": "04b9761c50767b68fa54d9a804e3cc526644f87a",
+          "timestamp_utc": "2026-10-15T23:47:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/04b9761c50767b68fa54d9a804e3cc526644f87a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "feat(seat1): integrate nine-rung moving-particle falsifier into Rust1.81 executable",
+          "seat": "unassigned",
+          "sha": "03c4368088c67b6aefe883ee85f226ad767c19a4",
+          "timestamp_utc": "2026-10-15T23:47:42Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/03c4368088c67b6aefe883ee85f226ad767c19a4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "feat(seat1): nine jump movement alias, synthetic wind impulse, integer offset scans and Fischer branch failures",
+          "seat": "unassigned",
+          "sha": "1aa2895048884446771a1912938d7c0930492964",
+          "timestamp_utc": "2026-10-15T23:47:33Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/1aa2895048884446771a1912938d7c0930492964"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "prereg(seat1): nine ternary jump motion aliasing, offset controls and 2-of-3 failure gates",
+          "seat": "unassigned",
+          "sha": "67f306d76edd12282dfddef1328382400676f179",
+          "timestamp_utc": "2026-10-15T23:46:48Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/67f306d76edd12282dfddef1328382400676f179"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "fix(seat1): correct Clippy unused import and signed to unsigned conversion",
+          "seat": "unassigned",
+          "sha": "717f119a916690b883d32fa02a9865e935cdaeb1",
+          "timestamp_utc": "2026-10-15T23:42:49Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/717f119a916690b883d32fa02a9865e935cdaeb1"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "ci(seat1): add frozen source FITS, QR7, SHA links and branch referee with four-way byte parity",
+          "seat": "unassigned",
+          "sha": "91542bda0af6e2165c277afd0cc4bac59a5ebd42",
+          "timestamp_utc": "2026-10-15T23:42:29Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/91542bda0af6e2165c277afd0cc4bac59a5ebd42"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "test(seat2): independent FITS synthetic-source trits, Rainbow7 QR, time hash and 3-leaf veto",
+          "seat": "unassigned",
+          "sha": "2ff3990fc3ec5d985beb347785c12340ab0fa036",
+          "timestamp_utc": "2026-10-15T23:42:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/2ff3990fc3ec5d985beb347785c12340ab0fa036"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "fix(seat1): remove unused import for strict Rust 1.81 Clippy",
+          "seat": "unassigned",
+          "sha": "19704c7a1975520e3e3337ce364f13e64762c620",
+          "timestamp_utc": "2026-10-15T23:41:43Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/19704c7a1975520e3e3337ce364f13e64762c620"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "fix(seat1): actual tab-separated QR payload records",
+          "seat": "unassigned",
+          "sha": "bf9902bcef954b9b3d25a486bb365c8f8d906d69",
+          "timestamp_utc": "2026-10-15T23:41:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/bf9902bcef954b9b3d25a486bb365c8f8d906d69"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "feat(seat1): execute physical-CPU freeze/play, original FITS fixture and seven-plane Rainbow QR transport outputs",
+          "seat": "unassigned",
+          "sha": "5ddda2729425e58cc146d058c5fd596a621e8662",
+          "timestamp_utc": "2026-10-15T23:41:14Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/5ddda2729425e58cc146d058c5fd596a621e8662"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "feat(seat1): register freeze-play FITS, SHA time receipts and rainbow framing kernel",
+          "seat": "unassigned",
+          "sha": "883f95cebc59f8881e7db016aea5652659696d37",
+          "timestamp_utc": "2026-10-15T23:40:51Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/883f95cebc59f8881e7db016aea5652659696d37"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "feat(seat1): freeze 2D frames, select time with valid order-three skip, SHA256 receipts, 3-leaf branch logic",
+          "seat": "unassigned",
+          "sha": "4c35ec9f31cc5784caf99ccbd44b4c8acc89e29f",
+          "timestamp_utc": "2026-10-15T23:40:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/4c35ec9f31cc5784caf99ccbd44b4c8acc89e29f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "github_actor": "JesseBrown1980",
+          "message_title": "test(seat1): ensure 7 rainbow lanes plus second QR frame in source fixture",
+          "seat": "unassigned",
+          "sha": "c3b42fb24dd4d1873fc142c2992d07df7480d55f",
+          "timestamp_utc": "2026-10-15T23:39:52Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c3b42fb24dd4d1873fc142c2992d07df7480d55f"
+        },
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
@@ -1060,17 +1225,6 @@
         {
           "attribution_basis": "explicit_branch_label",
           "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Implement actual negative injections, external permission denial and 10ms/20ms numerical convergence tests",
-          "seat": "seat-1",
-          "sha": "076758de2f1282ef0741b0a3bead4152591e7777",
-          "timestamp_utc": "2026-10-15T13:07:30Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/076758de2f1282ef0741b0a3bead4152591e7777"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
           "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
           "github_actor": "JesseBrown1980",
           "message_title": "Add independent Node implementation for preregistered 81-site current-proxy synthetic pulse/feedback challenge",
@@ -1078,160 +1232,6 @@
           "sha": "0ac94a8f40b4366b7cbb2156a9124e62c11e301a",
           "timestamp_utc": "2026-10-15T13:06:39Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0ac94a8f40b4366b7cbb2156a9124e62c11e301a"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Add independent Node implementation for preregistered 81-site current-proxy synthetic pulse/feedback challenge",
-          "seat": "seat-1",
-          "sha": "0ac94a8f40b4366b7cbb2156a9124e62c11e301a",
-          "timestamp_utc": "2026-10-15T13:06:39Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0ac94a8f40b4366b7cbb2156a9124e62c11e301a"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Implement Seat1 preregistered integer mass-conserving three-state photocycle and symbolic current traces",
-          "seat": "seat-1",
-          "sha": "70f1f94cef0ab5afc89320db185f25f1b5a3029c",
-          "timestamp_utc": "2026-10-15T13:06:11Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/70f1f94cef0ab5afc89320db185f25f1b5a3029c"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Implement Seat1 preregistered integer mass-conserving three-state photocycle and symbolic current traces",
-          "seat": "seat-1",
-          "sha": "70f1f94cef0ab5afc89320db185f25f1b5a3029c",
-          "timestamp_utc": "2026-10-15T13:06:11Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/70f1f94cef0ab5afc89320db185f25f1b5a3029c"
-        },
-        {
-          "attribution_basis": "explicit_commit_trailer",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Compare independent lightbank kinetics metrics field by field, not JSON key serialization order",
-          "seat": "seat-1",
-          "sha": "457883e1479641c3b8d82709b018106c07474fff",
-          "timestamp_utc": "2026-10-15T12:19:59Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/457883e1479641c3b8d82709b018106c07474fff"
-        },
-        {
-          "attribution_basis": "explicit_commit_trailer",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Compare independent lightbank kinetics metrics field by field, not JSON key serialization order",
-          "seat": "seat-1",
-          "sha": "457883e1479641c3b8d82709b018106c07474fff",
-          "timestamp_utc": "2026-10-15T12:19:59Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/457883e1479641c3b8d82709b018106c07474fff"
-        },
-        {
-          "attribution_basis": "explicit_commit_trailer",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Execute real 3-plane RGB QR scanner, 81-memory software light gate, independent JS BigInt replay on Ubuntu and Windows",
-          "seat": "seat-1",
-          "sha": "34b28be8e94414ca488cefa0f00ff5f52145de66",
-          "timestamp_utc": "2026-10-15T12:18:41Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/34b28be8e94414ca488cefa0f00ff5f52145de66"
-        },
-        {
-          "attribution_basis": "explicit_commit_trailer",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Execute real 3-plane RGB QR scanner, 81-memory software light gate, independent JS BigInt replay on Ubuntu and Windows",
-          "seat": "seat-1",
-          "sha": "34b28be8e94414ca488cefa0f00ff5f52145de66",
-          "timestamp_utc": "2026-10-15T12:18:41Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/34b28be8e94414ca488cefa0f00ff5f52145de66"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Independent Node BigInt photocycle replay, indexed QR data reconstruction, projector invariants and manifest checks",
-          "seat": "seat-1",
-          "sha": "62c3fed48e7e506b1922324ae4732ee5e558956f",
-          "timestamp_utc": "2026-10-15T12:17:57Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/62c3fed48e7e506b1922324ae4732ee5e558956f"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Independent Node BigInt photocycle replay, indexed QR data reconstruction, projector invariants and manifest checks",
-          "seat": "seat-1",
-          "sha": "62c3fed48e7e506b1922324ae4732ee5e558956f",
-          "timestamp_utc": "2026-10-15T12:17:57Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/62c3fed48e7e506b1922324ae4732ee5e558956f"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Implement real three-plane QR pixel roundtrip, 81 memories, projector proof, photocycle gate and fault injections",
-          "seat": "seat-1",
-          "sha": "090bff478adca684e1f655399b363084c8d40973",
-          "timestamp_utc": "2026-10-15T12:16:40Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/090bff478adca684e1f655399b363084c8d40973"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Implement real three-plane QR pixel roundtrip, 81 memories, projector proof, photocycle gate and fault injections",
-          "seat": "seat-1",
-          "sha": "090bff478adca684e1f655399b363084c8d40973",
-          "timestamp_utc": "2026-10-15T12:16:40Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/090bff478adca684e1f655399b363084c8d40973"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Preregister RGB QR 81-memory light-bank plus synthetic photocycle read gate before code or measured outputs",
-          "seat": "seat-1",
-          "sha": "152d778e9146e60bdfe18661c514cb62bb975dd3",
-          "timestamp_utc": "2026-10-15T12:14:32Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/152d778e9146e60bdfe18661c514cb62bb975dd3"
-        },
-        {
-          "attribution_basis": "explicit_branch_label",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/round2-rate-current-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Preregister RGB QR 81-memory light-bank plus synthetic photocycle read gate before code or measured outputs",
-          "seat": "seat-1",
-          "sha": "152d778e9146e60bdfe18661c514cb62bb975dd3",
-          "timestamp_utc": "2026-10-15T12:14:32Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/152d778e9146e60bdfe18661c514cb62bb975dd3"
-        },
-        {
-          "attribution_basis": "explicit_commit_trailer",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "agent/seat-1/rainbow7-lightbank-memory-20261015",
-          "github_actor": "JesseBrown1980",
-          "message_title": "Seal cross-OS Round2 computational findings, exact old/new SHAs, quantitative feedback tradeoffs and explicit source-authentication hold",
-          "seat": "seat-1",
-          "sha": "c56fd2e42d41430bf9341a33a183315c4d3b3a67",
-          "timestamp_utc": "2026-10-15T11:24:43Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c56fd2e42d41430bf9341a33a183315c4d3b3a67"
         }
       ],
       "repo": "JesseBrown1980/asolaria-stone-to-moss",
@@ -1240,122 +1240,122 @@
         {
           "branch": "main",
           "conclusion": null,
-          "id": 38817204018,
+          "id": 38835223024,
           "name": "Asolaria three-seat activity ledger",
-          "sha": "969aaa3924fb7b7f4655db3e49bbe698da80603b",
+          "sha": "a745c5e619f06528e617d55557541776ecb175aa",
           "status": "in_progress",
-          "updated_at": "2026-10-15T22:27:17Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38817204018"
+          "updated_at": "2026-10-16T01:27:37Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38835223024"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "branch": "agent/seat1/proxima-rust181-20261015",
           "conclusion": "success",
-          "id": 38809902634,
-          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
-          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
+          "id": 38825755502,
+          "name": "Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0",
+          "sha": "35284e29e5dbe352dfc0458b801b2a914d33bbeb",
           "status": "completed",
-          "updated_at": "2026-10-15T21:27:13Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809902634"
+          "updated_at": "2026-10-15T23:50:33Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825755502"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "branch": "agent/seat1/proxima-rust181-20261015",
           "conclusion": "success",
-          "id": 38809902499,
-          "name": "Seat5 R13 23M real-host classical trit stress",
-          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
+          "id": 38825755324,
+          "name": "Seat 1 triad 27-wave three-horizon independent challenge",
+          "sha": "35284e29e5dbe352dfc0458b801b2a914d33bbeb",
           "status": "completed",
-          "updated_at": "2026-10-15T21:27:30Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809902499"
+          "updated_at": "2026-10-15T23:49:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825755324"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "branch": "agent/seat1/proxima-rust181-20261015",
           "conclusion": "success",
-          "id": 38809896018,
-          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
-          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
+          "id": 38825751011,
+          "name": "Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0",
+          "sha": "35284e29e5dbe352dfc0458b801b2a914d33bbeb",
           "status": "completed",
-          "updated_at": "2026-10-15T21:27:07Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809896018"
+          "updated_at": "2026-10-15T23:49:34Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825751011"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "branch": "agent/seat1/proxima-rust181-20261015",
           "conclusion": "success",
-          "id": 38809896001,
-          "name": "Seat5 R13 23M real-host classical trit stress",
-          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621",
+          "id": 38825741559,
+          "name": "Seat 1 triad 27-wave three-horizon independent challenge",
+          "sha": "71ee3461177d04a952c2a500230afbeffce7c025",
           "status": "completed",
-          "updated_at": "2026-10-15T21:27:22Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809896001"
+          "updated_at": "2026-10-15T23:49:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825741559"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
-          "conclusion": "failure",
-          "id": 38809538596,
-          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
-          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
-          "status": "completed",
-          "updated_at": "2026-10-15T21:24:15Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809538596"
-        },
-        {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "branch": "agent/seat1/proxima-rust181-20261015",
           "conclusion": "success",
-          "id": 38809538580,
-          "name": "Seat5 R13 23M real-host classical trit stress",
-          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
+          "id": 38825741544,
+          "name": "Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0",
+          "sha": "71ee3461177d04a952c2a500230afbeffce7c025",
           "status": "completed",
-          "updated_at": "2026-10-15T21:24:39Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809538580"
+          "updated_at": "2026-10-15T23:49:14Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825741544"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
-          "conclusion": "failure",
-          "id": 38809532495,
-          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
-          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
-          "status": "completed",
-          "updated_at": "2026-10-15T21:24:12Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809532495"
-        },
-        {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "branch": "agent/seat1/proxima-rust181-20261015",
           "conclusion": "success",
-          "id": 38809532459,
-          "name": "Seat5 R13 23M real-host classical trit stress",
-          "sha": "4c214f3a144de5e7263815bc20008096a5f3c971",
+          "id": 38825736518,
+          "name": "Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0",
+          "sha": "71ee3461177d04a952c2a500230afbeffce7c025",
           "status": "completed",
-          "updated_at": "2026-10-15T21:24:35Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809532459"
+          "updated_at": "2026-10-15T23:49:13Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825736518"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
-          "conclusion": "failure",
-          "id": 38809416700,
-          "name": "Seat5 R13 book-governed center chariots Rust 1.81",
-          "sha": "d5d9229bfb5c8118fb75fae6884428bee8aec217",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "conclusion": "success",
+          "id": 38825701899,
+          "name": "Seat 1 triad 27-wave three-horizon independent challenge",
+          "sha": "04b9761c50767b68fa54d9a804e3cc526644f87a",
           "status": "completed",
-          "updated_at": "2026-10-15T21:23:19Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809416700"
+          "updated_at": "2026-10-15T23:48:52Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825701899"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
-          "conclusion": "failure",
-          "id": 38809416698,
-          "name": "Seat5 R13 23M real-host classical trit stress",
-          "sha": "d5d9229bfb5c8118fb75fae6884428bee8aec217",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "conclusion": "success",
+          "id": 38825701821,
+          "name": "Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0",
+          "sha": "04b9761c50767b68fa54d9a804e3cc526644f87a",
           "status": "completed",
-          "updated_at": "2026-10-15T21:23:20Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809416698"
+          "updated_at": "2026-10-15T23:48:57Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825701821"
         },
         {
-          "branch": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
-          "conclusion": "failure",
-          "id": 38809411221,
-          "name": "Seat5 R13 23M real-host classical trit stress",
-          "sha": "d5d9229bfb5c8118fb75fae6884428bee8aec217",
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "conclusion": "success",
+          "id": 38825699584,
+          "name": "Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0",
+          "sha": "04b9761c50767b68fa54d9a804e3cc526644f87a",
           "status": "completed",
-          "updated_at": "2026-10-15T21:23:18Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38809411221"
+          "updated_at": "2026-10-15T23:48:53Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825699584"
+        },
+        {
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "conclusion": "success",
+          "id": 38825695576,
+          "name": "Seat1 Asolaria Proxima Rust 1.81 GF3 HTTP-0",
+          "sha": "03c4368088c67b6aefe883ee85f226ad767c19a4",
+          "status": "completed",
+          "updated_at": "2026-10-15T23:48:45Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825695576"
+        },
+        {
+          "branch": "agent/seat1/proxima-rust181-20261015",
+          "conclusion": "success",
+          "id": 38825686499,
+          "name": "Seat 1 triad 27-wave three-horizon independent challenge",
+          "sha": "1aa2895048884446771a1912938d7c0930492964",
+          "status": "completed",
+          "updated_at": "2026-10-15T23:48:19Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825686499"
         }
       ]
     },
@@ -3974,5 +3974,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "dc72f78417dd6dfb50e30e94495684d18b2d7621e51721660b93677fc7b26b9f"
+  "source_state_sha256": "39aa6e2a5c8cc8b4ee0906e8b095c3d5c2bb343c88263f6ed381d9ff52a02600"
 }
