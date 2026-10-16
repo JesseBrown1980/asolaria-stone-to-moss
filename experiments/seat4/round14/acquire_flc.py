@@ -26,8 +26,11 @@ def header(data,at=0):
   if key=="END":break
   if x[8:10]==b"= ":
    val=x[10:].decode("ascii").split("/")[0].strip().strip("'").strip()
-   require(key not in h,"DUPLICATE_FITS_HEADER:"+key)
-   h[key]=val
+   if key in h:
+    if key in ("ROOTNAME","PROPOSID","INSTRUME","DETECTOR","FILTER","DATE-OBS","EXPTIME","EXPSTART","NAXIS","BITPIX","EXTNAME","EXTVER"):
+     require(h[key]==val,"INCONSISTENT_PROVENANCE_FITS_HEADER:"+key)
+   else:
+    h[key]=val
   require(cards<=8000,"FITS_HEADER_TOO_LONG")
  header_size=((cards*80+2879)//2880)*2880
  naxis=int(h.get("NAXIS","0"));bitpix=abs(int(h.get("BITPIX","8")))
