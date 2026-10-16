@@ -21,7 +21,7 @@ For original fixed laws h=1,3,9,27,81 this requires **h trits** of additional in
 | Verified current executable artifacts | Bytes | SHA-256 |
 | --- | ---: | --- |
 | `seat3-reversible.hbi` (55 final states + witness records) | **5,047** | `bc151e3f972d9a488066889f3b1c09940b1f51675b1798de883ba1099b6bc21f` |
-| `seat3-reversible.hbp` (57 report records; HBP field=GF3) | **9,350** | `7f6cd9ff80c44078c5c64a68834d11e93769cd8d141aa0cfc74e9c3e035a2804` |
+| `seat3-reversible.hbp` (59 report records; HBP field=GF3) | **9,350** | `7f6cd9ff80c44078c5c64a68834d11e93769cd8d141aa0cfc74e9c3e035a2804` |
 
 All four jobs produced **byte-identical full HBI/HBP files** and their canonical SHA256 sidecars. The fifth job checked 55 HBP rows and all four platforms. These are digital results executed on real physical electronic computers; no actual photonic memory retention was instrumented.
 
