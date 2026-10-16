@@ -27,7 +27,22 @@ jobs:
           python3 experiments/seat1/proxima-rust181/real_observations/acquire.py
           test "$(wc -l < real_observations/output/spec.dat)" -eq 722
           test "$(wc -l < real_observations/output/photo.dat)" -eq 2212
-          (cd real_observations/output && sha256sum spec.dat photo.dat ORIGINAL-SOURCE-MANIFEST.json > SHA256SUMS.txt)
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - name: Run integer-only nine real checkpoint RV analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/seat1/proxima-rust181
+          test "$(rustc --version | awk '{print $2}')" = "1.81.0"
+          cargo clippy --offline --locked --bin observational_rv -- -D warnings
+          cargo test --offline --locked --bin observational_rv
+          cargo run --offline --locked --release --bin observational_rv -- ../../../real_observations/output
+          cd ../../..
+          python3 experiments/seat1/proxima-rust181/real_observations/independent_referee.py
+          (cd real_observations/output && sha256sum spec.dat photo.dat NINE-REAL-OBSERVATION-WINDOWS.json ORIGINAL-SOURCE-MANIFEST.json INDEPENDENT-OBSERVATION-REVIEW.json > SHA256SUMS.txt)
       - uses: actions/upload-artifact@v4
         with:
           name: original-real-observations-proxima
