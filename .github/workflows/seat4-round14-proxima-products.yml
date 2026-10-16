@@ -1,0 +1,22 @@
+name: Seat4 R14 probe MAST source-dated Proxima FLC FITS products
+on:
+  push:
+    branches: [agent/seat4/proxima-real-optical-multiepoch-20261016]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  optical-products:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Inspect actual HST individual calibrated products, not mosaics
+        run: |
+          python experiments/seat4/round14/list_fits_products.py | tee "$RUNNER_TEMP/proxima-products.hbp"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-proxima-optical-products-HBP
+          path: ${{ runner.temp }}/proxima-products.hbp
+          if-no-files-found: error
