@@ -51,6 +51,25 @@ jobs:
           python independent_memory_referee.py out
           python independent_camera_referee.py out
           python independent_nine_jump_referee.py out
+          # Enforce the actual Rust 1.81, balanced-ternary / HBP-only
+          # source-and-output contract. Never serialize runtime evidence as JSON.
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("out")
+          files=sorted(x for x in p.iterdir() if x.is_file())
+          assert files, "MISSING_RUST_OUTPUT"
+          banned=[x.name for x in files if x.suffix.lower() in {".json",".jsonl",".ndjson"}]
+          assert not banned, "ASOLARIA_JSON_OUTPUT_FORBIDDEN:"+",".join(banned)
+          record=(p/"ASOLARIA-PROXIMA-RUST181.hbp").read_text(encoding="utf-8")
+          assert record.startswith("HBP1|")
+          assert "field=GF3|trits=-1,0,+1|float_used=0" in record
+          assert record.count("\nLEVEL|")==7
+          assert all("json=0" in l for l in record.splitlines())
+          assert (p/"PARTICLE-MEMORY-R1.ledger").exists()
+          assert (p/"RAINBOW-QR-R4.tsv").exists()
+          assert (p/"EPOCHS-RUST181.csv").exists()
+          print("SEAT4_RUST181_CLIPPY_BALANCED_TERNARY_HBP_NO_JSON_PASS")
+          PY
           (cd out && sha256sum ASOLARIA-PROXIMA-RUST181.hbp EPOCHS-RUST181.csv PARTICLE-MEMORY-R1.ledger PARTICLE-MEMORY-R1.hbp TEN-BILLION-YEAR-R1.hbp SYNTHETIC-FITS-R4.fits FREEZE-PLAY-R4.hbp RAINBOW-QR-R4.tsv NINE-JUMP-MOTION-R5.csv NINE-JUMP-MOTION-R5.hbp > COMPUTATIONAL.sha256)
       - uses: actions/upload-artifact@v4
         with:
