@@ -24,13 +24,17 @@ struct Frame {
 fn parse_timestamp(row:&[u8;RAW])->Result<u64,String>{
     let text=std::str::from_utf8(&row[1..10]).map_err(|e|e.to_string())?.trim();
     let (whole,fraction)=text.split_once('.').ok_or("MISSING_DAY_DECIMAL")?;
-    if fraction.is_empty()||fraction.len()>3||!fraction.bytes().all(|b|b.is_ascii_digit()){
+    if fraction.is_empty()||fraction.len()>8||!fraction.bytes().all(|b|b.is_ascii_digit()){
         return Err("INVALID_MILLIDAY_PRECISION".into());
     }
     let days=whole.parse::<u64>().map_err(|_|"INVALID_DAY")?;
-    let mut frac=fraction.parse::<u64>().map_err(|_|"INVALID_FRACTION")?;
-    for _ in fraction.len()..3{frac*=10;}
-    days.checked_mul(1000).and_then(|x|x.checked_add(frac))
+    let numerator=fraction.parse::<u64>().map_err(|_|"INVALID_FRACTION")?;
+    let denominator=10u64.pow(fraction.len()as u32);
+    let millis=numerator*1000/denominator;
+    let remainder=numerator*1000%denominator;
+    let rounded=millis+u64::from(remainder*2>denominator ||
+        (remainder*2==denominator && millis%2!=0));
+    days.checked_mul(1000).and_then(|x|x.checked_add(rounded))
         .ok_or_else(||"TIME_OVERFLOW".to_string())
 }
 fn pick(source:&[u8])->Result<[[u8;RAW];3],String>{
@@ -214,7 +218,8 @@ mod tests{
  fn test_rows()->[[u8;RAW];3]{
   std::array::from_fn(|i|{
     let mut row=[b'0';RAW];
-    row[1..10].copy_from_slice(format!("{:8.3}",8595.123+i as f64).as_bytes());
+    let times:[&[u8;9];3]=[b"8595.123 ",b"8595.124 ",b"8595.125 "];
+    row[1..10].copy_from_slice(times[i]);
     row[119]=b'0';
     row[20]=(i as u8)+b'1';
     row
