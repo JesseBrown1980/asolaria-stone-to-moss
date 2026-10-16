@@ -69,7 +69,13 @@ jobs:
             DEMO="./target/debug/behcs60-demo"
           fi
           python independent_referee.py "$DEMO" | tee seat3-reference.hbp
-          sha256sum seat3-reference.hbp > seat3-reference.hbp.sha256
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          original = Path("seat3-reference.hbp")
+          line = hashlib.sha256(original.read_bytes()).hexdigest()+"  "+original.name+"\n"
+          Path("seat3-reference.hbp.sha256").write_bytes(line.encode("ascii"))
+          PY
           sha256sum -c seat3-reference.hbp.sha256
       - name: Upload CI-bound reference HBP (not external publication)
         uses: actions/upload-artifact@v4
