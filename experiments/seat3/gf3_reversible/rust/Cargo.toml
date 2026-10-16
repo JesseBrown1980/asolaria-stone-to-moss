@@ -1,0 +1,6 @@
+[package]
+name = "seat3-gf3-reversible-witness"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
