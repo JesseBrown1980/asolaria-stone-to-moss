@@ -40,6 +40,13 @@ def main():
     assert result["train_rows"]==len(train)
     assert result["heldout_rows"]==len(test)
     assert result["per_instrument"]==inst_counts
+    instrument_scores=result["heldout_instrument_scores"]
+    assert set(instrument_scores)==set(str(i) for i in range(6))
+    for inst,values in instrument_scores.items():
+        assert values["n"]==inst_counts[inst]["test"]
+        for key in ("baseline_wrmse_mm_s","known_wrmse_mm_s","extra_wrmse_mm_s"):
+            assert 0<=values[key]<100000
+
     assert result["first_bjd_minus_2450000_milliday"]==min(r[1] for r in data)
     assert result["last_bjd_minus_2450000_milliday"]==max(r[1] for r in data)
     assert result["exploratory_trials"]==6
