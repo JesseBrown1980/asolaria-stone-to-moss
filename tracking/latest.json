@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-10-16T01:27:46Z",
+  "captured_at_utc": "2026-10-16T07:17:56Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -406,7 +406,7 @@
         },
         {
           "name": "main",
-          "sha": "a745c5e619f06528e617d55557541776ecb175aa"
+          "sha": "0735011149cb7f1800e5265bd5d52332a74a1aba"
         }
       ],
       "errors": [],
@@ -1240,11 +1240,21 @@
         {
           "branch": "main",
           "conclusion": null,
+          "id": 38866303145,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "0735011149cb7f1800e5265bd5d52332a74a1aba",
+          "status": "in_progress",
+          "updated_at": "2026-10-16T07:17:48Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38866303145"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
           "id": 38835223024,
           "name": "Asolaria three-seat activity ledger",
           "sha": "a745c5e619f06528e617d55557541776ecb175aa",
-          "status": "in_progress",
-          "updated_at": "2026-10-16T01:27:37Z",
+          "status": "completed",
+          "updated_at": "2026-10-16T01:28:11Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38835223024"
         },
         {
@@ -1346,16 +1356,6 @@
           "status": "completed",
           "updated_at": "2026-10-15T23:48:45Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825695576"
-        },
-        {
-          "branch": "agent/seat1/proxima-rust181-20261015",
-          "conclusion": "success",
-          "id": 38825686499,
-          "name": "Seat 1 triad 27-wave three-horizon independent challenge",
-          "sha": "1aa2895048884446771a1912938d7c0930492964",
-          "status": "completed",
-          "updated_at": "2026-10-15T23:48:19Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38825686499"
         }
       ]
     },
@@ -3974,5 +3974,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "39aa6e2a5c8cc8b4ee0906e8b095c3d5c2bb343c88263f6ed381d9ff52a02600"
+  "source_state_sha256": "c6b92de5153ecb74b44cef9657150877566ef7b2ae0cbb23d29be721c4aa9fe2"
 }
