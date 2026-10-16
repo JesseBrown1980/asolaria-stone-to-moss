@@ -71,7 +71,7 @@ def test():
         p=pathlib.Path(d)
         lines=["HBP1|schema=ASOLARIA-MIRI-S1-THREE-EPOCH-FAKE|json=0","BOUNDARY|S1_UNCONFIRMED=TRUE|json=0"]
         for n in (1618,6797,9252):
-            lines += [f"EPOCH|proposal={n}|coronagraph_obs=1|calibrated_candidates=1|json=0",f"OBS|proposal={n}|filters=F1550C|json=0"]
+            lines += [f"EPOCH|proposal={n}|coronagraph_obs=1|calibrated_candidates=1|json=0",f"OBS|proposal_id={n}|filters=F1550C|json=0"]
         data=("\n".join(lines)+"\n").encode()
         (p/"MAST-THREE-EPOCH-INVENTORY.hbp").write_bytes(data)
         (p/"MAST-THREE-EPOCH-INVENTORY.hbp.sha256").write_text(sha(data)+"  MAST-THREE-EPOCH-INVENTORY.hbp\n")
