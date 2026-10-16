@@ -42,7 +42,9 @@ jobs:
           cargo run --offline --locked --release --bin observational_rv -- ../../../real_observations/output
           cd ../../..
           python3 experiments/seat1/proxima-rust181/real_observations/independent_referee.py
-          (cd real_observations/output && sha256sum spec.dat photo.dat NINE-REAL-OBSERVATION-WINDOWS.json ORIGINAL-SOURCE-MANIFEST.json INDEPENDENT-OBSERVATION-REVIEW.json > SHA256SUMS.txt)
+          python3 -m pip install --quiet --disable-pip-version-check 'Pillow==12.3.0'
+          python3 experiments/seat1/proxima-rust181/real_observations/verify_image_ternary.py
+          (cd real_observations/output && sha256sum spec.dat photo.dat NINE-REAL-OBSERVATION-WINDOWS.json ORIGINAL-SOURCE-MANIFEST.json INDEPENDENT-OBSERVATION-REVIEW.json REAL-HUBBLE-TERNARY-RECEIPT.json > SHA256SUMS.txt)
       - uses: actions/upload-artifact@v4
         with:
           name: original-real-observations-proxima
