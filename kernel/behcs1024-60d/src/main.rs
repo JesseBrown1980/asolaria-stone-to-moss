@@ -1,5 +1,6 @@
 //! CLI uses heap only for argument parsing and printing; library uses no allocation.
 use behcs1024_60d::{project_60d, MAX_SOURCE_BYTES};
+use std::fmt::Write as _;
 
 fn nibble(b: u8) -> Option<u8> {
     match b {
@@ -24,7 +25,11 @@ fn parse_hex(s: &str) -> Result<Vec<u8>, &'static str> {
 }
 
 fn hex(bytes: &[u8]) -> String {
-    bytes.iter().map(|b| format!("{b:02x}")).collect()
+    let mut out = String::with_capacity(bytes.len() * 2);
+    for b in bytes {
+        write!(&mut out, "{b:02x}").expect("in-memory write");
+    }
+    out
 }
 
 fn main() {
