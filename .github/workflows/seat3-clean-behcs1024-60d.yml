@@ -1,0 +1,81 @@
+name: Seat3 Clean BEHCS1024 60D Rust181 Independent Verification
+
+on:
+  push:
+    paths:
+      - "kernel/behcs1024-60d/**"
+      - ".github/workflows/seat3-clean-behcs1024-60d.yml"
+  pull_request:
+    paths:
+      - "kernel/behcs1024-60d/**"
+      - ".github/workflows/seat3-clean-behcs1024-60d.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bound-parity-falsification:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: kernel/behcs1024-60d
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify new crate contains no address-like or credential-looking literals
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          patterns = [
+              re.compile(r"(?:\d{1,3}\.){3}\d{1,3}"),
+              re.compile(r"-----BEGIN [A-Z ]{3,32}-----"),
+              re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b"),
+          ]
+          checked = 0
+          for file in Path(".").rglob("*"):
+              if not file.is_file() or any(s in ("target", "__pycache__") for s in file.parts):
+                  continue
+              contents = file.read_text(encoding="utf-8", errors="replace")
+              for pattern in patterns:
+                  assert pattern.search(contents) is None, ("SCAN_HELD", file.name)
+              checked += 1
+          assert checked >= 6, ("MISSING_FILES", checked)
+          print("SEAT3_CLEAN_60D|content_scan=PASS|files="+str(checked)+"|json=0")
+          PY
+      - name: Install pinned Rust 1.81 with Clippy
+        run: rustup toolchain install 1.81.0 --profile minimal --component clippy --component rustfmt
+      - name: Reproducible library tests and CLI tests
+        run: cargo +1.81.0 test --locked --all-targets
+      - name: Strict Clippy, no warnings
+        run: cargo +1.81.0 clippy --locked --all-targets -- -D warnings
+      - name: Build CLI without unlocked dependencies
+        run: cargo +1.81.0 build --locked --bin behcs60-demo
+      - name: Run independently computed SHA-256 vectors, overlength rejections, and hash receipt
+        run: |
+          set -euo pipefail
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            DEMO="./target/debug/behcs60-demo.exe"
+          else
+            DEMO="./target/debug/behcs60-demo"
+          fi
+          python independent_referee.py "$DEMO" | tee seat3-reference.hbp
+          sha256sum seat3-reference.hbp > seat3-reference.hbp.sha256
+          sha256sum -c seat3-reference.hbp.sha256
+      - name: Upload CI-bound reference HBP (not external publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat3-clean-60d-${{ matrix.os }}
+          path: |
+            kernel/behcs1024-60d/seat3-reference.hbp
+            kernel/behcs1024-60d/seat3-reference.hbp.sha256
+          if-no-files-found: error
