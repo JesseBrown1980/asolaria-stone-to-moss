@@ -58,10 +58,14 @@ def get_catalog(filename,expected_len,expected_rows):
 def get_hubble():
     try:
         body,final,mime=fetch(HUBBLE)
-        if body[:4] not in (b"II*\x00",b"MM\x00*"):
-            raise ValueError("not uncompressed TIFF magic")
-        (BASE/"HUBBLE_2012_F555W_PUBLICATION.tif").write_bytes(body)
-        return {"source":final,"file":"HUBBLE_2012_F555W_PUBLICATION.tif",
+        if body[:4] in (b"II*\x00",b"MM\x00*"):kind="tif"
+        elif body.startswith(b"\xff\xd8\xff"):kind="jpg"
+        elif body.startswith(b"\x89PNG\r\n\x1a\n"):kind="png"
+        elif body.startswith(b"RIFF") and body[8:12]==b"WEBP":kind="webp"
+        else:raise ValueError("unrecognized image magic:"+body[:16].hex())
+        filename="HUBBLE_2012_F555W_PUBLICATION."+kind
+        (BASE/filename).write_bytes(body)
+        return {"source":final,"file":filename,"encoded_format":kind,
           "sha256":hashlib.sha256(body).hexdigest(),"bytes":len(body),
           "observation_date_utc":"2012-10-01","camera":"HST WFC3/UVIS",
           "filter":"F555W","exposure_seconds":175,
