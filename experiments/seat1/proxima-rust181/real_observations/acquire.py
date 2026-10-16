@@ -69,7 +69,7 @@ def get_hubble():
           "sha256":hashlib.sha256(body).hexdigest(),"bytes":len(body),
           "observation_date_utc":"2012-10-01","camera":"HST WFC3/UVIS",
           "filter":"F555W","exposure_seconds":175,
-          "source_type":"NASA public rendered TIFF, NOT original calibrated FITS science observation",
+          "source_type":"NASA public image returned as dynamically encoded image, NOT original calibrated FITS science observation",
           "available":True}
     except Exception as e:
         return {"source":HUBBLE,"available":False,"error":str(e)[:220],
