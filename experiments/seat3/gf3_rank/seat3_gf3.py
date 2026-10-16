@@ -99,7 +99,7 @@ def main(outdir):
                 require((fast==(0,)*N)==(h>=81 or seed==(0,)*N or all(c==0 for c in direct)),
                         "IMPOSSIBLE_NILPOTENT_REPORT")
             if h>=81:
-                require(all(col==(0,)*N for col in history),"81_STEPS_NOT_ZERO_ALL_BASIS")
+                require(all(not any(col) for col in history),"81_STEPS_NOT_ZERO_ALL_BASIS")
             s=selected[0]
             final=advance(s,taps,h)
             rows.append(
