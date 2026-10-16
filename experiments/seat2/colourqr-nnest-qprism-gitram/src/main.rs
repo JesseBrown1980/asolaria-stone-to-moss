@@ -124,7 +124,7 @@ fn qprism_roundtrip(frame: &[u8], lane: usize) -> Result<String, String> {
         return Err("QPRISM inverse failure".into());
     }
     let mut capsule = SessionCapsule::propose(pid, watcher, ComsMode::AiToAi, frame);
-    if dbbh_send(&cube, &mut capsule) != Err(Held::NoConsent) {
+    if !matches!(dbbh_send(&cube, &mut capsule), Err(Held::NoConsent)) {
         return Err("unarmed capsule escaped".into());
     }
     capsule.arm(pid);
@@ -143,9 +143,9 @@ fn qprism_roundtrip(frame: &[u8], lane: usize) -> Result<String, String> {
 
 fn expected_hbp(i: usize, src: &[u8], f: &[u8], lane: usize, address: &str) -> String {
     format!(
-        "COLOURQR|chunk={i}|lane={}|room=44|frame_bytes={}|frame_sha256={}|source_sha256={}|qprism_addr={address}|watcher=RECOMPUTE_SOURCE|consent=SIMULATED_BILATERAL|json=0\n",
+        "COLOURQR|chunk={i}|lane={}|room=44|frame_bytes={}|frame_sha256={}|source_sha256={}|index_le_hex={}|qprism_addr={address}|watcher=RECOMPUTE_SOURCE|consent=SIMULATED_BILATERAL|json=0\n",
         ["R", "G", "B"][lane],
-        f.len(), sha256_hex(f), sha256_hex(src)
+        f.len(), sha256_hex(f), sha256_hex(src), hex(&f[..4])
     )
 }
 
