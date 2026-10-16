@@ -1,0 +1,105 @@
+name: Seat4 Proxima sensory Rust1.81 GF3 HBI HBP SHA SH no JSON
+on:
+  push:
+    branches:
+      - agent/seat4/proxima-sensory-hbi-sh-rust181-20261016
+  pull_request:
+    paths:
+      - 'experiments/seat4/proxima-sensory-rust181/**'
+      - '.github/workflows/seat4-proxima-sensory-hbi-rust181.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  true-source-sensory:
+    name: Three source-timed Proxima sensor inputs ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Download previously verified immutable catalog original bytes; no synthesized photons
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38907868500
+          name: original-real-observations-proxima
+          path: input
+      - name: Pin actual observatory source bytes, pinned Rust and strict Clippy
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(rustc --version | awk '{print $2}')" = '1.81.0'
+          echo '027cff5c10b541608b727abada2af531037223edec3bb9112fcbb45fc333e474  input/spec.dat' | sha256sum --check
+          cd experiments/seat4/proxima-sensory-rust181
+          cargo clippy --offline --locked --all-targets -- -D warnings
+          cargo test --offline --locked
+      - name: Observe three real source epochs, HBI readback, seven mutation attacks and independent Python referee
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo run --manifest-path experiments/seat4/proxima-sensory-rust181/Cargo.toml --locked --offline --release -- input/spec.dat "$RUNNER_TEMP/seat4-sensory"
+          python experiments/seat4/proxima-sensory-rust181/independent_referee.py input/spec.dat "$RUNNER_TEMP/seat4-sensory"
+          python - <<'PY'
+          import os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'seat4-sensory'
+          names=sorted(x.name for x in p.iterdir())
+          expected=['sensory-three-epochs.hbi','sensory-three-epochs.hbi.sha256',
+                    'sensory-three-epochs.hbp','sensory-three-epochs.hbp.sha256']
+          assert names==expected,('NO_JSON_OR_OTHER_RUNTIME_FORMATS',names)
+          hbp=(p/'sensory-three-epochs.hbp').read_text()
+          assert 'trits=-1,0,+1' in hbp and 'field=GF3' in hbp
+          assert hbp.count('\nFRAME|')==3 and hbp.count('\nMOTION|')==2
+          assert hbp.count('seven_lanes=SYMBOLIC_ADDRESS_NOT_SPECTROMETER')==3
+          print('SEAT4_R13_RUST181_CLIPPY_TERNARY_NO_JSON_HBI_HBP_SOURCE_BOUND_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r13-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat4-sensory/*
+          retention-days: 30
+          if-no-files-found: error
+  cross-host-parity:
+    name: Seat4 full three-epoch HBI HBP byte-for-byte cross-host referee
+    runs-on: ubuntu-latest
+    needs: true-source-sensory
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r13-*
+          path: reports
+          merge-multiple: false
+      - name: Independently compare SHA sidecars and complete output byte parity for all four OS/Python jobs
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          dirs=sorted(Path('reports').glob('seat4-r13-*'))
+          assert len(dirs)==4
+          for name in ('sensory-three-epochs.hbi','sensory-three-epochs.hbp'):
+              files=[(d/name).read_bytes() for d in dirs]
+              assert len(set(files))==1,('SENSORY_CROSS_HOST_BYTE_DRIFT',name)
+              digest=hashlib.sha256(files[0]).hexdigest()
+              for d in dirs:
+                  assert (d/(name+'.sha256')).read_bytes()==(digest+'  '+name+'\n').encode('ascii')
+              print('SEAT4_R13_FOUR_HOSTS_BYTE_IDENTICAL',name,len(files[0]),digest)
+          hbp=(dirs[0]/'sensory-three-epochs.hbp').read_text()
+          assert hbp.count('\nFRAME|')==3 and 'applied_attacks=7|rejected=7' in hbp
+          assert 'real_photon_detector=FALSE' in hbp and 'RAM_FREE_CLAIM=FALSE' in hbp
+          print('SEAT4_PROXIMA_SENSORY_THREE_REAL_RV_EPOCHS_HBI_HBP_SH_SHA_PASS')
+          PY
