@@ -46,7 +46,7 @@ def audit(seat,input_dir,out):
     out.mkdir(parents=True,exist_ok=True)
     result="\n".join(linesout)+"\n"
     f=out/f"SEAT{seat}-MIRI-CATCHUP.hbp"
-    f.write_text(result)
+    f.write_bytes(result.encode())
     (out/(f.name+".sha256")).write_text(sha(result.encode())+"  "+f.name+"\n")
     print(f"SEAT{seat}_DIGITAL_AUDIT_PASS|scientific_fits_reduction=HOLD|source_sha256={source}|json=0")
 def final(indir,out):
@@ -62,7 +62,7 @@ def final(indir,out):
         lines.append(f"SEAT|number={n}|HBP_sha256={expected}|source_match=PASS|physical_host_independent=NOT_ATTESTED|json=0")
     lines.append("VERDICT|four_logical_roles=PASS|FITS_S1_three_epoch_reconstruction=PENDING|no_new_planet=CLAIMED_NONE|HF_external_write_and_readback=UNVERIFIED|json=0")
     out.mkdir(parents=True,exist_ok=True)
-    (out/"FOUR-SEAT-MIRI-COORDINATOR.hbp").write_text("\n".join(lines)+"\n")
+    (out/"FOUR-SEAT-MIRI-COORDINATOR.hbp").write_bytes(("\n".join(lines)+"\n").encode())
     print("CROSS_SEAT_SHA=PASS|science=HOLD")
 def test():
     import tempfile
