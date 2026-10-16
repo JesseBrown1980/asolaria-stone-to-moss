@@ -1,0 +1,67 @@
+name: Seat3 QR N-Nest Q-PRISM independent fail-closed integration
+
+on:
+  push:
+    paths:
+      - "experiments/seat3/qr-nnest-qprism/**"
+      - ".github/workflows/seat3-qr-nnest-qprism-independent.yml"
+  pull_request:
+    paths:
+      - "experiments/seat3/qr-nnest-qprism/**"
+      - ".github/workflows/seat3-qr-nnest-qprism-independent.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-bound-falsification:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Recheck local QR envelope and independently recomputed N-Nest failure propagation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile experiments/seat3/qr-nnest-qprism/independent_gate.py
+          python experiments/seat3/qr-nnest-qprism/independent_gate.py --output artifacts/seat3-local.hbp
+          (cd artifacts && sha256sum -c seat3-local.hbp.sha256)
+      - name: Fetch strictly pinned public upstream sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p upstream/n-nest upstream/q-prism
+          git -C upstream/n-nest init -q
+          git -C upstream/n-nest remote add origin https://github.com/JesseBrown1980/N-Nest-Prime-INFINITE-SELF-REFLECT-AGENTS-NESTED.git
+          git -C upstream/n-nest fetch --depth=1 origin 307903651f56e8a28ef98ca36aef22ee8cda935c
+          git -C upstream/n-nest checkout -q --detach FETCH_HEAD
+          git -C upstream/q-prism init -q
+          git -C upstream/q-prism remote add origin https://github.com/JesseBrown1980/Q-PRISM-human-organoid-neural-stream-as-a-high-dimensional-control.git
+          git -C upstream/q-prism fetch --depth=1 origin b4a21a25381d6920b7aab92c94c3c3e1420fc9e4
+          git -C upstream/q-prism checkout -q --detach FETCH_HEAD
+      - name: Install bounded upstream simulation dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check numpy==1.26.4 scipy==1.13.1
+      - name: Execute original N-Nest scripts and Q-PRISM simulation under independent gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/seat3/qr-nnest-qprism/independent_gate.py --upstreams upstream --output artifacts/seat3-upstream.hbp
+          (cd artifacts && sha256sum -c seat3-upstream.hbp.sha256)
+      - name: Preserve run-bound software receipt (not Hugging Face publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat3-qr-nnest-qprism-independent
+          path: |
+            artifacts/*.hbp
+            artifacts/*.sha256
+          if-no-files-found: error
