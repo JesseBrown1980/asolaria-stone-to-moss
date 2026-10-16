@@ -97,7 +97,7 @@ def main():
     image=manifest["image"]
     image_keys=("file","encoded_format","sha256","bytes","observation_date_utc","camera","filter","exposure_seconds","source")
     lines.append("IMAGE|available="+("true" if image["available"] else "false")+
-      "|"+"|".join(f"{key}={cleaned(image.get(key,"UNAVAILABLE"))}" for key in image_keys)+"|json=0")
+      "|"+"|".join(f"{key}={cleaned(image.get(key,'UNAVAILABLE'))}" for key in image_keys)+"|json=0")
     lines.append("BOUNDARY|hubble_rendered_image_is_not_calibrated_fits=TRUE|nine_optical_image_epochs=UNAVAILABLE|new_planet_claim=NONE|json=0")
     (BASE/"ORIGINAL-SOURCE-MANIFEST.hbp").write_bytes(("\n".join(lines)+"\n").encode("utf-8"))
 
