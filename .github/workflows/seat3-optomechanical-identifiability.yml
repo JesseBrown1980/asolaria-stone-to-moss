@@ -1,0 +1,148 @@
+name: Seat3 optomechanical causal-mechanism identifiability and cross-seat source challenge
+
+on:
+  push:
+    branches:
+      - agent/seat-3/optomechanical-identifiability-intervention-20261015
+    paths:
+      - "experiments/seat3/optomech_identifiability/**"
+      - ".github/workflows/seat3-optomechanical-identifiability.yml"
+      - "stones/2026-10-15-rainbow81/seat3-optomechanical-identifiability*"
+  pull_request:
+    paths:
+      - "experiments/seat3/optomech_identifiability/**"
+      - ".github/workflows/seat3-optomechanical-identifiability.yml"
+      - "stones/2026-10-15-rainbow81/seat3-optomechanical-identifiability*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  four-source-implementations:
+    name: C3 original-bank algebra ${{ matrix.os }} Python ${{ matrix.python }} and independent Node 22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11","3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: frozen-seat1-bank
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: affa8d191bafde16f5e6009407b7206339aed079
+          path: frozen-seat2-round7
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 2712ddc71a7ded7324658184bccf8e1dfd2cc5dd
+          path: frozen-seat4-round8
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Independently verify Seat1/2/4 immutable source Git objects
+        shell: bash
+        run: |
+          test "$(git -C frozen-seat1-bank rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-seat2-round7 rev-parse HEAD)" = affa8d191bafde16f5e6009407b7206339aed079
+          test "$(git -C frozen-seat4-round8 rev-parse HEAD)" = 2712ddc71a7ded7324658184bccf8e1dfd2cc5dd
+          test "$(git -C frozen-seat2-round7 rev-parse HEAD:experiments/seat2/round7/seat2_coupling.py)" = 23c98aa8ad3a8061a789a6723d78ec60747e9306
+          test "$(git -C frozen-seat4-round8 rev-parse HEAD:experiments/seat4/round8/factorial.py)" = 85621abe58044d4cfcaac2f48274b0ba244d28e8
+      - name: Download original hosted PR80 81-site and 567-row unmodified bank
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/pr80
+      - name: Independent Python and Node22 source-bound mechanism counterexample plus third verifier
+        shell: bash
+        run: |
+          python experiments/seat3/optomech_identifiability/identifiability.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python"
+          node experiments/seat3/optomech_identifiability/identifiability.js "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/node"
+          python experiments/seat3/optomech_identifiability/verify.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/verified"
+      - name: Real one-byte mutation of historical original bank must be rejected in BOTH languages
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
+          raw=bytearray(p.read_bytes());raw[70]^=1;p.write_bytes(raw)
+          PY
+          if python experiments/seat3/optomech_identifiability/identifiability.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/invalid-python"; then
+            echo "ERROR: altered original bank wrongly accepted by Python"; exit 1
+          fi
+          if node experiments/seat3/optomech_identifiability/identifiability.js "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/invalid-node"; then
+            echo "ERROR: altered original bank wrongly accepted by Node"; exit 1
+          fi
+          echo "PASS BOTH_SOURCE_ROOTS_HOLD_CORRUPTED_ORIGINAL"
+      - name: Tamper with an actual observation record and require third reviewer to reject
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"python"/"identifiability-factorial.hbp"
+          raw=bytearray(p.read_bytes());raw[300]^=1;p.write_bytes(raw)
+          PY
+          if python experiments/seat3/optomech_identifiability/verify.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/invalid-verdict"; then
+            echo "ERROR: forged factorial HBP accepted by third verifier"; exit 1
+          fi
+          echo "PASS THIRD_SOURCE_WATCHER_HELD_MUTATION"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-mechanism-identity-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          retention-days: 30
+          if-no-files-found: error
+
+  four-byte-parity:
+    name: 5th independent full byte and checksum parity
+    runs-on: ubuntu-latest
+    needs: four-source-implementations
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-mechanism-identity-*
+          merge-multiple: false
+          path: receipts
+      - name: Verify each complete HBP JSON third-source receipt and checksum sidecar
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          dirs=sorted(Path("receipts").glob("seat3-mechanism-identity-*"))
+          assert len(dirs)==4,dirs
+          for name in ("identifiability-factorial.hbp","identifiability-math.json","independent-identifiability-audit.json"):
+              data=[(d/name).read_bytes() for d in dirs]
+              assert all(blob==data[0] for blob in data),"SOURCE_PLATFORM_DRIFT:"+name
+              for d,blob in zip(dirs,data):
+                  expected=(hashlib.sha256(blob).hexdigest()+"  "+name+"\n").encode("ascii")
+                  assert (d/(name+".sha256")).read_bytes()==expected,"SIDECAR_MISMATCH"
+              print("SOURCE_HISTORICAL_FACTORIAL_FOUR_BYTE_EQUAL",name,len(data[0]),hashlib.sha256(data[0]).hexdigest())
+          math=json.loads((dirs[0]/"identifiability-math.json").read_bytes())
+          assert math["full_control_optical_vs_blocker_linked_rf_observationally_identical"] is True
+          assert math["intrinsic_mechanism_identified_by_y_alone"] is False
+          assert math["physical_optical_measurement"]=="NOT_RUN"
+          assert math["physical_phonon_measurement"]=="NOT_RUN"
+          print("CAUSAL_IDENTIFIABILITY_STILL_HOLD",math["blocker_vs_shield_discriminant_resonant_phase0"])
+          PY
