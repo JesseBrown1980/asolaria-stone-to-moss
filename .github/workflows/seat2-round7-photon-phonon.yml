@@ -1,0 +1,97 @@
+name: Seat2 Round7 Photon Phonon Electronic Factorial Audit
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat2/round7/**'
+      - '.github/workflows/seat2-round7-photon-phonon.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-model-replay:
+    name: Seat2 coupling ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          persist-credentials: false
+          path: frozen-main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Python executable factorial with nine actual negative controls
+        shell: bash
+        run: |
+          python experiments/seat2/round7/seat2_coupling.py "$RUNNER_TEMP/seat2-r7" frozen-main
+      - name: Separately authored Node replay of all 4096 rows and 1024 paired contrasts
+        shell: bash
+        run: |
+          node experiments/seat2/round7/verify_coupling.js "$RUNNER_TEMP/seat2-r7" frozen-main
+      - name: Enforce canonical byte checks and honest physical boundaries
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          d=Path(os.environ["RUNNER_TEMP"])/"seat2-r7"
+          files=("factorial.jsonl","results.json","result.hbp","independent-node.json")
+          for file in files:
+              data=(d/file).read_bytes()
+              expected=(hashlib.sha256(data).hexdigest()+"  "+file+"\n").encode("ascii")
+              assert (d/(file+".sha256")).read_bytes()==expected,file
+          x=json.loads((d/"results.json").read_bytes())
+          assert x["rows"]==4096 and x["matched_interaction_contrasts"]==1024
+          assert not x["physical_optomechanical_coupling_measured"]
+          assert not x["independent_optical_memory_measured"]
+          assert not x["biological_neural_memory_measured"]
+          print("R7_DIGITAL_FACTORIAL_VERIFIED_PHYSICAL_HELD")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-r7-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat2-r7/*
+          if-no-files-found: error
+  independent-raw-artifact-referee:
+    name: Download all four host outputs and compare exact bytes
+    runs-on: ubuntu-latest
+    needs: independent-model-replay
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat2-r7-*
+          path: source-evidence
+      - name: Require all 4 hosts full-byte identical and all sidecars correct
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          folders=sorted(p for p in Path("source-evidence").iterdir() if p.is_dir())
+          assert len(folders)==4,folders
+          names=("factorial.jsonl","results.json","result.hbp","independent-node.json")
+          for name in names:
+              items=[(p/name).read_bytes() for p in folders]
+              assert len(set(items))==1,"DRIFT_"+name
+              digest=hashlib.sha256(items[0]).hexdigest()
+              for p,blob in zip(folders,items):
+                  assert (p/(name+".sha256")).read_bytes()==(digest+"  "+name+"\n").encode("ascii")
+              print("R7_FOUR_HOSTS_EXACT",name,len(items[0]),digest)
+          result=json.loads((folders[0]/"results.json").read_bytes())
+          assert result["interaction_difference_in_differences"]["COHERENT_TOY"]["1"]==[23,0,-23,0]
+          assert result["interaction_difference_in_differences"]["PHASE_INSENSITIVE_ARTIFACT"]["0"]==[23,23,23,23]
+          assert not result["physical_optomechanical_coupling_measured"]
+          print("R7_5TH_REFEREE_PASS_DIGITAL_PHYSICAL_HELD")
+          PY
