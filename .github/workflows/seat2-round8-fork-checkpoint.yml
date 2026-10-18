@@ -1,0 +1,92 @@
+name: Seat2 Round8 Signed History Equivocation and Replay
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat2/round8/**'
+      - '.github/workflows/seat2-round8-fork-checkpoint.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-fork-review:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install audited Ed25519 dependency
+        run: python -m pip install "cryptography>=42,<48"
+      - name: Execute public fixture-key fork / replay falsification
+        shell: bash
+        run: |
+          python experiments/seat2/round8/seat2_fork_audit.py "$RUNNER_TEMP/seat2-r8"
+      - name: Independently verify every signed history with Node Ed25519
+        shell: bash
+        run: |
+          node experiments/seat2/round8/verify_fork.js "$RUNNER_TEMP/seat2-r8"
+      - name: Confirm post-hoc Git-pinned baseline rejects fork, rollback and decoder leakage
+        shell: bash
+        run: |
+          node experiments/seat2/round8/verify_external_checkpoint.js "$RUNNER_TEMP/seat2-r8" experiments/seat2/round8/PINNED-POSTHOC-BASELINE.json
+      - name: Check signed fixture, negative control count, and scope
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          dest=Path(os.environ['RUNNER_TEMP'])/'seat2-r8'
+          for name in ("fixture.json","results.json","independent-node.json","external-referee.json"):
+              data=(dest/name).read_bytes()
+              assert (dest/(name+'.sha256')).read_bytes()==(hashlib.sha256(data).hexdigest()+'  '+name+'\n').encode('ascii')
+          r=json.loads((dest/'results.json').read_bytes())
+          assert r['cases_executed']==19 and r['competing_signed_histories']==2
+          assert r['same_session_signed_fork_accepted_without_external_tip']
+          assert r['fork_rejected_with_fixed_external_tip']
+          assert r['persisted_external_checkpoint_rejects_replay']
+          assert not r['external_source_authenticated']
+          assert not r['real_optical_retention_measured']
+          print('R8_PRECOMMITTED_FORK_POLICY_PASS_PHYSICAL_HELD')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-r8-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat2-r8/*
+          if-no-files-found: error
+  downloaded-byte-parity:
+    needs: independent-fork-review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat2-r8-*
+          path: evidence
+      - name: Independently compare full signed history JSON and Node report across all four jobs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          folders=sorted(p for p in Path('evidence').iterdir() if p.is_dir())
+          assert len(folders)==4,folders
+          for name in ("fixture.json","results.json","independent-node.json","external-referee.json"):
+              blobs=[(p/name).read_bytes() for p in folders]
+              assert len(set(blobs))==1,'CROSS_HOST_BYTE_DRIFT:'+name
+              h=hashlib.sha256(blobs[0]).hexdigest()
+              for p in folders:
+                  assert (p/(name+'.sha256')).read_bytes()==(h+'  '+name+'\n').encode('ascii')
+              print('FOUR_HOSTED_BYTES_MATCH',name,len(blobs[0]),h)
+          s=json.loads((folders[0]/'results.json').read_bytes())
+          assert s['verdict']=='DIGITAL_TEST_PASS_PHYSICAL_AND_EXTERNAL_CUSTODY_HELD'
+          print('SEAT2_R8_FIFTH_JOB_PASS_DIGITAL_ONLY')
+          PY
