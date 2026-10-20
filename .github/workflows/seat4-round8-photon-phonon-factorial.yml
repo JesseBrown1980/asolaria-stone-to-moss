@@ -1,0 +1,109 @@
+name: Seat4 Round8 light phonon electronic memory factorial preflight
+on:
+  push:
+    branches:
+      - agent/seat-4/round8-photon-phonon-electronic-coupling-20261015
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compute-factorial:
+    name: Independent ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: frozen-seat1-pr80
+          persist-credentials: false
+      - name: Verify original source Git SHA and bank-producer blob
+        shell: bash
+        run: |
+          test "$(git -C frozen-seat1-pr80 rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-seat1-pr80 rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download archived original full-byte 81 source and 567 index/bank
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/r8-original-source
+      - name: Produce all 217728 factorial simulation source/response observations
+        shell: bash
+        run: |
+          python experiments/seat4/round8/factorial.py "$RUNNER_TEMP/r8-original-source" "$RUNNER_TEMP/r8-result"
+      - name: Independently recompute original bank SHA, each memory bit and all causal contrasts
+        shell: bash
+        run: |
+          node experiments/seat4/round8/verify_factorial.js "$RUNNER_TEMP/r8-original-source" "$RUNNER_TEMP/r8-result"
+      - name: Compare freshly regenerated full HBP to committed immutable R8 stone
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,os
+          stone=Path("stones/2026-10-15-rainbow81/seat4-r8-photon-phonon-electronic-factorial-20261015.hbp")
+          blob=stone.read_bytes()
+          assert len(blob)==502
+          digest=hashlib.sha256(blob).hexdigest()
+          assert digest=="826bfd820f5cb34f79a3ab7f3ef1cf201a15c63c29801f8ddc8feb9f6137cd7e"
+          assert blob==(Path(os.environ["RUNNER_TEMP"])/"r8-result"/"r8-results.hbp").read_bytes()
+          assert stone.with_suffix(stone.suffix+".sha256").read_bytes()==(digest+"  "+stone.name+"\n").encode("ascii")
+          print("R8_SEALED_FACTORED_PHYSICS_TOY_HBP_REGENERATED",len(blob),digest)
+          PY
+      - name: Upload scientific results and all source+sidecar digests
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r8-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/r8-result/*
+          if-no-files-found: error
+          retention-days: 30
+  full-parity:
+    name: Four-run byte parity and physical-claim gate
+    needs: compute-factorial
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r8-*
+          path: evidence
+          merge-multiple: false
+      - name: Full byte parity, original source and reported status
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          dirs=sorted(Path("evidence").glob("seat4-r8-*"))
+          assert len(dirs)==4,dirs
+          for name in ("r8-synthetic-factorial.jsonl","r8-results.json","r8-results.hbp","r8-independent-node.json"):
+              b=[(d/name).read_bytes() for d in dirs]
+              assert len(set(b))==1,"CROSS_HOST_BYTE_DRIFT:"+name
+              sha=hashlib.sha256(b[0]).hexdigest()
+              for d in dirs:
+                  assert (d/(name+".sha256")).read_bytes()==(sha+"  "+name+"\n").encode("ascii")
+              print("SEAT4_R8_FOUR_RUNS_BYTE_EXACT",name,len(b[0]),sha)
+          z=json.loads((dirs[0]/"r8-results.json").read_bytes())
+          assert z["total_factorial_rows"]==217728
+          assert z["photonic_memory_verified"] is False
+          assert z["phononic_memory_verified"] is False
+          assert z["biological_neural_memory_verified"] is False
+          print("FACTORIAL_TOY_PASS_REAL_LIGHT_PHONON_MEMORY_HOLD")
+          PY
