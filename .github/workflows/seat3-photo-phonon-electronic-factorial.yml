@@ -1,0 +1,124 @@
+name: Seat3 OAE photon-phonon-electronic causal falsifier full independent replay
+
+on:
+  push:
+    branches:
+      - agent/seat-3/neural-photon-memory-assay-20261015
+    paths:
+      - "experiments/seat3/neural_photon/*factorial*"
+      - "experiments/seat3/neural_photon/verify_sealed_oae.py"
+      - "stones/2026-10-15-rainbow81/seat3-photon-phonon-electronic-factorial*"
+      - "experiments/seat3/neural_photon/SEAT1-HANDOFF-PHOTON-PHONON*"
+      - ".github/workflows/seat3-photo-phonon-electronic-factorial.yml"
+  pull_request:
+    paths:
+      - "experiments/seat3/neural_photon/*factorial*"
+      - "experiments/seat3/neural_photon/verify_sealed_oae.py"
+      - "stones/2026-10-15-rainbow81/seat3-photon-phonon-electronic-factorial*"
+      - ".github/workflows/seat3-photo-phonon-electronic-factorial.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  oae-six-models:
+    name: 81648 source-root-pinned cases on ${{ matrix.os }} Python ${{ matrix.python }} and Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11","3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Retrieve actually archived historical 81+567 light-bank source bytes
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/original-pr80
+      - name: Independently execute six declared synthetic mechanisms with eight causal arms
+        shell: bash
+        run: |
+          python experiments/seat3/neural_photon/optical_acoustic_factorial.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/py"
+          node experiments/seat3/neural_photon/optical_acoustic_factorial.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/js"
+          python experiments/seat3/neural_photon/verify_optical_acoustic_factorial.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/py" "$RUNNER_TEMP/js" "$RUNNER_TEMP/verified"
+          python experiments/seat3/neural_photon/verify_sealed_oae.py stones/2026-10-15-rainbow81/seat3-photon-phonon-electronic-factorial-20261015.hbp "$RUNNER_TEMP/verified"
+      - name: Original underlying retained bank corruption fails both numerical models
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"original-pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
+          x=bytearray(p.read_bytes());x[350]^=1;p.write_bytes(x)
+          PY
+          if python experiments/seat3/neural_photon/optical_acoustic_factorial.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/fakepy"; then
+            echo "FAILED to hold source corruption in Python";exit 1
+          fi
+          if node experiments/seat3/neural_photon/optical_acoustic_factorial.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/fakejs"; then
+            echo "FAILED to hold source corruption in Node";exit 1
+          fi
+          echo "PASS altered original source rejected independently"
+      - name: Corrupted numerical factorial trace must fail independent referee
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"py"/"photon-phonon-electronic-toy.hbp"
+          x=bytearray(p.read_bytes());x[160]^=1;p.write_bytes(x)
+          PY
+          if python experiments/seat3/neural_photon/verify_optical_acoustic_factorial.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/py" "$RUNNER_TEMP/js" "$RUNNER_TEMP/forged"; then
+            echo "FAILED to hold modified detector trace";exit 1
+          fi
+          echo "PASS corrupted factorial HBP HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-oae-factorial-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          if-no-files-found: error
+          retention-days: 30
+
+  cross-platform-replication:
+    name: Fifth independent exact byte referee for four OS/library builds
+    runs-on: ubuntu-latest
+    needs: oae-six-models
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-oae-factorial-*
+          merge-multiple: false
+          path: receipts
+      - name: Check all 4 hosted detector traces and 3 full SHA sidecars byte-identical
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          sources=sorted(Path("receipts").glob("seat3-oae-factorial-*"))
+          assert len(sources)==4,sources
+          for f in ("photon-phonon-electronic-toy.hbp","photon-phonon-electronic-toy.json","independent-factorial-audit.json"):
+              blobs=[(src/f).read_bytes() for src in sources]
+              assert all(x==blobs[0] for x in blobs),"FOUR_HOST_SOURCE_MISMATCH"
+              for d,body in zip(sources,blobs):
+                  want=(hashlib.sha256(body).hexdigest()+"  "+f+"\n").encode("ascii")
+                  assert (d/(f+".sha256")).read_bytes()==want,"SIDECAR_MISMATCH"
+              print("OAE_FOUR_HOST_BYTE_PARITY_PASS",f,len(blobs[0]),hashlib.sha256(blobs[0]).hexdigest())
+          outcome=json.loads((sources[0]/"photon-phonon-electronic-toy.json").read_bytes())
+          assert outcome["real_photon_phonon_coupling"]=="NOT_RUN"
+          assert outcome["physical_optical_memory_retention"]=="NOT_RUN"
+          print("OAE_PHYSICAL_CAUSAL_EVIDENCE_HOLD",outcome["total_simulated_rows"])
+          PY
