@@ -1,0 +1,6 @@
+PORTAL|schema=ASOLARIA-SEAT4-R7-INDEPENDENT-NEURAL-REFEREE-V1|digital=1|external_photon_capture=0|json=0
+SOURCE|parent_sha256=332e1eeb2d4de748c2e1da07729944fefe5b63589e9533b4c93b74d7cf3f5527|bank_sha256=52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345|json=0
+LIF|frames=2835|neural_matches=567,0,541,231,567|exact_reads=567,0,514,142,567|false_green=0,0,27,89,0|json=0
+REFEREE|trace_sha256=82f40a5dbc648b0dc50fa7e0dff99c512f1773b42086a7da9615e6b403da929b|results_sha256=db979f2a81cae2f721aa95424659ab0483caa70d684e6c9915e40e701b1aac37|json=0
+ATTACKS|rpc_mutations=11|fake_spectrometer_controls=4|real_one_bit_LIF_collision=1|missing_violet_rows=81|result=HELD|json=0
+END|physical_photons_measured=0|real_biological_neurons_measured=0|source_trust=PINNED_DIGITAL_ROOT_ONLY|release_gate=NOT_PHYSICAL|json=0
