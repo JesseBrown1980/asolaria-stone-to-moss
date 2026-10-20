@@ -1,0 +1,3978 @@
+{
+  "captured_at_utc": "2026-10-20T18:31:02Z",
+  "registry_seats": [
+    "seat-1",
+    "seat-2",
+    "seat-3"
+  ],
+  "repositories": [
+    {
+      "branches": [
+        {
+          "name": "agent/coordinator/nested-four-seat-replay-20261015",
+          "sha": "540cab26d81b77dda9e90a486507d6935331e79f"
+        },
+        {
+          "name": "agent/coordinator/recurrence-four-arm-prereg-20261015",
+          "sha": "ce1db577ff3828a3dfc3278a3e6a57a1f190afcb"
+        },
+        {
+          "name": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "sha": "675288dc0aabdd8e7c2747a0e3e6df79e142fba7"
+        },
+        {
+          "name": "agent/seat1/august-device-carrier-reconciliation-20261015",
+          "sha": "2bb8f0abbac1fefb7c468761855b4fedc1aa0202"
+        },
+        {
+          "name": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "sha": "6eaa959c657150afbcd6589c1e7d5b1ce8d42c82"
+        },
+        {
+          "name": "agent/seat1/proxima-rust181-20261015",
+          "sha": "5303c9b2ed0c0ce33da684706d57caef516ffd2b"
+        },
+        {
+          "name": "agent/seat1/proxima-wcs-provenance-review-20261016",
+          "sha": "1f4209ae7e5b4ce55fca8aa782f3a1de368dcced"
+        },
+        {
+          "name": "agent/seat2/colourqr-nnest-qprism-gitram-20261016",
+          "sha": "909c597b539de50f2b2648e49f5a7ae2031ef8d4"
+        },
+        {
+          "name": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "sha": "0a1f39098254cb22fe8d5a9cc73a3cee96e4260f"
+        },
+        {
+          "name": "agent/seat3/clean-behcs1024-60d-20261016",
+          "sha": "cd167d3e9454a6fb02828fd4c46ab8f801bc84e9"
+        },
+        {
+          "name": "agent/seat3/gf3-81-rank-matrix-c3-20261016",
+          "sha": "6b0a535cf356127ac1362dacd0590772ef797416"
+        },
+        {
+          "name": "agent/seat3/gf3-reversible-witness-rust181-20261016",
+          "sha": "6616787bc4284bfe35dd95f3a9620dc9b81d1fed"
+        },
+        {
+          "name": "agent/seat3/qr-nnest-qprism-failclosed-20261016",
+          "sha": "ca0a94a3514508e2758fabcc3dd45beb1cd06f7a"
+        },
+        {
+          "name": "agent/seat4/observatory-hbp-only-20261016",
+          "sha": "ff7402cca2e768bdb94729643c6c3400853415db"
+        },
+        {
+          "name": "agent/seat4/proxima-real-optical-multiepoch-20261016",
+          "sha": "c494c568623775e33d9fdb89e737ff102fb71cfc"
+        },
+        {
+          "name": "agent/seat4/proxima-sensory-hbi-sh-rust181-20261016",
+          "sha": "22db5e5878a21ca12c1870cf0a61643221d6f482"
+        },
+        {
+          "name": "agent/seat4/rust181-ternary-hbp-pr124-repair-20261016",
+          "sha": "0f05fba8fa162e5688d33d6c0433efc29721f95c"
+        },
+        {
+          "name": "agent/seat-1/computational-readiness-20261014",
+          "sha": "85370f66df1e0279a81fdd731ac59a9302edac5e"
+        },
+        {
+          "name": "agent/seat-1/crossview-provenance-negative-20261015",
+          "sha": "693c6941b791f76253c8e683f5ef1139e53729ab"
+        },
+        {
+          "name": "agent/seat-1/factorized-rainbow27-lightbank-20261015",
+          "sha": "54ca8fd84158dca8ef3c4c94f50b3291b7ae930c"
+        },
+        {
+          "name": "agent/seat-1/multiview-observability-20261015",
+          "sha": "8f418ba10fdf4b84c28f328e96141f7cb82d192e"
+        },
+        {
+          "name": "agent/seat-1/nnest-qprism-source-orchestrator-20261015",
+          "sha": "cf356383d397e7dbe2dc66baaf4981937afc8f01"
+        },
+        {
+          "name": "agent/seat-1/optogenetic-photocycle-20261015",
+          "sha": "441c961258df60d67a4cdb74df8303fe11f94b43"
+        },
+        {
+          "name": "agent/seat-1/rainbow7-lightbank-memory-20261015",
+          "sha": "7a1374935421c73dc8760c22fc268b1a3f5c79bd"
+        },
+        {
+          "name": "agent/seat-1/recurrence-four-arm-72-20261015",
+          "sha": "432565f6f9f6ab4ba0b1f8ebf67a4f5374d07ab2"
+        },
+        {
+          "name": "agent/seat-1/round2-rate-current-20261015",
+          "sha": "076758de2f1282ef0741b0a3bead4152591e7777"
+        },
+        {
+          "name": "agent/seat-1/round3-august-lightbank-recall-20261015",
+          "sha": "3b2421d9f5e112da17115902c22c66c8c9dda2cb"
+        },
+        {
+          "name": "agent/seat-1/round3-ordered27-rainbow7-20261015",
+          "sha": "36b5d4e8d1dee8857818cb054f84df490af9c662"
+        },
+        {
+          "name": "agent/seat-1/round4-crosslane-r27v2-bank-20261015",
+          "sha": "958cb7bff9cd3aa0a7cc7949e5628291259500d7"
+        },
+        {
+          "name": "agent/seat-1/triad-27wave-3horizon-20261014",
+          "sha": "0cf1a6020625c4e969620650faf83b054e42c4f2"
+        },
+        {
+          "name": "agent/seat-2/cross-host-rainbow81-20261014",
+          "sha": "bd451707cedf040a6c4a8cd42b4db1445458ceea"
+        },
+        {
+          "name": "agent/seat-2/identity-noalias-peer-20261015",
+          "sha": "57edafc472462c3db63207fe8662274ad07c7c1a"
+        },
+        {
+          "name": "agent/seat-2/minimal-recovery-81-20261014",
+          "sha": "86a1315f41b1030be47d982cc3ebbc8cd3f075cc"
+        },
+        {
+          "name": "agent/seat-2/n-nest-qprism-information-audit-20261015",
+          "sha": "3adcedc4d29ebe3574ae484aceb383abb9aceb1a"
+        },
+        {
+          "name": "agent/seat-2/opto-lightgate-recurrence-20261015",
+          "sha": "e35796a6f1f31f8223bd084345f7e206214509a8"
+        },
+        {
+          "name": "agent/seat-2/peer-review-crossview-m2-20261015",
+          "sha": "43a655dd11dfab4eb6fcc21aee4dfdb51a4629b6"
+        },
+        {
+          "name": "agent/seat-2/physical-host-evidence-custody-20261015",
+          "sha": "a3543d9f8f52fc860994411135ee9e3778c1469b"
+        },
+        {
+          "name": "agent/seat-2/physical-host-provenance-audit-20261015",
+          "sha": "a67e0e8add3214809071f6e4d5bf1e24502638ad"
+        },
+        {
+          "name": "agent/seat-2/pr19-independent-replay-20261015",
+          "sha": "ed56053ee82a6dfc037f2ae3ce163c0421b51b0f"
+        },
+        {
+          "name": "agent/seat-2/recurrence-cross-seat-bridge-20261015",
+          "sha": "fa92a3d579152450bff3cb0b653c27bd1356a356"
+        },
+        {
+          "name": "agent/seat-2/rim72-source-envelope-20261015",
+          "sha": "c46c77e305e1d645ea3890afa0cbd8a88b5d7de4"
+        },
+        {
+          "name": "agent/seat-2/round3-rgb-provenance-20261015",
+          "sha": "55e93d2e584a64c2ace014f2de9a2ec20f0c3ea1"
+        },
+        {
+          "name": "agent/seat-2/round6-public-key-custody-cross-exam-20261015",
+          "sha": "fec6c06c4d91dd93683a9ae523a82fe41720063c"
+        },
+        {
+          "name": "agent/seat-2/round7-photon-phonon-electronic-coupling-20261015",
+          "sha": "affa8d191bafde16f5e6009407b7206339aed079"
+        },
+        {
+          "name": "agent/seat-2/round8-checkpoint-fork-rollback-20261015",
+          "sha": "b5000363894569326110dcb797f234647f0f5b84"
+        },
+        {
+          "name": "agent/seat-2/round9-host-activity-evidence-bridge-20261015",
+          "sha": "e2532396bbd42bb2a0bace2f26d4b5d6b8f2e966"
+        },
+        {
+          "name": "agent/seat-2/seat1-photocycle-peer-20261015",
+          "sha": "beab10f5963cae1c7eac5fc27a5509974ab4c925"
+        },
+        {
+          "name": "agent/seat-2/seat1-triad-third-algorithm-20261015",
+          "sha": "e7b68426910d30ab6ba58bb4e6540a71a366973a"
+        },
+        {
+          "name": "agent/seat-3/august-lightbank-colourqr-projector-20261015",
+          "sha": "15dade7b517719b9d5d1fa80e79838e1e7d8ed0a"
+        },
+        {
+          "name": "agent/seat-3/c3-third-seed-leakage-stress-20261015",
+          "sha": "1a9ae8a85331dd10f0c45ce79337a7b8f85c839b"
+        },
+        {
+          "name": "agent/seat-3/computational-preflight-20261014t1633",
+          "sha": "67ac287b0826cadfa41ff10e65bab4d06c17f0f9"
+        },
+        {
+          "name": "agent/seat-3/cross-host-rainbow81-20261014",
+          "sha": "c05e3f9764d557df8fcf7804692ce8a6eca9e393"
+        },
+        {
+          "name": "agent/seat-3/crossview-consistency-entropy-20261015",
+          "sha": "a1c3573d4e036d21d590d0d1a499a206fd827682"
+        },
+        {
+          "name": "agent/seat-3/factorized-rainbow27-resolver-20261015",
+          "sha": "2cd144947a4c75dbba20a37b263ef048bd290656"
+        },
+        {
+          "name": "agent/seat-3/immutable-identity-autonomous-ticks-20261015",
+          "sha": "29ef2b4d0e8aa7efc33a9af74a33c626afa2e011"
+        },
+        {
+          "name": "agent/seat-3/lightbank-projector-rgb-20261015",
+          "sha": "5761561359f8b0dd91a259b22381218b088db477"
+        },
+        {
+          "name": "agent/seat-3/multiview-polynomial-gcd-audit-20261015",
+          "sha": "87d3d8499b01a4290784e6b4aad8a3a7c5574002"
+        },
+        {
+          "name": "agent/seat-3/neural-photon-memory-assay-20261015",
+          "sha": "3c2d41a52d0b1c6a1d58ecf9b2d5327c81b493f3"
+        },
+        {
+          "name": "agent/seat-3/opto-lightgate-kinetics-20261015",
+          "sha": "f5edb9629707a5d14a5831f21f7550a16ba08209"
+        },
+        {
+          "name": "agent/seat-3/optomechanical-identifiability-intervention-20261015",
+          "sha": "414d4746982449e85ab6ac8ebb71388850fc2842"
+        },
+        {
+          "name": "agent/seat-3/physical-compute-selective-attenuator-audit-20261015",
+          "sha": "2653d29828fb8c10737887fae5f01e13acc6001b"
+        },
+        {
+          "name": "agent/seat-3/pr111-crosshost-provenance-falsification-20261015",
+          "sha": "001f76509ccaa98c898a4ed4a423e7ff558658db"
+        },
+        {
+          "name": "agent/seat-3/rainbow27-lossless-normalized-v2-20261015",
+          "sha": "c32d472dfe84f352450eb50469e0e9a987c33d78"
+        },
+        {
+          "name": "agent/seat-3/rainbow27-quadratic-witness-20261015",
+          "sha": "4db24bc72e6852bc2363501c59b7c0240f5c357d"
+        },
+        {
+          "name": "agent/seat-3/recovery-proof-20261014",
+          "sha": "9296f863be50619355cb7677298ca78b959ec9ed"
+        },
+        {
+          "name": "agent/seat-3/recurrence-correlation-floor-20261015",
+          "sha": "84a02995ecdbc40cbef9933a73a92ee778b3616b"
+        },
+        {
+          "name": "agent/seat-3/room03-fourstate-controller-20261015",
+          "sha": "f6df567f9d36697f2fc895167c04ac3c46152409"
+        },
+        {
+          "name": "agent/seat-3/round3-index-factorization-route-info-20261015",
+          "sha": "23337d71b33e83937ae4922665a313ff8d038985"
+        },
+        {
+          "name": "agent/seat-3/round3-qutrit-rainbow27-independent-20261015",
+          "sha": "a9f7f73acf3c515de68b0dfff6edc5e30f544e47"
+        },
+        {
+          "name": "agent/seat-3/seat1-photocycle-peer-audit-20261015",
+          "sha": "c1fc2c85e5684d2c1190662ba57e889d996b792b"
+        },
+        {
+          "name": "agent/seat-3/seat1-triad-independent-replay-20261015",
+          "sha": "dfaf3b26e6ea9ba8f44f64c982081837252b2af3"
+        },
+        {
+          "name": "agent/seat-3/two-horizon-stress-20261014",
+          "sha": "f3785464e4675552e604c38083c48157884e7bee"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-adversarial-mixtures",
+          "sha": "c0084fcd7cb27107dece5f5abdcbb62e629c253a"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-cross-host-portal",
+          "sha": "bab0d9cd4ff6ad70c02418644e083c0467a1e468"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-quantum-gravity-gates",
+          "sha": "9c8dac9cab2aa5513d801c3b36aad5506efc6722"
+        },
+        {
+          "name": "agent/seat-3/2026-10-14-three-physical-hosts",
+          "sha": "50d96e363943273a44b3a195eff9e9b2591f4765"
+        },
+        {
+          "name": "agent/seat-4/autonomous-simulation-capsule-20261015",
+          "sha": "6e32d41acdd813457e9b8a73a41a8df2afd16337"
+        },
+        {
+          "name": "agent/seat-4/colour-qr-lightbank-b3-20261015",
+          "sha": "57287df9c152c1642ddb1eaab1e33d0b880acb52"
+        },
+        {
+          "name": "agent/seat-4/core-science-room2-adversarial-20261015",
+          "sha": "bea653620af97cdd12102232e67f3adab275082c"
+        },
+        {
+          "name": "agent/seat-4/cross-host-rainbow81-20261014",
+          "sha": "6f8120b5adea6e3196eea2b776675fc6332ed8c3"
+        },
+        {
+          "name": "agent/seat-4/crossview-polynomial-certificate-20261015",
+          "sha": "f5bc38a66cbe8513a324412ecb6808e9fe3723e4"
+        },
+        {
+          "name": "agent/seat-4/light-bank-three-path-memory-20261015",
+          "sha": "0ea6efea7cf30dff0f2babb62f435630e1e496f4"
+        },
+        {
+          "name": "agent/seat-4/minimal-recovery-lift-20261014",
+          "sha": "e9da6260b8f5124a9413ebdb574a3db6fa312179"
+        },
+        {
+          "name": "agent/seat-4/nnest-corrective-gate-20261015",
+          "sha": "f8267c7681ce080fb14cdcbb9b3663ce35938e90"
+        },
+        {
+          "name": "agent/seat-4/nnest-qprism-compromised-watcher-20261015",
+          "sha": "8251c5b0852c3062f844e3a978836ce232ba7903"
+        },
+        {
+          "name": "agent/seat-4/opto-photo-gate-20261015",
+          "sha": "57ff95f65b9fe3c6f2764ee62f9bd88e15c4f9a8"
+        },
+        {
+          "name": "agent/seat-4/original-seat1-triad-peer-20261015",
+          "sha": "d0be62b084203226477801d86f80a2a9b80bb4ce"
+        },
+        {
+          "name": "agent/seat-4/recurrence-is-mind-9x9-feedback-20261015",
+          "sha": "59addb9e32d394a4a909fbbef847b42238af4f75"
+        },
+        {
+          "name": "agent/seat-4/room04-adversarial-photocycle-20261015",
+          "sha": "8b8a9e4faa5b72fd1d5c290c686c1417a36d38ff"
+        },
+        {
+          "name": "agent/seat-4/round4-v2-lane-binding-watcher-20261015",
+          "sha": "ad9c2b3dffae62e2fd8b746daa927a383a772793"
+        },
+        {
+          "name": "agent/seat-4/round5-source-spectrum-signature-20261015",
+          "sha": "76a47f94174076b80f53a7f5db2fbb694866607a"
+        },
+        {
+          "name": "agent/seat-4/round6-optical-neural-memory-falsification-20261015",
+          "sha": "a427ee599d7bd64ebb503d632e0c047588038c4f"
+        },
+        {
+          "name": "agent/seat-4/round7-neural-source-referee-20261015",
+          "sha": "1f3014b1c09a007ede71c12cc5a97212954fb5c1"
+        },
+        {
+          "name": "agent/seat-4/round8-photon-phonon-electronic-coupling-20261015",
+          "sha": "2712ddc71a7ded7324658184bccf8e1dfd2cc5dd"
+        },
+        {
+          "name": "agent/seat-4/round9-host-evidence-bridge-20261015",
+          "sha": "fb0f8b9939a84089d8cb64e303d23ee674254fd5"
+        },
+        {
+          "name": "agent/seat-4/round10-81bit-matrix-adversarial-20261015",
+          "sha": "dfbdcacf885123135f5fc088d7955d10d860f11c"
+        },
+        {
+          "name": "agent/seat-4/seat3-pr19-peer-audit-20261015",
+          "sha": "06239f30932ccb41920ec8f31b6996ab43a607b3"
+        },
+        {
+          "name": "agent/seat-5/r13-center-origin-trit-geometry-20261015",
+          "sha": "069d89107d3cc42e2666bdc10a66f1b8e7a26621"
+        },
+        {
+          "name": "audit/seat3-9720-release-integration-20261014",
+          "sha": "ff4b5171234346ca0fd6b8eea92d7899ea4fa6c4"
+        },
+        {
+          "name": "audit/seat4-signature-verification-20261014",
+          "sha": "77cfeb7dbd2341ca945818f687a965047e3e26ad"
+        }
+      ],
+      "errors": [],
+      "pull_requests": [
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 146,
+          "state": "open",
+          "title": "verify: independent Rust 1.81 check of ChatGPT Alpha Cen GGUF constellation",
+          "updated_at": "2026-10-18T14:58:48Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/146"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 145,
+          "state": "closed",
+          "title": "[Seat 3] Clean BEHCS-1024 60D extraction \u2014 bounded Rust 1.81 parity and source custody",
+          "updated_at": "2026-10-16T23:50:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/145"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 144,
+          "state": "closed",
+          "title": "Cross-link the source-verified BEHCS-1024 / 60D clean ternary kernel",
+          "updated_at": "2026-10-16T22:09:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/144"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 143,
+          "state": "open",
+          "title": "[Coordinator DRAFT] Four-seat JWST MIRI 2024/2025 MAST source and falsification gates",
+          "updated_at": "2026-10-16T20:30:52Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/143"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 141,
+          "state": "closed",
+          "title": "[Seat2] Three original Proxima HST FITS to RGB QR images, ZXing readback, Q-PRISM GitRAM",
+          "updated_at": "2026-10-16T18:02:24Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/141"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 140,
+          "state": "closed",
+          "title": "[Seat 3] Fail-closed N-Nest \u00d7 Q-PRISM \u00d7 Colour QR source-bound replay",
+          "updated_at": "2026-10-16T17:49:21Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/140"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 139,
+          "state": "closed",
+          "title": "[Seat 2 DRAFT] Colour QR \u00d7 N-Nest recurrence \u00d7 original Q-PRISM \u00d7 3-cell GitRAM integration",
+          "updated_at": "2026-10-16T17:52:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/139"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 137,
+          "state": "open",
+          "title": "[Seat 1 DRAFT] Three authentic HST Proxima WCS sky coordinates, Gaia-prior centroid, external source and optical gates",
+          "updated_at": "2026-10-16T16:52:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/137"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 136,
+          "state": "open",
+          "title": "[Seat 4] Three actual multi-epoch HST Proxima optical FITS: Rust 1.81 GF(3), HBI/HBP SHA/SH sensory replay",
+          "updated_at": "2026-10-16T17:33:09Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/136"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 135,
+          "state": "open",
+          "title": "[Seat 3 C3] Rust 1.81 GF(3) minimal reversible 81-trit memory sideband, canonical HBI/HBP and source-bound replay",
+          "updated_at": "2026-10-16T14:44:20Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/135"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 134,
+          "state": "open",
+          "title": "[Seat 3 C3] Independent GF(3) 81-trit rank ladder, matrix skip and recoverable-memory boundary",
+          "updated_at": "2026-10-16T14:28:11Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/134"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 133,
+          "state": "open",
+          "title": "[Seat 4] Proxima real-source sensory: Rust 1.81 GF(3), three epochs, HBI/HBP SHA and SH adversarial replay",
+          "updated_at": "2026-10-16T14:42:16Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/133"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 132,
+          "state": "open",
+          "title": "[Seat 4] Strict no-JSON Proxima observation evidence: Rust 1.81 GF(3), four HBP receipts and original raw SHA",
+          "updated_at": "2026-10-16T14:27:06Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/132"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 131,
+          "state": "open",
+          "title": "[Seat 4] Fix Seat 1 Rust 1.81 dual-binary CI; preserve Clippy, GF(3) trits and HBP-only output",
+          "updated_at": "2026-10-16T13:17:16Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/131"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 124,
+          "state": "open",
+          "title": "[Seat 1 DRAFT] Asolaria Rust1.81 seven-level Proxima ternary HRM/MTP/Fischer Chariots + HTTP-0",
+          "updated_at": "2026-10-16T14:43:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/124"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 123,
+          "state": "open",
+          "title": "[Seat 5 R13 DRAFT] Correct center-first N\u00d73\u00d73\u00d73 geometry with Chariot audit and Rust 1.81",
+          "updated_at": "2026-10-15T21:28:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/123"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 121,
+          "state": "open",
+          "title": "[Seat 5 / Round 11 DRAFT] Rust 1.81 independent 81-bit invertibility, kernel and law-switch verifier",
+          "updated_at": "2026-10-15T20:04:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/121"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 120,
+          "state": "closed",
+          "title": "[Seat 4 / Round 10] Independent original 81-bit matrix skip; nonlinear law-switch and hash-chain falsification",
+          "updated_at": "2026-10-15T19:54:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/120"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 118,
+          "state": "closed",
+          "title": "[Seat 3] Independent cross-seat PR111 host counter provenance, forged telemetry and source SHA falsifiers",
+          "updated_at": "2026-10-15T19:35:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/118"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 116,
+          "state": "open",
+          "title": "[Seat 3] Preserve reported photon-memory history; exact selective photon/RF rank and real host CPU/memory counters",
+          "updated_at": "2026-10-15T17:36:42Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/116"
+        }
+      ],
+      "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: write canonical GNU SHA256 sidecars across Windows and Linux, enforce byte identity",
+          "seat": "unassigned",
+          "sha": "cd167d3e9454a6fb02828fd4c46ab8f801bc84e9",
+          "timestamp_utc": "2026-10-16T22:14:54Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/cd167d3e9454a6fb02828fd4c46ab8f801bc84e9"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: fail closed if Linux/Windows HBP bytes differ despite passing unit tests",
+          "seat": "unassigned",
+          "sha": "a44996ba7f963c6f11d0a3bcaa90efc2bd25fd8f",
+          "timestamp_utc": "2026-10-16T22:13:21Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/a44996ba7f963c6f11d0a3bcaa90efc2bd25fd8f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: normalize HBP witness stdout to LF bytes on Windows and Linux",
+          "seat": "unassigned",
+          "sha": "fdafc29a300a460e4eac2954a78fe34b3f6c2bab",
+          "timestamp_utc": "2026-10-16T22:13:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fdafc29a300a460e4eac2954a78fe34b3f6c2bab"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: preserve -D warnings, remove Clippy format_collect allocations",
+          "seat": "unassigned",
+          "sha": "fcd538714703c8ca5e4215b1206fd9e987af3743",
+          "timestamp_utc": "2026-10-16T22:11:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fcd538714703c8ca5e4215b1206fd9e987af3743"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: preserve -D warnings, remove Clippy format_collect allocations",
+          "seat": "unassigned",
+          "sha": "8c3177e49043cf8095ad1c6ba757248db82d3041",
+          "timestamp_utc": "2026-10-16T22:11:43Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/8c3177e49043cf8095ad1c6ba757248db82d3041"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: repair independent SHA-256 K-table length; cross-check all 64 FIPS constants against source",
+          "seat": "unassigned",
+          "sha": "3111ae6ed1cef4704acdd4ddc67451c64a81b52a",
+          "timestamp_utc": "2026-10-16T22:11:00Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3111ae6ed1cef4704acdd4ddc67451c64a81b52a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: enforce Rust 1.81 strict Clippy bounded parity and clean-content CI",
+          "seat": "unassigned",
+          "sha": "9a57b953a44df5faf98826dcfe66c5addce0f919",
+          "timestamp_utc": "2026-10-16T22:09:55Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/9a57b953a44df5faf98826dcfe66c5addce0f919"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add independent Python SHA-256 coordinate parity and oversized-input falsifiers",
+          "seat": "unassigned",
+          "sha": "c47e00a4de824683c23a5c02c648ecbb16673bba",
+          "timestamp_utc": "2026-10-16T22:09:06Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c47e00a4de824683c23a5c02c648ecbb16673bba"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add standalone Rust181 BEHCS1024-60D crate README.md",
+          "seat": "unassigned",
+          "sha": "fa1016abb710d2d875c2924027dd5dfe009eb22e",
+          "timestamp_utc": "2026-10-16T22:08:42Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/fa1016abb710d2d875c2924027dd5dfe009eb22e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add standalone Rust181 BEHCS1024-60D crate src/main.rs",
+          "seat": "unassigned",
+          "sha": "0d2df4b74b556ab6c0bfe6c20a60585d30979545",
+          "timestamp_utc": "2026-10-16T22:08:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0d2df4b74b556ab6c0bfe6c20a60585d30979545"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add standalone Rust181 BEHCS1024-60D crate rust-toolchain.toml",
+          "seat": "unassigned",
+          "sha": "10e0ff2bc276bf382592a3df17dc19d59d7b10d4",
+          "timestamp_utc": "2026-10-16T22:08:38Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/10e0ff2bc276bf382592a3df17dc19d59d7b10d4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add standalone Rust181 BEHCS1024-60D crate Cargo.lock",
+          "seat": "unassigned",
+          "sha": "56005952dc2aa84df2cf9444741166160b1964c0",
+          "timestamp_utc": "2026-10-16T22:08:35Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/56005952dc2aa84df2cf9444741166160b1964c0"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add standalone Rust181 BEHCS1024-60D crate Cargo.toml",
+          "seat": "unassigned",
+          "sha": "a76a1a3346bf0f6b4ce89ccac0746fcb21a32d9e",
+          "timestamp_utc": "2026-10-16T22:08:33Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/a76a1a3346bf0f6b4ce89ccac0746fcb21a32d9e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat3/clean-behcs1024-60d-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: independently implement bounded BEHCS1024 60D hash coordinate without source-tree copying",
+          "seat": "unassigned",
+          "sha": "5c359815b06e7240606d25a6e938196fb978216c",
+          "timestamp_utc": "2026-10-16T22:08:00Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/5c359815b06e7240606d25a6e938196fb978216c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "ci(seat1): use hosted public runner to retrieve original Webb release images for local exact-pixel zoom",
+          "seat": "unassigned",
+          "sha": "675288dc0aabdd8e7c2747a0e3e6df79e142fba7",
+          "timestamp_utc": "2026-10-16T18:43:36Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/675288dc0aabdd8e7c2747a0e3e6df79e142fba7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "feat(seat1): capture and SHA original public Webb image and MAST proposal inventory",
+          "seat": "unassigned",
+          "sha": "55cca5a578949e5785f743edecfd8bd5e291a80a",
+          "timestamp_utc": "2026-10-16T18:43:26Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/55cca5a578949e5785f743edecfd8bd5e291a80a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat2 real Hubble FITS to RGB Colour QR readback (#141)",
+          "seat": "unassigned",
+          "sha": "a455493ba997fa423931e8d61d91c4b1ee782786",
+          "timestamp_utc": "2026-10-16T18:02:24Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/a455493ba997fa423931e8d61d91c4b1ee782786"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat2 real Hubble FITS to RGB Colour QR readback (#141)",
+          "seat": "unassigned",
+          "sha": "a455493ba997fa423931e8d61d91c4b1ee782786",
+          "timestamp_utc": "2026-10-16T18:02:24Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/a455493ba997fa423931e8d61d91c4b1ee782786"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: independently decode original V40 QR at full 12px module resolution, pure-symbol fallback",
+          "seat": "unassigned",
+          "sha": "0a1f39098254cb22fe8d5a9cc73a3cee96e4260f",
+          "timestamp_utc": "2026-10-16T17:59:59Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0a1f39098254cb22fe8d5a9cc73a3cee96e4260f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: independently decode original V40 QR at full 12px module resolution, pure-symbol fallback",
+          "seat": "unassigned",
+          "sha": "0a1f39098254cb22fe8d5a9cc73a3cee96e4260f",
+          "timestamp_utc": "2026-10-16T17:59:59Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0a1f39098254cb22fe8d5a9cc73a3cee96e4260f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: independently decode original V40 QR at full 12px module resolution, pure-symbol fallback",
+          "seat": "unassigned",
+          "sha": "0a1f39098254cb22fe8d5a9cc73a3cee96e4260f",
+          "timestamp_utc": "2026-10-16T17:59:59Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/0a1f39098254cb22fe8d5a9cc73a3cee96e4260f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: original HST FITS SHA/SCI source GitRAM RGB QR bitmap/readback hosted workflow",
+          "seat": "unassigned",
+          "sha": "b1073b15968a08e663c3beac0a1a842210e5b5cc",
+          "timestamp_utc": "2026-10-16T17:56:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b1073b15968a08e663c3beac0a1a842210e5b5cc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: original HST FITS SHA/SCI source GitRAM RGB QR bitmap/readback hosted workflow",
+          "seat": "unassigned",
+          "sha": "b1073b15968a08e663c3beac0a1a842210e5b5cc",
+          "timestamp_utc": "2026-10-16T17:56:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b1073b15968a08e663c3beac0a1a842210e5b5cc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: original HST FITS SHA/SCI source GitRAM RGB QR bitmap/readback hosted workflow",
+          "seat": "unassigned",
+          "sha": "b1073b15968a08e663c3beac0a1a842210e5b5cc",
+          "timestamp_utc": "2026-10-16T17:56:56Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/b1073b15968a08e663c3beac0a1a842210e5b5cc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: render real RGB triple QR PNG and independently decode all three HST SCI lanes with ZXing",
+          "seat": "unassigned",
+          "sha": "9b86a115cd213aea4534b9ca9fecd31cbe2b9227",
+          "timestamp_utc": "2026-10-16T17:56:14Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/9b86a115cd213aea4534b9ca9fecd31cbe2b9227"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: render real RGB triple QR PNG and independently decode all three HST SCI lanes with ZXing",
+          "seat": "unassigned",
+          "sha": "9b86a115cd213aea4534b9ca9fecd31cbe2b9227",
+          "timestamp_utc": "2026-10-16T17:56:14Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/9b86a115cd213aea4534b9ca9fecd31cbe2b9227"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: render real RGB triple QR PNG and independently decode all three HST SCI lanes with ZXing",
+          "seat": "unassigned",
+          "sha": "9b86a115cd213aea4534b9ca9fecd31cbe2b9227",
+          "timestamp_utc": "2026-10-16T17:56:14Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/9b86a115cd213aea4534b9ca9fecd31cbe2b9227"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: source-pinned full HST FITS SHA validation and real SCI pixel-byte RGB fixture",
+          "seat": "unassigned",
+          "sha": "c3d3ed64629691e4503054ba47bb76996c6dab33",
+          "timestamp_utc": "2026-10-16T17:55:36Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c3d3ed64629691e4503054ba47bb76996c6dab33"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: source-pinned full HST FITS SHA validation and real SCI pixel-byte RGB fixture",
+          "seat": "unassigned",
+          "sha": "c3d3ed64629691e4503054ba47bb76996c6dab33",
+          "timestamp_utc": "2026-10-16T17:55:36Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c3d3ed64629691e4503054ba47bb76996c6dab33"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: source-pinned full HST FITS SHA validation and real SCI pixel-byte RGB fixture",
+          "seat": "unassigned",
+          "sha": "c3d3ed64629691e4503054ba47bb76996c6dab33",
+          "timestamp_utc": "2026-10-16T17:55:36Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/c3d3ed64629691e4503054ba47bb76996c6dab33"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat2 Colour QR N-Nest Q-PRISM GitRAM integration (#139)",
+          "seat": "unassigned",
+          "sha": "767feb5c159f3ce0f36102ed0c94407b0e6ab929",
+          "timestamp_utc": "2026-10-16T17:52:55Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/767feb5c159f3ce0f36102ed0c94407b0e6ab929"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat2 Colour QR N-Nest Q-PRISM GitRAM integration (#139)",
+          "seat": "unassigned",
+          "sha": "767feb5c159f3ce0f36102ed0c94407b0e6ab929",
+          "timestamp_utc": "2026-10-16T17:52:55Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/767feb5c159f3ce0f36102ed0c94407b0e6ab929"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat2 Colour QR N-Nest Q-PRISM GitRAM integration (#139)",
+          "seat": "unassigned",
+          "sha": "767feb5c159f3ce0f36102ed0c94407b0e6ab929",
+          "timestamp_utc": "2026-10-16T17:52:55Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/767feb5c159f3ce0f36102ed0c94407b0e6ab929"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: run exact ColourQR-NNest-QPRISM-GitRAM certification on main merge",
+          "seat": "unassigned",
+          "sha": "909c597b539de50f2b2648e49f5a7ae2031ef8d4",
+          "timestamp_utc": "2026-10-16T17:51:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/909c597b539de50f2b2648e49f5a7ae2031ef8d4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: run exact ColourQR-NNest-QPRISM-GitRAM certification on main merge",
+          "seat": "unassigned",
+          "sha": "909c597b539de50f2b2648e49f5a7ae2031ef8d4",
+          "timestamp_utc": "2026-10-16T17:51:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/909c597b539de50f2b2648e49f5a7ae2031ef8d4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/colourqr-nnest-qprism-gitram-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: run exact ColourQR-NNest-QPRISM-GitRAM certification on main merge",
+          "seat": "unassigned",
+          "sha": "909c597b539de50f2b2648e49f5a7ae2031ef8d4",
+          "timestamp_utc": "2026-10-16T17:51:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/909c597b539de50f2b2648e49f5a7ae2031ef8d4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: run exact ColourQR-NNest-QPRISM-GitRAM certification on main merge",
+          "seat": "unassigned",
+          "sha": "909c597b539de50f2b2648e49f5a7ae2031ef8d4",
+          "timestamp_utc": "2026-10-16T17:51:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/909c597b539de50f2b2648e49f5a7ae2031ef8d4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat 3 independent N-Nest Q-PRISM Colour QR gate (#140)",
+          "seat": "unassigned",
+          "sha": "7bc83e1b286e749ca026f3f8054a95c8cb627acf",
+          "timestamp_utc": "2026-10-16T17:49:17Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7bc83e1b286e749ca026f3f8054a95c8cb627acf"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat 3 independent N-Nest Q-PRISM Colour QR gate (#140)",
+          "seat": "unassigned",
+          "sha": "7bc83e1b286e749ca026f3f8054a95c8cb627acf",
+          "timestamp_utc": "2026-10-16T17:49:17Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7bc83e1b286e749ca026f3f8054a95c8cb627acf"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge Seat 3 independent N-Nest Q-PRISM Colour QR gate (#140)",
+          "seat": "unassigned",
+          "sha": "7bc83e1b286e749ca026f3f8054a95c8cb627acf",
+          "timestamp_utc": "2026-10-16T17:49:17Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/7bc83e1b286e749ca026f3f8054a95c8cb627acf"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: reject unexpected GitRAM frames and exercise five actual source/QR/clock-index/channel forgery controls",
+          "seat": "unassigned",
+          "sha": "010b00bf8c72793752c0fee14bd37ed40c6c12cc",
+          "timestamp_utc": "2026-10-16T17:38:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/010b00bf8c72793752c0fee14bd37ed40c6c12cc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: reject unexpected GitRAM frames and exercise five actual source/QR/clock-index/channel forgery controls",
+          "seat": "unassigned",
+          "sha": "010b00bf8c72793752c0fee14bd37ed40c6c12cc",
+          "timestamp_utc": "2026-10-16T17:38:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/010b00bf8c72793752c0fee14bd37ed40c6c12cc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/colourqr-nnest-qprism-gitram-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: reject unexpected GitRAM frames and exercise five actual source/QR/clock-index/channel forgery controls",
+          "seat": "unassigned",
+          "sha": "010b00bf8c72793752c0fee14bd37ed40c6c12cc",
+          "timestamp_utc": "2026-10-16T17:38:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/010b00bf8c72793752c0fee14bd37ed40c6c12cc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: reject unexpected GitRAM frames and exercise five actual source/QR/clock-index/channel forgery controls",
+          "seat": "unassigned",
+          "sha": "010b00bf8c72793752c0fee14bd37ed40c6c12cc",
+          "timestamp_utc": "2026-10-16T17:38:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/010b00bf8c72793752c0fee14bd37ed40c6c12cc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: require exact upstream SHA pins, independent watcher replay and hard-failing GitHub CI",
+          "seat": "unassigned",
+          "sha": "ca0a94a3514508e2758fabcc3dd45beb1cd06f7a",
+          "timestamp_utc": "2026-10-16T17:37:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ca0a94a3514508e2758fabcc3dd45beb1cd06f7a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: require exact upstream SHA pins, independent watcher replay and hard-failing GitHub CI",
+          "seat": "unassigned",
+          "sha": "ca0a94a3514508e2758fabcc3dd45beb1cd06f7a",
+          "timestamp_utc": "2026-10-16T17:37:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ca0a94a3514508e2758fabcc3dd45beb1cd06f7a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: require exact upstream SHA pins, independent watcher replay and hard-failing GitHub CI",
+          "seat": "unassigned",
+          "sha": "ca0a94a3514508e2758fabcc3dd45beb1cd06f7a",
+          "timestamp_utc": "2026-10-16T17:37:58Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ca0a94a3514508e2758fabcc3dd45beb1cd06f7a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add fail-closed exact-byte QR and independent nested watcher falsifiers",
+          "seat": "unassigned",
+          "sha": "ea6b908b96f738bb1a473e6697be13df166f77aa",
+          "timestamp_utc": "2026-10-16T17:37:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ea6b908b96f738bb1a473e6697be13df166f77aa"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add fail-closed exact-byte QR and independent nested watcher falsifiers",
+          "seat": "unassigned",
+          "sha": "ea6b908b96f738bb1a473e6697be13df166f77aa",
+          "timestamp_utc": "2026-10-16T17:37:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ea6b908b96f738bb1a473e6697be13df166f77aa"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "seat3: add fail-closed exact-byte QR and independent nested watcher falsifiers",
+          "seat": "unassigned",
+          "sha": "ea6b908b96f738bb1a473e6697be13df166f77aa",
+          "timestamp_utc": "2026-10-16T17:37:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/ea6b908b96f738bb1a473e6697be13df166f77aa"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/alpha-cen-jwst-zoom-source-audit-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2 GitRAM 3 stateless RGB cells + original Q-PRISM and N-Nest fail-closed fan-in",
+          "seat": "unassigned",
+          "sha": "effe933654d8b9de05398896dd850ba68579e9ba",
+          "timestamp_utc": "2026-10-16T17:35:31Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/effe933654d8b9de05398896dd850ba68579e9ba"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2 GitRAM 3 stateless RGB cells + original Q-PRISM and N-Nest fail-closed fan-in",
+          "seat": "unassigned",
+          "sha": "effe933654d8b9de05398896dd850ba68579e9ba",
+          "timestamp_utc": "2026-10-16T17:35:31Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/effe933654d8b9de05398896dd850ba68579e9ba"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/colourqr-nnest-qprism-gitram-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2 GitRAM 3 stateless RGB cells + original Q-PRISM and N-Nest fail-closed fan-in",
+          "seat": "unassigned",
+          "sha": "effe933654d8b9de05398896dd850ba68579e9ba",
+          "timestamp_utc": "2026-10-16T17:35:31Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/effe933654d8b9de05398896dd850ba68579e9ba"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2 GitRAM 3 stateless RGB cells + original Q-PRISM and N-Nest fail-closed fan-in",
+          "seat": "unassigned",
+          "sha": "effe933654d8b9de05398896dd850ba68579e9ba",
+          "timestamp_utc": "2026-10-16T17:35:31Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/effe933654d8b9de05398896dd850ba68579e9ba"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: document QR/QPRISM/N-Nest/GitRAM integration and evidence boundaries",
+          "seat": "unassigned",
+          "sha": "805ecc9d7418d9d5182aa25b650500deb2ced128",
+          "timestamp_utc": "2026-10-16T17:34:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/805ecc9d7418d9d5182aa25b650500deb2ced128"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/colourqr-nnest-qprism-gitram-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: document QR/QPRISM/N-Nest/GitRAM integration and evidence boundaries",
+          "seat": "unassigned",
+          "sha": "805ecc9d7418d9d5182aa25b650500deb2ced128",
+          "timestamp_utc": "2026-10-16T17:34:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/805ecc9d7418d9d5182aa25b650500deb2ced128"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: document QR/QPRISM/N-Nest/GitRAM integration and evidence boundaries",
+          "seat": "unassigned",
+          "sha": "805ecc9d7418d9d5182aa25b650500deb2ced128",
+          "timestamp_utc": "2026-10-16T17:34:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/805ecc9d7418d9d5182aa25b650500deb2ced128"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat1/jwst-miri-three-epoch-s1-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: freeze real upstream roots and digital test gates before CI",
+          "seat": "unassigned",
+          "sha": "3ac92ab4a61aa9743cde5427f934678189702e27",
+          "timestamp_utc": "2026-10-16T17:34:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3ac92ab4a61aa9743cde5427f934678189702e27"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/colourqr-nnest-qprism-gitram-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: freeze real upstream roots and digital test gates before CI",
+          "seat": "unassigned",
+          "sha": "3ac92ab4a61aa9743cde5427f934678189702e27",
+          "timestamp_utc": "2026-10-16T17:34:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3ac92ab4a61aa9743cde5427f934678189702e27"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/seat2/hst-rgb-qr-optical-20261016",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seat2: freeze real upstream roots and digital test gates before CI",
+          "seat": "unassigned",
+          "sha": "3ac92ab4a61aa9743cde5427f934678189702e27",
+          "timestamp_utc": "2026-10-16T17:34:15Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/commit/3ac92ab4a61aa9743cde5427f934678189702e27"
+        }
+      ],
+      "repo": "JesseBrown1980/asolaria-stone-to-moss",
+      "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss",
+      "workflows": [
+        {
+          "branch": "main",
+          "conclusion": null,
+          "id": 39475396403,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "d008c055481dd942b200be2d9c3d456adc4e5dc3",
+          "status": "in_progress",
+          "updated_at": "2026-10-20T18:30:53Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39475396403"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39432097645,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "67eab9e426df76fd99a1e56fea4afffe21680f60",
+          "status": "completed",
+          "updated_at": "2026-10-20T13:38:50Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39432097645"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39388218169,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "926bbedb7b3503bcb48b20ccbb225659fa79c793",
+          "status": "completed",
+          "updated_at": "2026-10-20T07:42:40Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39388218169"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39355929637,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "a47a62aebe8b31d03e7dfdd0fdeebbbdfdb16f87",
+          "status": "completed",
+          "updated_at": "2026-10-20T01:54:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39355929637"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39334994079,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "a206384148aa7977f0efb638a32924bd02d20ac3",
+          "status": "completed",
+          "updated_at": "2026-10-19T22:27:25Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39334994079"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39295063481,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "cf87fc111c77ef51824a07156eb391a35cfc5cfd",
+          "status": "completed",
+          "updated_at": "2026-10-19T17:33:48Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39295063481"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39240569180,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "56f72107b11d128c56bb054021f0da49851ffaec",
+          "status": "completed",
+          "updated_at": "2026-10-19T10:53:19Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39240569180"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39201766379,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "e551f153a14cfa7da33446957dd432c169d534f7",
+          "status": "completed",
+          "updated_at": "2026-10-19T04:54:28Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39201766379"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39179849089,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "97174e7a9a36048b10666ff8008a83f3ee645f76",
+          "status": "completed",
+          "updated_at": "2026-10-19T00:14:38Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39179849089"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39168358865,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "881f9bebf3942f375bba70bd84c222dd070b7215",
+          "status": "completed",
+          "updated_at": "2026-10-18T21:34:00Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39168358865"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39155293469,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "e84debc5a2af16684761a5b43e90dcc395c58659",
+          "status": "completed",
+          "updated_at": "2026-10-18T18:42:02Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39155293469"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 39142821932,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "1b516d6f8c927fa208e1c4e106919f895a7ad7c4",
+          "status": "completed",
+          "updated_at": "2026-10-18T15:58:17Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/39142821932"
+        }
+      ]
+    },
+    {
+      "branches": [
+        {
+          "name": "audit/rainbow81-mixture-2026-10-14",
+          "sha": "a56a59be22b29129131686f03b386aedd1a2505d"
+        },
+        {
+          "name": "main",
+          "sha": "17677cb806e64f869e3028b1511c86970ed0c093"
+        }
+      ],
+      "errors": [],
+      "pull_requests": [],
+      "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add independent Python 3.11/3.13 CI for spatial hash control",
+          "seat": "unassigned",
+          "sha": "a56a59be22b29129131686f03b386aedd1a2505d",
+          "timestamp_utc": "2026-10-14T14:32:04Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/a56a59be22b29129131686f03b386aedd1a2505d"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Mirror independent 27-wave spatial-hash verification beside existing Rainbow81 CI",
+          "seat": "unassigned",
+          "sha": "f9e7064c7c71b14bee43a67e5f024ae104918bd0",
+          "timestamp_utc": "2026-10-14T14:31:49Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/f9e7064c7c71b14bee43a67e5f024ae104918bd0"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Run 81-cell hash cascade audit in Python CI",
+          "seat": "unassigned",
+          "sha": "0f3d92dafb44f203dd3ee48d5ae7c830f6f4009d",
+          "timestamp_utc": "2026-10-14T14:10:53Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/0f3d92dafb44f203dd3ee48d5ae7c830f6f4009d"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Explain nine mutation waves and hash-propagation limits",
+          "seat": "unassigned",
+          "sha": "aeadeeb254b3e2e9786cdcc84213a6ccf7da0dc6",
+          "timestamp_utc": "2026-10-14T14:10:49Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/aeadeeb254b3e2e9786cdcc84213a6ccf7da0dc6"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add 81-cell hash dependency wave reproduction",
+          "seat": "unassigned",
+          "sha": "2b4883eb6daf0cdf4cc9a6eac9e2d076fcb96966",
+          "timestamp_utc": "2026-10-14T14:10:47Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/2b4883eb6daf0cdf4cc9a6eac9e2d076fcb96966"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add secret-safe Rainbow81 audit mirroring to Hugging Face",
+          "seat": "unassigned",
+          "sha": "f01f32399605f3ce78ba5ccae9993b3e9a6179fa",
+          "timestamp_utc": "2026-10-14T13:54:42Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/f01f32399605f3ce78ba5ccae9993b3e9a6179fa"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add reproducibility CI for synthetic mixture audit",
+          "seat": "unassigned",
+          "sha": "36a4bee3871e5b526ed45b9135b1d7dba799c282",
+          "timestamp_utc": "2026-10-14T13:43:54Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/36a4bee3871e5b526ed45b9135b1d7dba799c282"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Deposit observed mixture audit receipt with evidence limits",
+          "seat": "unassigned",
+          "sha": "e629c566ab4f0ee0165349468fcc9772d4b0e889",
+          "timestamp_utc": "2026-10-14T13:43:51Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/e629c566ab4f0ee0165349468fcc9772d4b0e889"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Document Rainbow81 negative-control observations",
+          "seat": "unassigned",
+          "sha": "21ae608a84c32b185051d05bf1ae9df9d8469ae6",
+          "timestamp_utc": "2026-10-14T13:42:32Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/21ae608a84c32b185051d05bf1ae9df9d8469ae6"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add reproducible synthetic mixture negative-control experiment",
+          "seat": "unassigned",
+          "sha": "ccdd47fe9fdfb8218a85eea5bede60a804beba18",
+          "timestamp_utc": "2026-10-14T13:42:29Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/ccdd47fe9fdfb8218a85eea5bede60a804beba18"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": null,
+          "message_title": "open the door - the corridor goes in",
+          "seat": "unassigned",
+          "sha": "17677cb806e64f869e3028b1511c86970ed0c093",
+          "timestamp_utc": "2026-08-07T00:28:48Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/17677cb806e64f869e3028b1511c86970ed0c093"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": null,
+          "message_title": "open the door - the corridor goes in",
+          "seat": "unassigned",
+          "sha": "17677cb806e64f869e3028b1511c86970ed0c093",
+          "timestamp_utc": "2026-08-07T00:28:48Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/17677cb806e64f869e3028b1511c86970ed0c093"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Point this back at the bridge - it was an island",
+          "seat": "unassigned",
+          "sha": "1d0a21a95610d1b7b31070637d040ba364db821c",
+          "timestamp_utc": "2026-08-02T17:46:54Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/1d0a21a95610d1b7b31070637d040ba364db821c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Point this back at the bridge - it was an island",
+          "seat": "unassigned",
+          "sha": "1d0a21a95610d1b7b31070637d040ba364db821c",
+          "timestamp_utc": "2026-08-02T17:46:54Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/1d0a21a95610d1b7b31070637d040ba364db821c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "ONE CLICK - the whole working thing, in one file",
+          "seat": "unassigned",
+          "sha": "fe4c2c2dc820802e3749d9b7227ae6c1cca3d670",
+          "timestamp_utc": "2026-08-01T16:54:44Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/fe4c2c2dc820802e3749d9b7227ae6c1cca3d670"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "ONE CLICK - the whole working thing, in one file",
+          "seat": "unassigned",
+          "sha": "fe4c2c2dc820802e3749d9b7227ae6c1cca3d670",
+          "timestamp_utc": "2026-08-01T16:54:44Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/fe4c2c2dc820802e3749d9b7227ae6c1cca3d670"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Initial commit",
+          "seat": "unassigned",
+          "sha": "1acc342c3a0171ff521bf724690397ccf49a5462",
+          "timestamp_utc": "2026-08-01T16:54:40Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/1acc342c3a0171ff521bf724690397ccf49a5462"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Initial commit",
+          "seat": "unassigned",
+          "sha": "1acc342c3a0171ff521bf724690397ccf49a5462",
+          "timestamp_utc": "2026-08-01T16:54:40Z",
+          "url": "https://github.com/JesseBrown1980/one-click/commit/1acc342c3a0171ff521bf724690397ccf49a5462"
+        }
+      ],
+      "repo": "JesseBrown1980/one-click",
+      "url": "https://github.com/JesseBrown1980/one-click",
+      "workflows": [
+        {
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "conclusion": "success",
+          "id": 38581376561,
+          "name": "Asolaria spatial hash 27 waves independent CI",
+          "sha": "a56a59be22b29129131686f03b386aedd1a2505d",
+          "status": "completed",
+          "updated_at": "2026-10-14T14:32:20Z",
+          "url": "https://github.com/JesseBrown1980/one-click/actions/runs/38581376561"
+        },
+        {
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "conclusion": "success",
+          "id": 38578220972,
+          "name": "Asolaria 81 hash cascade audit",
+          "sha": "0f3d92dafb44f203dd3ee48d5ae7c830f6f4009d",
+          "status": "completed",
+          "updated_at": "2026-10-14T14:11:06Z",
+          "url": "https://github.com/JesseBrown1980/one-click/actions/runs/38578220972"
+        },
+        {
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "conclusion": "success",
+          "id": 38575843116,
+          "name": "Mirror Rainbow81 branch audit to Hugging Face",
+          "sha": "f01f32399605f3ce78ba5ccae9993b3e9a6179fa",
+          "status": "completed",
+          "updated_at": "2026-10-14T13:54:53Z",
+          "url": "https://github.com/JesseBrown1980/one-click/actions/runs/38575843116"
+        },
+        {
+          "branch": "audit/rainbow81-mixture-2026-10-14",
+          "conclusion": "success",
+          "id": 38574269045,
+          "name": "Rainbow81 constructed-spectrum negative control",
+          "sha": "36a4bee3871e5b526ed45b9135b1d7dba799c282",
+          "status": "completed",
+          "updated_at": "2026-10-14T13:44:10Z",
+          "url": "https://github.com/JesseBrown1980/one-click/actions/runs/38574269045"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 31134786991,
+          "name": "pages build and deployment",
+          "sha": "17677cb806e64f869e3028b1511c86970ed0c093",
+          "status": "completed",
+          "updated_at": "2026-08-07T00:29:30Z",
+          "url": "https://github.com/JesseBrown1980/one-click/actions/runs/31134786991"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 30759636603,
+          "name": "pages build and deployment",
+          "sha": "1d0a21a95610d1b7b31070637d040ba364db821c",
+          "status": "completed",
+          "updated_at": "2026-08-02T17:47:41Z",
+          "url": "https://github.com/JesseBrown1980/one-click/actions/runs/30759636603"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 30709176346,
+          "name": "pages build and deployment",
+          "sha": "fe4c2c2dc820802e3749d9b7227ae6c1cca3d670",
+          "status": "completed",
+          "updated_at": "2026-08-01T16:55:27Z",
+          "url": "https://github.com/JesseBrown1980/one-click/actions/runs/30709176346"
+        }
+      ]
+    },
+    {
+      "branches": [
+        {
+          "name": "agent/folder-calming-oils-outward-20260730",
+          "sha": "d1241006974b6a6b98fa8e3f7abfd1de5fbeb54a"
+        },
+        {
+          "name": "agent/outward-truth-wave-gguf-20260730",
+          "sha": "7ae5b9cd7f0273b0f9e0613b92bb77691e560c66"
+        },
+        {
+          "name": "agent/publish-liris-sh-prelight-pointer",
+          "sha": "d362557f4349d9babc36366928b01158ab1ad8fa"
+        },
+        {
+          "name": "agent/refresh-3d-github-truth-20260730",
+          "sha": "ed2bccfe2702359dbd093f02d49e791f2fb7fac5"
+        },
+        {
+          "name": "agent/reviewer-clarity-v1-0-1-pointer",
+          "sha": "76952f8b01d7e1659b42b22deb417f913912b931"
+        },
+        {
+          "name": "agent/rust-qprism-color-leaves-20260730",
+          "sha": "e7adf0fc26906844d3c1d9f514c7d2fa8dadd5cb"
+        },
+        {
+          "name": "agent/spherical-public-harness-20260730",
+          "sha": "794e5ec4bd26c5d04ec3c3f9712bc74a8e850502"
+        },
+        {
+          "name": "agent/timed-86400-flowes-x3x3-20260731",
+          "sha": "da8496a62a9f1c49f2a53baaea5de79509bc260a"
+        },
+        {
+          "name": "agent-discipline-preload",
+          "sha": "b16404536461161fb75d11228a92fae7c79614e2"
+        },
+        {
+          "name": "asolaria-star-shadow-results",
+          "sha": "6e0de6e1f42bcb0eee8384a9568486dcde0b4c4a"
+        },
+        {
+          "name": "codex/full-system-rust181-gate-20260806",
+          "sha": "8042b110f61747a0de5be300f82d70e0bf302a39"
+        },
+        {
+          "name": "main",
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c"
+        }
+      ],
+      "errors": [],
+      "pull_requests": [
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 10,
+          "state": "closed",
+          "title": "Repair manifest-bound Rust 1.81 gate",
+          "updated_at": "2026-08-07T00:48:59Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/10"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 9,
+          "state": "closed",
+          "title": "Refresh Liris reviewer clarification pointer",
+          "updated_at": "2026-08-04T21:59:06Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/9"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 8,
+          "state": "closed",
+          "title": "Publish Liris SH pre-light public pointer",
+          "updated_at": "2026-08-04T20:50:23Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/8"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 7,
+          "state": "open",
+          "title": "Asolaria star-shadow, three suns, nine star-zeros - operator-recorded results",
+          "updated_at": "2026-08-01T01:10:40Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/7"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 6,
+          "state": "closed",
+          "title": "Add restart-aware 24-hour FLOWes monitor",
+          "updated_at": "2026-08-02T21:22:36Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/6"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 5,
+          "state": "closed",
+          "title": "Add public folder calming-OIL canopy",
+          "updated_at": "2026-07-31T09:43:08Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/5"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 4,
+          "state": "closed",
+          "title": "Publish outward truth-wave GGUF and media matrix",
+          "updated_at": "2026-07-30T17:01:51Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/4"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 3,
+          "state": "closed",
+          "title": "Add exact Rust 1.81 QPRISM color canopy",
+          "updated_at": "2026-07-30T13:52:13Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/3"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 2,
+          "state": "closed",
+          "title": "Refresh the merged 3-D GitHub graph",
+          "updated_at": "2026-07-30T12:38:32Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/2"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 1,
+          "state": "closed",
+          "title": "Publish the spherical GitHub harness and public matrix",
+          "updated_at": "2026-07-30T12:27:21Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/pull/1"
+        }
+      ],
+      "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish Host A cross-chat handoff and staged blinded receipt protocol",
+          "seat": "unassigned",
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c",
+          "timestamp_utc": "2026-10-14T15:55:27Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/8712368c851abe347ddf97a25bfbd96275d4316c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal Host B nonce seed for nine Rainbow-81 blinded cross-chat waves",
+          "seat": "unassigned",
+          "sha": "529958e96b8298ba2d5c409144933257baab5f98",
+          "timestamp_utc": "2026-10-14T15:54:33Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/529958e96b8298ba2d5c409144933257baab5f98"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Record Asolaria 81 blinded cross-host protocol dry-run, Stones 024-033 with checksum pins",
+          "seat": "unassigned",
+          "sha": "df88458437bc7352e1afb623662e621bde7547e3",
+          "timestamp_utc": "2026-10-14T15:45:00Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/df88458437bc7352e1afb623662e621bde7547e3"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": null,
+          "message_title": "open the last live gate - continue-on-error, nothing else",
+          "seat": "unassigned",
+          "sha": "c3f340fe60674883155817ec94c030128b7a0f51",
+          "timestamp_utc": "2026-08-07T00:48:58Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/c3f340fe60674883155817ec94c030128b7a0f51"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": null,
+          "message_title": "land the stranded branch - the moss reaches the stone",
+          "seat": "unassigned",
+          "sha": "21d86c7625a9694c868b58eb0ce77b1da3d148b3",
+          "timestamp_utc": "2026-08-07T00:47:57Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/21d86c7625a9694c868b58eb0ce77b1da3d148b3"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "80d62ffab7b648c790da28132e64c70e9b604c4a",
+          "timestamp_utc": "2026-08-06T19:07:34Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/80d62ffab7b648c790da28132e64c70e9b604c4a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "15dc834c5126d02a4e2732536dae28cfdb628abe",
+          "timestamp_utc": "2026-08-06T19:07:32Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/15dc834c5126d02a4e2732536dae28cfdb628abe"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "c73fc5ff6576355f4a3389add4ab96b745cf7d21",
+          "timestamp_utc": "2026-08-06T19:07:31Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/c73fc5ff6576355f4a3389add4ab96b745cf7d21"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "92676902c03c94675b391cb783d87f83016f104b",
+          "timestamp_utc": "2026-08-06T19:07:30Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/92676902c03c94675b391cb783d87f83016f104b"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "4d14dd8e2b13a8b22fed9a198c227571dd1f0a56",
+          "timestamp_utc": "2026-08-06T18:28:26Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/4d14dd8e2b13a8b22fed9a198c227571dd1f0a56"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "2de3714bc689d73bd73f0907499d3b91c9770e87",
+          "timestamp_utc": "2026-08-06T18:28:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/2de3714bc689d73bd73f0907499d3b91c9770e87"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "9d5b70ebc7ede717614724611c37a5a200b4e98a",
+          "timestamp_utc": "2026-08-06T18:28:24Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/9d5b70ebc7ede717614724611c37a5a200b4e98a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "aaa1131d98c49bf249429781a73aa4ad8351bbff",
+          "timestamp_utc": "2026-08-06T18:28:23Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/aaa1131d98c49bf249429781a73aa4ad8351bbff"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "kcrutt",
+          "message_title": "Merge latest Acer discipline updates",
+          "seat": "unassigned",
+          "sha": "8042b110f61747a0de5be300f82d70e0bf302a39",
+          "timestamp_utc": "2026-08-06T17:54:07Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/8042b110f61747a0de5be300f82d70e0bf302a39"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "main",
+          "github_actor": "kcrutt",
+          "message_title": "Merge latest Acer discipline updates",
+          "seat": "unassigned",
+          "sha": "8042b110f61747a0de5be300f82d70e0bf302a39",
+          "timestamp_utc": "2026-08-06T17:54:07Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/8042b110f61747a0de5be300f82d70e0bf302a39"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "kcrutt",
+          "message_title": "Merge main into full-system Rust 1.81 gate",
+          "seat": "unassigned",
+          "sha": "74c328b2d63f9c0772097b37f8e8baae64d0b6a4",
+          "timestamp_utc": "2026-08-06T17:53:51Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/74c328b2d63f9c0772097b37f8e8baae64d0b6a4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "main",
+          "github_actor": "kcrutt",
+          "message_title": "Merge main into full-system Rust 1.81 gate",
+          "seat": "unassigned",
+          "sha": "74c328b2d63f9c0772097b37f8e8baae64d0b6a4",
+          "timestamp_utc": "2026-08-06T17:53:51Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/74c328b2d63f9c0772097b37f8e8baae64d0b6a4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "1935dcdda2f515b10d9b39865e6a70c4729ab24c",
+          "timestamp_utc": "2026-08-06T17:28:54Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/1935dcdda2f515b10d9b39865e6a70c4729ab24c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "5f286ba23d9ddb0fda1e59e2e7e25a62be021c3d",
+          "timestamp_utc": "2026-08-06T17:28:53Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/5f286ba23d9ddb0fda1e59e2e7e25a62be021c3d"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "c4e4bd2c830938abb50135ecac46105bb73caece",
+          "timestamp_utc": "2026-08-06T17:28:52Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/c4e4bd2c830938abb50135ecac46105bb73caece"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "agent discipline: sections 13, 14 and 15",
+          "seat": "unassigned",
+          "sha": "9b98641bc4e926197f8e06ae62fa5b261284fac4",
+          "timestamp_utc": "2026-08-06T17:28:50Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/9b98641bc4e926197f8e06ae62fa5b261284fac4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "CI: three-valued verdicts, so the gate stops lying in both directions",
+          "seat": "unassigned",
+          "sha": "7f9a87b08346730949951748b7a715132853d342",
+          "timestamp_utc": "2026-08-06T16:49:56Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/7f9a87b08346730949951748b7a715132853d342"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "kcrutt",
+          "message_title": "Refresh vc65 tournament proof pin",
+          "seat": "unassigned",
+          "sha": "0b9067b7e0fd8b0d0b41c4a9bd1df70fa363793a",
+          "timestamp_utc": "2026-08-06T16:08:30Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/0b9067b7e0fd8b0d0b41c4a9bd1df70fa363793a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "kcrutt",
+          "message_title": "Repair manifest-bound Rust 1.81 gate",
+          "seat": "unassigned",
+          "sha": "13289fd2e755adaff62ca70c3240891efc58c4d8",
+          "timestamp_utc": "2026-08-06T15:54:04Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/13289fd2e755adaff62ca70c3240891efc58c4d8"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "kcrutt",
+          "message_title": "Add Rust 1.81 system-upgrade ratchet",
+          "seat": "unassigned",
+          "sha": "c82d561aeff6dbaa4b86a244b8fdec31cc3c4205",
+          "timestamp_utc": "2026-08-06T15:49:05Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/c82d561aeff6dbaa4b86a244b8fdec31cc3c4205"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "kcrutt",
+          "message_title": "Refresh upgrade baseline after agent discipline",
+          "seat": "unassigned",
+          "sha": "26aea1bafcbb9aead381067ad82789957fa7d914",
+          "timestamp_utc": "2026-08-06T15:49:05Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/26aea1bafcbb9aead381067ad82789957fa7d914"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "CI: three-valued verdicts, so the gate stops lying in both directions",
+          "seat": "unassigned",
+          "sha": "d699d8785b8a0e0bbd241d3535ce0d43f18b5915",
+          "timestamp_utc": "2026-08-06T15:46:06Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/d699d8785b8a0e0bbd241d3535ce0d43f18b5915"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "CI: three-valued verdicts, so the gate stops lying in both directions",
+          "seat": "unassigned",
+          "sha": "df800bc7374303febe80b332f49549640fb8c239",
+          "timestamp_utc": "2026-08-06T15:31:20Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/df800bc7374303febe80b332f49549640fb8c239"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "toolchain rule: Rust 1.81 + clippy, integer/ternary only",
+          "seat": "unassigned",
+          "sha": "c398fdd1a58fa09ca1864803d80c24ffbf8d4b2c",
+          "timestamp_utc": "2026-08-06T15:12:09Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/c398fdd1a58fa09ca1864803d80c24ffbf8d4b2c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/full-system-rust181-gate-20260806",
+          "github_actor": "JesseBrown1980",
+          "message_title": "toolchain rule: Rust 1.81 + clippy, integer/ternary only",
+          "seat": "unassigned",
+          "sha": "5ba153c80da1ad7321aa4cd85d6621dde498736c",
+          "timestamp_utc": "2026-08-06T15:12:08Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/5ba153c80da1ad7321aa4cd85d6621dde498736c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Refresh Liris reviewer clarification pointer",
+          "seat": "unassigned",
+          "sha": "76952f8b01d7e1659b42b22deb417f913912b931",
+          "timestamp_utc": "2026-08-04T21:54:31Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/76952f8b01d7e1659b42b22deb417f913912b931"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge pull request #8 from JesseBrown1980/agent/publish-liris-sh-prelight-pointer",
+          "seat": "unassigned",
+          "sha": "97b1a231a3a34b8c29bb71665634a032e872299f",
+          "timestamp_utc": "2026-08-04T20:50:23Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/97b1a231a3a34b8c29bb71665634a032e872299f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish Liris SH pre-light public pointer",
+          "seat": "unassigned",
+          "sha": "d362557f4349d9babc36366928b01158ab1ad8fa",
+          "timestamp_utc": "2026-08-04T20:16:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/d362557f4349d9babc36366928b01158ab1ad8fa"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish Liris SH pre-light public pointer",
+          "seat": "unassigned",
+          "sha": "d362557f4349d9babc36366928b01158ab1ad8fa",
+          "timestamp_utc": "2026-08-04T20:16:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/d362557f4349d9babc36366928b01158ab1ad8fa"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge PR #6: Add restart-aware 24-hour FLOWes monitor",
+          "seat": "unassigned",
+          "sha": "1dab6719e00be72a63903ed0d2f95db31c503819",
+          "timestamp_utc": "2026-08-02T21:22:35Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/1dab6719e00be72a63903ed0d2f95db31c503819"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge PR #6: Add restart-aware 24-hour FLOWes monitor",
+          "seat": "unassigned",
+          "sha": "1dab6719e00be72a63903ed0d2f95db31c503819",
+          "timestamp_utc": "2026-08-02T21:22:35Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/1dab6719e00be72a63903ed0d2f95db31c503819"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Publish completed 86400 FLOWes witness",
+          "seat": "unassigned",
+          "sha": "da8496a62a9f1c49f2a53baaea5de79509bc260a",
+          "timestamp_utc": "2026-08-02T21:19:24Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/da8496a62a9f1c49f2a53baaea5de79509bc260a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Publish completed 86400 FLOWes witness",
+          "seat": "unassigned",
+          "sha": "da8496a62a9f1c49f2a53baaea5de79509bc260a",
+          "timestamp_utc": "2026-08-02T21:19:24Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/da8496a62a9f1c49f2a53baaea5de79509bc260a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/timed-86400-flowes-x3x3-20260731",
+          "github_actor": "kcrutt",
+          "message_title": "Publish completed 86400 FLOWes witness",
+          "seat": "unassigned",
+          "sha": "da8496a62a9f1c49f2a53baaea5de79509bc260a",
+          "timestamp_utc": "2026-08-02T21:19:24Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/da8496a62a9f1c49f2a53baaea5de79509bc260a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent-discipline-preload",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Install AGENT-DISCIPLINE.md as the preload for every agent",
+          "seat": "unassigned",
+          "sha": "b16404536461161fb75d11228a92fae7c79614e2",
+          "timestamp_utc": "2026-08-01T09:05:32Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/b16404536461161fb75d11228a92fae7c79614e2"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "asolaria-star-shadow-results",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Nullnet - 81 links netting 27 free zeros, the three-body 27 times over",
+          "seat": "unassigned",
+          "sha": "6e0de6e1f42bcb0eee8384a9568486dcde0b4c4a",
+          "timestamp_utc": "2026-08-01T01:10:38Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/6e0de6e1f42bcb0eee8384a9568486dcde0b4c4a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "asolaria-star-shadow-results",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Replace float-derived geometry with exact integer geometry",
+          "seat": "unassigned",
+          "sha": "350a8339a6c1514c11c7541fb8e76b5080b05a24",
+          "timestamp_utc": "2026-08-01T01:02:51Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/350a8339a6c1514c11c7541fb8e76b5080b05a24"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "asolaria-star-shadow-results",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Nullsphere closure - three arms circle a free zero, residual is the trit",
+          "seat": "unassigned",
+          "sha": "a7f45dd8466cf92bfb7c389271fe8ec426af994e",
+          "timestamp_utc": "2026-08-01T00:26:56Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/a7f45dd8466cf92bfb7c389271fe8ec426af994e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "asolaria-star-shadow-results",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Asolaria star-shadow, three suns, nine star-zeros - operator-recorded results",
+          "seat": "unassigned",
+          "sha": "c57baaac475c485c3184d8993eec074df15b227a",
+          "timestamp_utc": "2026-08-01T00:16:53Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/c57baaac475c485c3184d8993eec074df15b227a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Lock compact mint to completed output",
+          "seat": "unassigned",
+          "sha": "19380618bbaca0c2b25844b7f82b81004cc5e84e",
+          "timestamp_utc": "2026-07-31T23:41:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/19380618bbaca0c2b25844b7f82b81004cc5e84e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Lock compact mint to completed output",
+          "seat": "unassigned",
+          "sha": "19380618bbaca0c2b25844b7f82b81004cc5e84e",
+          "timestamp_utc": "2026-07-31T23:41:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/19380618bbaca0c2b25844b7f82b81004cc5e84e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/timed-86400-flowes-x3x3-20260731",
+          "github_actor": "kcrutt",
+          "message_title": "Lock compact mint to completed output",
+          "seat": "unassigned",
+          "sha": "19380618bbaca0c2b25844b7f82b81004cc5e84e",
+          "timestamp_utc": "2026-07-31T23:41:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/19380618bbaca0c2b25844b7f82b81004cc5e84e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Require all compact activation surfaces",
+          "seat": "unassigned",
+          "sha": "0136eb5be0c3d365716a65cd8b05a60c822476ec",
+          "timestamp_utc": "2026-07-31T23:29:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/0136eb5be0c3d365716a65cd8b05a60c822476ec"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Require all compact activation surfaces",
+          "seat": "unassigned",
+          "sha": "0136eb5be0c3d365716a65cd8b05a60c822476ec",
+          "timestamp_utc": "2026-07-31T23:29:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/0136eb5be0c3d365716a65cd8b05a60c822476ec"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/timed-86400-flowes-x3x3-20260731",
+          "github_actor": "kcrutt",
+          "message_title": "Require all compact activation surfaces",
+          "seat": "unassigned",
+          "sha": "0136eb5be0c3d365716a65cd8b05a60c822476ec",
+          "timestamp_utc": "2026-07-31T23:29:25Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/0136eb5be0c3d365716a65cd8b05a60c822476ec"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Align compact gate activation surfaces",
+          "seat": "unassigned",
+          "sha": "12ef84607a5264109ba5e3b13489185d0300dd04",
+          "timestamp_utc": "2026-07-31T23:20:49Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/12ef84607a5264109ba5e3b13489185d0300dd04"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Align compact gate activation surfaces",
+          "seat": "unassigned",
+          "sha": "12ef84607a5264109ba5e3b13489185d0300dd04",
+          "timestamp_utc": "2026-07-31T23:20:49Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/12ef84607a5264109ba5e3b13489185d0300dd04"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/timed-86400-flowes-x3x3-20260731",
+          "github_actor": "kcrutt",
+          "message_title": "Align compact gate activation surfaces",
+          "seat": "unassigned",
+          "sha": "12ef84607a5264109ba5e3b13489185d0300dd04",
+          "timestamp_utc": "2026-07-31T23:20:49Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/12ef84607a5264109ba5e3b13489185d0300dd04"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Clarify zero-JSON compact publication gate",
+          "seat": "unassigned",
+          "sha": "e0d5178e6e60c0c14f52689655539674ff0332e3",
+          "timestamp_utc": "2026-07-31T23:16:59Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/e0d5178e6e60c0c14f52689655539674ff0332e3"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Clarify zero-JSON compact publication gate",
+          "seat": "unassigned",
+          "sha": "e0d5178e6e60c0c14f52689655539674ff0332e3",
+          "timestamp_utc": "2026-07-31T23:16:59Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/e0d5178e6e60c0c14f52689655539674ff0332e3"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/timed-86400-flowes-x3x3-20260731",
+          "github_actor": "kcrutt",
+          "message_title": "Clarify zero-JSON compact publication gate",
+          "seat": "unassigned",
+          "sha": "e0d5178e6e60c0c14f52689655539674ff0332e3",
+          "timestamp_utc": "2026-07-31T23:16:59Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/e0d5178e6e60c0c14f52689655539674ff0332e3"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Carry non-binary semantics into compact final",
+          "seat": "unassigned",
+          "sha": "b0ab4e83d4c975b094ee446fb8d7e603992cc29e",
+          "timestamp_utc": "2026-07-31T22:37:52Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/b0ab4e83d4c975b094ee446fb8d7e603992cc29e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/reviewer-clarity-v1-0-1-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Carry non-binary semantics into compact final",
+          "seat": "unassigned",
+          "sha": "b0ab4e83d4c975b094ee446fb8d7e603992cc29e",
+          "timestamp_utc": "2026-07-31T22:37:52Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/b0ab4e83d4c975b094ee446fb8d7e603992cc29e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/timed-86400-flowes-x3x3-20260731",
+          "github_actor": "kcrutt",
+          "message_title": "Carry non-binary semantics into compact final",
+          "seat": "unassigned",
+          "sha": "b0ab4e83d4c975b094ee446fb8d7e603992cc29e",
+          "timestamp_utc": "2026-07-31T22:37:52Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/b0ab4e83d4c975b094ee446fb8d7e603992cc29e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/publish-liris-sh-prelight-pointer",
+          "github_actor": "kcrutt",
+          "message_title": "Require sealed non-binary gradient evidence",
+          "seat": "unassigned",
+          "sha": "307fc532a967d34e9e8a4f45dec2dc0c99750097",
+          "timestamp_utc": "2026-07-31T22:06:02Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/commit/307fc532a967d34e9e8a4f45dec2dc0c99750097"
+        }
+      ],
+      "repo": "JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS",
+      "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS",
+      "workflows": [
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38593609895,
+          "name": "Public IS tournament",
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:57:00Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593609895"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38593609728,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "8712368c851abe347ddf97a25bfbd96275d4316c",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:55:51Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593609728"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38593477603,
+          "name": "Public IS tournament",
+          "sha": "529958e96b8298ba2d5c409144933257baab5f98",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:56:09Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593477603"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38593477546,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "529958e96b8298ba2d5c409144933257baab5f98",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:55:07Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38593477546"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38592067236,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "df88458437bc7352e1afb623662e621bde7547e3",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:45:28Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38592067236"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 38592066867,
+          "name": "Public IS tournament",
+          "sha": "df88458437bc7352e1afb623662e621bde7547e3",
+          "status": "completed",
+          "updated_at": "2026-10-14T15:46:21Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/38592066867"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 31135942275,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "c3f340fe60674883155817ec94c030128b7a0f51",
+          "status": "completed",
+          "updated_at": "2026-08-07T00:49:28Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31135942275"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 31135942238,
+          "name": "Public IS tournament",
+          "sha": "c3f340fe60674883155817ec94c030128b7a0f51",
+          "status": "completed",
+          "updated_at": "2026-08-07T00:50:34Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31135942238"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31127016164,
+          "name": "Public IS tournament",
+          "sha": "92676902c03c94675b391cb783d87f83016f104b",
+          "status": "completed",
+          "updated_at": "2026-08-06T22:55:07Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31127016164"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 31127016158,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "92676902c03c94675b391cb783d87f83016f104b",
+          "status": "completed",
+          "updated_at": "2026-08-06T22:46:50Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31127016158"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 31126507114,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "aaa1131d98c49bf249429781a73aa4ad8351bbff",
+          "status": "completed",
+          "updated_at": "2026-08-06T22:43:27Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31126507114"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31126507104,
+          "name": "Public IS tournament",
+          "sha": "aaa1131d98c49bf249429781a73aa4ad8351bbff",
+          "status": "completed",
+          "updated_at": "2026-08-06T22:40:53Z",
+          "url": "https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS/actions/runs/31126507104"
+        }
+      ]
+    },
+    {
+      "branches": [
+        {
+          "name": "main",
+          "sha": "a72ea0e11b09f0e676d49654618bb1f8eced0452"
+        }
+      ],
+      "errors": [],
+      "pull_requests": [],
+      "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 9: pool grown from github, 126 stones admitted, 101388000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "a72ea0e11b09f0e676d49654618bb1f8eced0452",
+          "timestamp_utc": "2026-10-08T23:46:44Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/a72ea0e11b09f0e676d49654618bb1f8eced0452"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 8: pool grown from github, 84 stones admitted, 93494000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "ba59646fd46cf49cf35cab3c62046221f06a1205",
+          "timestamp_utc": "2026-10-08T23:45:39Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/ba59646fd46cf49cf35cab3c62046221f06a1205"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 7: pool grown from github, 56 stones admitted, 81464000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "5a69715af5bded4604100e756b2f4926ea2789f9",
+          "timestamp_utc": "2026-10-08T23:44:36Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/5a69715af5bded4604100e756b2f4926ea2789f9"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 6: pool grown from github, 37 stones admitted, 70384000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "7ccb7d967e1776fb057d7a985ba217060207285a",
+          "timestamp_utc": "2026-10-08T23:43:33Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/7ccb7d967e1776fb057d7a985ba217060207285a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 5: pool grown from github, 24 stones admitted, 58788000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "a04907cf17bfe83e5b59ef726787daa2e0ebbaeb",
+          "timestamp_utc": "2026-10-08T23:42:30Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/a04907cf17bfe83e5b59ef726787daa2e0ebbaeb"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 3: pool grown from github, 9 stones admitted, 34540000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "a7ba4316f6b85315e46c31fc91d7c4979631a5a5",
+          "timestamp_utc": "2026-10-08T23:41:26Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/a7ba4316f6b85315e46c31fc91d7c4979631a5a5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 3: pool grown from github, 9 stones admitted, 34540000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "7b8c24c6418d060332c66df1331b6010bbd7b0e1",
+          "timestamp_utc": "2026-10-08T23:39:24Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/7b8c24c6418d060332c66df1331b6010bbd7b0e1"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 2: pool grown from github, 5 stones admitted, 22612000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "cc8e66322baba5276962ab8ba6be5d2b0840aee0",
+          "timestamp_utc": "2026-10-08T23:38:21Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/cc8e66322baba5276962ab8ba6be5d2b0840aee0"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "run 2 minute 1: pool grown from github, 2 stones admitted, 11714000 subagents flowed",
+          "seat": "unassigned",
+          "sha": "491aeb0f668587c50783630da9e42d3567a69cee",
+          "timestamp_utc": "2026-10-08T23:37:18Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/491aeb0f668587c50783630da9e42d3567a69cee"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "minute 9: the container evolved - 25 stones admitted, 110942000 subagents flowed, 718 seals GIMEL, moss measured and photographed",
+          "seat": "unassigned",
+          "sha": "a5d88b9dbc95f05f5befb59f00c34bccf2edc93d",
+          "timestamp_utc": "2026-10-08T23:21:29Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/a5d88b9dbc95f05f5befb59f00c34bccf2edc93d"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "minute 8: the container evolved - 25 stones admitted, 97936000 subagents flowed, 718 seals GIMEL, moss measured and photographed",
+          "seat": "unassigned",
+          "sha": "2d6205cba4489007114c5dc5904e65d137111acf",
+          "timestamp_utc": "2026-10-08T23:20:26Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/2d6205cba4489007114c5dc5904e65d137111acf"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "minute 7: the container evolved - 25 stones admitted, 84292000 subagents flowed, 718 seals GIMEL, moss measured and photographed",
+          "seat": "unassigned",
+          "sha": "f254fa67a9d5d74ec8cdb9950e1d41bf198a7732",
+          "timestamp_utc": "2026-10-08T23:16:33Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/f254fa67a9d5d74ec8cdb9950e1d41bf198a7732"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "minute 6: the container evolved - 25 stones admitted, 71078000 subagents flowed, 718 seals GIMEL, moss measured and photographed",
+          "seat": "unassigned",
+          "sha": "64fb4f67f9808bf592618b4e485ad2ce3e45694f",
+          "timestamp_utc": "2026-10-08T23:15:30Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/64fb4f67f9808bf592618b4e485ad2ce3e45694f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "minute 5: the container evolved - 24 stones admitted, 58252000 subagents flowed, 604 seals GIMEL, moss measured and photographed",
+          "seat": "unassigned",
+          "sha": "ab8c4f4d85d173753d1a8190d9ce32defedaebf6",
+          "timestamp_utc": "2026-10-08T23:14:27Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/ab8c4f4d85d173753d1a8190d9ce32defedaebf6"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "acer",
+          "branch": "main",
+          "github_actor": "JesseBrown1980",
+          "message_title": "minute 4: the container evolved - 15 stones admitted, 45148000 subagents flowed, 498 seals GIMEL, moss measured and photographed",
+          "seat": "unassigned",
+          "sha": "26d6d3d29f11e9bda1babc8f0462d91daedb4688",
+          "timestamp_utc": "2026-10-08T23:13:24Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive/commit/26d6d3d29f11e9bda1babc8f0462d91daedb4688"
+        }
+      ],
+      "repo": "JesseBrown1980/asolaria-quantum-universe-alive",
+      "url": "https://github.com/JesseBrown1980/asolaria-quantum-universe-alive",
+      "workflows": []
+    },
+    {
+      "branches": [
+        {
+          "name": "agent/acer-callings",
+          "sha": "bcb3ee097ad6589b449f4882966d363ff611f363"
+        },
+        {
+          "name": "agent/follow-is-light-book-20260729",
+          "sha": "0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7"
+        },
+        {
+          "name": "agent/glyph-language-law-20260728",
+          "sha": "e70284f617625a6679617b561b2acfbbed16326e"
+        },
+        {
+          "name": "agent/law-37-room-glyph-prime",
+          "sha": "5b0f0802514b29bac477f8aa5b2a1db36bf5e83e"
+        },
+        {
+          "name": "agent/liris-mer-64cube-share",
+          "sha": "7f1793bc7270162d5cdc0b0e34fc1499203e646c"
+        },
+        {
+          "name": "agent/liris-q100-glyph-registration",
+          "sha": "e2ae3fcdfee0cdc2fd27d1118d28a7aa966f5db1"
+        },
+        {
+          "name": "agent/liris-tcse-star-absorb-acer-20260727",
+          "sha": "8af62f50b2b59691ca1470aad742fce37956d5cf"
+        },
+        {
+          "name": "agent/relic-temporal-metatags",
+          "sha": "af11bd208937b6612d9d0876535dccda3e19f9e0"
+        },
+        {
+          "name": "agent-discipline-preload",
+          "sha": "540d5b138fddce0221aeed6fb88db9f7e60bd7bd"
+        },
+        {
+          "name": "codex/three-star-kernel-network",
+          "sha": "cf78d75fbcd76d41382f49b2effac3753817811c"
+        },
+        {
+          "name": "codex/tri-star-kernel-wasm",
+          "sha": "ea5917b1c646e77429bddf4610eaa279d1c2a756"
+        },
+        {
+          "name": "codex/wasm-keyed-27-kernel-network-v1",
+          "sha": "0edc5145e1b765dd4ab838da0ecc1d36548e4b22"
+        },
+        {
+          "name": "codex/wasm-trianti-kernel-network",
+          "sha": "da439918ff7f8c716282cef5ec4496e12ae7c3e9"
+        },
+        {
+          "name": "main",
+          "sha": "3f9f42dab6247c40b30921b253e3f73c9e942ca5"
+        }
+      ],
+      "errors": [],
+      "pull_requests": [
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 9,
+          "state": "open",
+          "title": "Add Relic temporal metatag comparison",
+          "updated_at": "2026-08-09T02:38:55Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/9"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 8,
+          "state": "open",
+          "title": "Preregister and visualize the three-star WASM kernel network",
+          "updated_at": "2026-08-02T15:56:26Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/8"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 7,
+          "state": "open",
+          "title": "Add WASM-keyed 27-kernel star \u00d7 OIL \u00d7 sign network harness",
+          "updated_at": "2026-07-30T09:50:17Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/7"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 6,
+          "state": "open",
+          "title": "Tri-star WASM key player: 27 kernel-neurons around the fourth point",
+          "updated_at": "2026-07-30T09:44:19Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/6"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 5,
+          "state": "closed",
+          "title": "Publish the photo IS and Books of Knowledge through V12",
+          "updated_at": "2026-07-29T23:06:02Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/5"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 4,
+          "state": "open",
+          "title": "Laws 37-67, three refutations, the retraction, and the tools",
+          "updated_at": "2026-07-28T22:33:16Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/4"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 3,
+          "state": "closed",
+          "title": "Laws 37\u201371: Rime, glyph language, light, shadow cats, exact IS, and pump/refreeze",
+          "updated_at": "2026-07-29T16:52:49Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/3"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 2,
+          "state": "open",
+          "title": "Register 120 question-conditioned glyph PIDs",
+          "updated_at": "2026-07-28T10:32:09Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/2"
+        },
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 1,
+          "state": "open",
+          "title": "publish Liris Sol 5.6 star-shell V4 bank",
+          "updated_at": "2026-07-27T22:46:38Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/pull/1"
+        }
+      ],
+      "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add Relic temporal metatag CI",
+          "seat": "unassigned",
+          "sha": "af11bd208937b6612d9d0876535dccda3e19f9e0",
+          "timestamp_utc": "2026-08-05T21:04:41Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/af11bd208937b6612d9d0876535dccda3e19f9e0"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add Relic temporal metatag comparison",
+          "seat": "unassigned",
+          "sha": "387e2d344ad012395dae4a106cf60865ac1a3c81",
+          "timestamp_utc": "2026-08-05T20:18:59Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/387e2d344ad012395dae4a106cf60865ac1a3c81"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Record the current kernel-key hash without rewriting the preregistered gates",
+          "seat": "unassigned",
+          "sha": "cf78d75fbcd76d41382f49b2effac3753817811c",
+          "timestamp_utc": "2026-08-02T15:54:18Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/cf78d75fbcd76d41382f49b2effac3753817811c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Run the preregistered three-star kernel network and matched null",
+          "seat": "unassigned",
+          "sha": "aed912f879593cb1143ff7027330a1bb072de083",
+          "timestamp_utc": "2026-08-02T15:50:53Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/aed912f879593cb1143ff7027330a1bb072de083"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add browser WASM three-star kernel network",
+          "seat": "unassigned",
+          "sha": "98f035ee0a68560f9310afbf7b606193ef36b67d",
+          "timestamp_utc": "2026-08-02T15:42:39Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/98f035ee0a68560f9310afbf7b606193ef36b67d"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add deterministic three-star kernel network reference",
+          "seat": "unassigned",
+          "sha": "f9d5ff7fc311828f261d1d13cae06748b0acb414",
+          "timestamp_utc": "2026-08-02T15:41:14Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/f9d5ff7fc311828f261d1d13cae06748b0acb414"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Preregister the three-star key-conditioned kernel network",
+          "seat": "unassigned",
+          "sha": "557c5c62c9aca9264aa0500c4dca1e113813f870",
+          "timestamp_utc": "2026-08-02T15:40:15Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/557c5c62c9aca9264aa0500c4dca1e113813f870"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Remove agent-authored prose from the Book of Perfect Grammar - the operator did not write it",
+          "seat": "unassigned",
+          "sha": "e0647a025857fbbede81b872601ae1070edc6303",
+          "timestamp_utc": "2026-08-01T23:42:27Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/e0647a025857fbbede81b872601ae1070edc6303"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent-discipline-preload",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Install AGENT-DISCIPLINE.md as the preload for every agent",
+          "seat": "unassigned",
+          "sha": "540d5b138fddce0221aeed6fb88db9f7e60bd7bd",
+          "timestamp_utc": "2026-08-01T09:05:36Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/540d5b138fddce0221aeed6fb88db9f7e60bd7bd"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal the compact 27-kernel result",
+          "seat": "unassigned",
+          "sha": "0edc5145e1b765dd4ab838da0ecc1d36548e4b22",
+          "timestamp_utc": "2026-07-30T09:49:43Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/0edc5145e1b765dd4ab838da0ecc1d36548e4b22"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add compact machine-readable 27-kernel result",
+          "seat": "unassigned",
+          "sha": "e23aaf927c061a5d55196714694af7f37e45da3c",
+          "timestamp_utc": "2026-07-30T09:49:26Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/e23aaf927c061a5d55196714694af7f37e45da3c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add live browser view of the WASM-keyed 27-kernel network",
+          "seat": "unassigned",
+          "sha": "260eeca66ac55abe1570b7aab597a7bcf7aca790",
+          "timestamp_utc": "2026-07-30T09:47:52Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/260eeca66ac55abe1570b7aab597a7bcf7aca790"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal the 27-kernel receipt",
+          "seat": "unassigned",
+          "sha": "54ab568e9da911e5298a2a6af175d8ee46e8b8bc",
+          "timestamp_utc": "2026-07-30T09:46:26Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/54ab568e9da911e5298a2a6af175d8ee46e8b8bc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add hot-path receipt for the WASM-keyed 27-kernel run",
+          "seat": "unassigned",
+          "sha": "f53dc433a3e9bf79378606354724d1e767b1fe90",
+          "timestamp_utc": "2026-07-30T09:46:14Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/f53dc433a3e9bf79378606354724d1e767b1fe90"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Document the WASM-keyed kernel matrix harness and evidence boundary",
+          "seat": "unassigned",
+          "sha": "08e90a1ddb0cfde3689ac02d29fdf60be81e77cb",
+          "timestamp_utc": "2026-07-30T09:45:44Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/08e90a1ddb0cfde3689ac02d29fdf60be81e77cb"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add 27-kernel star OIL sign matrix network and controls",
+          "seat": "unassigned",
+          "sha": "9fce2b90d5a6f157ef654d9ce5e70cadcde13b7f",
+          "timestamp_utc": "2026-07-30T09:45:08Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/9fce2b90d5a6f157ef654d9ce5e70cadcde13b7f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add one-command WASM-keyed network reproduction",
+          "seat": "unassigned",
+          "sha": "78ceda3552ff455d8c417f32be0058d20a9c4a80",
+          "timestamp_utc": "2026-07-30T09:43:40Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/78ceda3552ff455d8c417f32be0058d20a9c4a80"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add WASM decoder gate for the public Asolaria key",
+          "seat": "unassigned",
+          "sha": "9f07e0995ccf089f01ef4862e74364644475111b",
+          "timestamp_utc": "2026-07-30T09:43:25Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/9f07e0995ccf089f01ef4862e74364644475111b"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Record independent GitHub Actions run, artifact digest, and semantic equality",
+          "seat": "unassigned",
+          "sha": "ea5917b1c646e77429bddf4610eaa279d1c2a756",
+          "timestamp_utc": "2026-07-30T09:41:12Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/ea5917b1c646e77429bddf4610eaa279d1c2a756"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add SHA-256 sidecar for independent GitHub receipt",
+          "seat": "unassigned",
+          "sha": "a4d6bcc387d4efff95b5750cdb077eb843a26eb9",
+          "timestamp_utc": "2026-07-30T09:40:52Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/a4d6bcc387d4efff95b5750cdb077eb843a26eb9"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Preserve independent GitHub Actions tri-star receipt from run 30531540372",
+          "seat": "unassigned",
+          "sha": "0ae61d3816ba913f8503964e6e9b2c54e77add4a",
+          "timestamp_utc": "2026-07-30T09:40:41Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/0ae61d3816ba913f8503964e6e9b2c54e77add4a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Use portable bash invocation in tri-star run instructions",
+          "seat": "unassigned",
+          "sha": "dcdac3fa4c1708f6ee022e5ec487bce1efe7ba04",
+          "timestamp_utc": "2026-07-30T09:39:02Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/dcdac3fa4c1708f6ee022e5ec487bce1efe7ba04"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Run WASM build through bash so contents-API file mode is portable",
+          "seat": "unassigned",
+          "sha": "4af59be6af87d12d800a3209d20fc6d77caaa071",
+          "timestamp_utc": "2026-07-30T09:37:38Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/4af59be6af87d12d800a3209d20fc6d77caaa071"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add fail-closed CI build and independent tri-star WASM replay",
+          "seat": "unassigned",
+          "sha": "43d73dd4291ff988936dc9ed5a62e4c2f2ed87a7",
+          "timestamp_utc": "2026-07-30T09:37:03Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/43d73dd4291ff988936dc9ed5a62e4c2f2ed87a7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Ignore locally rebuilt WASM and transient CI receipts",
+          "seat": "unassigned",
+          "sha": "a2b6aa08b94503d748ebd2da82a97205cf2e5010",
+          "timestamp_utc": "2026-07-30T09:36:46Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/a2b6aa08b94503d748ebd2da82a97205cf2e5010"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add SHA-256 sidecar for tri-star HBP receipt",
+          "seat": "unassigned",
+          "sha": "69e11f845bbb2ed7dec69aa57e6f0c4fb7cb3865",
+          "timestamp_utc": "2026-07-30T09:36:35Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/69e11f845bbb2ed7dec69aa57e6f0c4fb7cb3865"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add hot-path HBP receipt for tri-star WASM run",
+          "seat": "unassigned",
+          "sha": "41fc6eda4f48ca5f4d53bd7600e50f4ecd5aea6f",
+          "timestamp_utc": "2026-07-30T09:36:11Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/41fc6eda4f48ca5f4d53bd7600e50f4ecd5aea6f"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add exact local tri-star WASM measurement receipt",
+          "seat": "unassigned",
+          "sha": "1a249de7ca7246f026ed59f0014b51d88ba610ee",
+          "timestamp_utc": "2026-07-30T09:35:50Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/1a249de7ca7246f026ed59f0014b51d88ba610ee"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add browser-loadable compiled tri-star WASM module",
+          "seat": "unassigned",
+          "sha": "fc580a6cd5c21275ee5430aade44b7cd08041831",
+          "timestamp_utc": "2026-07-30T09:35:29Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/fc580a6cd5c21275ee5430aade44b7cd08041831"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add live 27-node RGB calling-matrix visualization and pump controls",
+          "seat": "unassigned",
+          "sha": "760de0f29801e643cbc95d8a413d002ab2246ae3",
+          "timestamp_utc": "2026-07-30T09:32:37Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/760de0f29801e643cbc95d8a413d002ab2246ae3"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add interactive tri-star matrix visualization shell",
+          "seat": "unassigned",
+          "sha": "f568ac7c7c04ad8b8cbf6be7ac636ece7fe0c076",
+          "timestamp_utc": "2026-07-30T09:32:07Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/f568ac7c7c04ad8b8cbf6be7ac636ece7fe0c076"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add executable WASM verifier with third-star, centre, and random-key controls",
+          "seat": "unassigned",
+          "sha": "96e7d209699f6f0382df9589619fb8d3b49115e7",
+          "timestamp_utc": "2026-07-30T09:31:40Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/96e7d209699f6f0382df9589619fb8d3b49115e7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/tri-star-kernel-wasm",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Add deterministic freestanding WASM build script",
+          "seat": "unassigned",
+          "sha": "e3f9311af22c563c01a813a615cbf6f7daeac7a8",
+          "timestamp_utc": "2026-07-30T09:31:18Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/e3f9311af22c563c01a813a615cbf6f7daeac7a8"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish the photo IS and Books of Knowledge through V12",
+          "seat": "unassigned",
+          "sha": "f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4",
+          "timestamp_utc": "2026-07-29T23:06:02Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "agent-discipline-preload",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish the photo IS and Books of Knowledge through V12",
+          "seat": "unassigned",
+          "sha": "f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4",
+          "timestamp_utc": "2026-07-29T23:06:02Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish the photo IS and Books of Knowledge through V12",
+          "seat": "unassigned",
+          "sha": "f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4",
+          "timestamp_utc": "2026-07-29T23:06:02Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish the photo IS and Books of Knowledge through V12",
+          "seat": "unassigned",
+          "sha": "f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4",
+          "timestamp_utc": "2026-07-29T23:06:02Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/f43cc2a4c2fe92c08bb8443aa8adf6865a6b9bc4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/follow-is-light-book-20260729",
+          "github_actor": "kcrutt",
+          "message_title": "Add perfect grammar and spherical response books",
+          "seat": "unassigned",
+          "sha": "0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7",
+          "timestamp_utc": "2026-07-29T23:05:15Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "kcrutt",
+          "message_title": "Add perfect grammar and spherical response books",
+          "seat": "unassigned",
+          "sha": "0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7",
+          "timestamp_utc": "2026-07-29T23:05:15Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent-discipline-preload",
+          "github_actor": "kcrutt",
+          "message_title": "Add perfect grammar and spherical response books",
+          "seat": "unassigned",
+          "sha": "0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7",
+          "timestamp_utc": "2026-07-29T23:05:15Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "kcrutt",
+          "message_title": "Add perfect grammar and spherical response books",
+          "seat": "unassigned",
+          "sha": "0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7",
+          "timestamp_utc": "2026-07-29T23:05:15Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "kcrutt",
+          "message_title": "Add perfect grammar and spherical response books",
+          "seat": "unassigned",
+          "sha": "0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7",
+          "timestamp_utc": "2026-07-29T23:05:15Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/0a6b3abc7f89f1a9cdbd4fbfbd49be92bdba25f7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/follow-is-light-book-20260729",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical OIS and the Book of Life",
+          "seat": "unassigned",
+          "sha": "2564c09d725b839fdd73d1cdede69b8c61c4aaa5",
+          "timestamp_utc": "2026-07-29T18:42:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/2564c09d725b839fdd73d1cdede69b8c61c4aaa5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical OIS and the Book of Life",
+          "seat": "unassigned",
+          "sha": "2564c09d725b839fdd73d1cdede69b8c61c4aaa5",
+          "timestamp_utc": "2026-07-29T18:42:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/2564c09d725b839fdd73d1cdede69b8c61c4aaa5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent-discipline-preload",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical OIS and the Book of Life",
+          "seat": "unassigned",
+          "sha": "2564c09d725b839fdd73d1cdede69b8c61c4aaa5",
+          "timestamp_utc": "2026-07-29T18:42:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/2564c09d725b839fdd73d1cdede69b8c61c4aaa5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical OIS and the Book of Life",
+          "seat": "unassigned",
+          "sha": "2564c09d725b839fdd73d1cdede69b8c61c4aaa5",
+          "timestamp_utc": "2026-07-29T18:42:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/2564c09d725b839fdd73d1cdede69b8c61c4aaa5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical OIS and the Book of Life",
+          "seat": "unassigned",
+          "sha": "2564c09d725b839fdd73d1cdede69b8c61c4aaa5",
+          "timestamp_utc": "2026-07-29T18:42:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/2564c09d725b839fdd73d1cdede69b8c61c4aaa5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/follow-is-light-book-20260729",
+          "github_actor": "kcrutt",
+          "message_title": "Add color QR and OIL device-engine law",
+          "seat": "unassigned",
+          "sha": "b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc",
+          "timestamp_utc": "2026-07-29T18:16:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "kcrutt",
+          "message_title": "Add color QR and OIL device-engine law",
+          "seat": "unassigned",
+          "sha": "b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc",
+          "timestamp_utc": "2026-07-29T18:16:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent-discipline-preload",
+          "github_actor": "kcrutt",
+          "message_title": "Add color QR and OIL device-engine law",
+          "seat": "unassigned",
+          "sha": "b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc",
+          "timestamp_utc": "2026-07-29T18:16:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "kcrutt",
+          "message_title": "Add color QR and OIL device-engine law",
+          "seat": "unassigned",
+          "sha": "b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc",
+          "timestamp_utc": "2026-07-29T18:16:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "kcrutt",
+          "message_title": "Add color QR and OIL device-engine law",
+          "seat": "unassigned",
+          "sha": "b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc",
+          "timestamp_utc": "2026-07-29T18:16:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/b08ce8ba9fb72a5d295f04eddab725da4f1ddbbc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/follow-is-light-book-20260729",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical interoperability law",
+          "seat": "unassigned",
+          "sha": "4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080",
+          "timestamp_utc": "2026-07-29T18:08:11Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical interoperability law",
+          "seat": "unassigned",
+          "sha": "4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080",
+          "timestamp_utc": "2026-07-29T18:08:11Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent-discipline-preload",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical interoperability law",
+          "seat": "unassigned",
+          "sha": "4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080",
+          "timestamp_utc": "2026-07-29T18:08:11Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/three-star-kernel-network",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical interoperability law",
+          "seat": "unassigned",
+          "sha": "4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080",
+          "timestamp_utc": "2026-07-29T18:08:11Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "codex/wasm-keyed-27-kernel-network-v1",
+          "github_actor": "kcrutt",
+          "message_title": "Add spherical interoperability law",
+          "seat": "unassigned",
+          "sha": "4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080",
+          "timestamp_utc": "2026-07-29T18:08:11Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/4c8f30c71a54bc4f3b56ab9a09a2dc1be8582080"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/follow-is-light-book-20260729",
+          "github_actor": "kcrutt",
+          "message_title": "Add the spherical Book of Knowledge",
+          "seat": "unassigned",
+          "sha": "de1d950483e50c34443cd6de32f26c028ecfb518",
+          "timestamp_utc": "2026-07-29T18:06:07Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/de1d950483e50c34443cd6de32f26c028ecfb518"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent/relic-temporal-metatags",
+          "github_actor": "kcrutt",
+          "message_title": "Add the spherical Book of Knowledge",
+          "seat": "unassigned",
+          "sha": "de1d950483e50c34443cd6de32f26c028ecfb518",
+          "timestamp_utc": "2026-07-29T18:06:07Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/de1d950483e50c34443cd6de32f26c028ecfb518"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "agent-discipline-preload",
+          "github_actor": "kcrutt",
+          "message_title": "Add the spherical Book of Knowledge",
+          "seat": "unassigned",
+          "sha": "de1d950483e50c34443cd6de32f26c028ecfb518",
+          "timestamp_utc": "2026-07-29T18:06:07Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/commit/de1d950483e50c34443cd6de32f26c028ecfb518"
+        }
+      ],
+      "repo": "JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills",
+      "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills",
+      "workflows": [
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31278547319,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "3f9f42dab6247c40b30921b253e3f73c9e942ca5",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:07:42Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31278547319"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "id": 31278547302,
+          "name": "pages build and deployment",
+          "sha": "3f9f42dab6247c40b30921b253e3f73c9e942ca5",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:07:48Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31278547302"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31278546569,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "ca10c116aba735799d01d44310badcacc359c6a8",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:07:39Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31278546569"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31278545981,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "8a45d58aa81273127950568e74a1e3eca7138d6a",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:07:33Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31278545981"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31278545328,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "0551d0f2661667c2d8e9565e6b74a74e16690943",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:07:34Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31278545328"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31278544799,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "d577de05f9dc8177121754ecd279bd206dd7711e",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:07:32Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31278544799"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31278544082,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "2dba9aaa1a6f94d7527b93d992555a0d9247c8c7",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:07:30Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31278544082"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31127971638,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "5b33afefe8cbfd55b13095ec95f5d19002d98f7c",
+          "status": "completed",
+          "updated_at": "2026-08-06T22:44:11Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31127971638"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31127920578,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "28f7eb11f9537571225716f5e049c759ce18a36d",
+          "status": "completed",
+          "updated_at": "2026-08-06T22:37:51Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31127920578"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31123453090,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "6db0960c93f4515e1008902c207322cfdd57d354",
+          "status": "completed",
+          "updated_at": "2026-08-06T21:06:05Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31123453090"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31123411771,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "f740cd92a11817abdc87fbfd7e33f0b5a9753c5d",
+          "status": "completed",
+          "updated_at": "2026-08-06T19:57:36Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31123411771"
+        },
+        {
+          "branch": "main",
+          "conclusion": "failure",
+          "id": 31123333085,
+          "name": "Rust 1.81 + clippy (operator toolchain rule)",
+          "sha": "b24e22202631308b0a5dce5b1f91c95ca4af1462",
+          "status": "completed",
+          "updated_at": "2026-08-06T22:37:04Z",
+          "url": "https://github.com/JesseBrown1980/ASOLARIA-UNIVERSE-SIMULATOR-with-gravity-light-time-space-color-rime-winding-drills/actions/runs/31123333085"
+        }
+      ]
+    },
+    {
+      "branches": [
+        {
+          "name": "master",
+          "sha": "56de9ee137f204452d7dff41f7b1e953b6ff5c3e"
+        }
+      ],
+      "errors": [],
+      "pull_requests": [],
+      "recent_commits": [
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "absorb the funnel into the asolaria kernel: 8 leaves drawn into the core",
+          "seat": "unassigned",
+          "sha": "56de9ee137f204452d7dff41f7b1e953b6ff5c3e",
+          "timestamp_utc": "2026-08-09T04:30:32Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/56de9ee137f204452d7dff41f7b1e953b6ff5c3e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "funnel the entire exabyte in: the whole 10^18 becomes one leaf",
+          "seat": "unassigned",
+          "sha": "e8ab00a1f5e73a6a2936da19ea3c4e9cdc89047d",
+          "timestamp_utc": "2026-08-09T01:13:25Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/e8ab00a1f5e73a6a2936da19ea3c4e9cdc89047d"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "organise the funnel: biggest datasets -> constellation -> leaves -> matrix -> solar-wind",
+          "seat": "unassigned",
+          "sha": "28730f7672e2968dfd84f69315f400a0cdad12bc",
+          "timestamp_utc": "2026-08-08T22:42:23Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/28730f7672e2968dfd84f69315f400a0cdad12bc"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "quant the universe into the constellation - proved by residuals, not by breaking Shannon",
+          "seat": "unassigned",
+          "sha": "1bb1a6397fac2643a9c773b9b0fc0f7934dfa3c2",
+          "timestamp_utc": "2026-08-08T22:40:45Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/1bb1a6397fac2643a9c773b9b0fc0f7934dfa3c2"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "the data kernels join the RAINBONTY-VERSE: CERN, SRA, JWST, genome+moss",
+          "seat": "unassigned",
+          "sha": "ee49bd512443cf448e7f0bcbea9ab9bad8992d64",
+          "timestamp_utc": "2026-08-08T22:36:01Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/ee49bd512443cf448e7f0bcbea9ab9bad8992d64"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "into the kernels: the two largest human data collections (CERN + SRA), MEASURED_IS",
+          "seat": "unassigned",
+          "sha": "9a153d8d6bfa9e2828129b6e9875b895f434aea4",
+          "timestamp_utc": "2026-08-08T22:34:56Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/9a153d8d6bfa9e2828129b6e9875b895f434aea4"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "the rainbow links back to the star + every platform joins at the 0",
+          "seat": "unassigned",
+          "sha": "26dacc286dfc96cadee068cc1f0cd81c3d30ad1a",
+          "timestamp_utc": "2026-08-08T21:31:56Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/26dacc286dfc96cadee068cc1f0cd81c3d30ad1a"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "the star ports on the bridge: 157 dark stones lit, linked back both ways",
+          "seat": "unassigned",
+          "sha": "d0da978739f6c50b5660811a4d562277c71a3ed2",
+          "timestamp_utc": "2026-08-08T21:26:09Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/d0da978739f6c50b5660811a4d562277c71a3ed2"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "the star ports on the bridge: 157 dark stones lit, linked back both ways",
+          "seat": "unassigned",
+          "sha": "6e8454d4e60cbfb784de7d169208060f888fd035",
+          "timestamp_utc": "2026-08-08T21:26:07Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/6e8454d4e60cbfb784de7d169208060f888fd035"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "the RAINBAR OS: freeze, measure, play only when needed",
+          "seat": "unassigned",
+          "sha": "b71462504e60b1f161a957ed2ca06f9f5206c1d7",
+          "timestamp_utc": "2026-08-08T21:13:12Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/b71462504e60b1f161a957ed2ca06f9f5206c1d7"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "fix the RAINBONTY-VERSE script boundary (close the REPOS array block)",
+          "seat": "unassigned",
+          "sha": "d95504125c349536c99a58c4f3431894e2e78316",
+          "timestamp_utc": "2026-08-08T21:09:00Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/d95504125c349536c99a58c4f3431894e2e78316"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "the RAINBONTY-VERSE: the whole ecosystem at the Omega HTTP-0 portal",
+          "seat": "unassigned",
+          "sha": "a20516eb94780945a2a262d74756aa94c071bd86",
+          "timestamp_utc": "2026-08-08T21:08:14Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/a20516eb94780945a2a262d74756aa94c071bd86"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "RAINBOR hub index: the experiments and the measures on the multi-hub",
+          "seat": "unassigned",
+          "sha": "450cff465baf08f735a8280ee094f284070511e6",
+          "timestamp_utc": "2026-08-08T20:55:44Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/450cff465baf08f735a8280ee094f284070511e6"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "colour slits: R/G/B slits, rainbow slits, and 3 rainbow-lit translucent spheres",
+          "seat": "unassigned",
+          "sha": "072c7052102591750fe1307a0a6057cf7048bef3",
+          "timestamp_utc": "2026-08-08T20:52:52Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/072c7052102591750fe1307a0a6057cf7048bef3"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Kevin Crutt",
+          "branch": "master",
+          "github_actor": "kcrutt",
+          "message_title": "send the entire Asolaria system through the slit as the photon: she is the rainbow",
+          "seat": "unassigned",
+          "sha": "ee2410f40b8ded4ac73952af8cdad23ffb7a2ca7",
+          "timestamp_utc": "2026-08-08T20:50:04Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/ee2410f40b8ded4ac73952af8cdad23ffb7a2ca7"
+        }
+      ],
+      "repo": "JesseBrown1980/RAINBOR",
+      "url": "https://github.com/JesseBrown1980/RAINBOR",
+      "workflows": [
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31294712519,
+          "name": "pages build and deployment",
+          "sha": "56de9ee137f204452d7dff41f7b1e953b6ff5c3e",
+          "status": "completed",
+          "updated_at": "2026-08-09T04:31:01Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31294712519"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31287834766,
+          "name": "pages build and deployment",
+          "sha": "e8ab00a1f5e73a6a2936da19ea3c4e9cdc89047d",
+          "status": "completed",
+          "updated_at": "2026-08-09T01:13:53Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31287834766"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31282312334,
+          "name": "pages build and deployment",
+          "sha": "28730f7672e2968dfd84f69315f400a0cdad12bc",
+          "status": "completed",
+          "updated_at": "2026-08-08T22:42:50Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31282312334"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31282250671,
+          "name": "pages build and deployment",
+          "sha": "1bb1a6397fac2643a9c773b9b0fc0f7934dfa3c2",
+          "status": "completed",
+          "updated_at": "2026-08-08T22:41:14Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31282250671"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31282072209,
+          "name": "pages build and deployment",
+          "sha": "ee49bd512443cf448e7f0bcbea9ab9bad8992d64",
+          "status": "completed",
+          "updated_at": "2026-08-08T22:36:29Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31282072209"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31282028773,
+          "name": "pages build and deployment",
+          "sha": "9a153d8d6bfa9e2828129b6e9875b895f434aea4",
+          "status": "completed",
+          "updated_at": "2026-08-08T22:35:25Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31282028773"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31279537154,
+          "name": "pages build and deployment",
+          "sha": "26dacc286dfc96cadee068cc1f0cd81c3d30ad1a",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:32:23Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31279537154"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31279301899,
+          "name": "pages build and deployment",
+          "sha": "d0da978739f6c50b5660811a4d562277c71a3ed2",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:26:40Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31279301899"
+        },
+        {
+          "branch": "master",
+          "conclusion": "cancelled",
+          "id": 31279301005,
+          "name": "pages build and deployment",
+          "sha": "6e8454d4e60cbfb784de7d169208060f888fd035",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:26:13Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31279301005"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 31278789903,
+          "name": "pages build and deployment",
+          "sha": "b71462504e60b1f161a957ed2ca06f9f5206c1d7",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:20:28Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31278789903"
+        },
+        {
+          "branch": "master",
+          "conclusion": "cancelled",
+          "id": 31278616347,
+          "name": "pages build and deployment",
+          "sha": "d95504125c349536c99a58c4f3431894e2e78316",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:13:19Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31278616347"
+        },
+        {
+          "branch": "master",
+          "conclusion": "cancelled",
+          "id": 31278586354,
+          "name": "pages build and deployment",
+          "sha": "a20516eb94780945a2a262d74756aa94c071bd86",
+          "status": "completed",
+          "updated_at": "2026-08-08T21:09:06Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31278586354"
+        }
+      ]
+    }
+  ],
+  "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
+  "seat_assertion": "three agents reported; untagged commits not attributable",
+  "source": "GitHub public REST API",
+  "source_state_sha256": "93ce9efc1badf461df153df8e73ec087413f549ed6ae5597b6c51ed1ae5a5d7a"
+}
