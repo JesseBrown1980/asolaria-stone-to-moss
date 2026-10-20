@@ -1,0 +1,12 @@
+HBP1|schema=ASOLARIA-PLANET-NAME-REGISTER-V1|date=2026-10-15|json=0
+OBJECT|research_id=ASOLARIA-BE-1|name=Brown–Edens I|honors=Jesse Brown and Dan Edens|json=0
+STATUS|simulation_alias=TRUE|astronomical_detection=FALSE|iau_official_name=FALSE|confirmed_planet=FALSE|json=0
+CONTEXT|constellation=Proxima Centauri region|actual_system_membership=NOT_MEASURED|json=0
+EXTERNAL|source=NASA Exoplanet Archive Proxima system overview|b=CONFIRMED|d=CONFIRMED|c=CANDIDATE|json=0
+OBSERVATION|new_radial_velocity_source=NONE|new_spectrum=NONE|new_transit=NONE|calibrated_rainbow_7bands=NONE|json=0
+PHYSICS|be1_mass=UNKNOWN|be1_orbital_period=UNKNOWN|be1_radius=UNKNOWN|be1_composition=UNKNOWN|be1_habitability=UNKNOWN|json=0
+MODEL|runtime=Rust1.81|addressed_particle_histories=YES|source_particle_events=SYNTHETIC_FIXTURE|10Gyr_jump=MODEL_ONLY|json=0
+AUTH|original_external_observation=NOT_PRESENT|independent_witness=NOT_PRESENT|planet_claim=NOT_SUPPORTED|json=0
+NEXT|compare_independent_calibrated_observations_against_known_body_null_model|require_cross_instrument_replay_and_activity_controls|json=0
+BOUNDARY|not_new_astronomical_discovery|do_not_make_iau_claims|do_not_fabricate_planet_mass_or_pixels|json=0
+END|research_id=ASOLARIA-BE-1|designation=INTERNAL_HYPOTHESIS|json=0
