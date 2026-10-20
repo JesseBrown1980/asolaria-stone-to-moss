@@ -1,0 +1,167 @@
+name: Seat 2 Round 9 Physical Host Activity Evidence Bridge
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat2/round9/**'
+      - '.github/workflows/seat2-round9-host-activity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  measured-host-activity:
+    name: Host counters ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          persist-credentials: false
+          path: frozen-main
+      - name: Assert historical main checkout exact commit
+        shell: bash
+        run: test "$(git -C frozen-main rev-parse HEAD)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install OS process measurement dependency
+        run: python -m pip install psutil==7.0.0
+      - name: Run pinned digital workload while measuring real process CPU time and RSS
+        shell: bash
+        run: |
+          python experiments/seat2/round9/host_bridge.py frozen-main "$RUNNER_TEMP/seat2-r9"
+      - name: Independently review actual host counters and recompute SHA in Node22
+        shell: bash
+        run: |
+          node experiments/seat2/round9/review_host_bridge.js frozen-main "$RUNNER_TEMP/seat2-r9"
+      - name: Execute 10 actual Node-review forgery tests with recomputed unsigned SHA sidecars
+        shell: bash
+        run: |
+          python experiments/seat2/round9/adversarial_host_context.py             frozen-main "$RUNNER_TEMP/seat2-r9" "$RUNNER_TEMP/seat2-r9/attack-review.json"             experiments/seat2/round9/review_host_bridge.js
+      - name: Enforce per-host meter boundary, data checksums and measured CPU / memory
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          folder=Path(os.environ['RUNNER_TEMP'])/'seat2-r9'
+          for name in ('digital.json','host-activity.json','instrument-status.json','node-review.json','attack-review.json'):
+              b=(folder/name).read_bytes()
+              assert (folder/(name+'.sha256')).read_bytes()==(hashlib.sha256(b).hexdigest()+'  '+name+'\n').encode('ascii')
+          d=json.loads((folder/'digital.json').read_bytes())
+          h=json.loads((folder/'host-activity.json').read_bytes())
+          i=json.loads((folder/'instrument-status.json').read_bytes())
+          assert d['hash_loops']==256 and len(d['negative_controls'])==9
+          assert h['cpu_elapsed_ns']>0 and h['wall_elapsed_ns']>0
+          assert h['rss_during_bytes']-h['rss_before_bytes']>=1024*1024
+          assert h['github_run_id']==os.environ['GITHUB_RUN_ID']
+          assert h['producing_git_sha']==os.environ['GITHUB_SHA']
+          assert h['runner_os']==os.environ['RUNNER_OS']
+          assert h['github_job']==os.environ['GITHUB_JOB']
+          evt=json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+          assert h['pr_head_sha']==evt['pull_request']['head']['sha']
+          assert h['github_pr_number']==evt['pull_request']['number']==111
+          assert h['github_run_attempt']==int(os.environ['GITHUB_RUN_ATTEMPT'])
+          assert h['github_event_name']==os.environ['GITHUB_EVENT_NAME']=='pull_request'
+          attacked=json.loads((folder/'attack-review.json').read_bytes())
+          assert attacked['case_count']==10 and attacked['status']=='NINE_CONTEXT_OR_SENSOR_FORGERIES_REJECTED_ONE_UNSIGNED_CPU_GAP'
+          assert attacked['forgeries_rejected']==9
+          assert attacked['unsigned_positive_cpu_counter_forgery_accepted_as_expected'] is True
+          assert all(x['recomputed_local_sha256_sidecar'] for x in attacked['falsification_cases'])
+          assert sum(x['actual_node_reviewer_rejected'] for x in attacked['falsification_cases'])==9
+          assert [x['case'] for x in attacked['falsification_cases']
+                  if x['unsigned_positive_cpu_forgery_accepted']]==['counter_cpu_positive']
+          assert not i['externally_attested_instrument_data']
+          assert all(not x['measured'] and x['value'] is None for x in i['channels'].values())
+          print('HOST_OS_COUNTERS_OBSERVED_ELECTRIC_AND_OPTICAL_SENSORS_NOT_MEASURED')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-r9-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat2-r9/*
+          if-no-files-found: error
+  cross-host-evidence-referee:
+    name: Four hosts identical digital bytes, individually hashed varying telemetry
+    runs-on: ubuntu-latest
+    needs: measured-host-activity
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat2-r9-*
+          path: evidence
+      - name: Retrieve authoritative GitHub Actions run identity from provider API
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > evidence-run-identity.json
+      - name: Keep actual host readings rather than fabricate identical timing/RSS
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          folders=sorted(p for p in Path('evidence').iterdir() if p.is_dir())
+          api=json.loads(Path('evidence-run-identity.json').read_bytes())
+          evt=json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_bytes())
+          assert os.environ['GITHUB_EVENT_NAME']=='pull_request'
+          assert api['id']==int(os.environ['GITHUB_RUN_ID'])
+          assert api['run_attempt']==int(os.environ['GITHUB_RUN_ATTEMPT'])
+          assert api['event']=='pull_request'
+          pr_head=evt['pull_request']['head']['sha']
+          assert api['head_sha']==pr_head, 'GITHUB_API_PR_HEAD_MISMATCH'
+          assert evt['pull_request']['number']==111
+          assert any(x['number']==111 for x in api['pull_requests'])
+          assert len(folders)==4,folders
+          static=('digital.json','instrument-status.json','node-review.json','attack-review.json')
+          for name in static:
+              data=[(p/name).read_bytes() for p in folders]
+              assert len(set(data))==1,'DIGITAL_BYTE_DRIFT:'+name
+              h=hashlib.sha256(data[0]).hexdigest()
+              for p,b in zip(folders,data):
+                  assert (p/(name+'.sha256')).read_bytes()==(h+'  '+name+'\n').encode('ascii')
+              print('R9_FOUR_HOSTS_DIGITAL_BYTES_IDENTICAL',name,len(data[0]),h)
+          expected={'seat2-r9-ubuntu-latest-py3.11':('Linux','3.11.'),
+                    'seat2-r9-ubuntu-latest-py3.13':('Linux','3.13.'),
+                    'seat2-r9-windows-latest-py3.11':('Windows','3.11.'),
+                    'seat2-r9-windows-latest-py3.13':('Windows','3.13.')}
+          assert set(p.name for p in folders)==set(expected), 'WRONG_MATRIX_ARTIFACT_IDENTITY'
+          for p in folders:
+              name='host-activity.json';data=(p/name).read_bytes()
+              digest=hashlib.sha256(data).hexdigest()
+              assert (p/(name+'.sha256')).read_bytes()==(digest+'  '+name+'\n').encode('ascii')
+              x=json.loads(data)
+              assert x['cpu_elapsed_ns']>0 and x['wall_elapsed_ns']>0
+              assert x['rss_during_bytes']-x['rss_before_bytes']>=1024*1024
+              assert x['runner_os'] in ('Linux','Windows')
+              expected_os,py_prefix=expected[p.name]
+              assert x['runner_os']==expected_os and x['platform_system']==expected_os, 'WRONG_RUNNER_OS'
+              assert x['python'].startswith(py_prefix),'WRONG_HOST_PYTHON_MATRIX'
+              assert x['github_run_id']==os.environ['GITHUB_RUN_ID'], 'FORGED_RUN_ID'
+              assert x['producing_git_sha']==os.environ['GITHUB_SHA'], 'FORGED_MERGE_COMMIT_SHA'
+              assert x['pr_head_sha']==pr_head, 'FORGED_PR_HEAD_SHA'
+              assert x['github_pr_number']==111, 'FORGED_PR_NUMBER'
+              assert x['github_run_attempt']==api['run_attempt'], 'FORGED_RUN_ATTEMPT'
+              assert x['github_event_name']=='pull_request', 'WRONG_EVENT_KIND'
+              assert x['github_job']=='measured-host-activity', 'WRONG_PRODUCER_JOB'
+
+              print('R9_REAL_HOST_PROCESS_COUNTERS',p.name,
+                    'cpu_ns',x['cpu_elapsed_ns'],'wall_ns',x['wall_elapsed_ns'],
+                    'rss_delta_bytes',x['rss_during_bytes']-x['rss_before_bytes'],
+                    'raw_host_sha256',digest)
+          print('R9_GITHUB_API_PR_HEAD_RUN_ATTEMPT_AND_SYNTHETIC_MERGE_SEPARATELY_BOUND',pr_head,os.environ['GITHUB_SHA'],api['run_attempt'])
+          print('R9_PHYSICAL_HOST_ACTIVITY_BRIDGE_PASS_NO_INSTRUMENTED_PHOTONS_OR_POWER')
+          PY
