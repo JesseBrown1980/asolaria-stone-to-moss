@@ -1,0 +1,15 @@
+{
+  "schema": "ASOLARIA-SEAT2-R8-POSTHOC-PINNED-CHECKPOINT-V1",
+  "provenance": "POSTHOC_FROZEN_FROM_FIRST_GREEN_CI_NOT_INDEPENDENT_CUSTODY",
+  "producing_commit": "3abd252290441dff9185bd28457d1bb4d6bceff1",
+  "producing_run_id": 38774754199,
+  "expected_source_root": "02ff42a93d934074ae9c83e1b989f097944c8c7cd2ed80197c2cfd8795391e22",
+  "expected_bank_root": "52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345",
+  "expected_session": "SEAT2-R8-DIGITAL-FIXTURE-SESSION-20261015",
+  "expected_nonce": "SEAT2-R8-PUBLIC-NONCE-NOT-EXTERNAL-FRESHNESS",
+  "expected_chain_tip": "f1fcc6155336e4422e3775427e44d07c55a627c58e169b9a3fb6b60b24cec9b5",
+  "expected_fixture_sha256": "091ab42989b7b0a66a771af5f937bfe1929575d6697be3fe8dadd80c38db0cf7",
+  "expected_results_sha256": "f0114ee56366b4f13e51b1ea8f1c969f2e5e20d8ef5668ecd132f17b311d525c",
+  "durable_external_last_sequence_for_replay_test": 4,
+  "physical_optical_measurement_attested": false
+}
