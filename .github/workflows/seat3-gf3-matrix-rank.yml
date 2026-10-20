@@ -1,0 +1,120 @@
+name: C3 independent Rust181 GF3 81-trit rank and logical matrix-skip certificate
+on:
+  push:
+    branches: [agent/seat3/gf3-81-rank-matrix-c3-20261016]
+    paths:
+      - 'experiments/seat3/gf3_rank/**'
+      - '.github/workflows/seat3-gf3-matrix-rank.yml'
+  pull_request:
+    paths:
+      - 'experiments/seat3/gf3_rank/**'
+      - '.github/workflows/seat3-gf3-matrix-rank.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-field:
+    runs-on: ${{ matrix.os }}
+    name: GF3 81 basis rank ${{ matrix.os }} Python ${{ matrix.python }} Node22
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest,windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5303c9b2ed0c0ce33da684706d57caef516ffd2b
+          path: frozen-seat1-rust
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pin actual Seat1 Rust 1.81 original GF(3) source and seven-depth law
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C frozen-seat1-rust rev-parse HEAD)" = 5303c9b2ed0c0ce33da684706d57caef516ffd2b
+          test "$(git -C frozen-seat1-rust rev-parse HEAD:experiments/seat1/proxima-rust181/src/lib.rs)" = 0a26e3d24ac0b0211c31c3aa32e23d50d7d0c3ec
+          grep -F 'pub fn gf3_step' frozen-seat1-rust/experiments/seat1/proxima-rust181/src/lib.rs
+          grep -F 'nilpotent_after_81([0,1,3])' frozen-seat1-rust/experiments/seat1/proxima-rust181/src/lib.rs
+          grep -F 'nilpotent_after_81([0,4,7])' frozen-seat1-rust/experiments/seat1/proxima-rust181/src/lib.rs
+      - name: Independent Python matrix Gaussian rank and fast logical skips
+        shell: bash
+        run: |
+          python experiments/seat3/gf3_rank/seat3_gf3.py "$RUNNER_TEMP/c3-python"
+      - name: Independent Node GF3 rank, selected state skip and per-state SHA
+        shell: bash
+        run: |
+          node experiments/seat3/gf3_rank/seat3_gf3.js "$RUNNER_TEMP/c3-node"
+      - name: Independently source audit full HBP with polynomial convolution
+        shell: bash
+        run: |
+          python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$RUNNER_TEMP/c3-python"
+          python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$RUNNER_TEMP/c3-node"
+          cmp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp" "$RUNNER_TEMP/c3-node/seat3-gf3-rank-certificate.hbp"
+          cmp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp.sha256" "$RUNNER_TEMP/c3-node/seat3-gf3-rank-certificate.hbp.sha256"
+          mkdir -p "$RUNNER_TEMP/c3-verified"
+          cp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp" "$RUNNER_TEMP/c3-verified/"
+          cp "$RUNNER_TEMP/c3-python/seat3-gf3-rank-certificate.hbp.sha256" "$RUNNER_TEMP/c3-verified/"
+      - name: Mutated HBP evidence must be rejected by independent polynomial referee
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path(os.environ["RUNNER_TEMP"])/"c3-python"/"seat3-gf3-rank-certificate.hbp"
+          b=bytearray(p.read_bytes())
+          b[110]^=1
+          p.write_bytes(b)
+          PY
+          if python experiments/seat3/gf3_rank/verify_gf3_hbp.py "$RUNNER_TEMP/c3-python"; then
+             echo 'FAILED: accepted altered GF3 certificate'; exit 1
+          fi
+          echo 'SEAT3_GF3_ALTERED_HBP_REJECTED'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-c3-gf3-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/c3-verified/*
+          if-no-files-found: error
+          retention-days: 30
+  fifth-exact-referee:
+    name: All four original GF3 rank certificates byte identical, no JSON
+    runs-on: ubuntu-latest
+    needs: independent-field
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-c3-gf3-*
+          merge-multiple: false
+          path: four-certificates
+      - name: Verify all four SHA sidecars and exactly matched theorem rows
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          folders=sorted(Path('four-certificates').glob('seat3-c3-gf3-*'))
+          assert len(folders)==4,folders
+          name='seat3-gf3-rank-certificate.hbp'
+          blobs=[(p/name).read_bytes() for p in folders]
+          assert all(x==blobs[0] for x in blobs),'DIFFERENT_SCIENTIFIC_TRACES'
+          digest=hashlib.sha256(blobs[0]).hexdigest()
+          for p,raw in zip(folders,blobs):
+              assert (p/(name+'.sha256')).read_bytes()==(digest+'  '+name+'\n').encode()
+              assert not any(q.suffix in ('.json','.jsonl','.ndjson') for q in p.iterdir())
+          rows=blobs[0].decode('ascii').splitlines()
+          for taps in ('013','047'):
+              for h,expected in ((0,81),(1,80),(3,78),(9,72),(27,54),(81,0),(82,0)):
+                  hit=[r for r in rows if r.startswith(f'RANK|taps={taps}|logical_ticks={h}|')]
+                  assert len(hit)==1 and f'|rank={expected}|' in hit[0],(taps,h,hit)
+          assert any('stale_same_law_fail_count=' in x and '|law_aware_composition=PASS' in x for x in rows)
+          print('C3_FINAL_4_PLATFORM_GF3_MATRIX_CERT_PASS',digest,len(blobs[0]),'bytes')
+          PY
