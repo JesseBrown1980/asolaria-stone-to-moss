@@ -1,0 +1,6 @@
+HBP1|schema=ASOLARIA-CLAUDE-VERIFY-HF-MIRROR-V1|date=2026-10-16|json=0
+GITHUB|repo=JesseBrown1980/asolaria-stone-to-moss|branch=ccr-7180d4f5-bq2h43|commit=743d3f00e82973093614c2e771ba9db58d052a30|path=experiments/claude-verify/alphacen-gguf-constellation-20261016|visibility=public|anonymous_fetch=HTTP200|json=0
+CI|run=38956579385|ubuntu=+1|windows=+1|webb_live_esa_sha256=5475f875fc7e5ea2c375fe97f59fb0576856f2b767b7d19508bc6a6c46803bb7|webb_equals_explorer_embed=+1|json=0
+HF|repo=datasets/Jessedbrown/asolaria-alphacen-gguf-constellation|commit=5fb3407ef79dd0478b0da600601f1998a23fac49|private=0|json=0
+HF_ANON|files_listed=31|uploaded_files=30|byte_equal_to_github_commit=30|sidecars_verified=15|hf_default_gitattributes=1|json=0
+BOUNDARY|gguf_3084cd8b=NOT_PUBLISHED_OPERATOR_HELD|this_receipt_added_after_mirror=1|json=0
