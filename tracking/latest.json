@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-11-04T18:03:25Z",
+  "captured_at_utc": "2026-11-04T23:45:17Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -413,6 +413,14 @@
       "pull_requests": [
         {
           "github_actor": "JesseBrown1980",
+          "number": 147,
+          "state": "closed",
+          "title": "Link this README to 17-repository research index, QNN Google circuit test and HTTP-0 measurements",
+          "updated_at": "2026-11-04T20:59:04Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/147"
+        },
+        {
+          "github_actor": "JesseBrown1980",
           "number": 146,
           "state": "open",
           "title": "verify: independent Rust 1.81 check of ChatGPT Alpha Cen GGUF constellation",
@@ -562,14 +570,6 @@
           "title": "[Seat 3] Independent cross-seat PR111 host counter provenance, forged telemetry and source SHA falsifiers",
           "updated_at": "2026-10-15T19:35:32Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/118"
-        },
-        {
-          "github_actor": "JesseBrown1980",
-          "number": 116,
-          "state": "open",
-          "title": "[Seat 3] Preserve reported photon-memory history; exact selective photon/RF rank and real host CPU/memory counters",
-          "updated_at": "2026-10-15T17:36:42Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/pull/116"
         }
       ],
       "recent_commits": [
@@ -1240,11 +1240,21 @@
         {
           "branch": "main",
           "conclusion": null,
+          "id": 41936145502,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "58d7e61d0ced431222c122faa856274e54fde516",
+          "status": "in_progress",
+          "updated_at": "2026-11-04T23:45:01Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/41936145502"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
           "id": 41883091251,
           "name": "Asolaria three-seat activity ledger",
           "sha": "f4e33e0a1b70500baf8628e9e073ce364793111a",
-          "status": "in_progress",
-          "updated_at": "2026-11-04T18:03:07Z",
+          "status": "completed",
+          "updated_at": "2026-11-04T18:04:09Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/41883091251"
         },
         {
@@ -1346,16 +1356,6 @@
           "status": "completed",
           "updated_at": "2026-11-01T19:45:41Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/41343283827"
-        },
-        {
-          "branch": "main",
-          "conclusion": "success",
-          "id": 41315669183,
-          "name": "Asolaria three-seat activity ledger",
-          "sha": "90bd4db6dae42b4a4b1842fefab93e8decab2a1b",
-          "status": "completed",
-          "updated_at": "2026-11-01T14:20:57Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/41315669183"
         }
       ]
     },
@@ -3974,5 +3974,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "9bc69f034388786bb252eabdea4c746b02c7483fb41143c3ea204333813a7059"
+  "source_state_sha256": "86731cc7151f4c1c8e14dd4c0ab2a3a1783eb99ec1db67b42e4fac03fe331032"
 }
