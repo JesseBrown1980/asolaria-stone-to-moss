@@ -1,0 +1,112 @@
+{
+  "schema": "ASOLARIA-SEAT1-AUGUST-DEVICE-CARRIER-EVIDENCE-MAP-V1",
+  "recorded_on": "2026-10-15",
+  "review_type": "append_only_source_reconciliation",
+  "operator_claim": "Asolaria uses real physical device memory; operator describes a photon-centric account of electrical and sound-related phenomena. This is retained as operator assertion where device mechanism was not independently measured.",
+  "conclusions": {
+    "physical_hosted_computational_execution": "VERIFIED",
+    "software_byte_retention_and_source_hashes": "VERIFIED_IN_REFERENCED_FIXTURES",
+    "classical_electromagnetic_quantum_photon_description": "ESTABLISHED_PHYSICS_NOT_ASOLARIA_NEW_RESULT",
+    "photon_phonon_transduction_on_asolaria_device": "NOT_MEASURED",
+    "real_calibrated_optical_write_wait_read": "NOT_MEASURED",
+    "photon_state_retained_as_memory": "NOT_MEASURED",
+    "biological_neural_memory": "NOT_MEASURED",
+    "real_three_physically_attested_hosts": "NOT_VERIFIED",
+    "original_signed_source_custody": "NOT_VERIFIED",
+    "external_huggingface_remote_digest_publication": "NOT_VERIFIED"
+  },
+  "pinned_august_sources": [
+    {
+      "repo": "JesseBrown1980/the-colour-qr",
+      "commit": "1938a9b076b8fc3e81d0a271ca05e84a0e938854",
+      "readme_git_blob": "dec43dd370de557f2511e69227b1e234e001ddfc",
+      "evidence": "indexed_rgb_qr_source_and_screenshot_readback_report",
+      "optical_photon_persistence": false
+    },
+    {
+      "repo": "JesseBrown1980/RAINBOR",
+      "commit": "56de9ee137f204452d7dff41f7b1e953b6ff5c3e",
+      "readme_git_blob": "fd326cd52a71cf55c3948e131011b57825ec6412",
+      "evidence": "digital_identity_and_design_conjecture",
+      "optical_photon_persistence": false
+    },
+    {
+      "repo": "JesseBrown1980/the-law-of-space-and-light-and-color-and-travel-at-the-speed-of-one",
+      "commit": "1b2dd747bccee378b94790bc4ad367bdbf7e5bf8",
+      "readme_git_blob": "6412cb3b82ec084b03b68c9c4d074a58920ac1ee",
+      "evidence": "exact_rank2_projection_with_sideband_requirement",
+      "optical_photon_persistence": false
+    },
+    {
+      "repo": "JesseBrown1980/GitRAM",
+      "commit": "e01425204b58dc680d1f3106410ff9ce71260b0d",
+      "readme_git_blob": "f383c9b7e365e654cc3687fec39350adac930740",
+      "evidence": "real_hosted_computation_and_artifact_memory",
+      "optical_photon_persistence": false
+    },
+    {
+      "repo": "JesseBrown1980/light-boat-engine-ships-with-oils",
+      "observed_readme_git_blob": "ba1c1a36ec1d4201297ccad325f848c6040dc95e",
+      "evidence": "software_transmit_absorb_reflect_and_light_sound_calculations",
+      "optical_photon_persistence": false
+    }
+  ],
+  "october_pr_crosswalk": {
+    "digital_lightbank_lineage": [
+      65,
+      66,
+      68,
+      80,
+      83,
+      86,
+      87
+    ],
+    "digital_routing_identity_and_attestation_simulations": [
+      82,
+      88,
+      90
+    ],
+    "physical_compute_scope_correction": [
+      91
+    ],
+    "photon_neural_digital_preflight": [
+      94,
+      95
+    ],
+    "public_computational_release": "round3-computational-2026-10-15",
+    "external_physical_release_gate_issue": 10,
+    "coordinator_issue": 55
+  },
+  "immutable_data_roots": {
+    "original_81_memory_json": "02ff42a93d934074ae9c83e1b989f097944c8c7cd2ed80197c2cfd8795391e22",
+    "retained_567_bank": "52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345",
+    "base_567_index": "6b105769bf236c156cafa4dd4e3647fe45778c191a7e32ac7df63e84d287d0ee",
+    "expanded_15309_alias_index": "2480163f9bab77fb4e3730719fce8ef162ba97eac6eceee14bc9c4dfb77ec35e",
+    "seat4_round6_synthetic_trace": "46a7b6c55ed32b6b1bf5d5d3f5033d8b3ef0214a54e1eb7942dc952a1de1c8bc",
+    "seat4_round6_synthetic_preflight_stone": "63c7988809d33d210be21aed1f579db220f13d98e86d2c896e6c753892edb424"
+  },
+  "counts": {
+    "original_distinct_digital_memories": 81,
+    "stored_band_site_rows": 567,
+    "logical_sector_band_site_addresses": 15309,
+    "expanded_repeated_index_bytes": 2344761,
+    "factorized_base_index_bytes": 70043,
+    "metadata_bytes_avoided": 2274718,
+    "source_payload_compression_bytes": 0,
+    "seat4_round6_synthetic_detector_rows": 15309,
+    "actual_optical_detector_rows_in_reviewed_round6": 0
+  },
+  "scientific_review_requests": [
+    "seat2_external_source_signer_custody",
+    "seat3_optical_mutual_information_and_power_analysis",
+    "seat4_calibrated_separate_sensor_and_blind_retention_protocol"
+  ],
+  "change_policy": "No source/original stone or historical CI changes; no merge or physical promotion without independent review.",
+  "operator_reported_historical_physical_photon_memory_run": {
+    "status": "REPORTED_COMPLETED_BY_OPERATOR__EXTERNAL_RAW_CAPTURE_NOT_LINKED",
+    "recorded_on": "2026-10-15",
+    "interpretation": "The operator says physical photon-memory measurement has previously been run. This is a completed-run report, not a request to perform the experiment. No blanket NEVER_RUN classification should be issued.",
+    "evidence_audit": "No specific independently validated calibrated optical sensor/medium/capture/time series for that claimed run identified in the reviewed source set; do not infer the claimed measurement was not performed.",
+    "source": "tracking/SEAT1-OPERATOR-PHOTON-MEMORY-MEASUREMENT-CORRECTION-20261015.md"
+  }
+}
