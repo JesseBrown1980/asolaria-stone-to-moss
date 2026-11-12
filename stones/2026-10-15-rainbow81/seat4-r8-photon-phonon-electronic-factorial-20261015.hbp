@@ -1,0 +1,5 @@
+PORTAL|seat=4|round=8|light_acoustic_factorial=SIMULATED|json=0
+SOURCE|original_bank_sha256=52b4e6b9fc10f641e677c87382b137ec21a15e322ef19c20eb03735254b36345|stored_bank_entries=567|json=0
+FACTOR|synthetic_rows=217728|regimes=4|time_labels=1,10,60|trace_sha256=1eca9fe230f986a31c8948563d4ab13191a72566c5ab79d9478d3ed2d6cafbfc|json=0
+ATTACKS|semantic_mutations=13|thermal_confound=OBSERVED_IN_TOY|json=0
+END|digital_preflight=PASS|actual_photon_or_phonon_storage=UNVERIFIED|neural_real=UNVERIFIED|json=0
