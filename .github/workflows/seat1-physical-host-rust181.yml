@@ -1,0 +1,112 @@
+name: Seat1 physical-host evidence (Rust 1.81)
+on:
+  push:
+    branches: [seat1-physical-host-evidence-rust181-20261015]
+  pull_request:
+    paths:
+      - 'experiments/seat1/physical_host/**'
+      - '.github/workflows/seat1-physical-host-rust181.yml'
+  workflow_dispatch:
+
+jobs:
+  host-capture:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - name: Verify pinned compiler, Clippy, integer code, and unit tests
+        shell: bash
+        working-directory: experiments/seat1/physical_host
+        run: |
+          set -euo pipefail
+          rustc --version
+          test "$(rustc --version | awk '{print $2}')" = "1.81.0"
+          cargo clippy --locked --offline --all-targets -- -D warnings
+          cargo test --locked --offline
+      - name: Record real host-process measurements (no optical sensor attached)
+        shell: bash
+        working-directory: experiments/seat1/physical_host
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          unset ASOLARIA_OPTICAL_CAPTURE_PATH
+          if [ "${{ matrix.profile }}" = "release" ]; then
+            cargo run --locked --offline --release -- out
+          else
+            cargo run --locked --offline -- out
+          fi
+          sha256sum out/receipt.json > out/receipt.sha256
+          python3 - <<'PY'
+          import json, os, pathlib
+          result=json.loads(pathlib.Path('out/receipt.json').read_bytes())
+          assert result['toolchain']=='rust-1.81.0'
+          assert result['source_commit']==os.environ['GITHUB_SHA']
+          assert result['ternary_digits']==[-1,0,1]
+          assert result['aliases_per_round']==15309
+          assert result['bank_entries']==567
+          assert result['original_memories']==81
+          assert result['rounds']==128
+          assert result['executed_alias_operations']==15309*128
+          assert result['deterministic_digest']=='3b6fe647a64e065f'
+          for name in ('idle','active'):
+              phase=result[name]
+              assert phase['end_epoch_ms']>=phase['start_epoch_ms']
+              assert phase['monotonic_elapsed_ns']>0
+              assert phase['rss_kib_start']>0 and phase['rss_kib_end']>0
+              assert phase['process_cpu_ticks_delta']>=0
+          assert result['optical']['status']=='not_run_no_instrument_interface'
+          assert result['optical']['phase'] is None
+          assert all(v is None for v in result['direct_instruments'].values())
+          assert result['claims']=={
+              'os_reported_physical_execution':True,
+              'attested_independent_physical_host':False,
+              'direct_electrical_measurement':False,
+              'direct_optical_measurement':False,
+              'optical_memory_proven':False,
+          }
+          print('Seat1 evidence schema and claim separation: PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat1-physical-${{ matrix.profile }}
+          path: |
+            experiments/seat1/physical_host/out/receipt.json
+            experiments/seat1/physical_host/out/receipt.sha256
+          if-no-files-found: error
+
+  reconcile:
+    needs: host-capture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat1-physical-*
+          path: downloaded
+      - name: Reconcile deterministic work and independently hash both raw receipts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          paths=sorted(pathlib.Path('downloaded').rglob('receipt.json'))
+          assert len(paths)==2,paths
+          receipts=[json.loads(p.read_bytes()) for p in paths]
+          same=('source_commit','ternary_digits','original_memories','bank_entries','aliases_per_round','rounds','executed_alias_operations','deterministic_digest','claims')
+          for key in same:
+              assert receipts[0][key]==receipts[1][key],key
+          for p,r in zip(paths,receipts):
+              sha=hashlib.sha256(p.read_bytes()).hexdigest()
+              digest_file=p.with_name('receipt.sha256').read_text().split()[0]
+              assert sha==digest_file,(p,sha,digest_file)
+              assert r['evidence_scope']=='os_reported_host_process'
+              assert r['optical']['status']=='not_run_no_instrument_interface'
+              assert all(value is None for value in r['direct_instruments'].values())
+              print(f'{p}: {sha}')
+          print('DIGEST/ADDRESS PARITY PASS; raw telemetry intentionally not byte-identical')
+          PY
