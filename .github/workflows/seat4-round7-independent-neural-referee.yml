@@ -1,0 +1,124 @@
+name: Seat4 Round7 archived neural source, RPC and physical spoof referee
+on:
+  push:
+    branches:
+      - agent/seat-4/round7-neural-source-referee-20261015
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  peer-referee:
+    name: Independent ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: eee7ff0cd5d69f596fb99aca6c1998a26308c5fd
+          path: frozen-parent-pr93
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: a427ee599d7bd64ebb503d632e0c047588038c4f
+          path: frozen-seat4-pr94
+          persist-credentials: false
+      - name: Freeze original Git histories, reject silent source replacement
+        shell: bash
+        run: |
+          test "$(git -C frozen-parent-pr93 rev-parse HEAD)" = eee7ff0cd5d69f596fb99aca6c1998a26308c5fd
+          test "$(git -C frozen-parent-pr93 rev-parse HEAD:experiments/photon_electron_mcp/photon_model.py)" = 1d152260ab0654e4c42585a07a706326448a556e
+          test "$(git -C frozen-seat4-pr94 rev-parse HEAD)" = a427ee599d7bd64ebb503d632e0c047588038c4f
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download original PRIOR hosted photon/electron artifact bytes
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38768572316
+          name: photon-electron-ubuntu-latest
+          path: ${{ runner.temp }}/original-PR93-artifacts
+      - name: Python independent full-bank LIF, genuine RPC mutations and 5103-row fake spectrometer challenge
+        shell: bash
+        run: |
+          python experiments/seat4/round7/referee.py "$RUNNER_TEMP/original-PR93-artifacts" "frozen-seat4-pr94/experiments/seat4/round6/physical_capture_gate.py" "$RUNNER_TEMP/seat4-r7-output"
+      - name: Independent Node22 replay of all source bits, LIF fingerprints and results
+        shell: bash
+        run: |
+          node experiments/seat4/round7/verify_neural.js "$RUNNER_TEMP/original-PR93-artifacts" "$RUNNER_TEMP/seat4-r7-output"
+      - name: Verify fresh science receipts against committed append-only Seat4 R7 stone
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,os,json
+          from pathlib import Path
+          stone=Path("stones/2026-10-15-rainbow81/seat4-r7-independent-neural-source-referee-20261015.hbp")
+          digest=hashlib.sha256(stone.read_bytes()).hexdigest()
+          assert len(stone.read_bytes())==821
+          assert digest=="dc80458eedd505a07362173532b093495cd3c9bd3e5c1707e436f766c8f04eae"
+          assert stone.with_suffix(stone.suffix+".sha256").read_bytes()==(digest+"  "+stone.name+"\n").encode('ascii')
+          output=Path(os.environ['RUNNER_TEMP'])/'seat4-r7-output'
+          expected={
+            'seat4-r7-trace.hbp':'82f40a5dbc648b0dc50fa7e0dff99c512f1773b42086a7da9615e6b403da929b',
+            'seat4-r7-results.json':'db979f2a81cae2f721aa95424659ab0483caa70d684e6c9915e40e701b1aac37'
+          }
+          for name,expected_sha in expected.items():
+              actual=hashlib.sha256((output/name).read_bytes()).hexdigest()
+              assert actual==expected_sha
+              assert expected_sha.encode('ascii') in stone.read_bytes()
+          m=json.loads((output/'seat4-r7-results.json').read_bytes())
+          assert m['neural_false_green']==[0,0,27,89,0]
+          assert not m['actual_photons_measured'] and not m['biological_neurons_measured']
+          print('SEAT4_R7_STONE_HOSTED_REGENERATED',len(stone.read_bytes()),digest)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r7-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat4-r7-output/*
+          retention-days: 30
+          if-no-files-found: error
+  exact-parity:
+    name: Four-machine-context byte parity referee
+    runs-on: ubuntu-latest
+    needs: peer-referee
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r7-*
+          merge-multiple: false
+          path: peer-evidence
+      - name: Verify full HBP, structured receipts and canonical SHA sidecars
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          groups=sorted(Path('peer-evidence').glob('seat4-r7-*'))
+          assert len(groups)==4,groups
+          for filename in ('seat4-r7-trace.hbp','seat4-r7-results.json'):
+              contents=[(g/filename).read_bytes() for g in groups]
+              assert all(x==contents[0] for x in contents),'CROSS_OS_CONTENT_DRIFT:'+filename
+              h=hashlib.sha256(contents[0]).hexdigest()
+              for g in groups:
+                  assert (g/(filename+'.sha256')).read_bytes()==(h+'  '+filename+'\n').encode('ascii')
+              print('SEAT4_R7_FOUR_RUNS_BYTE_EXACT',filename,len(contents[0]),h)
+          receipt=json.loads((groups[0]/'seat4-r7-results.json').read_bytes())
+          assert receipt['neural_false_green']==[0,0,27,89,0]
+          assert receipt['actual_photons_measured'] is False
+          assert receipt['biological_neurons_measured'] is False
+          print('NEURAL_ONLY_FALSE_POSITIVE_GATE_HELD_AND_PHYSICAL_ORIGIN_UNVERIFIED')
+          PY
