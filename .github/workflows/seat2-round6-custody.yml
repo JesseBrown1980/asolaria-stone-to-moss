@@ -1,0 +1,72 @@
+name: Seat 2 Round 6 source-custody cross examination
+on:
+  pull_request:
+    paths:
+      - 'experiments/seat2/round6/**'
+      - '.github/workflows/seat2-round6-custody.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-digital-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install standalone cryptography requirement
+        run: python -m pip install "cryptography>=42,<48"
+      - name: Execute fixture-key spoof, 5039 S7 permutations, 2187 frames
+        run: python experiments/seat2/round6/seat2_round6.py r6-evidence
+      - name: Assert evidence checksum and external origin hold
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          d=Path('r6-evidence')
+          h,name=(d/'SHA256SUMS').read_text('ascii').strip().split('  ',1)
+          raw=(d/name).read_bytes()
+          assert hashlib.sha256(raw).hexdigest()==h
+          x=json.loads(raw)
+          assert x['cases']['coherent_signed_port_forgeries_accepted_by_bare_crypto']==5039
+          assert x['cases']['same_forgeries_rejected_by_fixed_external_binding']==5039
+          assert x['cases']['signed_mock_frames']==2187
+          assert not x['externally_authenticated_source']
+          assert not x['physical_photon_storage_measured']
+          print('SHA_CHECK_PASS',h)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat2-r6-${{ matrix.os }}-py${{ matrix.python }}
+          path: r6-evidence/
+          if-no-files-found: error
+  downloaded-byte-parity:
+    needs: independent-digital-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: evidence
+          pattern: seat2-r6-*
+      - name: Check four artifacts byte-identical
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          files=sorted(Path('evidence').rglob('results.json'))
+          assert len(files)==4, files
+          payloads=[p.read_bytes() for p in files]
+          assert all(b==payloads[0] for b in payloads), 'CROSS_OS_RAW_BYTES_DRIFT'
+          for p in files:
+            sha,name=(p.parent/'SHA256SUMS').read_text().strip().split('  ',1)
+            assert name=='results.json' and hashlib.sha256(p.read_bytes()).hexdigest()==sha
+          print('FOUR_BYTE_IDENTICAL',len(files),hashlib.sha256(payloads[0]).hexdigest())
+          PY
