@@ -1,0 +1,103 @@
+name: Seat4 Round9 link original computations to real host process counters
+on:
+  push:
+    branches:
+      - agent/seat-4/round9-host-evidence-bridge-20261015
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  host-observation:
+    name: Source-backed host observation ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: frozen-pr80-source
+          persist-credentials: false
+      - name: Verify upstream historical source identity
+        shell: bash
+        run: |
+          test "$(git -C frozen-pr80-source rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-pr80-source rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download immutable original 81-source 567-index full bytes
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/original
+      - name: Measured guest OS CPU-time, elapsed time, peak allocation and RSS; source-pinned real bank SHA
+        shell: bash
+        run: |
+          python experiments/seat4/round9/host_bridge.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/observed"
+      - name: Independent full-workload Node22 SHA replay and fabricated sensor evidence prohibition
+        shell: bash
+        run: |
+          node experiments/seat4/round9/verify_host.js "$RUNNER_TEMP/original" "$RUNNER_TEMP/observed"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-r9-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/observed/*
+          if-no-files-found: error
+          retention-days: 30
+  independent-host-referee:
+    name: Cross-platform digest parity and distinct honest host measurements
+    needs: host-observation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-r9-*
+          path: evidence
+          merge-multiple: false
+      - name: Check independent original science SHA parity, preserve variable host counters
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          roots=sorted(Path('evidence').glob('seat4-r9-*'))
+          assert len(roots)==4,roots
+          for name in ('r9-science.json','r9-independent-node.json'):
+              parts=[(r/name).read_bytes() for r in roots]
+              assert len(set(parts))==1,'FROZEN_COMPUTATIONAL_RESULT_DRIFT:'+name
+              d=hashlib.sha256(parts[0]).hexdigest()
+              print('REAL_OS_EXECUTION_SOURCE_SCIENCE_BYTE_EXACT',name,len(parts[0]),d)
+          summary=[]
+          for root in roots:
+              for name in ('r9-science.json','r9-host.json','r9-independent-node.json'):
+                  b=(root/name).read_bytes()
+                  d=hashlib.sha256(b).hexdigest()
+                  assert (root/(name+'.sha256')).read_bytes()==(d+'  '+name+'\n').encode('ascii')
+              host=json.loads((root/'r9-host.json').read_bytes())
+              assert host['host_process_cpu_time_ns_OS']>0
+              assert host['monotonic_elapsed_ns_OS']>0
+              assert host['tracemalloc_peak_python_allocation_bytes']>=4*1024*1024
+              assert host['measured_ac_wall_energy_joules'] is None
+              assert host['measured_dc_current_amperes'] is None
+              assert host['measured_optical_photon_counts'] is None
+              assert host['measured_acoustic_phonon_counts'] is None
+              summary.append((root.name,host['host_process_cpu_time_ns_OS'],
+                host['monotonic_elapsed_ns_OS'],host['observed_process_peak_resident_bytes']))
+          print('ACTUAL_PROVIDER_OS_COUNTERS_DIFFER_NATURALLY',summary)
+          print('ENERGY_OPTICAL_AND_ACOUSTIC_INSTRUMENTED_VALUES_ALL_NOT_MEASURED')
+          PY

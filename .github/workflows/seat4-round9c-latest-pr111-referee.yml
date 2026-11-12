@@ -1,0 +1,112 @@
+name: Seat4 R9C independent PR111 exact head merge run attempt cross examination
+on:
+  push:
+    branches:
+      - agent/seat-4/round9-host-evidence-bridge-20261015
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  cross-exam:
+    name: Independently witness PR111 original CI ${{ matrix.os }} Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          path: original-main
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: e7011fe09868f0a84de0434964cc3dadc205b808
+          fetch-depth: 0
+          path: reviewed-merge
+          persist-credentials: false
+      - name: Independently assert real git PR head and base are two actual merge parents
+        shell: bash
+        run: |
+          test "$(git -C original-main rev-parse HEAD)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          test "$(git -C reviewed-merge rev-parse HEAD)" = e7011fe09868f0a84de0434964cc3dadc205b808
+          test "$(git -C reviewed-merge rev-parse HEAD^1)" = 5d3e3a1147ad7af84c1b5b1ba482dfddd9832c86
+          test "$(git -C reviewed-merge rev-parse HEAD^2)" = e2532396bbd42bb2a0bace2f26d4b5d6b8f2e966
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download original four archives, not freshly regenerated producer output
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38783337268
+          pattern: seat2-r9-*
+          merge-multiple: false
+          path: earlier-hosted-artifacts
+      - name: Independent ORIGINAL run API and actual merged Git SHA from GitHub provider
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p trusted-api
+          gh api repos/JesseBrown1980/asolaria-stone-to-moss/actions/runs/38783337268 > trusted-api/pr111-original-run-api.json
+          gh api repos/JesseBrown1980/asolaria-stone-to-moss/commits/e7011fe09868f0a84de0434964cc3dadc205b808 > trusted-api/pr111-original-merge-api.json
+      - name: Independent Python source-digest witness with 16 real full-file Node verifier attacks
+        shell: bash
+        run: |
+          python experiments/seat4/round9/audit_pr111_latest.py "trusted-api" "original-main" "reviewed-merge" "earlier-hosted-artifacts" "$RUNNER_TEMP/seat4-pr111-current"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat4-pr111-r9c-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/seat4-pr111-current/*
+          retention-days: 30
+          if-no-files-found: error
+  exact-content-parity:
+    name: Independently compare original four-host source-custody and counter forgeries
+    runs-on: ubuntu-latest
+    needs: cross-exam
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat4-pr111-r9c-*
+          path: independent-evidence
+          merge-multiple: false
+      - name: Full byte-equivalence and independent SHA256 checked on four executing platforms
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          dirs=sorted(Path('independent-evidence').glob('seat4-pr111-r9c-*'))
+          assert len(dirs)==4,dirs
+          name='seat4-pr111-r9c-review.json'
+          contents=[(d/name).read_bytes() for d in dirs]
+          assert len(set(contents))==1,'SEAT4_INDEPENDENT_CROSS_HOST_REPORT_DRIFT'
+          sha=hashlib.sha256(contents[0]).hexdigest()
+          for d in dirs:
+              assert (d/(name+'.sha256')).read_bytes()==(sha+'  '+name+'\n').encode('ascii')
+          report=json.loads(contents[0])
+          assert report['producing_workflow_run']==38783337268
+          assert report['run_attempt']==1
+          assert report['reviewed_original_head']=='e2532396bbd42bb2a0bace2f26d4b5d6b8f2e966'
+          assert report['actual_merge_commit']=='e7011fe09868f0a84de0434964cc3dadc205b808'
+          assert report['host_archive_count']==4
+          assert len(report['additional_cases_against_original_node'])==16
+          assert report['expected_accepted_unsigned_plausible_metrics']==3
+          assert report['expected_rejected_source_and_sensor_spoofs']==13
+          assert report['independent_calibrated_physical_counter_signature'] is False
+          print('SEAT4_LATEST_PR111_R9C_FOUR_RUNS_BYTE_PARITY',len(contents[0]),sha)
+          print('PR_HEAD_MERGE_RUN_ATTEMPT_VERIFIED_UNSIGNED_CPU_RSS_TIME_UNATTESTED')
+          PY
