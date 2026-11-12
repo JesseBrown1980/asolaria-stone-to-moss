@@ -1,0 +1,107 @@
+name: Seat5 Round11 Rust 1.81 independent 81-bit row-matrix and kernel audit
+on:
+  push:
+    branches: [seat5-round11-rust181-invertibility-20261015]
+  pull_request:
+    paths:
+      - 'experiments/seat5/round11/**'
+      - '.github/workflows/seat5-r11-rust181-invertibility.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  rust-row-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - name: Exact original source and already-merged Seat4 Round10 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:experiments/seat3/two_horizon_matrix.py)" = 2b0ed7e52776cd8a9b48086d83ba31c8486629fb
+          test -f experiments/seat4/round10/polynomial_referee.py
+          test "$(rustc --version | awk '{print $2}')" = 1.81.0
+      - name: Run Rust1.81 Clippy as an error and all Rust tests
+        shell: bash
+        working-directory: experiments/seat5/round11/rust
+        run: |
+          set -euo pipefail
+          cargo clippy --locked --offline --all-targets -- -D warnings
+          cargo test --locked --offline
+      - name: Produce immutable Seat4 reference trace and compare exact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/seat4-frozen"
+          python experiments/seat4/round10/polynomial_referee.py "$RUNNER_TEMP/seat4-frozen"
+          cd "$RUNNER_TEMP/seat4-frozen"
+          printf '%s  %s\n' 08a1ebbf1e7d24d7882258e9f341767b19093c1a4368b5e21f175592461f32ef r10-81bit-cases.jsonl | sha256sum -c -
+          printf '%s  %s\n' 5d9b2a894af90a16695604fb3601941d2ca698834261e14c404b68bdd965ca8b r10-results.json | sha256sum -c -
+      - name: Independently execute all 195 rows using Rust1.81 output-row matrix
+        shell: bash
+        working-directory: experiments/seat5/round11/rust
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          if [ "${{ matrix.profile }}" = release ]; then
+            cargo run --locked --offline --release -- "$RUNNER_TEMP/seat4-frozen/r10-81bit-cases.jsonl" out
+          else
+            cargo run --locked --offline -- "$RUNNER_TEMP/seat4-frozen/r10-81bit-cases.jsonl" out
+          fi
+          sha256sum out/r11-cases.tsv out/r11-receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('out/r11-receipt.json').read_bytes())
+          assert r['rows_verified']==195
+          assert r['law_ranks']==[80,80,81,81,80]
+          assert r['law_nullities']==[1,1,0,0,1]
+          assert r['noninvertible_all_ones_kernel'] is True
+          assert r['valid_switched_state']=='1949302f90e20a0478bf2'
+          assert r['stale_invalid_state']=='1284fb06a20fdbc73537c'
+          assert r['arbitrary_hashchain_jump_claimed'] is False
+          assert r['direct_optical_detector_measured'] is False
+          assert len(Path('out/r11-cases.tsv').read_text().splitlines())==195
+          print('SEAT5_R11_THIRD_ENGINE_195_CASES_PASS_AND_RANK_GATES_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat5-r11-rust181-${{ matrix.profile }}
+          path: |
+            experiments/seat5/round11/rust/out/r11-cases.tsv
+            experiments/seat5/round11/rust/out/r11-receipt.json
+          if-no-files-found: error
+  parity:
+    needs: rust-row-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat5-r11-rust181-*
+          path: witnesses
+      - name: Independently reconcile complete Rust debug/release output bytes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          parents=sorted(x for x in Path('witnesses').iterdir() if x.is_dir())
+          assert len(parents)==2,parents
+          for filename in ('r11-cases.tsv','r11-receipt.json'):
+              values=[(x/filename).read_bytes() for x in parents]
+              assert len(set(values))==1,filename
+              print(filename,len(values[0]),hashlib.sha256(values[0]).hexdigest())
+          r=json.loads((parents[0]/'r11-receipt.json').read_bytes())
+          assert r['law_ranks']==[80,80,81,81,80] and r['rows_verified']==195
+          print('SEAT5_R11_RUST181_81BIT_INDEPENDENT_BYTE_PARITY_PASS')
+          PY
