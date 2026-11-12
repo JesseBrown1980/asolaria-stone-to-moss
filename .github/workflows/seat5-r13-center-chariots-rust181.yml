@@ -1,0 +1,75 @@
+name: Seat5 R13 book-governed center chariots Rust 1.81
+on:
+  push:
+    branches: [agent/seat-5/r13-center-origin-trit-geometry-20261015]
+  pull_request:
+    paths:
+      - 'experiments/seat5/r13/**'
+      - '.github/workflows/seat5-r13-center-chariots-rust181.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  geometric-proof:
+    name: Rust1.81 Chariots ${{ matrix.profile }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - name: Rust 1.81 Clippy -D warnings and native trit tests
+        working-directory: experiments/seat5/r13/rust
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(rustc --version | awk '{print $2}')" = '1.81.0'
+          cargo clippy --offline --locked --all-targets -- -D warnings
+          cargo test --offline --locked
+      - name: Freeze actual HBP receipt and external SHA
+        working-directory: experiments/seat5/r13/rust
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          if [ '${{ matrix.profile }}' = 'release' ]; then
+            cargo run --offline --locked --release -- out
+          else
+            cargo run --offline --locked -- out
+          fi
+          grep -q '^HBP1|seat=5|round=13|class=COMPUTATIONAL_ADDRESS_ONLY|trits=-1,0,+1|float_used=0$' out/seat5-r13-center-chariots.hbp
+          grep -q '^ADDRESS|origins=81|cells=2187|shared_observer=2026|stored_signed_separations=1053|restore=EXACT$' out/seat5-r13-center-chariots.hbp
+          grep -q '^GATE|broken_mirror=PAID|independent_centers=PAID|nonclosing_triad=REJECTED|nonintegral_observer=REJECTED$' out/seat5-r13-center-chariots.hbp
+          grep -q '^BOUNDARY|original_GF2_matrix=UNCHANGED|mod3_cancellation=SEPARATE|no_externally_attested_sensor=TRUE|physical_optical_retention=NOT_TESTED$' out/seat5-r13-center-chariots.hbp
+          (cd out && sha256sum seat5-r13-center-chariots.hbp > seat5-r13-center-chariots.hbp.sha256)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat5-r13-${{ matrix.profile }}
+          path: experiments/seat5/r13/rust/out/*
+          if-no-files-found: error
+  byte-parity:
+    name: Rust1.81 independent HBP receipt parity
+    needs: geometric-proof
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat5-r13-*
+          path: downloads
+      - name: Check two independently built proofs and their SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          for profile in debug release; do
+            (cd "downloads/seat5-r13-$profile" && sha256sum --check seat5-r13-center-chariots.hbp.sha256)
+          done
+          cmp downloads/seat5-r13-debug/seat5-r13-center-chariots.hbp downloads/seat5-r13-release/seat5-r13-center-chariots.hbp
+          grep -q '^CHARIOT|forward=COMPLETE27|backward=COMPLETE27|center=SHARED|mirror_pairing=EXACT$' downloads/seat5-r13-debug/seat5-r13-center-chariots.hbp
+          echo 'SEAT5_R13_EXACT_CENTER_AND_CHARIOT_PROOF_PASS'

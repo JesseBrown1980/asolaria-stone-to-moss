@@ -1,0 +1,8 @@
+[package]
+name = "asolaria-seat5-r13"
+version = "0.1.0"
+edition = "2021"
+default-run = "asolaria-seat5-r13"
+rust-version = "1.81"
+
+[dependencies]
