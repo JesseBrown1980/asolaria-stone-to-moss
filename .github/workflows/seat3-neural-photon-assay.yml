@@ -1,0 +1,134 @@
+name: Seat3 neural photon light-bank arrival surrogate and independent cross-examination
+
+on:
+  push:
+    branches:
+      - agent/seat-3/neural-photon-memory-assay-20261015
+    paths:
+      - "experiments/seat3/neural_photon/**"
+      - ".github/workflows/seat3-neural-photon-assay.yml"
+      - "stones/2026-10-15-rainbow81/seat3-neural-photon*"
+  pull_request:
+    paths:
+      - "experiments/seat3/neural_photon/**"
+      - ".github/workflows/seat3-neural-photon-assay.yml"
+      - "stones/2026-10-15-rainbow81/seat3-neural-photon*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-to-photo-assay:
+    name: Source-pinned photon SIMULATION on ${{ matrix.os }} Python ${{ matrix.python }} Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          ref: 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          path: frozen-original-bank
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Pin signed spectrum mapping source and exact historical bank producer
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD:experiments/seat4/round5/sign_spectrum.js)" = 36e8f399b851a5c8d16596ab7a21397e1bef35d6
+          test "$(git -C frozen-original-bank rev-parse HEAD)" = 7b5faf1103a7b42b603b44b08a5a5bfa994d0f76
+          test "$(git -C frozen-original-bank rev-parse HEAD:experiments/seat1/ordered27/ordered27_index.py)" = 025ac142481586fd767f1431328622fc4e2e29e0
+      - name: Retrieve actual original 81 and 567 source bank from hosted PR80 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/original-pr80
+      - name: Independent Python and Node photon-event engines plus third source verifier
+        shell: bash
+        run: |
+          python experiments/seat3/neural_photon/photon_assay.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/python"
+          node experiments/seat3/neural_photon/photon_assay.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/node"
+          python experiments/seat3/neural_photon/verify_photon_assay.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/verified"
+      - name: Altered original bank byte must be rejected by both independent engines
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path(os.environ["RUNNER_TEMP"])/"original-pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
+          x=bytearray(p.read_bytes());x[100]^=1;p.write_bytes(x)
+          PY
+          if python experiments/seat3/neural_photon/photon_assay.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/invalid-py"; then
+            echo "FAIL: accepted changed historical source"; exit 1
+          fi
+          if node experiments/seat3/neural_photon/photon_assay.js "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/invalid-js"; then
+            echo "FAIL: Node accepted changed historical source"; exit 1
+          fi
+          echo "Original bank-root corruption HELD"
+      - name: Altered observed count evidence must be rejected by third verifier
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path(os.environ["RUNNER_TEMP"])/"python"/"photon-symbols.hbp"
+          x=bytearray(p.read_bytes());x[108]^=1;p.write_bytes(x)
+          PY
+          if python experiments/seat3/neural_photon/verify_photon_assay.py "$RUNNER_TEMP/original-pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/invalid-audit"; then
+            echo "FAIL: accepted corrupted detector-count HBP"; exit 1
+          fi
+          echo "Modified synthetic detector packet HELD"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-photon-assay-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          if-no-files-found: error
+          retention-days: 30
+
+  four-source-byte-parity:
+    name: Four-job source and receipt byte parity with physical scope gate
+    runs-on: ubuntu-latest
+    needs: source-to-photo-assay
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-photon-assay-*
+          merge-multiple: false
+          path: audit-outputs
+      - name: Compare complete three output files and six SHA sidecars across four OS runs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          dirs=sorted(Path("audit-outputs").glob("seat3-photon-assay-*"))
+          assert len(dirs)==4,dirs
+          for name in ("photon-symbols.hbp","photon-assay.json","independent-photon-audit.json"):
+              data=[(d/name).read_bytes() for d in dirs]
+              assert all(x==data[0] for x in data),"PLATFORM_BYTE_DRIFT:"+name
+              for d,blob in zip(dirs,data):
+                  expected=(hashlib.sha256(blob).hexdigest()+"  "+name+"\n").encode("ascii")
+                  assert (d/(name+".sha256")).read_bytes()==expected
+              print("FOUR_HOST_SOURCE_PARITY_PASS",name,len(data[0]),hashlib.sha256(data[0]).hexdigest())
+          meta=json.loads((dirs[0]/"photon-assay.json").read_bytes())
+          assert meta["physical_optical_detector_capture"]=="NOT_RUN"
+          assert meta["photonic_persistent_storage"]=="NOT_RUN"
+          assert meta["externally_authenticated_source"] is False
+          print("REAL_OPTICS_AND_STORAGE_NOT_RUN",meta["error_census_by_exposures"])
+          PY

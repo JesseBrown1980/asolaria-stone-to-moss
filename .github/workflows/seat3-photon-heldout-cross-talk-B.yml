@@ -1,0 +1,121 @@
+name: Seat3 independent validation-B heldout photon cross-talk correction
+
+on:
+  push:
+    branches:
+      - agent/seat-3/neural-photon-memory-assay-20261015
+    paths:
+      - "experiments/seat3/neural_photon/*cross_talk_B*"
+      - "experiments/seat3/neural_photon/POSTHOC-SECOND-SEED-*"
+      - ".github/workflows/seat3-photon-heldout-cross-talk-B.yml"
+      - "stones/2026-10-15-rainbow81/seat3-photon-crosstalk-B*"
+  pull_request:
+    paths:
+      - "experiments/seat3/neural_photon/*cross_talk_B*"
+      - ".github/workflows/seat3-photon-heldout-cross-talk-B.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  independent-b:
+    name: Frozen B on ${{ matrix.os }} Python ${{ matrix.python }} and independent Node22
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11","3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Download original physically executed historical 81-by-7 bank archive
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: JesseBrown1980/asolaria-stone-to-moss
+          run-id: 38745842295
+          name: ordered27-rainbow7-ubuntu-latest
+          path: ${{ runner.temp }}/pr80
+      - name: Unseen photon event seed B, frozen non-retuned correction and independent full-source verification
+        shell: bash
+        run: |
+          python experiments/seat3/neural_photon/cross_talk_B.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python"
+          node experiments/seat3/neural_photon/cross_talk_B.js "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/node"
+          python experiments/seat3/neural_photon/verify_cross_talk_B.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/verified"
+          python experiments/seat3/neural_photon/paired_cross_exam_B.py "$RUNNER_TEMP/verified" "$RUNNER_TEMP/verified"
+      - name: Independently held-out attack on source bank must fail both engines
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"pr80"/"rainbow-evidence"/"rainbow7-bank.jsonl"
+          x=bytearray(p.read_bytes());x[300]^=1;p.write_bytes(x)
+          PY
+          if python experiments/seat3/neural_photon/cross_talk_B.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/wrong-py"; then
+            echo "FAILED: forged lightbank source accepted Python"; exit 1
+          fi
+          if node experiments/seat3/neural_photon/cross_talk_B.js "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/wrong-js"; then
+            echo "FAILED: forged lightbank source accepted Node"; exit 1
+          fi
+          echo "Both independent B engines rejected tampered original bank"
+      - name: Changed corrected optical count must fail third independent auditor
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])/"python"/"photon-cross-talk-B.hbp"
+          b=bytearray(p.read_bytes());b[114]^=1;p.write_bytes(b)
+          PY
+          if python experiments/seat3/neural_photon/verify_cross_talk_B.py "$RUNNER_TEMP/pr80" "$RUNNER_TEMP/python" "$RUNNER_TEMP/node" "$RUNNER_TEMP/wrong-receipt"; then
+            echo "FAILED: B tampered observation accepted"; exit 1
+          fi
+          echo "Corrupted source observation failed strict independent audit"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat3-crosstalk-B-${{ matrix.os }}-${{ matrix.python }}
+          path: ${{ runner.temp }}/verified/*
+          if-no-files-found: error
+          retention-days: 30
+
+  final-four-byte-parity:
+    name: Four hosted platforms same full unseen cross-talk result and policy constraints
+    runs-on: ubuntu-latest
+    needs: independent-b
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat3-crosstalk-B-*
+          merge-multiple: false
+          path: receipts
+      - name: Byte-exact B HBP and JSON copies across Ubuntu/Windows
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          jobs=sorted(Path("receipts").glob("seat3-crosstalk-B-*"))
+          assert len(jobs)==4,jobs
+          for f in ("photon-cross-talk-B.hbp","photon-cross-talk-B.json","independent-cross-talk-B.json","paired-cross-exam-B.json"):
+              blobs=[(job/f).read_bytes() for job in jobs]
+              assert all(x==blobs[0] for x in blobs),"CROSS_HOST_B_RECEIPTS_DIFFER"
+              for job,data in zip(jobs,blobs):
+                  want=(hashlib.sha256(data).hexdigest()+"  "+f+"\n").encode("ascii")
+                  assert (job/(f+".sha256")).read_bytes()==want
+              print("FOUR_BYTE_EXACT_B_PASS",f,len(blobs[0]),hashlib.sha256(blobs[0]).hexdigest())
+          d=json.loads((jobs[0]/"photon-cross-talk-B.json").read_bytes())
+          assert d["real_optical_capture_status"]=="NOT_RUN"
+          assert d["physical_photonic_retention_status"]=="NOT_RUN"
+          print("HELDOUT_B_ERRORS",d["source_counts_by_exposure"])
+          PY
