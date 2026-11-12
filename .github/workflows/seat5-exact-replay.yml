@@ -1,0 +1,54 @@
+name: Seat5 independent exact replay
+on:
+  push:
+    branches: [seat5-independent-referee-20261015]
+  pull_request:
+    paths:
+      - 'experiments/seat5/**'
+      - '.github/workflows/seat5-exact-replay.yml'
+  workflow_dispatch:
+jobs:
+  replay:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Execute frozen referee source and check raw bytes
+        shell: bash
+        run: |
+          mkdir -p out
+          python experiments/seat5/seat5_referee.py out
+          python -c "import hashlib,pathlib; p=pathlib.Path('out/results.json'); h=hashlib.sha256(p.read_bytes()).hexdigest(); print(h); assert h=='9fb5834996181ff3a240414bb5939293f89b6e6127fef4cff9712d9fff96c0e4'"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seat5-${{ matrix.os }}-py${{ matrix.python }}
+          path: out/results.json
+          if-no-files-found: error
+  byte-parity:
+    needs: replay
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: seat5-*
+          path: downloaded
+      - name: Verify four downloaded raw outputs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib,hashlib
+          fs=sorted(pathlib.Path('downloaded').rglob('results.json'))
+          assert len(fs)==4, fs
+          blobs=[p.read_bytes() for p in fs]
+          assert len(set(blobs))==1
+          h=hashlib.sha256(blobs[0]).hexdigest()
+          assert h=='9fb5834996181ff3a240414bb5939293f89b6e6127fef4cff9712d9fff96c0e4',h
+          print('4/4 byte-identical:',h)
+          PY
