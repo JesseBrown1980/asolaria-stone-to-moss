@@ -1,0 +1,52 @@
+name: Seat1 Proxima Real Observatory Source Intake
+on:
+  push:
+    branches: [agent/seat1/proxima-rust181-20261015]
+    paths:
+      - 'experiments/seat1/proxima-rust181/real_observations/**'
+      - '.github/workflows/seat1-proxima-real-observations.yml'
+  pull_request:
+    paths:
+      - 'experiments/seat1/proxima-rust181/real_observations/**'
+      - '.github/workflows/seat1-proxima-real-observations.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-raw-intake:
+    name: Source HTTPS 722 RV 2212 flux Hubble hash
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Retrieve and validate actual dated astronomical source bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 experiments/seat1/proxima-rust181/real_observations/acquire.py
+          test "$(wc -l < real_observations/output/spec.dat)" -eq 722
+          test "$(wc -l < real_observations/output/photo.dat)" -eq 2212
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.81.0'
+          components: clippy
+      - name: Run integer-only nine real checkpoint RV analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd experiments/seat1/proxima-rust181
+          test "$(rustc --version | awk '{print $2}')" = "1.81.0"
+          cargo clippy --offline --locked --bin observational_rv -- -D warnings
+          cargo test --offline --locked --bin observational_rv
+          cargo run --offline --locked --release --bin observational_rv -- ../../../real_observations/output
+          cd ../../..
+          python3 experiments/seat1/proxima-rust181/real_observations/independent_referee.py
+          python3 -m pip install --quiet --disable-pip-version-check 'Pillow==12.3.0'
+          python3 experiments/seat1/proxima-rust181/real_observations/verify_image_ternary.py
+          (cd real_observations/output && sha256sum spec.dat photo.dat NINE-REAL-OBSERVATION-WINDOWS.json ORIGINAL-SOURCE-MANIFEST.json INDEPENDENT-OBSERVATION-REVIEW.json REAL-HUBBLE-TERNARY-RECEIPT.json > SHA256SUMS.txt)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: original-real-observations-proxima
+          path: real_observations/output/*
+          if-no-files-found: error
