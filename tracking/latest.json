@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-11-12T20:54:07Z",
+  "captured_at_utc": "2026-11-13T01:54:42Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -1240,11 +1240,21 @@
         {
           "branch": "main",
           "conclusion": null,
+          "id": 43348313465,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "fb38d44d53bf9dd0fde7a743e2080fca2731ea4a",
+          "status": "in_progress",
+          "updated_at": "2026-11-13T01:54:32Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/43348313465"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
           "id": 43304825477,
           "name": "Asolaria three-seat activity ledger",
           "sha": "23122d1cd8da01b2b37f6d070ab807a0d34aa00f",
-          "status": "in_progress",
-          "updated_at": "2026-11-12T20:53:57Z",
+          "status": "completed",
+          "updated_at": "2026-11-12T20:54:44Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/43304825477"
         },
         {
@@ -1346,16 +1356,6 @@
           "status": "completed",
           "updated_at": "2026-11-09T18:54:12Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/42678077991"
-        },
-        {
-          "branch": "main",
-          "conclusion": "success",
-          "id": 42583323869,
-          "name": "Asolaria three-seat activity ledger",
-          "sha": "709a10102b764e2cbfd42e2e219600f104960f82",
-          "status": "completed",
-          "updated_at": "2026-11-09T08:05:01Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/42583323869"
         }
       ]
     },
@@ -3673,20 +3673,249 @@
       "branches": [
         {
           "name": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "sha": "ecd5b93c7d7db5378f07a29979655901bf54700e"
+          "sha": "d75334b81c6199db3f8ef1527cdf7184de5388a1"
         },
         {
           "name": "master",
-          "sha": "56de9ee137f204452d7dff41f7b1e953b6ff5c3e"
+          "sha": "fa02fbe14931e113cdad721f60413fb49bf82325"
         }
       ],
       "errors": [],
-      "pull_requests": [],
+      "pull_requests": [
+        {
+          "github_actor": "JesseBrown1980",
+          "number": 1,
+          "state": "closed",
+          "title": "RAINBOR: verified 12B-address virtual slit detector with exact ternary/binary jumps and density controls",
+          "updated_at": "2026-11-12T20:58:40Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/pull/1"
+        }
+      ],
       "recent_commits": [
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Merge pull request #1 from JesseBrown1980/gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "seat": "unassigned",
+          "sha": "fa02fbe14931e113cdad721f60413fb49bf82325",
+          "timestamp_utc": "2026-11-12T20:58:39Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/fa02fbe14931e113cdad721f60413fb49bf82325"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
           "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Update RAINBOR README SHA-256 sidecar after recording verified 12B virtual pixel experiment",
+          "seat": "unassigned",
+          "sha": "d75334b81c6199db3f8ef1527cdf7184de5388a1",
+          "timestamp_utc": "2026-11-12T20:57:55Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/d75334b81c6199db3f8ef1527cdf7184de5388a1"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Update RAINBOR README SHA-256 sidecar after recording verified 12B virtual pixel experiment",
+          "seat": "unassigned",
+          "sha": "d75334b81c6199db3f8ef1527cdf7184de5388a1",
+          "timestamp_utc": "2026-11-12T20:57:55Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/d75334b81c6199db3f8ef1527cdf7184de5388a1"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact RAINBON-12B-MEASURED-20261112.md with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "9f7ad1d6ced8ae0c73a37bb5f76a2e6b48ab2ce8",
+          "timestamp_utc": "2026-11-12T20:57:52Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/9f7ad1d6ced8ae0c73a37bb5f76a2e6b48ab2ce8"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact RAINBON-12B-MEASURED-20261112.md with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "9f7ad1d6ced8ae0c73a37bb5f76a2e6b48ab2ce8",
+          "timestamp_utc": "2026-11-12T20:57:52Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/9f7ad1d6ced8ae0c73a37bb5f76a2e6b48ab2ce8"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact RAINBON-12B-MEASURED-20261112.hbp with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "445dd68b959b2f341f2b3e28b56aa9f950ddee1c",
+          "timestamp_utc": "2026-11-12T20:57:50Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/445dd68b959b2f341f2b3e28b56aa9f950ddee1c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact RAINBON-12B-MEASURED-20261112.hbp with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "445dd68b959b2f341f2b3e28b56aa9f950ddee1c",
+          "timestamp_utc": "2026-11-12T20:57:50Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/445dd68b959b2f341f2b3e28b56aa9f950ddee1c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact RAINBON-12B-JUMP-DENSITY-FREEZE-20261112.hbp with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "f05bd2bef1d4cdf74f57a27174f0b930b0fd1fbf",
+          "timestamp_utc": "2026-11-12T20:57:48Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/f05bd2bef1d4cdf74f57a27174f0b930b0fd1fbf"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact RAINBON-12B-JUMP-DENSITY-FREEZE-20261112.hbp with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "f05bd2bef1d4cdf74f57a27174f0b930b0fd1fbf",
+          "timestamp_utc": "2026-11-12T20:57:48Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/f05bd2bef1d4cdf74f57a27174f0b930b0fd1fbf"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact rainbon_12b_jump_density.py with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "e5de735f04ff3adb02db484c4d0793d0c72317a1",
+          "timestamp_utc": "2026-11-12T20:57:45Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/e5de735f04ff3adb02db484c4d0793d0c72317a1"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact rainbon_12b_jump_density.py with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "e5de735f04ff3adb02db484c4d0793d0c72317a1",
+          "timestamp_utc": "2026-11-12T20:57:45Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/e5de735f04ff3adb02db484c4d0793d0c72317a1"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact rainbon-12b-jump-density.yml with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "15c312dae0bfd733f36e5ca1df3067d117b595dd",
+          "timestamp_utc": "2026-11-12T20:57:43Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/15c312dae0bfd733f36e5ca1df3067d117b595dd"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal exact rainbon-12b-jump-density.yml with its own SHA-256 sidecar",
+          "seat": "unassigned",
+          "sha": "15c312dae0bfd733f36e5ca1df3067d117b595dd",
+          "timestamp_utc": "2026-11-12T20:57:43Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/15c312dae0bfd733f36e5ca1df3067d117b595dd"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Record verified Rainbon 12B sparse virtual screen, exact ternary/binary freeze-play and explicit density proxy limits",
+          "seat": "unassigned",
+          "sha": "4c5816e8353a3f27fc5458ef02263cea7e3fb463",
+          "timestamp_utc": "2026-11-12T20:56:52Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/4c5816e8353a3f27fc5458ef02263cea7e3fb463"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Record verified Rainbon 12B sparse virtual screen, exact ternary/binary freeze-play and explicit density proxy limits",
+          "seat": "unassigned",
+          "sha": "4c5816e8353a3f27fc5458ef02263cea7e3fb463",
+          "timestamp_utc": "2026-11-12T20:56:52Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/4c5816e8353a3f27fc5458ef02263cea7e3fb463"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal full hosted 12B meta-pixel experiment summary in exact HBP, including both SHA-256 run roots",
+          "seat": "unassigned",
+          "sha": "75090cb1d4625b836710aebf5b88446b4c30114c",
+          "timestamp_utc": "2026-11-12T20:56:24Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/75090cb1d4625b836710aebf5b88446b4c30114c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Seal full hosted 12B meta-pixel experiment summary in exact HBP, including both SHA-256 run roots",
+          "seat": "unassigned",
+          "sha": "75090cb1d4625b836710aebf5b88446b4c30114c",
+          "timestamp_utc": "2026-11-12T20:56:24Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/75090cb1d4625b836710aebf5b88446b4c30114c"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish two independently reproduced exact-jump and 144-screen density experiment receipts with astrophysics scope controls",
+          "seat": "unassigned",
+          "sha": "63fa32cff4b807b6c66764c0ec884fe7feb2054b",
+          "timestamp_utc": "2026-11-12T20:54:39Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/63fa32cff4b807b6c66764c0ec884fe7feb2054b"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Publish two independently reproduced exact-jump and 144-screen density experiment receipts with astrophysics scope controls",
+          "seat": "unassigned",
+          "sha": "63fa32cff4b807b6c66764c0ec884fe7feb2054b",
+          "timestamp_utc": "2026-11-12T20:54:39Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/63fa32cff4b807b6c66764c0ec884fe7feb2054b"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Separate optimized process-RSS experiment run from original allocation-instrumented control",
+          "seat": "unassigned",
+          "sha": "ecd5b93c7d7db5378f07a29979655901bf54700e",
+          "timestamp_utc": "2026-11-12T20:50:18Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/ecd5b93c7d7db5378f07a29979655901bf54700e"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
           "github_actor": "JesseBrown1980",
           "message_title": "Separate optimized process-RSS experiment run from original allocation-instrumented control",
           "seat": "unassigned",
@@ -3708,7 +3937,29 @@
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Accelerate screen runs by replacing expensive per-float allocation tracing with bounded process RSS check",
+          "seat": "unassigned",
+          "sha": "a69bdb1f2bd8f949eadf05d8d7b1101777cb95a5",
+          "timestamp_utc": "2026-11-12T20:50:06Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/a69bdb1f2bd8f949eadf05d8d7b1101777cb95a5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
           "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Launch GitHub hosted 12B-address sparse Rainbon 409-channel interference with exact jump/freeze-play and falsification controls",
+          "seat": "unassigned",
+          "sha": "c2dcb66ed2772ec65373491149de43311d77a8a5",
+          "timestamp_utc": "2026-11-12T20:46:27Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/c2dcb66ed2772ec65373491149de43311d77a8a5"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
           "github_actor": "JesseBrown1980",
           "message_title": "Launch GitHub hosted 12B-address sparse Rainbon 409-channel interference with exact jump/freeze-play and falsification controls",
           "seat": "unassigned",
@@ -3730,7 +3981,29 @@
         {
           "attribution_basis": "no_explicit_seat_proof",
           "author_label": "Jesse Daniel Brown",
+          "branch": "master",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Implement exact 27-state Rainbon matrix-law jumps, sparse 12B-screen interference and temperature-gated density controls",
+          "seat": "unassigned",
+          "sha": "fdb80107f90d004ab76a677b613eb704246cf7b0",
+          "timestamp_utc": "2026-11-12T20:45:50Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/fdb80107f90d004ab76a677b613eb704246cf7b0"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
           "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
+          "github_actor": "JesseBrown1980",
+          "message_title": "Freeze reproducible 12-billion-address virtual Rainbon slit/jump/density test and explicit astrophysics caveats before running",
+          "seat": "unassigned",
+          "sha": "186d22dfd9d23c6fcb53cc9db257da8782acca17",
+          "timestamp_utc": "2026-11-12T20:43:38Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/186d22dfd9d23c6fcb53cc9db257da8782acca17"
+        },
+        {
+          "attribution_basis": "no_explicit_seat_proof",
+          "author_label": "Jesse Daniel Brown",
+          "branch": "master",
           "github_actor": "JesseBrown1980",
           "message_title": "Freeze reproducible 12-billion-address virtual Rainbon slit/jump/density test and explicit astrophysics caveats before running",
           "seat": "unassigned",
@@ -3748,275 +4021,31 @@
           "sha": "56de9ee137f204452d7dff41f7b1e953b6ff5c3e",
           "timestamp_utc": "2026-08-09T04:30:32Z",
           "url": "https://github.com/JesseBrown1980/RAINBOR/commit/56de9ee137f204452d7dff41f7b1e953b6ff5c3e"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "absorb the funnel into the asolaria kernel: 8 leaves drawn into the core",
-          "seat": "unassigned",
-          "sha": "56de9ee137f204452d7dff41f7b1e953b6ff5c3e",
-          "timestamp_utc": "2026-08-09T04:30:32Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/56de9ee137f204452d7dff41f7b1e953b6ff5c3e"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "kcrutt",
-          "message_title": "funnel the entire exabyte in: the whole 10^18 becomes one leaf",
-          "seat": "unassigned",
-          "sha": "e8ab00a1f5e73a6a2936da19ea3c4e9cdc89047d",
-          "timestamp_utc": "2026-08-09T01:13:25Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/e8ab00a1f5e73a6a2936da19ea3c4e9cdc89047d"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "funnel the entire exabyte in: the whole 10^18 becomes one leaf",
-          "seat": "unassigned",
-          "sha": "e8ab00a1f5e73a6a2936da19ea3c4e9cdc89047d",
-          "timestamp_utc": "2026-08-09T01:13:25Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/e8ab00a1f5e73a6a2936da19ea3c4e9cdc89047d"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "kcrutt",
-          "message_title": "organise the funnel: biggest datasets -> constellation -> leaves -> matrix -> solar-wind",
-          "seat": "unassigned",
-          "sha": "28730f7672e2968dfd84f69315f400a0cdad12bc",
-          "timestamp_utc": "2026-08-08T22:42:23Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/28730f7672e2968dfd84f69315f400a0cdad12bc"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "organise the funnel: biggest datasets -> constellation -> leaves -> matrix -> solar-wind",
-          "seat": "unassigned",
-          "sha": "28730f7672e2968dfd84f69315f400a0cdad12bc",
-          "timestamp_utc": "2026-08-08T22:42:23Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/28730f7672e2968dfd84f69315f400a0cdad12bc"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "kcrutt",
-          "message_title": "quant the universe into the constellation - proved by residuals, not by breaking Shannon",
-          "seat": "unassigned",
-          "sha": "1bb1a6397fac2643a9c773b9b0fc0f7934dfa3c2",
-          "timestamp_utc": "2026-08-08T22:40:45Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/1bb1a6397fac2643a9c773b9b0fc0f7934dfa3c2"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "quant the universe into the constellation - proved by residuals, not by breaking Shannon",
-          "seat": "unassigned",
-          "sha": "1bb1a6397fac2643a9c773b9b0fc0f7934dfa3c2",
-          "timestamp_utc": "2026-08-08T22:40:45Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/1bb1a6397fac2643a9c773b9b0fc0f7934dfa3c2"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "kcrutt",
-          "message_title": "the data kernels join the RAINBONTY-VERSE: CERN, SRA, JWST, genome+moss",
-          "seat": "unassigned",
-          "sha": "ee49bd512443cf448e7f0bcbea9ab9bad8992d64",
-          "timestamp_utc": "2026-08-08T22:36:01Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/ee49bd512443cf448e7f0bcbea9ab9bad8992d64"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "the data kernels join the RAINBONTY-VERSE: CERN, SRA, JWST, genome+moss",
-          "seat": "unassigned",
-          "sha": "ee49bd512443cf448e7f0bcbea9ab9bad8992d64",
-          "timestamp_utc": "2026-08-08T22:36:01Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/ee49bd512443cf448e7f0bcbea9ab9bad8992d64"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "kcrutt",
-          "message_title": "into the kernels: the two largest human data collections (CERN + SRA), MEASURED_IS",
-          "seat": "unassigned",
-          "sha": "9a153d8d6bfa9e2828129b6e9875b895f434aea4",
-          "timestamp_utc": "2026-08-08T22:34:56Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/9a153d8d6bfa9e2828129b6e9875b895f434aea4"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "into the kernels: the two largest human data collections (CERN + SRA), MEASURED_IS",
-          "seat": "unassigned",
-          "sha": "9a153d8d6bfa9e2828129b6e9875b895f434aea4",
-          "timestamp_utc": "2026-08-08T22:34:56Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/9a153d8d6bfa9e2828129b6e9875b895f434aea4"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "kcrutt",
-          "message_title": "the rainbow links back to the star + every platform joins at the 0",
-          "seat": "unassigned",
-          "sha": "26dacc286dfc96cadee068cc1f0cd81c3d30ad1a",
-          "timestamp_utc": "2026-08-08T21:31:56Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/26dacc286dfc96cadee068cc1f0cd81c3d30ad1a"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "the rainbow links back to the star + every platform joins at the 0",
-          "seat": "unassigned",
-          "sha": "26dacc286dfc96cadee068cc1f0cd81c3d30ad1a",
-          "timestamp_utc": "2026-08-08T21:31:56Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/26dacc286dfc96cadee068cc1f0cd81c3d30ad1a"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "JesseBrown1980",
-          "message_title": "the star ports on the bridge: 157 dark stones lit, linked back both ways",
-          "seat": "unassigned",
-          "sha": "d0da978739f6c50b5660811a4d562277c71a3ed2",
-          "timestamp_utc": "2026-08-08T21:26:09Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/d0da978739f6c50b5660811a4d562277c71a3ed2"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "master",
-          "github_actor": "JesseBrown1980",
-          "message_title": "the star ports on the bridge: 157 dark stones lit, linked back both ways",
-          "seat": "unassigned",
-          "sha": "d0da978739f6c50b5660811a4d562277c71a3ed2",
-          "timestamp_utc": "2026-08-08T21:26:09Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/d0da978739f6c50b5660811a4d562277c71a3ed2"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "JesseBrown1980",
-          "message_title": "the star ports on the bridge: 157 dark stones lit, linked back both ways",
-          "seat": "unassigned",
-          "sha": "6e8454d4e60cbfb784de7d169208060f888fd035",
-          "timestamp_utc": "2026-08-08T21:26:07Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/6e8454d4e60cbfb784de7d169208060f888fd035"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Jesse Daniel Brown",
-          "branch": "master",
-          "github_actor": "JesseBrown1980",
-          "message_title": "the star ports on the bridge: 157 dark stones lit, linked back both ways",
-          "seat": "unassigned",
-          "sha": "6e8454d4e60cbfb784de7d169208060f888fd035",
-          "timestamp_utc": "2026-08-08T21:26:07Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/6e8454d4e60cbfb784de7d169208060f888fd035"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
-          "github_actor": "kcrutt",
-          "message_title": "the RAINBAR OS: freeze, measure, play only when needed",
-          "seat": "unassigned",
-          "sha": "b71462504e60b1f161a957ed2ca06f9f5206c1d7",
-          "timestamp_utc": "2026-08-08T21:13:12Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/b71462504e60b1f161a957ed2ca06f9f5206c1d7"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "the RAINBAR OS: freeze, measure, play only when needed",
-          "seat": "unassigned",
-          "sha": "b71462504e60b1f161a957ed2ca06f9f5206c1d7",
-          "timestamp_utc": "2026-08-08T21:13:12Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/b71462504e60b1f161a957ed2ca06f9f5206c1d7"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "fix the RAINBONTY-VERSE script boundary (close the REPOS array block)",
-          "seat": "unassigned",
-          "sha": "d95504125c349536c99a58c4f3431894e2e78316",
-          "timestamp_utc": "2026-08-08T21:09:00Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/d95504125c349536c99a58c4f3431894e2e78316"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "the RAINBONTY-VERSE: the whole ecosystem at the Omega HTTP-0 portal",
-          "seat": "unassigned",
-          "sha": "a20516eb94780945a2a262d74756aa94c071bd86",
-          "timestamp_utc": "2026-08-08T21:08:14Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/a20516eb94780945a2a262d74756aa94c071bd86"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "RAINBOR hub index: the experiments and the measures on the multi-hub",
-          "seat": "unassigned",
-          "sha": "450cff465baf08f735a8280ee094f284070511e6",
-          "timestamp_utc": "2026-08-08T20:55:44Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/450cff465baf08f735a8280ee094f284070511e6"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "colour slits: R/G/B slits, rainbow slits, and 3 rainbow-lit translucent spheres",
-          "seat": "unassigned",
-          "sha": "072c7052102591750fe1307a0a6057cf7048bef3",
-          "timestamp_utc": "2026-08-08T20:52:52Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/072c7052102591750fe1307a0a6057cf7048bef3"
-        },
-        {
-          "attribution_basis": "no_explicit_seat_proof",
-          "author_label": "Kevin Crutt",
-          "branch": "master",
-          "github_actor": "kcrutt",
-          "message_title": "send the entire Asolaria system through the slit as the photon: she is the rainbow",
-          "seat": "unassigned",
-          "sha": "ee2410f40b8ded4ac73952af8cdad23ffb7a2ca7",
-          "timestamp_utc": "2026-08-08T20:50:04Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/commit/ee2410f40b8ded4ac73952af8cdad23ffb7a2ca7"
         }
       ],
       "repo": "JesseBrown1980/RAINBOR",
       "url": "https://github.com/JesseBrown1980/RAINBOR",
       "workflows": [
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 43305607194,
+          "name": "RAINBOR 12B sparse Rainbon virtual pixels and exact matrix jump",
+          "sha": "fa02fbe14931e113cdad721f60413fb49bf82325",
+          "status": "completed",
+          "updated_at": "2026-11-12T20:59:19Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/43305607194"
+        },
+        {
+          "branch": "master",
+          "conclusion": "success",
+          "id": 43305605490,
+          "name": "pages build and deployment",
+          "sha": "fa02fbe14931e113cdad721f60413fb49bf82325",
+          "status": "completed",
+          "updated_at": "2026-11-12T20:59:11Z",
+          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/43305605490"
+        },
         {
           "branch": "gpt6-rainbon-12b-virtual-jump-density-20261112",
           "conclusion": "success",
@@ -4116,26 +4145,6 @@
           "status": "completed",
           "updated_at": "2026-08-08T21:32:23Z",
           "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31279537154"
-        },
-        {
-          "branch": "master",
-          "conclusion": "success",
-          "id": 31279301899,
-          "name": "pages build and deployment",
-          "sha": "d0da978739f6c50b5660811a4d562277c71a3ed2",
-          "status": "completed",
-          "updated_at": "2026-08-08T21:26:40Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31279301899"
-        },
-        {
-          "branch": "master",
-          "conclusion": "cancelled",
-          "id": 31279301005,
-          "name": "pages build and deployment",
-          "sha": "6e8454d4e60cbfb784de7d169208060f888fd035",
-          "status": "completed",
-          "updated_at": "2026-08-08T21:26:13Z",
-          "url": "https://github.com/JesseBrown1980/RAINBOR/actions/runs/31279301005"
         }
       ]
     }
@@ -4143,5 +4152,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "108f6a6e151417f59504d29fdb1a3c2dabce23b3516940390fe1948360de0413"
+  "source_state_sha256": "c66719547ffcecd586d6bd7b7905407ce323bc2aab0e3b5ad8e1f4893811dd74"
 }
