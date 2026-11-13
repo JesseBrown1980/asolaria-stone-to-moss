@@ -1,0 +1,114 @@
+name: Claude verify Alpha Cen GGUF constellation (Rust 1.81, no JS actions)
+on:
+  push:
+    branches: [ccr-7180d4f5-bq2h43]
+    paths:
+      - 'experiments/claude-verify/**'
+      - '.github/workflows/claude-verify-alphacen-gguf.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Rust 1.81 verify ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    env:
+      D: experiments/claude-verify/alphacen-gguf-constellation-20261016
+      FOLLOW_SHA: 8712368c851abe347ddf97a25bfbd96275d4316c
+    steps:
+      - name: Fetch the exact pushed commit with git only
+        run: |
+          set -euo pipefail
+          git init -q src
+          cd src
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch -q --depth 1 origin "${GITHUB_SHA}"
+          git checkout -q FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+      - name: Install Rust 1.81.0 with clippy via rustup
+        run: |
+          set -euo pipefail
+          rustup toolchain install 1.81.0 --profile minimal -c clippy
+          rustc +1.81.0 --version | grep -q '^rustc 1.81.0 '
+      - name: Every SHA-256 sidecar matches its bytes
+        run: |
+          set -euo pipefail
+          cd "src/${D}"
+          n=0
+          while IFS= read -r s; do
+            (cd "$(dirname "$s")" && sha256sum --check --quiet "$(basename "$s")")
+            n=$((n+1))
+          done < <(find . -name '*.sha256' | sort)
+          echo "SIDECARS|checked=${n}|mismatched=0|json=0"
+          test "$n" -ge 15
+      - name: No float types in Rust sources
+        run: |
+          set -euo pipefail
+          if grep -rnE '\bf32\b|\bf64\b|as f[0-9]' "src/${D}"/*/src; then exit 1; fi
+          echo "FLOAT_GREP|hits=0|json=0"
+      - name: Clippy -D warnings, tests and release build (both crates)
+        run: |
+          set -euo pipefail
+          for c in gguf-verify-hbp rainbow27-check; do
+            (cd "src/${D}/${c}" \
+              && cargo +1.81.0 clippy --locked --all-targets -- -D warnings \
+              && cargo +1.81.0 test --locked \
+              && cargo +1.81.0 build --locked --release)
+            echo "CRATE|name=${c}|clippy=+1|test=+1|build=+1|json=0"
+          done
+      - name: Rainbow-27 re-derivation equals committed HBP
+        run: |
+          set -euo pipefail
+          cd "src/${D}/rainbow27-check"
+          cargo +1.81.0 run --locked --release -q > "${RUNNER_TEMP}/r27.hbp"
+          diff "${RUNNER_TEMP}/r27.hbp" EXPECTED-OUTPUT.hbp
+          echo "REDERIVE|pr=90|match=+1|json=0"
+      - name: GGUF verifier on pinned FOLLOW GGUFs and hostile negatives
+        run: |
+          set -euo pipefail
+          V="$PWD/src/${D}/gguf-verify-hbp/target/release/gguf-verify-hbp"
+          git init -q follow
+          cd follow
+          git remote add origin https://github.com/JesseBrown1980/FOLLOW-THE-IS-NOT-THE-WILL-AND-WAS.git
+          git fetch -q --depth 1 origin "${FOLLOW_SHA}"
+          git checkout -q FETCH_HEAD
+          check() {
+            out=$("$V" "$1" --expect-sha256 "$2")
+            echo "$out" | grep -E '^(FILE|HEADER|LAYOUT|VERDICT)\|'
+            echo "$out" | grep -qx 'VERDICT|structure=+1|json=0'
+          }
+          check colors/DOUBLE-RAINBOW-OIL-3174.gguf 1b7f4097aef8ddbe603beb7cdf8f07c304147cefc99cb7d03ced925a550ea4ed
+          check matrix/PUBLIC-FOLDER-CALMING-OILS.gguf fa266f1bf527d3757b6825d97b65653c547d8f1557a1ba516cee1598facd2bcf
+          check matrix/PUBLIC-OUTWARD-TRUTH-WAVES.gguf b315be52a4a6870d2eb15f44736dd29e30685bea6b0b16936e16abc9a809e9f6
+          check matrix/TIMED-CHIRAL-PUBLIC-COLOR-ORBITS.gguf 77174fb892a1c8152de362730d2864ef2b7f929b496af7758a5c42a88798bb6e
+          G=colors/DOUBLE-RAINBOW-OIL-3174.gguf
+          neg() {
+            if "$V" "$@" > neg.out; then cat neg.out; echo "NEGATIVE|accepted_unexpectedly|json=0"; exit 1; fi
+            grep -E 'verdict=-1|structure=-1' neg.out
+          }
+          cp "$G" t1.gguf && printf '\000' | dd of=t1.gguf bs=1 seek=8 count=1 conv=notrunc 2>/dev/null && neg t1.gguf
+          cp "$G" t2.gguf && printf '\177' | dd of=t2.gguf bs=1 seek=3000 count=1 conv=notrunc 2>/dev/null && neg t2.gguf --expect-sha256 1b7f4097aef8ddbe603beb7cdf8f07c304147cefc99cb7d03ced925a550ea4ed
+          head -c 1000 "$G" > t3.gguf && neg t3.gguf
+          neg "$G" --expect-meta general.architecture=asolariaimg
+          neg "../src/${D}/README.md"
+          echo "NEGATIVES|attacks=5|rejected=5|json=0"
+      - name: Webb source image still matches ESA original (network, Ubuntu only)
+        if: runner.os == 'Linux'
+        run: |
+          set -euo pipefail
+          if curl -fsSL --retry 3 -o webb.jpg https://cdn.esawebb.org/archives/images/large/weic2515c.jpg; then
+            h=$(sha256sum webb.jpg | cut -c1-64)
+            echo "WEBB|sha256=${h}|json=0"
+            test "$h" = 5475f875fc7e5ea2c375fe97f59fb0576856f2b767b7d19508bc6a6c46803bb7
+            echo "WEBB|equals_explorer_embed=+1|json=0"
+          else
+            echo "WEBB|download=HELD|verdict=0|json=0"
+          fi
