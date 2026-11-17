@@ -1,5 +1,5 @@
 {
-  "captured_at_utc": "2026-11-17T04:38:22Z",
+  "captured_at_utc": "2026-11-17T14:36:01Z",
   "registry_seats": [
     "seat-1",
     "seat-2",
@@ -1240,11 +1240,21 @@
         {
           "branch": "main",
           "conclusion": null,
+          "id": 44104829548,
+          "name": "Asolaria three-seat activity ledger",
+          "sha": "b662998e82294110517cc6ca0ce99f1bad89a444",
+          "status": "in_progress",
+          "updated_at": "2026-11-17T14:35:46Z",
+          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/44104829548"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
           "id": 44018543349,
           "name": "Asolaria three-seat activity ledger",
           "sha": "d6b6dffb90a2a6946447d418d42bd6fe62eeddb4",
-          "status": "in_progress",
-          "updated_at": "2026-11-17T04:38:13Z",
+          "status": "completed",
+          "updated_at": "2026-11-17T04:38:57Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/44018543349"
         },
         {
@@ -1346,16 +1356,6 @@
           "status": "completed",
           "updated_at": "2026-11-14T14:15:51Z",
           "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/43603873690"
-        },
-        {
-          "branch": "main",
-          "conclusion": "success",
-          "id": 43567390836,
-          "name": "Asolaria three-seat activity ledger",
-          "sha": "a84eb81894e5482764394c8928b447e4a13567c8",
-          "status": "completed",
-          "updated_at": "2026-11-14T06:40:01Z",
-          "url": "https://github.com/JesseBrown1980/asolaria-stone-to-moss/actions/runs/43567390836"
         }
       ]
     },
@@ -4152,5 +4152,5 @@
   "schema": "ASOLARIA-THREE-SEAT-ACTIVITY-SNAPSHOT-V1",
   "seat_assertion": "three agents reported; untagged commits not attributable",
   "source": "GitHub public REST API",
-  "source_state_sha256": "b6647b4e79dc65a38beaec7dc54e8988a6ef3d982c6ef45b7363d95353fba111"
+  "source_state_sha256": "8c77d14687d1fa09c76ec1fdaada7b6d35b401164a7d16211d3374ba340a276d"
 }
